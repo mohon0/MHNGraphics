@@ -16,6 +16,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { FcGoogle } from "react-icons/fc";
 import { MdOutlineDashboard } from "react-icons/md";
 import { ToastContainer, toast } from "react-toastify";
 import { z } from "zod";
@@ -136,11 +137,12 @@ export default function Login() {
                     {/* Google Sign-In Button */}
                     <div className="mt-4">
                       <Button
-                        className="w-full bg-secondary-foreground text-primary-foreground hover:bg-secondary-foreground/90 hover:text-primary-foreground"
+                        className="w-full border-gray-300"
                         variant="outline"
                         type="button"
                         onClick={() => signIn("google")}
                       >
+                        <FcGoogle />
                         Sign in with Google
                       </Button>
                     </div>
