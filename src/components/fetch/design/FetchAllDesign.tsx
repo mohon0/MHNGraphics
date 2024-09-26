@@ -1,11 +1,13 @@
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 
-export function FetchAllDesign() {
+export function FetchAllDesign(page: number) {
   return useQuery({
-    queryKey: ["All Design"],
+    queryKey: ["All Design", page],
     queryFn: async () => {
-      const response = await axios.get(`/api/design/all-design`);
+      const response = await axios.get(`/api/design/all-design`, {
+        params: { page },
+      });
       return response.data;
     },
   });

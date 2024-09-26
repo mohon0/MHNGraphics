@@ -55,7 +55,7 @@ export default function DesktopMenu({ fixed = false }: { fixed?: boolean }) {
     <NavigationMenu>
       <NavigationMenuList>
         <NavigationMenuItem>
-          <Link href="/design" legacyBehavior passHref>
+          <Link href="/design/page/1" legacyBehavior passHref>
             <NavigationMenuLink
               className={fixed ? "pl-2 text-white" : "pl-2 text-black"}
             >

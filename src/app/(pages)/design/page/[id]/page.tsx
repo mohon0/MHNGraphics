@@ -1,15 +1,13 @@
 "use client";
-
+import PaginationUi from "@/components/common/pagination/PaginationUi";
 import DesignSkeleton from "@/components/common/skeleton/DesignSkeleton";
 import { FetchAllDesign } from "@/components/fetch/design/FetchAllDesign";
 import { createSlug } from "@/components/helper/slug/CreateSlug";
 import { DesignType } from "@/components/interface/DesignType";
 import Header from "@/components/layout/Header/Header";
-import Hero from "@/components/pages/home/hero/Hero";
 import Image from "next/image";
 import Link from "next/link";
 
-// Message component for error or empty data states
 function DesignMessage({ message }: { message: string }) {
   return (
     <div className="flex h-full flex-col items-center justify-center text-center">
@@ -18,29 +16,31 @@ function DesignMessage({ message }: { message: string }) {
   );
 }
 
-export default function Design() {
-  const { isLoading, data, isError } = FetchAllDesign();
+export default function Design({
+  searchParams,
+}: {
+  searchParams: { page?: string };
+}) {
+  const currentPage = Number(searchParams.page) || 1;
+  const { isLoading, data, isError } = FetchAllDesign(currentPage);
 
   return (
     <>
-      {/* Always render Header */}
-      <Header fixed />
-      <Hero />
-      <div className="mx-10 my-10">
-        <p className="mb-10 text-center text-3xl font-bold">
-          All The Assets You Will Ever Need
-        </p>
+      <Header />
 
-        {/* Conditional rendering for loading, error, or data display */}
+      <div className="mx-10 my-10">
+        <h1 className="mb-10 text-center text-3xl font-bold">
+          All The Assets You Will Ever Need
+        </h1>
         {isLoading ? (
           <DesignSkeleton />
         ) : isError ? (
           <DesignMessage message="Something went wrong while fetching the designs." />
-        ) : !Array.isArray(data) || data.length === 0 ? (
-          <DesignSkeleton />
+        ) : !data?.data || data.data.length === 0 ? (
+          <DesignMessage message="No designs available." />
         ) : (
           <div className="columns-1 gap-4 md:columns-3">
-            {data.map((item: DesignType) => (
+            {data.data.map((item: DesignType) => (
               <Link
                 href={createSlug(
                   item.category,
@@ -61,6 +61,13 @@ export default function Design() {
                 />
               </Link>
             ))}
+          </div>
+        )}
+
+        {/* Pagination */}
+        {data?.meta && data.meta.totalPages > 1 && (
+          <div className="mt-8 text-center">
+            <PaginationUi totalPages={data.meta.totalPages} />
           </div>
         )}
       </div>

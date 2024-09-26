@@ -9,7 +9,7 @@ export default function Contact() {
   return (
     <div className="mx-3 my-10 md:mx-10 lg:mx-32">
       <header className="text-center">
-        <h2 className="my-4 text-4xl font-bold lg:text-6xl">Contact With Me</h2>
+        <h2 className="my-4 text-4xl font-bold">Contact With Me</h2>
       </header>
 
       <div className="mt-10 grid grid-cols-1 gap-10 md:grid-cols-12">
