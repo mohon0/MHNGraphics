@@ -67,7 +67,7 @@ export default function DesktopMenu({ fixed = false }: { fixed?: boolean }) {
         {/* Other Menu Items */}
         <NavigationMenuItem>
           <NavigationMenuTrigger
-            className={fixed ? "text-white" : "text-black"}
+            className={fixed ? "text-white" : "text-black hover:text-black/80"}
           >
             Image
           </NavigationMenuTrigger>
@@ -88,7 +88,7 @@ export default function DesktopMenu({ fixed = false }: { fixed?: boolean }) {
 
         <NavigationMenuItem>
           <NavigationMenuTrigger
-            className={fixed ? "text-white" : "text-black"}
+            className={fixed ? "text-white" : "text-black hover:text-black/80"}
           >
             Icons
           </NavigationMenuTrigger>
@@ -108,7 +108,7 @@ export default function DesktopMenu({ fixed = false }: { fixed?: boolean }) {
         </NavigationMenuItem>
         <NavigationMenuItem>
           <NavigationMenuTrigger
-            className={fixed ? "text-white" : "text-black"}
+            className={fixed ? "text-white" : "text-black hover:text-black/80"}
           >
             Video
           </NavigationMenuTrigger>
@@ -128,7 +128,7 @@ export default function DesktopMenu({ fixed = false }: { fixed?: boolean }) {
         </NavigationMenuItem>
         <NavigationMenuItem>
           <NavigationMenuTrigger
-            className={fixed ? "text-white" : "text-black"}
+            className={fixed ? "text-white" : "text-black hover:text-black/80"}
           >
             Template
           </NavigationMenuTrigger>
@@ -148,7 +148,7 @@ export default function DesktopMenu({ fixed = false }: { fixed?: boolean }) {
         </NavigationMenuItem>
         <NavigationMenuItem>
           <NavigationMenuTrigger
-            className={fixed ? "text-white" : "text-black"}
+            className={fixed ? "text-white" : "text-black hover:text-black/80"}
           >
             PSD
           </NavigationMenuTrigger>
@@ -168,7 +168,7 @@ export default function DesktopMenu({ fixed = false }: { fixed?: boolean }) {
         </NavigationMenuItem>
         <NavigationMenuItem>
           <NavigationMenuTrigger
-            className={fixed ? "text-white" : "text-black"}
+            className={fixed ? "text-white" : "text-black hover:text-black/80"}
           >
             Mockups
           </NavigationMenuTrigger>
@@ -188,7 +188,7 @@ export default function DesktopMenu({ fixed = false }: { fixed?: boolean }) {
         </NavigationMenuItem>
         <NavigationMenuItem>
           <NavigationMenuTrigger
-            className={fixed ? "text-white" : "text-black"}
+            className={fixed ? "text-white" : "text-black hover:text-black/80"}
           >
             More
           </NavigationMenuTrigger>
@@ -209,7 +209,11 @@ export default function DesktopMenu({ fixed = false }: { fixed?: boolean }) {
         <NavigationMenuItem>
           <Link href="/docs" legacyBehavior passHref>
             <NavigationMenuLink
-              className={fixed ? "pr-1 text-white" : "pr-1 text-black"}
+              className={
+                fixed
+                  ? "pr-1 text-white hover:text-white/80"
+                  : "pr-1 text-black hover:text-black/80"
+              }
             >
               Job
             </NavigationMenuLink>
@@ -218,7 +222,11 @@ export default function DesktopMenu({ fixed = false }: { fixed?: boolean }) {
         <NavigationMenuItem>
           <Link href="/docs" legacyBehavior passHref>
             <NavigationMenuLink
-              className={fixed ? "pl-2 text-white" : "pl-2 text-black"}
+              className={
+                fixed
+                  ? "pl-2 text-white hover:text-white/80"
+                  : "pl-2 text-black hover:text-black/80"
+              }
             >
               Hire Freelancer
             </NavigationMenuLink>

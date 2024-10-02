@@ -16,7 +16,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { FaUser } from "react-icons/fa";
 
-export default function User() {
+export default function User({ fixed = false }: { fixed?: boolean }) {
   const { status, data: session } = useSession();
 
   return (
@@ -63,7 +63,7 @@ export default function User() {
         </Menubar>
       ) : (
         <Link href="/sign-in">
-          <Button variant="secondary">Sign In</Button>
+          <Button variant={fixed ? "secondary" : "default"}>Sign In</Button>
         </Link>
       )}
     </>

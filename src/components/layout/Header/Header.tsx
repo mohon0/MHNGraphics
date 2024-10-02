@@ -41,7 +41,7 @@ export default function Header({ fixed = false }: { fixed?: boolean }) {
           >
             Pricing
           </Link>
-          <User />
+          <User fixed={fixed} />
         </div>
       </div>
     </header>
