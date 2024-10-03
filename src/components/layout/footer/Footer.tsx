@@ -1,6 +1,7 @@
 "use client";
 import { motion } from "framer-motion";
 import Link from "next/link";
+import { FaInstagram } from "react-icons/fa";
 import { FaXTwitter } from "react-icons/fa6";
 import { LuFacebook, LuGithub } from "react-icons/lu";
 import { MdOutlineCopyright } from "react-icons/md";
@@ -9,22 +10,27 @@ import { SlSocialLinkedin } from "react-icons/sl";
 // Social Media Links Data
 const socialLinks = [
   {
-    href: "https://www.facebook.com/sejarparvez",
+    href: "https://www.facebook.com/www.md.mohon",
     label: "Facebook",
     icon: <LuFacebook />,
   },
   {
-    href: "https://www.twitter.com/sejarparvez",
+    href: "https://www.twitter.com/mohongraphics",
     label: "Twitter",
     icon: <FaXTwitter />,
   },
   {
-    href: "https://linkedin.com/in/sejarparvez",
+    href: "https://www.instagram.com/mohongraphics",
+    label: "Twitter",
+    icon: <FaInstagram />,
+  },
+  {
+    href: "https://linkedin.com/in/mohongraphics",
     label: "LinkedIn",
     icon: <SlSocialLinkedin />,
   },
   {
-    href: "https://www.github.com/sejarparvez",
+    href: "https://www.github.com/mohon01",
     label: "GitHub",
     icon: <LuGithub />,
   },
