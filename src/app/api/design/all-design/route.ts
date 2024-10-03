@@ -17,6 +17,14 @@ export async function GET(req: NextRequest) {
       orderBy: {
         createdAt: "desc",
       },
+      include: {
+        author: {
+          select: {
+            name: true,
+            image: true,
+          },
+        },
+      },
     });
 
     // Get the total count of designs for pagination metadata

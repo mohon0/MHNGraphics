@@ -34,11 +34,11 @@ const data = {
       items: [
         {
           title: "Add New",
-          url: "admin-dashboard/new-design",
+          url: "/admin-dashboard/new-design",
         },
         {
           title: "View All",
-          url: "#",
+          url: "/admin-dashboard/all-design",
         },
       ],
     },

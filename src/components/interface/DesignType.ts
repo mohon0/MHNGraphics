@@ -22,4 +22,8 @@ export interface DesignType {
   category: string;
   subcategory: string;
   createdAt: Date;
+  author: {
+    name: string;
+    image: string;
+  };
 }
