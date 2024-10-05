@@ -3,6 +3,7 @@ import PaginationUi from "@/components/common/pagination/PaginationUi";
 import DesignSkeleton from "@/components/common/skeleton/DesignSkeleton";
 import { FetchAllDesign } from "@/components/fetch/design/FetchAllDesign";
 import { convertDateString } from "@/components/helper/date/convertDateString";
+import { createSlug } from "@/components/helper/slug/CreateSlug";
 import { DesignType } from "@/components/interface/DesignType";
 import { Button } from "@/components/ui/button";
 import { DialogFooter, DialogHeader } from "@/components/ui/dialog";
@@ -73,29 +74,52 @@ export default function Design({
                 {data.data.map((item: DesignType) => (
                   <TableRow key={item.id} className="group">
                     <TableCell className="items-start align-top">
-                      <Image
-                        src={item.image}
-                        alt={item.name}
-                        height={100}
-                        width={100}
-                        className="w-20"
-                      />
+                      <Link
+                        href={createSlug(
+                          item.category,
+                          item.subcategory,
+                          item.name,
+                          item.createdAt,
+                        )}
+                      >
+                        <Image
+                          src={item.image}
+                          alt={item.name}
+                          height={100}
+                          width={100}
+                          className="w-20"
+                        />
+                      </Link>
                     </TableCell>
                     <TableCell className="align-top">
                       <div className="space-y-2">
-                        <Link href="">{item.name}</Link>
+                        <Link
+                          href={createSlug(
+                            item.category,
+                            item.subcategory,
+                            item.name,
+                            item.createdAt,
+                          )}
+                        >
+                          {item.name}
+                        </Link>
                         <div className="flex items-center gap-4 text-sm group-hover:flex lg:hidden">
-                          <Link
-                            href={`/admin-dashboard/edit-product?id=${item.id}`}
-                            className="text-primary"
-                          >
+                          <Link href="" className="text-primary">
                             Edit
                           </Link>
                           <Separator
                             orientation="vertical"
                             className="h-3 bg-black"
                           />
-                          <Link href="" className="text-primary">
+                          <Link
+                            href={createSlug(
+                              item.category,
+                              item.subcategory,
+                              item.name,
+                              item.createdAt,
+                            )}
+                            className="text-primary"
+                          >
                             View
                           </Link>
                           <Separator

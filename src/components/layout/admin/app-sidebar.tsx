@@ -38,7 +38,7 @@ const data = {
         },
         {
           title: "View All",
-          url: "/admin-dashboard/all-design",
+          url: "/admin-dashboard/all-design/page/1",
         },
       ],
     },
