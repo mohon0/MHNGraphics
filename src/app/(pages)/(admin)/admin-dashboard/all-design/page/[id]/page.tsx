@@ -1,12 +1,32 @@
 "use client";
 import PaginationUi from "@/components/common/pagination/PaginationUi";
-import DesignSkeleton from "@/components/common/skeleton/DesignSkeleton";
+import TableSkeleton from "@/components/common/skeleton/TableSkeleton";
+import { productCategories } from "@/components/data/ProductCategory";
 import { FetchAllDesign } from "@/components/fetch/design/FetchAllDesign";
 import { convertDateString } from "@/components/helper/date/convertDateString";
 import { createSlug } from "@/components/helper/slug/CreateSlug";
 import { DesignType } from "@/components/interface/DesignType";
 import { Button } from "@/components/ui/button";
-import { DialogFooter, DialogHeader } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
 import {
   Table,
@@ -16,16 +36,11 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogDescription,
-  DialogTitle,
-  DialogTrigger,
-} from "@radix-ui/react-dialog";
 import Image from "next/image";
 import Link from "next/link";
+import { useCallback, useState } from "react";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function DesignMessage({ message }: { message: string }) {
   return (
@@ -40,17 +55,92 @@ export default function Design({
 }: {
   searchParams: { page?: string };
 }) {
-  const currentPage = Number(searchParams.page) || 1;
-  const { isLoading, data, isError } = FetchAllDesign(currentPage);
+  const [category, setCategory] = useState<string>("all");
+  const [searchQuery, setSearchQuery] = useState<string>("");
 
-  console.log(data);
+  const currentPage = Number(searchParams.page) || 1;
+  const { isLoading, data, isError, refetch } = FetchAllDesign({
+    page: currentPage,
+    category,
+    searchQuery,
+  });
+
+  const handleFilterChange = useCallback((value: string) => {
+    setCategory(value);
+  }, []);
+
+  const handleSearchChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      setSearchQuery(e.target.value);
+    },
+    [],
+  );
+
+  const handleDelete = async (id: string) => {
+    try {
+      await fetch(`/api/design/${id}`, { method: "DELETE" });
+      toast.success("Design deleted successfully.");
+      refetch();
+    } catch (error) {
+      toast.error("Failed to delete the design.");
+    }
+  };
+
+  if (isError) {
+    toast.error("Something went wrong while fetching the designs.");
+  }
 
   return (
     <>
       <div className="mx-10 my-10">
-        <h1 className="mb-10 text-center text-3xl font-bold">All Design</h1>
+        <>
+          <h1 className="mb-10 text-center text-3xl font-bold">All Design</h1>
+          <div className="flex flex-col justify-between gap-4 md:flex-row">
+            <div className="mt-4 flex gap-4">
+              <Select onValueChange={handleFilterChange}>
+                <SelectTrigger className="w-[180px]">
+                  <SelectValue placeholder="Category" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    <SelectLabel>All Categories</SelectLabel>
+                    <SelectItem value="all">All</SelectItem>
+                    {productCategories.map((category) => (
+                      <SelectItem
+                        key={category.value}
+                        value={category.value
+                          .toLowerCase()
+                          .replace(/\s+/g, "_")}
+                      >
+                        {category.label}
+                      </SelectItem>
+                    ))}
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+              <Button onClick={() => refetch()} disabled={isLoading}>
+                {isLoading ? "Loading..." : "Filter"}
+              </Button>
+            </div>
+            <div className="flex items-center gap-4">
+              <Input
+                placeholder="Search by name"
+                value={searchQuery}
+                onChange={handleSearchChange}
+              />
+              <Button
+                onClick={() => refetch()}
+                disabled={searchQuery.length < 3 || isLoading}
+              >
+                {isLoading ? "Loading..." : "Search"}
+              </Button>
+            </div>
+          </div>
+        </>
         {isLoading ? (
-          <DesignSkeleton />
+          <div className="mt-10">
+            <TableSkeleton rowCount={10} />
+          </div>
         ) : isError ? (
           <DesignMessage message="Something went wrong while fetching the designs." />
         ) : !data?.data || data.data.length === 0 ? (
@@ -88,6 +178,7 @@ export default function Design({
                           height={100}
                           width={100}
                           className="w-20"
+                          priority
                         />
                       </Link>
                     </TableCell>
@@ -137,7 +228,7 @@ export default function Design({
                                 <DialogTitle>Delete Product</DialogTitle>
                                 <DialogDescription>
                                   Are you sure you want to delete this product?
-                                  This Action can not be undone.
+                                  This action cannot be undone.
                                 </DialogDescription>
                               </DialogHeader>
                               <DialogFooter>
@@ -150,7 +241,7 @@ export default function Design({
                                   <Button
                                     type="button"
                                     variant="destructive"
-                                    // onClick={() => handleDelete(item.id)}
+                                    onClick={() => handleDelete(item.id)}
                                   >
                                     Delete
                                   </Button>
@@ -186,6 +277,7 @@ export default function Design({
           </div>
         )}
       </div>
+      <ToastContainer autoClose={3000} />
     </>
   );
 }

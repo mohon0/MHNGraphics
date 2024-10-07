@@ -1,17 +1,46 @@
 import { Prisma } from "@/components/helper/prisma/Prisma";
+import { DesignStatus } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
   try {
-    const { searchParams } = new URL(req.url);
-    const page = parseInt(searchParams.get("page") || "1");
-    const limit = 30;
+    const url = new URL(req.url);
+    const queryParams = new URLSearchParams(url.search);
 
-    // Calculate the offset
+    const page = queryParams.get("currentPage")
+      ? parseInt(queryParams.get("currentPage")!, 10)
+      : 1;
+
+    const category = queryParams.get("category") || "all";
+    const searchQuery = queryParams.get("searchQuery") || "";
+
+    const limit = 30;
     const skip = (page - 1) * limit;
 
-    // Fetch designs with pagination
+    let whereClause: {
+      status?: DesignStatus;
+      category?: string;
+      name?: {
+        contains: string;
+        mode: "insensitive";
+      };
+    } = {};
+
+    if (category !== "all") {
+      whereClause.category = category;
+    }
+    if (searchQuery) {
+      whereClause.name = {
+        contains: searchQuery,
+        mode: "insensitive",
+      };
+    }
+
+    console.log(whereClause);
+
+    // Fetch designs with pagination and filtering
     const response = await Prisma.design.findMany({
+      where: whereClause, // Add the where clause here
       skip,
       take: limit,
       orderBy: {
@@ -27,10 +56,11 @@ export async function GET(req: NextRequest) {
       },
     });
 
-    // Get the total count of designs for pagination metadata
-    const totalCount = await Prisma.design.count();
+    // Get the total count of designs for pagination metadata with filtering
+    const totalCount = await Prisma.design.count({
+      where: whereClause, // Add the where clause here
+    });
 
-    // Build the paginated response
     const result = {
       data: response,
       meta: {
