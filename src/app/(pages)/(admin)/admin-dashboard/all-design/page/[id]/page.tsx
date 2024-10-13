@@ -77,12 +77,30 @@ export default function Design({
   );
 
   const handleDelete = async (id: string) => {
+    const toastId = toast.loading("Deleting design... ⏳");
+
     try {
-      await fetch(`/api/design/${id}`, { method: "DELETE" });
-      toast.success("Design deleted successfully.");
+      const response = await fetch(`/api/design/single-design?id=${id}`, {
+        method: "DELETE",
+      });
+      if (!response.ok) {
+        throw new Error("Failed to delete the design.");
+      }
+
+      toast.update(toastId, {
+        render: "Design deleted successfully! ✅",
+        type: "success",
+        isLoading: false,
+        autoClose: 3000,
+      });
       refetch();
     } catch (error) {
-      toast.error("Failed to delete the design.");
+      toast.update(toastId, {
+        render: "Failed to delete the design. ❌ Please try again.",
+        type: "error",
+        isLoading: false,
+        autoClose: 3000,
+      });
     }
   };
 
