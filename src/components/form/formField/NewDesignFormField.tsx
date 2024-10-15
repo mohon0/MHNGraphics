@@ -71,7 +71,11 @@ export const NewProductName: React.FC = () => {
                   <span>Description</span>
                 </FormLabel>
                 <FormControl>
-                  <Textarea placeholder="SEO description" {...field} />
+                  <Textarea
+                    placeholder="SEO description"
+                    className="min-h-40"
+                    {...field}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -222,7 +226,7 @@ export function ProductImage({ image, setImage, error }: ProductImageProps) {
   );
 }
 
-const RequiredLabel: React.FC<{ children: React.ReactNode }> = ({
+export const RequiredLabel: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => (
   <FormLabel className="flex items-center gap-1">
@@ -244,10 +248,13 @@ export const ProductCategoryAndTags: React.FC = () => {
   const [input, setInput] = useState("");
 
   const addTag = (tag: string) => {
-    const trimmedTag = tag.trim();
+    const trimmedTag = tag.trim(); // Trim whitespace from the input
     if (trimmedTag && !tags.includes(trimmedTag)) {
-      setValue("tags", [...tags, trimmedTag]);
-      setInput("");
+      const currentTags = watch("tags") || [];
+      setValue("tags", [...currentTags, trimmedTag]); // Set the new tags array directly
+      setInput(""); // Clear the input field after adding the tag
+    } else if (!trimmedTag) {
+      console.warn("Cannot add an empty tag."); // Optional: Add a warning for empty tags
     }
   };
 
@@ -379,7 +386,7 @@ export const ProductCategoryAndTags: React.FC = () => {
               <Button
                 variant="outline"
                 type="button"
-                onClick={() => input && addTag(input)}
+                onClick={() => addTag(input)}
               >
                 Add
               </Button>

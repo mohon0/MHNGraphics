@@ -1,59 +1,5 @@
 import { z } from "zod";
 
-// New Blog Post
-export const NewPostFormSchema = z.object({
-  title: z
-    .string()
-    .min(1, "Title is required")
-    .max(100, "Title can not be more than 100 characters"),
-
-  status: z.string().min(1, "Status is required"),
-
-  slug: z
-    .string()
-    .min(1, "Slug is required")
-    .trim()
-    .regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, "Slug must be a valid format"),
-  excerpt: z
-    .string()
-    .min(1, "Excerpt is required")
-    .max(800, "Excerpt can not be more than 800 characters"),
-  metaDescription: z
-    .string()
-    .min(3, "Meta description is required")
-    .max(800, "Meta description can not be more than 800 characters"),
-  tags: z.array(z.string()).optional(),
-  content: z.string().min(1, "Content is required"),
-  category: z.string().min(1, "Category is required"),
-});
-
-export type NewPostFormSchemaType = z.infer<typeof NewPostFormSchema>;
-
-export const EditPostFormSchema = z.object({
-  id: z.string(),
-  status: z.string().min(1, "Status is required"),
-  title: z
-    .string()
-    .min(1, "Title is required")
-    .max(100, "Title can not be more than 100 characters"),
-  slug: z.string().min(1, "Slug is required"),
-  excerpt: z
-    .string()
-    .min(1, "Excerpt is required")
-    .max(800, "Excerpt can not be more than 800 characters"),
-  metaDescription: z
-    .string()
-    .min(3, "Meta description is required")
-    .max(800, "Meta description can not be more than 800 characters"),
-  tags: z.array(z.string()).optional(),
-  content: z.string().min(1, "Content is required"),
-  category: z.string().min(1, "Category is required"),
-});
-
-export type EditPostFormSchemaType = z.infer<typeof NewPostFormSchema>;
-
-// New Product
-
 export const NewProductFormSchema = z.object({
   name: z
     .string()

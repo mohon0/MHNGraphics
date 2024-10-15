@@ -126,58 +126,6 @@ export async function GET(req: NextRequest, res: NextResponse) {
   }
 }
 
-// export async function DELETE(req: NextRequest, res: NextResponse) {
-//   try {
-//     const token = await getToken({ req, secret });
-
-//     if (!token) {
-//       return new NextResponse("You are not authenticated", { status: 401 });
-//     }
-
-//     if (token.status !== "ADMIN") {
-//       return new NextResponse("You are not authorized", { status: 403 });
-//     }
-
-//     const url = new URL(req.url);
-//     const queryParams = new URLSearchParams(url.search);
-//     const postId = queryParams.get("id");
-
-//     if (!postId) {
-//       return new NextResponse("Post not found", { status: 404 });
-//     }
-
-//     // Fetch the product details
-//     const product = await Prisma.design.findUnique({
-//       where: {
-//         id: postId,
-//       },
-//       select: {
-//         image: true,
-//       },
-//     });
-
-//     if (!product) {
-//       return new NextResponse("Post not found", { status: 404 });
-//     }
-
-//     if (await checkIfImageExists(product.image)) {
-//       const storageRefToDelete = ref(storage, product.image);
-//       await deleteObject(storageRefToDelete);
-//     }
-
-//     await Prisma.post.delete({
-//       where: {
-//         id: postId,
-//       },
-//     });
-
-//     return new NextResponse("Product deleted successfully", { status: 200 });
-//   } catch (error) {
-//     console.log(error);
-//     return new NextResponse("Internal Server Error", { status: 500 });
-//   }
-// }
-
 export async function DELETE(req: NextRequest, res: NextResponse) {
   try {
     const token = await getToken({ req, secret });

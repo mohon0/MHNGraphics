@@ -32,7 +32,7 @@ export default function NewDesign() {
       status: "",
       category: "",
       subcategory: "",
-      tags: [""],
+      tags: [],
     },
   });
 

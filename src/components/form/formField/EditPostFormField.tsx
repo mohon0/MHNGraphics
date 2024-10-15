@@ -97,3 +97,5 @@ export const PostImage: React.FC<PostImageProps> = ({
     </Card>
   );
 };
+
+import React from "react";

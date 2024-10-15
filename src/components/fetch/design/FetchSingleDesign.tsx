@@ -19,11 +19,21 @@ export function FetchSingleDesign({
   name,
 }: props) {
   return useQuery({
-    queryKey: ["All Design"],
+    queryKey: ["Single Design", category, subcategory, day, month, year],
     queryFn: async () => {
       const response = await axios.get(
         `/api/design/single-design?category=${category}&subcategory=${subcategory}&day=${day}&month=${month}&year=${year}&name=${name}`,
       );
+      return response.data;
+    },
+  });
+}
+
+export function FetchSingleDesignById(id: string) {
+  return useQuery({
+    queryKey: ["Single Design", id],
+    queryFn: async () => {
+      const response = await axios.get(`/api/design/edit-design?id=${id}`);
       return response.data;
     },
   });
