@@ -6,7 +6,7 @@ export async function GET(req: NextRequest, res: NextResponse) {
     const url = new URL(req.url);
     const queryParams = new URLSearchParams(url.search);
     const id = queryParams.get("id");
-    console.log(queryParams);
+
     if (!id) {
       return new NextResponse("Invalid Request Id", { status: 404 });
     }

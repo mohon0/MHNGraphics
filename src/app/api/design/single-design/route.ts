@@ -2,6 +2,7 @@ import checkIfImageExists from "@/components/helper/image/checkIfImageExists";
 import { Prisma } from "@/components/helper/prisma/Prisma";
 import { SlugToText } from "@/components/helper/slug/SlugToText";
 import storage from "@/utils/firebaseConfig";
+import { DesignStatus } from "@prisma/client";
 import {
   deleteObject,
   getDownloadURL,
@@ -45,6 +46,8 @@ export async function POST(req: NextRequest) {
     const description = getStringValue(formData, "description");
     const category = getStringValue(formData, "category");
     const subcategory = getStringValue(formData, "subcategory");
+    const status = getStringValue(formData, "status") as DesignStatus;
+
     const tags =
       formData
         .get("tags")
@@ -67,6 +70,7 @@ export async function POST(req: NextRequest) {
         description,
         category,
         subcategory,
+        status,
         tags,
         image: imageUrl, // Store the image URL in the database
         authorId,
