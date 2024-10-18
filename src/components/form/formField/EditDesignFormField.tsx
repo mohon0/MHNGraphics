@@ -12,8 +12,7 @@ import { cn } from "@/lib/utils";
 import { Loader2, Upload, X } from "lucide-react";
 import Image from "next/image";
 import { useCallback, useState } from "react";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { toast } from "react-toastify";
 
 interface ProductImageProps {
   image: string | null;
@@ -184,7 +183,6 @@ export default function EditDesignImage({
           </div>
         </CardContent>
       </Card>
-      <ToastContainer position="bottom-right" />
     </>
   );
 }

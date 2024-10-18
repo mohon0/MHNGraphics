@@ -1,5 +1,4 @@
 "use client";
-
 import {
   NewProductName,
   ProductCategoryAndTags,
@@ -60,6 +59,7 @@ export default function NewDesign() {
       });
 
       if (response.status !== 200) {
+        toast.dismiss();
         toast.error("Failed to create design");
         setWarning("Failed to submit the form");
       } else {

@@ -3,7 +3,6 @@ import { productCategories } from "@/components/data/ProductCategory";
 import { FetchSingleDesignById } from "@/components/fetch/design/FetchSingleDesign";
 import { NewProductName } from "@/components/form/formField/NewDesignFormField";
 import { Suspense } from "react";
-import "react-toastify/dist/ReactToastify.css";
 
 import EditDesignImage from "@/components/form/formField/EditDesignFormField";
 import {
@@ -160,7 +159,6 @@ function DesignPage() {
   );
 
   async function onSubmit(formData: NewProductFormSchemaType) {
-    console.log("clicked");
     const totalImages = initialImage ? 1 : newImage ? 1 : 0;
 
     if (totalImages === 0) {
@@ -188,7 +186,7 @@ function DesignPage() {
     toast.loading("Please wait...");
     try {
       const response = await axios.patch(
-        "/api/admin-dashboard/edit-design",
+        "/api/design/edit-design",
         submissionData,
         {
           headers: {
@@ -198,248 +196,265 @@ function DesignPage() {
       );
 
       if (response.status !== 200) {
-        toast.error("Failed to update product");
-      } else {
-        refetch();
         toast.dismiss();
-        toast.success("Product successfully updated");
-        setNewImage(null);
-
-        setDeletedImage(null);
+        toast.error("Failed to update design");
+      } else {
+        toast.dismiss();
+        toast.success("Design successfully updated");
       }
     } catch (error) {
       toast.dismiss();
-      toast.error("Failed to submit the form");
+      toast.error("Failed to update the form");
     }
   }
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="mx-10 gap-10 md:grid md:grid-cols-2">
+        <div className="space-y-10">
+          <Skeleton className="h-20" />
+          <Skeleton className="h-20" />
+          <Skeleton className="h-20" />
+          <Skeleton className="h-20" />
+        </div>
+        <div className="space-y-10">
+          <Skeleton className="h-20" />
+          <Skeleton className="h-20" />
+          <Skeleton className="h-20" />
+          <Skeleton className="h-20" />
+        </div>
+      </div>
+    );
   }
 
   if (isError) {
     return <div>Error loading product data</div>;
   }
 
-  console.log(tags);
-
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)}>
-        <div className="flex min-h-screen w-full flex-col">
-          <div className="flex flex-col sm:gap-4">
-            <main className="grid flex-1 items-start gap-4 sm:py-0 md:gap-8">
-              <div className="mx-auto grid max-w-[59rem] flex-1 auto-rows-max gap-4">
-                <div className="flex items-center gap-4">
-                  <Button
-                    variant="outline"
-                    type="button"
-                    size="icon"
-                    className="h-7 w-7"
-                    onClick={() => router.back()}
-                  >
-                    <ChevronLeft className="h-4 w-4" />
-                    <span className="sr-only">Back</span>
-                  </Button>
-                  <h1 className="flex-1 shrink-0 whitespace-nowrap text-xl font-semibold tracking-tight sm:grow-0">
-                    Edit Product
-                  </h1>
-                  <div className="hidden items-center gap-2 md:ml-auto md:flex">
+    <>
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)}>
+          <div className="flex min-h-screen w-full flex-col">
+            <div className="flex flex-col sm:gap-4">
+              <main className="grid flex-1 items-start gap-4 sm:py-0 md:gap-8">
+                <div className="mx-auto grid max-w-[59rem] flex-1 auto-rows-max gap-4">
+                  <div className="flex items-center gap-4">
                     <Button
                       variant="outline"
-                      onClick={() => {
-                        form.reset();
-                        setNewImage(null);
-
-                        setDeletedImage(null);
-                      }}
+                      type="button"
+                      size="icon"
+                      className="h-7 w-7"
+                      onClick={() => router.back()}
                     >
-                      Discard
+                      <ChevronLeft className="h-4 w-4" />
+                      <span className="sr-only">Back</span>
                     </Button>
-                    <Button type="submit">Edit Design</Button>
-                  </div>
-                </div>
-                <div className="grid gap-4 md:grid-cols-[1fr_250px] lg:grid-cols-3 lg:gap-8">
-                  <div className="grid auto-rows-max items-start gap-4 lg:col-span-2 lg:gap-8">
-                    <NewProductName />
+                    <h1 className="flex-1 shrink-0 whitespace-nowrap text-xl font-semibold tracking-tight sm:grow-0">
+                      Edit Product
+                    </h1>
+                    <div className="hidden items-center gap-2 md:ml-auto md:flex">
+                      <Button
+                        variant="outline"
+                        type="button"
+                        onClick={() => {
+                          form.reset();
+                          setNewImage(null);
 
-                    <Card x-chunk="dashboard-07-chunk-2">
-                      <CardHeader>
-                        <CardTitle>Category</CardTitle>
-                      </CardHeader>
-                      <CardContent>
-                        <div className="grid items-baseline gap-6 sm:grid-cols-2">
-                          <div className="grid gap-3">
-                            <div>
-                              <FormField
-                                name="category"
-                                render={({ field }) => (
-                                  <FormItem>
-                                    <FormLabel className="flex">
-                                      <span>Category</span>
-                                      <CgAsterisk color="red" />
-                                    </FormLabel>
-                                    <Select
-                                      onValueChange={field.onChange}
-                                      defaultValue={data.category || ""}
-                                    >
-                                      <SelectTrigger>
-                                        <SelectValue placeholder="Select Category" />
-                                      </SelectTrigger>
-                                      <SelectContent>
-                                        {productCategories.map((category) => (
-                                          <SelectItem
-                                            key={category.value}
-                                            value={category.value}
-                                          >
-                                            {category.label}
-                                          </SelectItem>
-                                        ))}
-                                      </SelectContent>
-                                    </Select>
-                                    <FormMessage />
-                                  </FormItem>
-                                )}
-                              />
-                            </div>
-                          </div>
-                          <div className="grid gap-3">
-                            {subcategoriesLoaded && (
-                              <FormField
-                                name="subcategory"
-                                render={({ field }) => (
-                                  <FormItem>
-                                    <FormLabel>Sub Category</FormLabel>
-                                    <Select
-                                      onValueChange={field.onChange}
-                                      defaultValue={data.subcategory || ""}
-                                    >
-                                      <SelectTrigger>
-                                        <SelectValue placeholder="Select a subcategory" />
-                                      </SelectTrigger>
-                                      <SelectContent>
-                                        <SelectGroup>
-                                          <SelectLabel>Subcategory</SelectLabel>
-                                          {subcategories.map((subcategory) => (
+                          setDeletedImage(null);
+                        }}
+                      >
+                        Discard
+                      </Button>
+                      <Button type="submit">Edit Design</Button>
+                    </div>
+                  </div>
+                  <div className="grid gap-4 md:grid-cols-[1fr_250px] lg:grid-cols-3 lg:gap-8">
+                    <div className="grid auto-rows-max items-start gap-4 lg:col-span-2 lg:gap-8">
+                      <NewProductName />
+
+                      <Card x-chunk="dashboard-07-chunk-2">
+                        <CardHeader>
+                          <CardTitle>Category</CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                          <div className="grid items-baseline gap-6 sm:grid-cols-2">
+                            <div className="grid gap-3">
+                              <div>
+                                <FormField
+                                  name="category"
+                                  render={({ field }) => (
+                                    <FormItem>
+                                      <FormLabel className="flex">
+                                        <span>Category</span>
+                                        <CgAsterisk color="red" />
+                                      </FormLabel>
+                                      <Select
+                                        onValueChange={field.onChange}
+                                        defaultValue={data.category || ""}
+                                      >
+                                        <SelectTrigger>
+                                          <SelectValue placeholder="Select Category" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                          {productCategories.map((category) => (
                                             <SelectItem
-                                              key={subcategory.value}
-                                              value={subcategory.value}
+                                              key={category.value}
+                                              value={category.value}
                                             >
-                                              {subcategory.label}
+                                              {category.label}
                                             </SelectItem>
                                           ))}
-                                        </SelectGroup>
-                                      </SelectContent>
-                                    </Select>
-                                    <FormMessage />
-                                  </FormItem>
-                                )}
-                              />
-                            )}
+                                        </SelectContent>
+                                      </Select>
+                                      <FormMessage />
+                                    </FormItem>
+                                  )}
+                                />
+                              </div>
+                            </div>
+                            <div className="grid gap-3">
+                              {subcategoriesLoaded && (
+                                <FormField
+                                  name="subcategory"
+                                  render={({ field }) => (
+                                    <FormItem>
+                                      <FormLabel>Sub Category</FormLabel>
+                                      <Select
+                                        onValueChange={field.onChange}
+                                        defaultValue={data.subcategory || ""}
+                                      >
+                                        <SelectTrigger>
+                                          <SelectValue placeholder="Select a subcategory" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                          <SelectGroup>
+                                            <SelectLabel>
+                                              Subcategory
+                                            </SelectLabel>
+                                            {subcategories.map(
+                                              (subcategory) => (
+                                                <SelectItem
+                                                  key={subcategory.value}
+                                                  value={subcategory.value}
+                                                >
+                                                  {subcategory.label}
+                                                </SelectItem>
+                                              ),
+                                            )}
+                                          </SelectGroup>
+                                        </SelectContent>
+                                      </Select>
+                                      <FormMessage />
+                                    </FormItem>
+                                  )}
+                                />
+                              )}
+                            </div>
                           </div>
-                        </div>
 
-                        <div>
-                          <FormLabel>Tags</FormLabel>
-                          <div className="mb-2 flex flex-wrap gap-2">
-                            {tags
-                              .filter((tag) => tag.trim() !== "")
-                              .map((tag: string, index: number) => (
-                                <Badge
-                                  key={index}
-                                  variant="secondary"
-                                  className="px-2 py-1 text-sm"
-                                >
-                                  {tag}
-                                  <Button
-                                    variant="ghost"
-                                    size="sm"
-                                    type="button"
-                                    className="ml-1 h-auto p-0"
-                                    onClick={() => removeTag(index)}
+                          <div>
+                            <FormLabel>Tags</FormLabel>
+                            <div className="mb-2 flex flex-wrap gap-2">
+                              {tags
+                                .filter((tag) => tag.trim() !== "")
+                                .map((tag: string, index: number) => (
+                                  <Badge
+                                    key={index}
+                                    variant="secondary"
+                                    className="px-2 py-1 text-sm"
                                   >
-                                    <X className="h-3 w-3" />
-                                    <span className="sr-only">
-                                      Remove {tag} tag
-                                    </span>
-                                  </Button>
-                                </Badge>
-                              ))}
-                          </div>
-                          <div className="flex gap-2">
-                            <Input
-                              type="text"
-                              value={input}
-                              onChange={(e) => setInput(e.target.value)}
-                              onKeyDown={handleKeyDown}
-                              placeholder="Add a tag..."
-                              className="flex-grow"
-                            />
-                            <Button
-                              variant="outline"
-                              type="button"
-                              onClick={() => input && addTag(input)}
-                            >
-                              Add
-                            </Button>
-                          </div>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  </div>
-                  <div className="grid auto-rows-max items-start gap-4 lg:gap-8">
-                    <FormField
-                      control={form.control}
-                      name="status"
-                      render={({ field }) => (
-                        <Card x-chunk="dashboard-07-chunk-3">
-                          <CardHeader>
-                            <CardTitle>Design Status</CardTitle>
-                          </CardHeader>
-                          <CardContent>
-                            <FormItem>
-                              <FormLabel className="flex">
-                                <span>Design Status</span>
-                                <CgAsterisk color="red" />
-                              </FormLabel>
-                              <Select
-                                onValueChange={field.onChange}
-                                defaultValue={data?.status}
+                                    {tag}
+                                    <Button
+                                      variant="ghost"
+                                      size="sm"
+                                      type="button"
+                                      className="ml-1 h-auto p-0"
+                                      onClick={() => removeTag(index)}
+                                    >
+                                      <X className="h-3 w-3" />
+                                      <span className="sr-only">
+                                        Remove {tag} tag
+                                      </span>
+                                    </Button>
+                                  </Badge>
+                                ))}
+                            </div>
+                            <div className="flex gap-2">
+                              <Input
+                                type="text"
+                                value={input}
+                                onChange={(e) => setInput(e.target.value)}
+                                onKeyDown={handleKeyDown}
+                                placeholder="Add a tag..."
+                                className="flex-grow"
+                              />
+                              <Button
+                                variant="outline"
+                                type="button"
+                                onClick={() => input && addTag(input)}
                               >
-                                <SelectTrigger>
-                                  <SelectValue placeholder="Select a status" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                  <SelectItem value="DRAFT">DRAFT</SelectItem>
-                                  <SelectItem value="PUBLISHED">
-                                    PUBLISHED
-                                  </SelectItem>
-                                  <SelectItem value="PENDING">
-                                    PENDING
-                                  </SelectItem>
-                                </SelectContent>
-                              </Select>
-                              <FormMessage />
-                            </FormItem>
-                          </CardContent>
-                        </Card>
-                      )}
-                    />
-                    <EditDesignImage
-                      image={initialImage}
-                      newImage={newImage}
-                      deletedImage={deletedImage}
-                      handleAddNewImage={handleAddNewImage}
-                      handleDeleteImage={handleDeleteImage}
-                    />
+                                Add
+                              </Button>
+                            </div>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    </div>
+                    <div className="grid auto-rows-max items-start gap-4 lg:gap-8">
+                      <FormField
+                        control={form.control}
+                        name="status"
+                        render={({ field }) => (
+                          <Card x-chunk="dashboard-07-chunk-3">
+                            <CardHeader>
+                              <CardTitle>Design Status</CardTitle>
+                            </CardHeader>
+                            <CardContent>
+                              <FormItem>
+                                <FormLabel className="flex">
+                                  <span>Design Status</span>
+                                  <CgAsterisk color="red" />
+                                </FormLabel>
+                                <Select
+                                  onValueChange={field.onChange}
+                                  defaultValue={data?.status}
+                                >
+                                  <SelectTrigger>
+                                    <SelectValue placeholder="Select a status" />
+                                  </SelectTrigger>
+                                  <SelectContent>
+                                    <SelectItem value="DRAFT">DRAFT</SelectItem>
+                                    <SelectItem value="PUBLISHED">
+                                      PUBLISHED
+                                    </SelectItem>
+                                    <SelectItem value="PENDING">
+                                      PENDING
+                                    </SelectItem>
+                                  </SelectContent>
+                                </Select>
+                                <FormMessage />
+                              </FormItem>
+                            </CardContent>
+                          </Card>
+                        )}
+                      />
+                      <EditDesignImage
+                        image={initialImage}
+                        newImage={newImage}
+                        deletedImage={deletedImage}
+                        handleAddNewImage={handleAddNewImage}
+                        handleDeleteImage={handleDeleteImage}
+                      />
+                    </div>
                   </div>
                 </div>
-              </div>
-            </main>
+              </main>
+            </div>
           </div>
-        </div>
-      </form>
+        </form>
+      </Form>
       <ToastContainer autoClose={3000} />
-    </Form>
+    </>
   );
 }
