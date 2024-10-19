@@ -122,6 +122,14 @@ export async function GET(req: NextRequest, res: NextResponse) {
           gte: formattedDate,
         },
       },
+      include: {
+        author: {
+          select: {
+            name: true,
+            image: true,
+          },
+        },
+      },
     });
 
     return new NextResponse(JSON.stringify(response), { status: 200 });
