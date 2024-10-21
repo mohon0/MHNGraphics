@@ -12,8 +12,10 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import img from "@/images/contact1.png";
 import { zodResolver } from "@hookform/resolvers/zod";
+import axios from "axios";
 import Image from "next/image";
 import { useForm } from "react-hook-form";
+import { ToastContainer, toast } from "react-toastify";
 import { z } from "zod";
 
 const FormSchema = z.object({
@@ -40,8 +42,23 @@ export default function Contact() {
     },
   });
 
-  function onSubmit(data: z.infer<typeof FormSchema>) {
-    console.log(data);
+  async function onSubmit(data: z.infer<typeof FormSchema>) {
+    toast.loading("Please wait...");
+
+    try {
+      const response = await axios.post("/api/email/contact", data);
+
+      toast.dismiss();
+      if (response.status === 200) {
+        toast.success("Design successfully added");
+        // form.reset(); 
+      } else {
+        toast.error("Failed to create design");
+      }
+    } catch (error) {
+      toast.dismiss();
+      toast.error("Failed to submit the form");
+    }
   }
 
   return (
@@ -136,17 +153,13 @@ export default function Contact() {
               )}
             />
 
-            <Button
-              type="submit"
-              aria-label="send message"
-              title="send message"
-              className="mt-10"
-            >
+            <Button type="submit" className="mt-10">
               SEND MESSAGE
             </Button>
           </form>
         </Form>
       </div>
+      <ToastContainer autoClose={3000} />
     </div>
   );
 }
