@@ -171,7 +171,7 @@ export default function Design({
                   <TableHead className="text-left">Design</TableHead>
                   <TableHead>Name</TableHead>
                   <TableHead>Category</TableHead>
-                  <TableHead>Subcategory</TableHead>
+                  <TableHead>Status</TableHead>
                   <TableHead>Author</TableHead>
                   <TableHead className="max-w-20 text-right">
                     Created At
@@ -274,9 +274,7 @@ export default function Design({
                       </div>
                     </TableCell>
                     <TableCell className="align-top">{item.category}</TableCell>
-                    <TableCell className="align-top">
-                      {item.subcategory}
-                    </TableCell>
+                    <TableCell className="align-top">{item.status}</TableCell>
                     <TableCell className="align-top">
                       {item.author.name}
                     </TableCell>

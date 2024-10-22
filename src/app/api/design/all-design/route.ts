@@ -13,6 +13,7 @@ export async function GET(req: NextRequest) {
 
     const category = queryParams.get("category") || "all";
     const searchQuery = queryParams.get("searchQuery") || "";
+    const status = queryParams.get("status") as DesignStatus;
 
     const limit = 30;
     const skip = (page - 1) * limit;
@@ -25,6 +26,10 @@ export async function GET(req: NextRequest) {
         mode: "insensitive";
       };
     } = {};
+
+    if (status == "PUBLISHED") {
+      whereClause.status = status;
+    }
 
     if (category !== "all") {
       whereClause.category = category;
@@ -41,6 +46,7 @@ export async function GET(req: NextRequest) {
       where: whereClause, // Add the where clause here
       skip,
       take: limit,
+
       orderBy: {
         createdAt: "desc",
       },

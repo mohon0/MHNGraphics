@@ -42,6 +42,7 @@ export default function Design({
     page: currentPage,
     category,
     searchQuery,
+    status: "PUBLISHED",
   });
 
   const handleFilterChange = useCallback((value: string) => {

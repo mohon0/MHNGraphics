@@ -16,7 +16,7 @@ enum UserStatus {
 enum DesignStatus {
   DRAFT
   PUBLISHED
-  ARCHIVED
+  PENDING
 }
 
 enum PostStatus {
