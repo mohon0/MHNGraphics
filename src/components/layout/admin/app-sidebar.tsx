@@ -1,9 +1,7 @@
 "use client";
-
 import {
+  BadgeCheck,
   BookOpen,
-  Bot,
-  Frame,
   GalleryHorizontal,
   Map,
   PieChart,
@@ -22,112 +20,110 @@ import {
   SidebarHeader,
   SidebarRail,
 } from "@/components/ui/sidebar";
-
-// This is sample data.
-const data = {
-  navMain: [
-    {
-      title: "Design",
-      url: "#",
-      icon: GalleryHorizontal,
-      isActive: true,
-      items: [
-        {
-          title: "Add New",
-          url: "/admin-dashboard/new-design",
-        },
-        {
-          title: "View All",
-          url: "/admin-dashboard/all-design/page/1",
-        },
-      ],
-    },
-    {
-      title: "Models",
-      url: "#",
-      icon: Bot,
-      items: [
-        {
-          title: "Genesis",
-          url: "#",
-        },
-        {
-          title: "Explorer",
-          url: "#",
-        },
-        {
-          title: "Quantum",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Documentation",
-      url: "#",
-      icon: BookOpen,
-      items: [
-        {
-          title: "Introduction",
-          url: "#",
-        },
-        {
-          title: "Get Started",
-          url: "#",
-        },
-        {
-          title: "Tutorials",
-          url: "#",
-        },
-        {
-          title: "Changelog",
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Settings",
-      url: "#",
-      icon: Settings2,
-      items: [
-        {
-          title: "General",
-          url: "#",
-        },
-        {
-          title: "Team",
-          url: "#",
-        },
-        {
-          title: "Billing",
-          url: "#",
-        },
-        {
-          title: "Limits",
-          url: "#",
-        },
-      ],
-    },
-  ],
-  projects: [
-    {
-      name: "Design Engineering",
-      url: "#",
-      icon: Frame,
-    },
-    {
-      name: "Sales & Marketing",
-      url: "#",
-      icon: PieChart,
-    },
-    {
-      name: "Travel",
-      url: "#",
-      icon: Map,
-    },
-  ],
-};
+import { useSession } from "next-auth/react";
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  const { data: session } = useSession(); // Retrieve session data
+
+  const data = {
+    navMain: [
+      {
+        title: "Design",
+        url: "#",
+        icon: GalleryHorizontal,
+        isActive: true,
+        items: [
+          {
+            title: "Add New",
+            url: "/admin-dashboard/new-design",
+          },
+          {
+            title: "View All",
+            url: "/admin-dashboard/all-design/page/1",
+          },
+        ],
+      },
+      {
+        title: "Account",
+        url: "#",
+        icon: BadgeCheck,
+        items: [
+          {
+            title: "View Profile",
+            url: `/profile?id=${session?.user?.id}`,
+          },
+          {
+            title: "Edit Profile",
+            url: "/edit-profile",
+          },
+        ],
+      },
+      {
+        title: "Documentation",
+        url: "#",
+        icon: BookOpen,
+        items: [
+          {
+            title: "Introduction",
+            url: "#",
+          },
+          {
+            title: "Get Started",
+            url: "#",
+          },
+          {
+            title: "Tutorials",
+            url: "#",
+          },
+          {
+            title: "Changelog",
+            url: "#",
+          },
+        ],
+      },
+      {
+        title: "Settings",
+        url: "#",
+        icon: Settings2,
+        items: [
+          {
+            title: "General",
+            url: "#",
+          },
+          {
+            title: "Team",
+            url: "#",
+          },
+          {
+            title: "Billing",
+            url: "#",
+          },
+          {
+            title: "Limits",
+            url: "#",
+          },
+        ],
+      },
+    ],
+    projects: [
+      {
+        name: "Profile",
+        url: `/profile?id=${session?.user?.id}`,
+        icon: BadgeCheck,
+      },
+      {
+        name: "Sales & Marketing",
+        url: "#",
+        icon: PieChart,
+      },
+      {
+        name: "Travel",
+        url: "#",
+        icon: Map,
+      },
+    ],
+  };
+
   return (
     <Sidebar collapsible="icon" {...props}>
       <SidebarHeader>

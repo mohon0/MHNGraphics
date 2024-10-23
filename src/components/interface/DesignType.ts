@@ -23,6 +23,8 @@ export interface DesignType {
   subcategory: string;
   createdAt: Date;
   status: string;
+  description: string;
+  tags: string[];
   author: {
     name: string;
     image: string;
