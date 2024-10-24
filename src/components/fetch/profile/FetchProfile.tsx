@@ -13,3 +13,13 @@ export function FetchProfile(id: string, take: number, skip: number) {
     enabled: !!id,
   });
 }
+
+export function EditProfileInfo() {
+  return useQuery({
+    queryKey: ["Edit Profile"],
+    queryFn: async () => {
+      const response = await axios(`/api/editprofile`);
+      return response.data;
+    },
+  });
+}

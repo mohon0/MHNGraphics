@@ -57,6 +57,7 @@ model User {
   email            String      @unique
   password         String
   emailVerified    DateTime?
+  bio              String?
   image            String?
   verificationCode String?
   createdAt        DateTime    @default(now())
