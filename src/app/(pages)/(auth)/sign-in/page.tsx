@@ -136,7 +136,7 @@ export default function Login() {
                     {/* Google Sign-In Button */}
                     <div className="mt-4">
                       <Button
-                        className="w-full"
+                        className="w-full bg-secondary-foreground text-primary-foreground hover:bg-secondary-foreground/90 hover:text-primary-foreground"
                         variant="outline"
                         type="button"
                         onClick={() => signIn("google")}

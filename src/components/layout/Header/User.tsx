@@ -19,8 +19,6 @@ import { FaUser } from "react-icons/fa";
 export default function User() {
   const { status, data: session } = useSession();
 
-  console.log(session);
-
   return (
     <>
       {status === "loading" ? (

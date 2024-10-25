@@ -23,10 +23,25 @@ export default function Page({ params }: { params: { slug: string[] } }) {
   if (isError) {
     return (
       <div className="flex h-screen items-center justify-center">
-        Error loading design.
+        <div role="alert" aria-live="assertive">
+          Error loading design.
+        </div>
       </div>
     );
   }
+
+  // Destructure data for easier access
+  const { image, name: designName } = data || {};
+
+  // Function to handle download
+  const handleDownload = () => {
+    const link = document.createElement("a");
+    link.href = image; // Set the image URL as the link's href
+    link.download = designName || "design"; // Set a default name for the downloaded file
+    document.body.appendChild(link);
+    link.click(); // Simulate a click on the link
+    document.body.removeChild(link); // Clean up the DOM
+  };
 
   return (
     <div className="container mx-auto my-10 px-4">
@@ -37,8 +52,8 @@ export default function Page({ params }: { params: { slug: string[] } }) {
           ) : (
             <>
               <Image
-                src={data.image}
-                alt={data.name || "Design image"}
+                src={image}
+                alt={designName || "Design image"}
                 layout="fill"
                 objectFit="contain"
                 className={`duration-700 ease-in-out ${
@@ -55,7 +70,7 @@ export default function Page({ params }: { params: { slug: string[] } }) {
             {isLoading ? (
               <Skeleton className="h-10 w-full" />
             ) : (
-              <Button className="w-full">
+              <Button className="w-full" onClick={handleDownload}>
                 <Download className="mr-2 h-4 w-4" /> Download
               </Button>
             )}
@@ -71,9 +86,7 @@ export default function Page({ params }: { params: { slug: string[] } }) {
           </>
         ) : (
           <div className="mt-10">
-            <div></div>
-            <h1 className="text-2xl font-bold">{data.name}</h1>
-
+            <h1 className="text-2xl font-bold">{designName}</h1>
             <p className="text-muted-foreground">{`${day}/${month}/${year}`}</p>
           </div>
         )}
