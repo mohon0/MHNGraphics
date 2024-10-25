@@ -1,0 +1,119 @@
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum UserStatus {
+  USER
+  ADMIN
+  SUBSCRIBER
+}
+
+enum DesignStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+enum PostStatus {
+  PUBLISHED
+  DRAFT
+}
+
+model Account {
+  id                String  @id @default(auto()) @map("_id") @db.ObjectId
+  userId            String  @db.ObjectId
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  sessionToken String   @unique
+  userId       String   @db.ObjectId
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model User {
+  id               String      @id @default(auto()) @map("_id") @db.ObjectId
+  name             String
+  email            String      @unique
+  password         String
+  emailVerified    DateTime?
+  image            String?
+  verificationCode String?
+  createdAt        DateTime    @default(now())
+  status           UserStatus  @default(USER)
+  accounts         Account[]
+  sessions         Session[]
+  posts            Post[]
+  design           Design[]
+  comments         Comment[]
+}
+
+model Post {
+  id              String     @id @default(auto()) @map("_id") @db.ObjectId
+  title           String
+  slug            String
+  excerpt         String
+  metaDescription String
+  tags            String[]
+  content         String
+  category        String
+  image           String
+  comments        Comment[]
+  status          PostStatus @default(DRAFT)
+  createdAt       DateTime   @default(now())
+  updatedAt       DateTime   @updatedAt
+  authorId        String     @db.ObjectId
+  author          User       @relation(fields: [authorId], references: [id], onDelete: Cascade)
+
+  @@index([slug])
+  @@index([category])
+}
+
+model Comment {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  content   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  authorId  String   @db.ObjectId
+  postId    String   @db.ObjectId
+  author    User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  post      Post     @relation(fields: [postId], references: [id])
+}
+
+model Design {
+  id          String        @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  description String
+  category    String
+  subcategory String
+  image       String
+  tags        String[]
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+  status      DesignStatus @default(DRAFT)
+  authorId    String        @db.ObjectId
+  author      User          @relation(fields: [authorId], references: [id], onDelete: Cascade)
+
+  @@index([category])
+  @@index([subcategory])
+}
