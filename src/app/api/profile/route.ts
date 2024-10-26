@@ -19,6 +19,7 @@ export async function GET(req: NextRequest) {
         name: true,
         createdAt: true,
         status: true,
+        image: true,
         design: {
           take: take,
           skip: skip, // Use skip to prevent duplication
