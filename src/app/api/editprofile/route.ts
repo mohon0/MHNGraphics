@@ -102,10 +102,36 @@ export async function PUT(req: NextRequest) {
 
     return NextResponse.json(updatedUser);
   } catch (error) {
-    console.error("Error updating user:", error);
     return NextResponse.json(
       { message: "Error updating user" },
       { status: 500 },
     );
+  }
+}
+
+export async function PATCH(req: NextRequest, res: NextResponse) {
+  try {
+    const data = await req.json();
+    const { currentPassword, newPassword } = data;
+    if (!currentPassword || !newPassword) {
+      return NextResponse.json({ message: "Missing data" }, { status: 400 });
+    }
+
+    const token = await getToken({ req, secret });
+    if (!token)
+      return NextResponse.json(
+        { message: "You are not logged in" },
+        { status: 401 },
+      );
+
+    const existingUser = await prisma.user.findUnique({
+      where: { id: token.sub },
+    });
+    if (!existingUser)
+      return NextResponse.json({ message: "User not found" }, { status: 404 });
+    console.log(existingUser);
+    return new NextResponse("api is working", { status: 200 });
+  } catch (error) {
+    return new NextResponse("Internal server error", { status: 500 });
   }
 }

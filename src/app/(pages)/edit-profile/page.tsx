@@ -22,7 +22,8 @@ import axios from "axios";
 import { CameraIcon } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import * as z from "zod";
 
 // Validation schemas
@@ -41,13 +42,13 @@ const passwordFormSchema = z
   .object({
     currentPassword: z
       .string()
-      .min(8, { message: "Password must be at least 8 characters." }),
+      .min(6, { message: "Password must be at least 6 characters." }),
     newPassword: z
       .string()
-      .min(8, { message: "Password must be at least 8 characters." }),
+      .min(6, { message: "Password must be at least 6 characters." }),
     confirmPassword: z
       .string()
-      .min(8, { message: "Password must be at least 8 characters." }),
+      .min(6, { message: "Password must be at least 6 characters." }),
   })
   .refine((data) => data.newPassword === data.confirmPassword, {
     message: "Passwords don't match",
@@ -60,6 +61,7 @@ type PasswordFormValues = z.infer<typeof passwordFormSchema>;
 export default function ProfileForm() {
   const [activeTab, setActiveTab] = useState("profile");
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
+  const { isLoading, data, refetch } = EditProfileInfo();
   const profileForm = useForm<ProfileFormValues>({
     resolver: zodResolver(profileFormSchema),
     defaultValues: { name: "", email: "", bio: "" },
@@ -76,9 +78,7 @@ export default function ProfileForm() {
     mode: "onChange",
   });
 
-  const [avatarSrc, setAvatarSrc] = useState(
-    "/placeholder.svg?height=100&width=100",
-  );
+  const [avatarSrc, setAvatarSrc] = useState("");
 
   async function onProfileSubmit(data: ProfileFormValues) {
     const formData = new FormData();
@@ -90,21 +90,42 @@ export default function ProfileForm() {
     if (avatarFile) {
       formData.append("avatar", avatarFile);
     }
-
+    toast.loading("Please wait...");
     try {
       const response = await axios.put("/api/editprofile", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
       });
-      toast("Profile updated");
+      if (response.status === 200) {
+        toast.dismiss();
+        toast.success("Profile updated successfully");
+        refetch();
+      } else {
+        toast.dismiss();
+        toast.error("Error updating profile");
+      }
     } catch (error) {
+      toast.dismiss();
       toast.error("An error occurred while updating the profile.");
     }
   }
 
-  function onPasswordSubmit(data: PasswordFormValues) {
-    toast("Your password has been successfully changed.");
+  async function onPasswordSubmit(data: PasswordFormValues) {
+    toast.loading("Please wait...");
+    try {
+      const response = await axios.patch("/api/editprofile", data);
+      if (response.status === 200) {
+        toast.dismiss();
+        toast.success("Password updated successfully");
+      } else {
+        toast.dismiss();
+        toast.error("An error occurred");
+      }
+    } catch (error) {
+      toast.dismiss();
+      toast.error("An error occurred");
+    }
   }
 
   // Handle avatar image selection with a 500 KB size limit
@@ -125,8 +146,6 @@ export default function ProfileForm() {
       reader.readAsDataURL(file);
     }
   };
-
-  const { isLoading, data } = EditProfileInfo();
 
   useEffect(() => {
     if (data) {
@@ -302,6 +321,7 @@ export default function ProfileForm() {
           </TabsContent>
         </Tabs>
       </CardContent>
+      <ToastContainer autoClose={3000} />
     </Card>
   );
 }
