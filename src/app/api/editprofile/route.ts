@@ -1,5 +1,6 @@
 import storage from "@/utils/firebaseConfig";
 import { PrismaClient } from "@prisma/client";
+import bcrypt from "bcrypt";
 import {
   deleteObject,
   getDownloadURL,
@@ -129,9 +130,34 @@ export async function PATCH(req: NextRequest, res: NextResponse) {
     });
     if (!existingUser)
       return NextResponse.json({ message: "User not found" }, { status: 404 });
-    console.log(existingUser);
-    return new NextResponse("api is working", { status: 200 });
+    // Check if the password is not null before comparing
+    if (existingUser.password === null) {
+      return new NextResponse("User password is null", { status: 500 });
+    }
+
+    const isPasswordValid = await bcrypt.compare(
+      currentPassword,
+      existingUser.password,
+    );
+
+    if (!isPasswordValid) {
+      return new NextResponse("Current password is incorrect", { status: 400 });
+    }
+
+    const hashedNewPassword = await bcrypt.hash(newPassword, 10);
+
+    await prisma.user.update({
+      where: { id: token.sub },
+      data: {
+        password: hashedNewPassword,
+      },
+    });
+
+    return new NextResponse("Password updated successfully");
   } catch (error) {
-    return new NextResponse("Internal server error", { status: 500 });
+    console.error("Error:", error);
+    return new NextResponse("Error updating password", { status: 500 });
+  } finally {
+    prisma.$disconnect();
   }
 }
