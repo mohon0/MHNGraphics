@@ -19,7 +19,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
-import { CameraIcon } from "lucide-react";
+import { CameraIcon, Eye, EyeOff } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast, ToastContainer } from "react-toastify";
@@ -59,6 +59,9 @@ type ProfileFormValues = z.infer<typeof profileFormSchema>;
 type PasswordFormValues = z.infer<typeof passwordFormSchema>;
 
 export default function ProfileForm() {
+  const [showCurrentPassword, setShowCurrentPassword] = useState(false);
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [activeTab, setActiveTab] = useState("profile");
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
   const { isLoading, data, refetch } = EditProfileInfo();
@@ -274,6 +277,7 @@ export default function ProfileForm() {
                 onSubmit={passwordForm.handleSubmit(onPasswordSubmit)}
                 className="space-y-8"
               >
+                {/* Current Password Field */}
                 <FormField
                   control={passwordForm.control}
                   name="currentPassword"
@@ -281,12 +285,28 @@ export default function ProfileForm() {
                     <FormItem>
                       <FormLabel>Current Password</FormLabel>
                       <FormControl>
-                        <Input type="password" {...field} />
+                        <div className="relative">
+                          <Input
+                            type={showCurrentPassword ? "text" : "password"}
+                            {...field}
+                          />
+                          <button
+                            type="button"
+                            onClick={() =>
+                              setShowCurrentPassword(!showCurrentPassword)
+                            }
+                            className="absolute right-3 top-1/2 -translate-y-1/2 transform"
+                          >
+                            {showCurrentPassword ? <EyeOff /> : <Eye />}
+                          </button>
+                        </div>
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
+
+                {/* New Password Field */}
                 <FormField
                   control={passwordForm.control}
                   name="newPassword"
@@ -294,12 +314,26 @@ export default function ProfileForm() {
                     <FormItem>
                       <FormLabel>New Password</FormLabel>
                       <FormControl>
-                        <Input type="password" {...field} />
+                        <div className="relative">
+                          <Input
+                            type={showNewPassword ? "text" : "password"}
+                            {...field}
+                          />
+                          <button
+                            type="button"
+                            onClick={() => setShowNewPassword(!showNewPassword)}
+                            className="absolute right-3 top-1/2 -translate-y-1/2 transform"
+                          >
+                            {showNewPassword ? <EyeOff /> : <Eye />}
+                          </button>
+                        </div>
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
+
+                {/* Confirm Password Field */}
                 <FormField
                   control={passwordForm.control}
                   name="confirmPassword"
@@ -307,12 +341,27 @@ export default function ProfileForm() {
                     <FormItem>
                       <FormLabel>Confirm Password</FormLabel>
                       <FormControl>
-                        <Input type="password" {...field} />
+                        <div className="relative">
+                          <Input
+                            type={showConfirmPassword ? "text" : "password"}
+                            {...field}
+                          />
+                          <button
+                            type="button"
+                            onClick={() =>
+                              setShowConfirmPassword(!showConfirmPassword)
+                            }
+                            className="absolute right-3 top-1/2 -translate-y-1/2 transform"
+                          >
+                            {showConfirmPassword ? <EyeOff /> : <Eye />}
+                          </button>
+                        </div>
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
+
                 <Button type="submit" className="w-full">
                   Change Password
                 </Button>
