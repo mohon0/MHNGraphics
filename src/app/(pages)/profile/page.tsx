@@ -162,6 +162,7 @@ function ProfileContent() {
                 transition={{ duration: 0.5 }}
                 className="space-y-4 rounded-lg bg-secondary p-4"
               >
+                <div>{data.bio}</div>
                 <div className="flex items-center gap-3">
                   <CalendarIcon className="h-5 w-5 text-primary" />
                   <span>
