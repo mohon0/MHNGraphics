@@ -46,6 +46,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       {
         title: "Account",
         url: "#",
+        isActive: true,
         icon: BadgeCheck,
         items: [
           {
@@ -108,7 +109,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     projects: [
       {
         name: "Profile",
-        url: `/profile?id=${session?.user?.id}`,
+        url: `/admin-dashboard/users/page/1`,
         icon: BadgeCheck,
       },
       {
