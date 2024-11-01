@@ -6,6 +6,7 @@ import {
   Map,
   PieChart,
   Settings2,
+  UserRoundSearch,
 } from "lucide-react";
 import * as React from "react";
 
@@ -106,11 +107,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         ],
       },
     ],
-    projects: [
+    Users: [
       {
-        name: "Profile",
+        name: "Users",
         url: `/admin-dashboard/users/page/1`,
-        icon: BadgeCheck,
+        icon: UserRoundSearch,
       },
       {
         name: "Sales & Marketing",
@@ -132,7 +133,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={data.navMain} />
-        <NavProjects projects={data.projects} />
+        <NavProjects projects={data.Users} />
       </SidebarContent>
       <SidebarFooter>
         <NavUser />

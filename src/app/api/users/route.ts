@@ -1,4 +1,7 @@
+import checkIfImageExists from "@/components/helper/image/checkIfImageExists";
 import { Prisma } from "@/components/helper/prisma/Prisma";
+import storage from "@/utils/firebaseConfig";
+import { deleteObject, ref } from "firebase/storage";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
@@ -66,5 +69,61 @@ export async function GET(req: NextRequest) {
       { error: "Internal Server Error" },
       { status: 500 },
     );
+  }
+}
+
+export async function DELETE(req: NextRequest) {
+  try {
+    const url = new URL(req.url);
+    const queryParams = new URLSearchParams(url.search);
+    const id = queryParams.get("id");
+
+    // Validate ID
+    if (!id) {
+      return new NextResponse("User ID is required", { status: 400 });
+    }
+
+    // Retrieve the user by ID
+    const user = await Prisma.user.findUnique({
+      where: { id },
+    });
+
+    // Check if the user exists
+    if (!user) {
+      return new NextResponse("User not found", { status: 404 });
+    }
+
+    // Prevent deletion of admin accounts
+    if (user.status === "ADMIN") {
+      return new NextResponse("Admin accounts cannot be deleted", {
+        status: 403,
+      });
+    }
+
+    // Delete user image from Firebase if it exists
+
+    if (user.image) {
+      if (await checkIfImageExists(user.image)) {
+        const storageRefToDelete = ref(storage, user.image);
+        await deleteObject(storageRefToDelete);
+      }
+    }
+
+    // Begin transaction to delete all associated records
+    await Prisma.$transaction([
+      Prisma.account.deleteMany({ where: { userId: id } }),
+      Prisma.session.deleteMany({ where: { userId: id } }),
+      Prisma.post.deleteMany({ where: { authorId: id } }),
+      Prisma.design.deleteMany({ where: { authorId: id } }),
+      Prisma.comment.deleteMany({ where: { authorId: id } }),
+      Prisma.user.delete({ where: { id } }),
+    ]);
+
+    return new NextResponse("User and associated data deleted successfully", {
+      status: 200,
+    });
+  } catch (error) {
+    console.error("Error deleting user:", error);
+    return new NextResponse("Internal Server Error", { status: 500 });
   }
 }

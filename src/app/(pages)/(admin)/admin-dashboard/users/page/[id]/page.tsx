@@ -26,9 +26,10 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import axios from "axios";
 import Link from "next/link";
 import { useCallback, useState } from "react";
-import { ToastContainer, toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 function DesignMessage({ message }: { message: string }) {
@@ -60,36 +61,22 @@ export default function Design({
   );
 
   const handleDelete = async (id: string) => {
-    const toastId = toast.loading("Deleting design... ⏳");
-
+    toast.loading("Please wait...");
     try {
-      const response = await fetch(`/api/design/single-design?id=${id}`, {
-        method: "DELETE",
-      });
-      if (!response.ok) {
-        throw new Error("Failed to delete the design.");
+      const response = await axios.delete(`/api/users?id=${id}`);
+      if (response.status === 200) {
+        toast.dismiss();
+        toast.success("User deleted successfully");
+        refetch();
+      } else {
+        toast.dismiss();
+        toast.error("Error deleting user");
       }
-
-      toast.update(toastId, {
-        render: "Design deleted successfully! ✅",
-        type: "success",
-        isLoading: false,
-        autoClose: 3000,
-      });
-      refetch();
     } catch (error) {
-      toast.update(toastId, {
-        render: "Failed to delete the design. ❌ Please try again.",
-        type: "error",
-        isLoading: false,
-        autoClose: 3000,
-      });
+      toast.dismiss();
+      toast.error("Error deleting user");
     }
   };
-
-  if (isError) {
-    toast.error("Something went wrong while fetching the designs.");
-  }
 
   return (
     <>
@@ -172,10 +159,10 @@ export default function Design({
                             </DialogTrigger>
                             <DialogContent className="sm:max-w-md">
                               <DialogHeader>
-                                <DialogTitle>Delete Product</DialogTitle>
+                                <DialogTitle>Delete User</DialogTitle>
                                 <DialogDescription>
-                                  Are you sure you want to delete this product?
-                                  This action cannot be undone.
+                                  This action cannot be undone. It will delete
+                                  everything related to this user.
                                 </DialogDescription>
                               </DialogHeader>
                               <DialogFooter>
