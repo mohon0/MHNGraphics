@@ -13,14 +13,15 @@ import img2 from "@/images/hero/2.jpg";
 import img3 from "@/images/hero/3.jpg";
 import { ChevronDown, Search } from "lucide-react";
 import Image, { StaticImageData } from "next/image";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 const imageArray: StaticImageData[] = [img1, img2, img3];
 
 export default function Hero() {
+  const router = useRouter();
   const [searchQuery, setSearchQuery] = useState("");
-  const [searchFilter, setSearchFilter] = useState("All");
+  const [searchFilter, setSearchFilter] = useState("all");
   const [backgroundImage, setBackgroundImage] = useState<StaticImageData>(img1);
   const [isLoading, setIsLoading] = useState(true);
   const pathname = usePathname();
@@ -34,7 +35,12 @@ export default function Hero() {
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Searching for:", searchQuery, "in category:", searchFilter);
+    // Redirect to /search with query parameters
+    router.push(
+      `/search?category=${encodeURIComponent(searchFilter)}&query=${encodeURIComponent(
+        searchQuery,
+      )}&page=1`,
+    );
   };
 
   const filters = ["All", "Photos", "Videos", "Vectors", "Icons"];
