@@ -2,6 +2,7 @@
 
 import ProfileSkeleton from "@/components/common/skeleton/ProfileSkelton";
 import { FetchProfile } from "@/components/fetch/profile/FetchProfile";
+import { createSlug } from "@/components/helper/slug/CreateSlug";
 import { DesignType } from "@/components/interface/DesignType";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
@@ -16,6 +17,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { motion } from "framer-motion";
 import { CalendarIcon, ImageIcon } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useState } from "react"; // Import Suspense
 
@@ -114,35 +116,44 @@ function ProfileContent() {
                       transition={{ duration: 0.3, delay: index * 0.1 }}
                     >
                       <Card className="h-full overflow-hidden transition-transform duration-300 hover:scale-105">
-                        <div className="relative aspect-square">
-                          <Image
-                            src={design.image}
-                            alt={design.name}
-                            layout="fill"
-                            objectFit="cover"
-                            className="transition-transform duration-300 hover:scale-110"
-                            loading="lazy" // Lazy loading for performance
-                          />
-                        </div>
-                        <CardContent className="p-4">
-                          <h3 className="truncate text-lg font-semibold">
-                            {design.name}
-                          </h3>
-                          <p className="mt-1 line-clamp-2 text-sm text-muted-foreground">
-                            {design.description}
-                          </p>
-                          <div className="mt-3 flex flex-wrap gap-2">
-                            {design.tags.slice(0, 3).map((tag, index) => (
-                              <Badge
-                                key={index}
-                                variant="secondary"
-                                className="text-xs"
-                              >
-                                {tag}
-                              </Badge>
-                            ))}
+                        <Link
+                          href={createSlug(
+                            design.category,
+                            design.subcategory,
+                            design.name,
+                            design.createdAt,
+                          )}
+                        >
+                          <div className="relative aspect-square">
+                            <Image
+                              src={design.image}
+                              alt={design.name}
+                              layout="fill"
+                              objectFit="cover"
+                              className="transition-transform duration-300 hover:scale-110"
+                              loading="lazy" // Lazy loading for performance
+                            />
                           </div>
-                        </CardContent>
+                          <CardContent className="p-4">
+                            <h3 className="truncate text-lg font-semibold">
+                              {design.name}
+                            </h3>
+                            <p className="mt-1 line-clamp-2 text-sm text-muted-foreground">
+                              {design.description}
+                            </p>
+                            <div className="mt-3 flex flex-wrap gap-2">
+                              {design.tags.slice(0, 3).map((tag, index) => (
+                                <Badge
+                                  key={index}
+                                  variant="secondary"
+                                  className="text-xs"
+                                >
+                                  {tag}
+                                </Badge>
+                              ))}
+                            </div>
+                          </CardContent>
+                        </Link>
                       </Card>
                     </motion.div>
                   ))}

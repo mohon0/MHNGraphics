@@ -37,7 +37,7 @@ export default function Hero() {
     e.preventDefault();
     // Redirect to /search with query parameters
     router.push(
-      `/search?category=${encodeURIComponent(searchFilter)}&query=${encodeURIComponent(
+      `/design?category=${encodeURIComponent(searchFilter)}&query=${encodeURIComponent(
         searchQuery,
       )}&page=1`,
     );
