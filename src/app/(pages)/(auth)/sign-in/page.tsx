@@ -79,7 +79,7 @@ export default function Login() {
           <Link href="/">
             <Button className="flex items-center gap-2" size="lg">
               <MdOutlineDashboard size={20} />
-              <span>Back to Dashboard</span>
+              <span>Back to Home</span>
             </Button>
           </Link>
         </div>
