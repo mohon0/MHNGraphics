@@ -43,7 +43,7 @@ export default function Hero() {
     );
   };
 
-  const filters = ["All", "Photos", "Videos", "Vectors", "Icons"];
+  const filters = ["All", "Photos", "Videos", "Vectors"];
 
   if (isLoading) {
     return (
@@ -75,8 +75,8 @@ export default function Hero() {
         priority
         className="h-[29.5rem] w-full object-cover brightness-50"
       />
-      <div className="absolute inset-0 flex flex-col items-center justify-center space-y-6 bg-black bg-opacity-40 px-4 md:space-y-8 lg:space-y-10">
-        <div className="text-center">
+      <div className="top absolute inset-0 flex flex-col items-center justify-center space-y-6 bg-black bg-opacity-40 px-4 md:space-y-8 lg:space-y-10">
+        <div className="mt-10 text-center">
           <h1 className="mb-4 text-3xl font-bold text-white drop-shadow-lg sm:text-4xl md:text-5xl">
             Create Great Designs, Faster
           </h1>
@@ -113,7 +113,7 @@ export default function Hero() {
             <div className="relative flex-grow">
               <input
                 type="text"
-                placeholder="Search for images, videos, vectors..."
+                placeholder="Search"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="h-10 w-full pl-4 pr-12 text-gray-800 placeholder-gray-500 focus:outline-none focus:ring-0 sm:h-12"

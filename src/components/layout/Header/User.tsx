@@ -46,9 +46,7 @@ export default function User({ fixed = false }: { fixed?: boolean }) {
                 {session.user.name}
               </MenubarItem>
               <MenubarSeparator />
-              <Link
-                href={`${session.user.role === "ADMIN" ? "/admin-dashboard" : "/dashboard"}`}
-              >
+              <Link href="/dashboard">
                 <MenubarItem>Dashboard</MenubarItem>
               </Link>
               <MenubarItem>Orders</MenubarItem>
