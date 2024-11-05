@@ -1,4 +1,5 @@
 "use client";
+import EditDesignSkeleton from "@/components/common/skeleton/EditDesignSkeleton";
 import {
   NewProductName,
   ProductCategoryAndTags,
@@ -86,7 +87,7 @@ export default function NewDesign() {
   const router = useRouter();
 
   // Handle loading and unauthenticated states
-  if (status === "loading") return <p>Loading...</p>;
+  if (status === "loading") return <EditDesignSkeleton />;
   if (status === "unauthenticated") {
     router.push("/sign-in"); // Redirect to the sign-in page if not authenticated
     return null;

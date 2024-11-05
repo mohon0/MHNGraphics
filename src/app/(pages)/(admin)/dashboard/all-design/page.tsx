@@ -221,7 +221,7 @@ export default function Design({
                               </Link>
                               <div className="flex items-center gap-4 text-sm group-hover:flex lg:hidden">
                                 <Link
-                                  href={`/admin-dashboard/edit-design?id=${item.id}`}
+                                  href={`/dashboard/edit-design?id=${item.id}`}
                                   className="text-primary"
                                 >
                                   Edit
