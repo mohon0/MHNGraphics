@@ -1,9 +1,16 @@
 import { Prisma } from "@/components/helper/prisma/Prisma";
-import { DesignStatus } from "@prisma/client";
+import { getToken } from "next-auth/jwt";
 import { NextRequest, NextResponse } from "next/server";
+
+const secret = process.env.NEXTAUTH_SECRET;
 
 export async function GET(req: NextRequest) {
   try {
+    const token = await getToken({ req, secret });
+
+    if (!token)
+      return NextResponse.json({ message: "Token not found" }, { status: 401 });
+
     const url = new URL(req.url);
     const queryParams = new URLSearchParams(url.search);
 
@@ -17,18 +24,20 @@ export async function GET(req: NextRequest) {
     const skip = (page - 1) * limit;
 
     let whereClause: {
+      authorId?: string | undefined;
       category?: string;
-      status?: DesignStatus;
       name?: {
         contains: string;
         mode: "insensitive";
       };
     } = {};
 
-    whereClause.status = "PUBLISHED";
-
     if (category !== "all") {
       whereClause.category = category;
+    }
+
+    if (token.status !== "ADMIN") {
+      whereClause.authorId = token.sub;
     }
     if (searchQuery) {
       whereClause.name = {

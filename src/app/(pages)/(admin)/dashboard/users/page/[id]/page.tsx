@@ -200,11 +200,11 @@ export default function Design({
         )}
 
         {/* Pagination */}
-        {data?.meta && data.meta.totalPages > 1 && (
+        {/* {data?.meta && data.meta.totalPages > 1 && (
           <div className="mt-8 text-center">
             <PaginationUi totalPages={data.meta.totalPages} />
           </div>
-        )}
+        )} */}
       </div>
       <ToastContainer autoClose={3000} />
     </>

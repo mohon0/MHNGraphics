@@ -26,7 +26,7 @@ export default function Dashboard() {
           <BreadCrumb />
           <div className="flex">
             <main className="w-full">
-              {session?.user?.role === "Admin" ? (
+              {session?.user?.role === "ADMIN" ? (
                 // Admin-specific content
                 <div>
                   <h1>Admin Dashboard</h1>

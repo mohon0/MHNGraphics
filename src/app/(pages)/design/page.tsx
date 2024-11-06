@@ -53,18 +53,17 @@ function SearchPageContent() {
   );
 
   const handleSearch = useCallback(() => {
-    router.push(`/search?category=${category}&query=${searchQuery}&page=1`);
+    router.push(`/design?category=${category}&query=${searchQuery}&page=1`);
   }, [router, category, searchQuery]);
 
   const categoryName = searchParams.get("category") || "All";
   const query = searchParams.get("query") || "";
   const page = parseInt(searchParams.get("page") || "1", 10);
 
-  const { isLoading, data, isError, refetch } = FetchAllDesign({
+  const { isLoading, data, isError } = FetchAllDesign({
     page,
     category: categoryName,
     searchQuery: query,
-    status: "PUBLISHED",
   });
 
   return (
@@ -152,7 +151,12 @@ function SearchPageContent() {
 
         {data?.meta && data.meta.totalPages > 1 && (
           <div className="mt-8 text-center">
-            <PaginationUi totalPages={data.meta.totalPages} />
+            <PaginationUi
+              totalPages={data.meta.totalPages}
+              category={categoryName}
+              currentPage={page}
+              query={query}
+            />
           </div>
         )}
       </div>

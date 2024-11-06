@@ -2,7 +2,7 @@
 import PaginationUi from "@/components/common/pagination/PaginationUi";
 import TableSkeleton from "@/components/common/skeleton/TableSkeleton";
 import { productCategories } from "@/components/data/ProductCategory";
-import { FetchAllDesign } from "@/components/fetch/design/FetchAllDesign";
+import { FetchUserDesign } from "@/components/fetch/design/FetchUserDesign";
 import { convertDateString } from "@/components/helper/date/convertDateString";
 import { createSlug } from "@/components/helper/slug/CreateSlug";
 import { DesignType } from "@/components/interface/DesignType";
@@ -62,7 +62,7 @@ export default function Design({
   const [searchQuery, setSearchQuery] = useState<string>("");
 
   const currentPage = Number(searchParams.page) || 1;
-  const { isLoading, data, isError, refetch } = FetchAllDesign({
+  const { isLoading, data, isError, refetch } = FetchUserDesign({
     page: currentPage,
     category,
     searchQuery,
@@ -306,7 +306,12 @@ export default function Design({
               {/* Pagination */}
               {data?.meta && data.meta.totalPages > 1 && (
                 <div className="mt-8 text-center">
-                  <PaginationUi totalPages={data.meta.totalPages} />
+                  <PaginationUi
+                    totalPages={data.meta.totalPages}
+                    category={category}
+                    currentPage={currentPage}
+                    query={searchQuery}
+                  />
                 </div>
               )}
             </main>

@@ -11,7 +11,7 @@ interface Props {
   searchQuery: string;
 }
 
-export function FetchAllDesign({ page, category, searchQuery }: Props) {
+export function FetchUserDesign({ page, category, searchQuery }: Props) {
   const [debouncedSearchQuery, setDebouncedSearchQuery] = useState(searchQuery);
 
   // Debounce the search query
@@ -26,7 +26,7 @@ export function FetchAllDesign({ page, category, searchQuery }: Props) {
   return useQuery({
     queryKey: ["All Design", page, category, debouncedSearchQuery],
     queryFn: async () => {
-      const response = await axios.get(`/api/design/all-design`, {
+      const response = await axios.get(`/api/design/user-design`, {
         params: {
           page,
           category,

@@ -1,107 +1,127 @@
 "use client";
 
-import {
-  Pagination,
-  PaginationContent,
-  PaginationEllipsis,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from "@/components/ui/pagination";
-import clsx from "clsx";
+import { motion } from "framer-motion";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
 
 interface PaginationUiProps {
   totalPages: number;
+  category: string;
+  query: string;
+  currentPage: number;
 }
 
-export default function PaginationUi({ totalPages }: PaginationUiProps) {
+export default function Component(
+  { totalPages, category, query, currentPage }: PaginationUiProps = {
+    totalPages: 10,
+    category: "",
+    query: "",
+    currentPage: 1,
+  },
+) {
   const pathname = usePathname();
-  const currentPage = Number(pathname.split("/").pop()) || 1;
+  const [mounted, setMounted] = useState(false);
 
-  // Function to create URLs for each page
-  const createPageURL = (pageNumber: number | string) => {
-    return `/design/page/${pageNumber}`;
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const createPageURL = (page: number) => {
+    const url = new URL(pathname, window.location.origin);
+    if (category) url.searchParams.set("category", category);
+    if (query) url.searchParams.set("query", query);
+    url.searchParams.set("page", page.toString());
+    return url.toString();
   };
 
-  // Generate pagination numbers based on the current page and total pages
-  const generatePagination = () => {
-    if (totalPages <= 7) {
-      return Array.from({ length: totalPages }, (_, i) => i + 1);
-    }
-    if (currentPage <= 3) {
-      return [1, 2, 3, 4, "ellipsis", totalPages];
-    }
-    if (currentPage >= totalPages - 2) {
-      return [
-        1,
-        "ellipsis",
-        totalPages - 3,
-        totalPages - 2,
-        totalPages - 1,
-        totalPages,
-      ];
-    }
-    return [
-      1,
-      "ellipsis",
-      currentPage - 1,
-      currentPage,
-      currentPage + 1,
-      "ellipsis",
-      totalPages,
-    ];
-  };
+  const pages = getPaginationPages(currentPage, totalPages);
 
-  const pages = generatePagination();
+  if (!mounted) {
+    return null;
+  }
 
   return (
-    <Pagination>
-      <PaginationContent>
-        {/* Previous Button */}
-        <PaginationItem>
-          <PaginationPrevious
-            href={createPageURL(currentPage - 1)}
-            aria-disabled={currentPage <= 1}
-            className={clsx(
-              currentPage <= 1 && "pointer-events-none opacity-50",
-            )}
-          />
-        </PaginationItem>
-
-        {/* Page Number Buttons */}
-        {pages.map((page, index) => (
-          <PaginationItem key={index}>
-            {page === "ellipsis" ? (
-              <PaginationEllipsis />
-            ) : (
-              <PaginationLink
-                href={createPageURL(page)}
-                isActive={currentPage === page}
-                aria-current={currentPage === page ? "page" : undefined}
-                aria-disabled={currentPage === page}
-                className={clsx(
-                  currentPage === page && "pointer-events-none opacity-50",
-                )}
-              >
-                {page}
-              </PaginationLink>
-            )}
-          </PaginationItem>
-        ))}
-
-        {/* Next Button */}
-        <PaginationItem>
-          <PaginationNext
-            href={createPageURL(currentPage + 1)}
-            aria-disabled={currentPage >= totalPages}
-            className={clsx(
-              currentPage >= totalPages && "pointer-events-none opacity-50",
-            )}
-          />
-        </PaginationItem>
-      </PaginationContent>
-    </Pagination>
+    <nav
+      className="mt-8 flex items-center justify-center space-x-2"
+      aria-label="Pagination"
+    >
+      <Link
+        href={createPageURL(currentPage - 1)}
+        className={`relative inline-flex items-center rounded-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0 ${
+          currentPage <= 1 ? "pointer-events-none opacity-50" : ""
+        }`}
+        aria-disabled={currentPage <= 1}
+      >
+        <span className="sr-only">Previous</span>
+        <ChevronLeft className="h-5 w-5" aria-hidden="true" />
+      </Link>
+      <span className="relative z-10 inline-flex items-center rounded-md bg-gray-100 px-4 py-2 text-sm font-semibold text-gray-500 focus:outline-offset-0">
+        Page {currentPage} of {totalPages}
+      </span>
+      {pages.map((page, index) => (
+        <motion.span
+          key={index}
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+        >
+          {page === "ellipsis" ? (
+            <span className="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-700 ring-1 ring-inset ring-gray-300 focus:outline-offset-0">
+              ...
+            </span>
+          ) : (
+            <Link
+              href={createPageURL(page)}
+              className={`relative inline-flex items-center rounded-md px-4 py-2 text-sm font-semibold focus:z-20 focus:outline-offset-0 ${
+                currentPage === page
+                  ? "z-10 bg-primary text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                  : "text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+              }`}
+              aria-current={currentPage === page ? "page" : undefined}
+            >
+              {page}
+            </Link>
+          )}
+        </motion.span>
+      ))}
+      <Link
+        href={createPageURL(currentPage + 1)}
+        className={`relative inline-flex items-center rounded-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0 ${
+          currentPage >= totalPages ? "pointer-events-none opacity-50" : ""
+        }`}
+        aria-disabled={currentPage >= totalPages}
+      >
+        <span className="sr-only">Next</span>
+        <ChevronRight className="h-5 w-5" aria-hidden="true" />
+      </Link>
+    </nav>
   );
+}
+
+function getPaginationPages(
+  currentPage: number,
+  totalPages: number,
+): (number | "ellipsis")[] {
+  const pages: (number | "ellipsis")[] = [];
+  const maxPagesToShow = 5;
+
+  if (totalPages <= maxPagesToShow) {
+    for (let i = 1; i <= totalPages; i++) {
+      pages.push(i);
+    }
+  } else {
+    const leftEdge = Math.max(1, currentPage - 1);
+    const rightEdge = Math.min(totalPages, currentPage + 1);
+
+    if (leftEdge > 2) pages.push(1, "ellipsis");
+    else for (let i = 1; i < leftEdge; i++) pages.push(i);
+
+    for (let i = leftEdge; i <= rightEdge; i++) pages.push(i);
+
+    if (rightEdge < totalPages - 1) pages.push("ellipsis", totalPages);
+    else for (let i = rightEdge + 1; i <= totalPages; i++) pages.push(i);
+  }
+
+  return pages;
 }
