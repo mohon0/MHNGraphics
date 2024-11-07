@@ -41,15 +41,22 @@ function SearchPageContent() {
     searchParams.get("query") || "",
   );
 
-  const handleFilterChange = useCallback((value: string) => {
-    setCategory(value);
-  }, []);
+  const handleFilterChange = useCallback(
+    (value: string) => {
+      setCategory(value);
+      router.push(`/design?category=${value}&query=${searchQuery}&page=1`);
+    },
+    [router, searchQuery],
+  );
 
   const handleSearchChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
-      setSearchQuery(e.target.value);
+      const newQuery = e.target.value;
+      setSearchQuery(newQuery);
+      // Update URL parameters and trigger fetchDesign with debouncing within it
+      router.push(`/design?category=${category}&query=${newQuery}&page=1`);
     },
-    [],
+    [router, category],
   );
 
   const handleSearch = useCallback(() => {

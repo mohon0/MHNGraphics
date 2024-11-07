@@ -146,10 +146,6 @@ export async function DELETE(req: NextRequest, res: NextResponse) {
       return new NextResponse("You are not authenticated", { status: 401 });
     }
 
-    if (token.status !== "ADMIN") {
-      return new NextResponse("You are not authorized", { status: 403 });
-    }
-
     const url = new URL(req.url);
     const queryParams = new URLSearchParams(url.search);
     const postId = queryParams.get("id");
@@ -165,6 +161,7 @@ export async function DELETE(req: NextRequest, res: NextResponse) {
       },
       select: {
         image: true,
+        authorId: true,
       },
     });
 
@@ -172,8 +169,8 @@ export async function DELETE(req: NextRequest, res: NextResponse) {
       return new NextResponse("Post not found", { status: 404 });
     }
 
-    if (!product) {
-      return new NextResponse("Post not found", { status: 404 });
+    if (token.status !== "ADMIN" || token.sub === product.authorId) {
+      return new NextResponse("You are not authorized", { status: 403 });
     }
 
     if (await checkIfImageExists(product.image)) {

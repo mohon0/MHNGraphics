@@ -1,5 +1,6 @@
 "use client";
 import PaginationUi from "@/components/common/pagination/PaginationUi";
+import DesignSkeleton from "@/components/common/skeleton/DesignSkeleton";
 import TableSkeleton from "@/components/common/skeleton/TableSkeleton";
 import { productCategories } from "@/components/data/ProductCategory";
 import { FetchUserDesign } from "@/components/fetch/design/FetchUserDesign";
@@ -41,7 +42,8 @@ import {
 } from "@/components/ui/table";
 import Image from "next/image";
 import Link from "next/link";
-import { useCallback, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { Suspense, useCallback, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -53,31 +55,54 @@ function DesignMessage({ message }: { message: string }) {
   );
 }
 
-export default function Design({
-  searchParams,
-}: {
-  searchParams: { page?: string };
-}) {
-  const [category, setCategory] = useState<string>("all");
-  const [searchQuery, setSearchQuery] = useState<string>("");
+function Design() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
 
-  const currentPage = Number(searchParams.page) || 1;
-  const { isLoading, data, isError, refetch } = FetchUserDesign({
-    page: currentPage,
-    category,
-    searchQuery,
-  });
+  const [category, setCategory] = useState<string>(
+    searchParams.get("category") || "all",
+  );
+  const [searchQuery, setSearchQuery] = useState<string>(
+    searchParams.get("query") || "",
+  );
 
-  const handleFilterChange = useCallback((value: string) => {
-    setCategory(value);
-  }, []);
+  const handleFilterChange = useCallback(
+    (value: string) => {
+      setCategory(value);
+      router.push(
+        `/dashboard/all-design?category=${value}&query=${searchQuery}&page=1`,
+      );
+    },
+    [router, searchQuery],
+  );
 
   const handleSearchChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
-      setSearchQuery(e.target.value);
+      const newQuery = e.target.value;
+      setSearchQuery(newQuery);
+      // Update URL parameters and trigger fetchDesign with debouncing within it
+      router.push(
+        `/dashboard/all-design?category=${category}&query=${newQuery}&page=1`,
+      );
     },
-    [],
+    [router, category],
   );
+
+  const handleSearch = useCallback(() => {
+    router.push(
+      `/dashboard/all-design?category=${category}&query=${searchQuery}&page=1`,
+    );
+  }, [router, category, searchQuery]);
+
+  const categoryName = searchParams.get("category") || "All";
+  const query = searchParams.get("query") || "";
+  const page = parseInt(searchParams.get("page") || "1", 10);
+
+  const { isLoading, data, isError, refetch } = FetchUserDesign({
+    page,
+    category: categoryName,
+    searchQuery: query,
+  });
 
   const handleDelete = async (id: string) => {
     const toastId = toast.loading("Deleting design... ⏳");
@@ -120,9 +145,9 @@ export default function Design({
           <div className="flex">
             <main className="mx-4 w-full">
               <>
-                <div className="flex flex-col justify-between gap-4 md:flex-row">
+                <div className="mx-auto flex flex-col items-baseline gap-4 md:flex-row md:gap-20">
                   <div className="mt-4 flex gap-4">
-                    <Select onValueChange={handleFilterChange}>
+                    <Select value={category} onValueChange={handleFilterChange}>
                       <SelectTrigger className="w-[180px]">
                         <SelectValue placeholder="Category" />
                       </SelectTrigger>
@@ -143,7 +168,7 @@ export default function Design({
                         </SelectGroup>
                       </SelectContent>
                     </Select>
-                    <Button onClick={() => refetch()} disabled={isLoading}>
+                    <Button onClick={handleSearch} disabled={isLoading}>
                       {isLoading ? "Loading..." : "Filter"}
                     </Button>
                   </div>
@@ -152,10 +177,16 @@ export default function Design({
                       placeholder="Search by name"
                       value={searchQuery}
                       onChange={handleSearchChange}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                          handleSearch();
+                        }
+                      }}
                     />
                     <Button
-                      onClick={() => refetch()}
-                      disabled={searchQuery.length < 3 || isLoading}
+                      onClick={handleSearch}
+                      type="submit"
+                      disabled={isLoading}
                     >
                       {isLoading ? "Loading..." : "Search"}
                     </Button>
@@ -309,7 +340,7 @@ export default function Design({
                   <PaginationUi
                     totalPages={data.meta.totalPages}
                     category={category}
-                    currentPage={currentPage}
+                    currentPage={page}
                     query={searchQuery}
                   />
                 </div>
@@ -321,5 +352,13 @@ export default function Design({
 
       <ToastContainer autoClose={3000} />
     </>
+  );
+}
+
+export default function SearchPage() {
+  return (
+    <Suspense fallback={<DesignSkeleton />}>
+      <Design />
+    </Suspense>
   );
 }

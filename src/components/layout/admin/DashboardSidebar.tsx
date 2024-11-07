@@ -58,7 +58,7 @@ export function DashboardSidebar({
         },
         {
           title: "View All",
-          url: "/dashboard/all-design",
+          url: "dashboard/all-design?category=all&query=&page=1",
         },
       ],
     },
