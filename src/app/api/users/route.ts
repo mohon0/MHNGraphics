@@ -9,8 +9,8 @@ export async function GET(req: NextRequest) {
     const url = new URL(req.url);
     const queryParams = new URLSearchParams(url.search);
 
-    const page = queryParams.get("currentPage")
-      ? parseInt(queryParams.get("currentPage")!, 10)
+    const page = queryParams.get("page")
+      ? parseInt(queryParams.get("page")!, 10)
       : 1;
 
     const searchQuery = queryParams.get("searchQuery") || "";

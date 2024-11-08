@@ -8,7 +8,7 @@ import { useEffect, useState } from "react";
 
 interface PaginationUiProps {
   totalPages: number;
-  category: string;
+  category?: string;
   query: string;
   currentPage: number;
 }

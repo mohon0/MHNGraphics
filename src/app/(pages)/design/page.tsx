@@ -82,7 +82,10 @@ function SearchPageContent() {
           </h1>
           <div className="mx-auto flex flex-col items-baseline gap-4 md:flex-row md:gap-20">
             <div className="mt-4 flex gap-4">
-              <Select onValueChange={handleFilterChange}>
+              <Select
+                defaultValue={category}
+                onValueChange={handleFilterChange}
+              >
                 <SelectTrigger className="w-[180px]">
                   <SelectValue placeholder="Category" />
                 </SelectTrigger>

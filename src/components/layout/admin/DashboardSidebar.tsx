@@ -118,7 +118,7 @@ export function DashboardSidebar({
   const adminProjects = [
     {
       name: "Users",
-      url: `/dashboard/users/page/1`,
+      url: `/dashboard/users?page=1`,
       icon: UserRoundSearch,
     },
     {

@@ -1,4 +1,5 @@
 "use client";
+import PaginationUi from "@/components/common/pagination/PaginationUi";
 import TableSkeleton from "@/components/common/skeleton/TableSkeleton";
 import { FetchAllUser } from "@/components/fetch/users/FetchAllUsers";
 import { convertDateString } from "@/components/helper/date/convertDateString";
@@ -30,7 +31,8 @@ import {
 } from "@/components/ui/table";
 import axios from "axios";
 import Link from "next/link";
-import { useCallback, useState } from "react";
+import { useSearchParams } from "next/navigation";
+import { Suspense, useCallback, useState } from "react";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -42,16 +44,13 @@ function DesignMessage({ message }: { message: string }) {
   );
 }
 
-export default function Users({
-  searchParams,
-}: {
-  searchParams: { page?: string };
-}) {
+function Users() {
   const [searchQuery, setSearchQuery] = useState<string>("");
+  const params = useSearchParams();
+  const page = Number(params.get("page")) || 1;
 
-  const currentPage = Number(searchParams.page) || 1;
   const { isLoading, data, isError, refetch } = FetchAllUser({
-    page: currentPage,
+    page,
     searchQuery,
   });
 
@@ -80,7 +79,6 @@ export default function Users({
     }
   };
 
-  //TODO: use search query instead of catch all route.
   // TODO: add pagination
 
   return (
@@ -228,11 +226,15 @@ export default function Users({
                 )}
 
                 {/* Pagination */}
-                {/* {data?.meta && data.meta.totalPages > 1 && (
-          <div className="mt-8 text-center">
-            <PaginationUi totalPages={data.meta.totalPages} />
-          </div>
-        )} */}
+                {data?.meta && data.meta.totalPages > 1 && (
+                  <div className="mt-8 text-center">
+                    <PaginationUi
+                      totalPages={data.meta.totalPages}
+                      currentPage={page}
+                      query={searchQuery}
+                    />
+                  </div>
+                )}
               </div>
             </main>
           </div>
@@ -240,5 +242,13 @@ export default function Users({
       </SidebarProvider>
       <ToastContainer autoClose={3000} />
     </>
+  );
+}
+
+export default function SearchPage() {
+  return (
+    <Suspense fallback={<TableSkeleton rowCount={10} />}>
+      <Users />
+    </Suspense>
   );
 }
