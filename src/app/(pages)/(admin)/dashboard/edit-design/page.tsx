@@ -214,9 +214,15 @@ function DesignPage() {
 
   if (isLoading) {
     return (
-      <div className="mt-6">
-        <EditDesignSkeleton />;
-      </div>
+      <SidebarProvider>
+        <DashboardSidebar />
+        <main className="w-full">
+          <BreadCrumb />
+          <div>
+            <EditDesignSkeleton />;
+          </div>
+        </main>
+      </SidebarProvider>
     );
   }
 
