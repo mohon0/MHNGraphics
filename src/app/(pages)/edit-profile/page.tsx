@@ -20,6 +20,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
 import { CameraIcon, Eye, EyeOff } from "lucide-react";
+import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast, ToastContainer } from "react-toastify";
@@ -82,6 +83,7 @@ export default function ProfileForm() {
   });
 
   const [avatarSrc, setAvatarSrc] = useState("");
+  const { data: session, update } = useSession();
 
   async function onProfileSubmit(data: ProfileFormValues) {
     const formData = new FormData();
@@ -103,6 +105,14 @@ export default function ProfileForm() {
       if (response.status === 200) {
         toast.dismiss();
         toast.success("Profile updated successfully");
+        console.log(response.data);
+
+        update({
+          user: {
+            name: `${response.data.name}`,
+            image: `${response.data.image}`,
+          },
+        });
         refetch();
       } else {
         toast.dismiss();
@@ -236,6 +246,7 @@ export default function ProfileForm() {
                         <FormControl>
                           <Input
                             readOnly
+                            disabled
                             placeholder="example@example.com"
                             {...field}
                           />

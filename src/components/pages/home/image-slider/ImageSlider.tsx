@@ -31,7 +31,7 @@ export default function ImageMarquee() {
   if (isError) {
     return (
       <section className="my-20 space-y-6">
-        <h2 className="mb-10 text-center text-4xl font-bold text-primary">
+        <h2 className="mb-10 text-center text-4xl font-bold">
           View Design & Sell Content
         </h2>
         <p>There was an error loading the designs. Please try again later.</p>

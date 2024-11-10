@@ -75,6 +75,9 @@ export const authOptions = {
       session?: Session;
     }) {
       if (trigger === "update") {
+        console.log(session);
+        token.name = session?.user?.name;
+        token.picture = session?.user?.image;
         return { ...token, ...session?.user };
       }
       if (user) {
