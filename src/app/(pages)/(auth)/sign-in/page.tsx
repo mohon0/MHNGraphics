@@ -140,7 +140,9 @@ export default function Login() {
                         className="w-full border-gray-300"
                         variant="outline"
                         type="button"
-                        onClick={() => signIn("google")}
+                        onClick={() =>
+                          signIn("google", { prompt: "select_account" })
+                        }
                       >
                         <FcGoogle />
                         Sign in with Google

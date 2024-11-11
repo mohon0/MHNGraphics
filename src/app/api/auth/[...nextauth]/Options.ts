@@ -6,6 +6,7 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
 
 const prisma = new PrismaClient();
+
 interface UserWithRole {
   id: string;
   email: string;
@@ -29,27 +30,19 @@ export const authOptions = {
           throw new Error("Email and password are required.");
         }
         const user = await prisma.user.findUnique({
-          where: {
-            email: credentials.email,
-          },
+          where: { email: credentials.email },
         });
 
-        if (!user) {
-          throw new Error("User not found.");
-        }
-        if (user.emailVerified === null) {
+        if (!user || user.emailVerified === null) {
           throw new Error("User not found.");
         }
 
         if (user.password) {
-          const passwordMatch = await bcrypt.compareSync(
+          const passwordMatch = bcrypt.compareSync(
             credentials.password,
             user.password,
           );
-
-          if (!passwordMatch) {
-            throw new Error("Incorrect password.");
-          }
+          if (!passwordMatch) throw new Error("Incorrect password.");
         }
 
         return user;
@@ -63,6 +56,46 @@ export const authOptions = {
   ],
 
   callbacks: {
+    async signIn({
+      user,
+      account,
+      profile,
+    }: {
+      user: any;
+      account: any;
+      profile: any;
+    }) {
+      if (account.provider === "google") {
+        const existingUser = await prisma.user.findUnique({
+          where: { email: user.email },
+        });
+
+        if (existingUser) {
+          if (!existingUser.googleId) {
+            await prisma.user.update({
+              where: { email: user.email },
+              data: { googleId: profile.id },
+            });
+          }
+          user.id = existingUser.id; // Pass existing user ID for use in jwt
+        } else {
+          const newUser = await prisma.user.create({
+            data: {
+              email: user.email,
+              name: user.name,
+              image: user.image || null,
+              googleId: profile.id,
+              password: null,
+              status: "USER",
+              emailVerified: new Date(),
+            },
+          });
+          user.id = newUser.id; // Pass new user ID for use in jwt
+        }
+      }
+      return true;
+    },
+
     async jwt({
       token,
       user,
@@ -70,37 +103,30 @@ export const authOptions = {
       session,
     }: {
       token: JWT;
-      user?: UserWithRole | undefined;
+      user?: UserWithRole;
       trigger?: any;
       session?: Session;
     }) {
       if (trigger === "update") {
-        console.log(session);
         token.name = session?.user?.name;
         token.picture = session?.user?.image;
         return { ...token, ...session?.user };
       }
+
       if (user) {
-        return Promise.resolve({
-          ...token,
-          ...user,
-        });
+        token.id = user.id; // Set token ID to user ID
+        token.role = user.status; // Set role/status
       }
-      return Promise.resolve(token);
+      return token;
     },
-    session: ({
-      session,
-      token,
-    }: {
-      session: Session;
-      token: string | JWT;
-    }) => {
+
+    async session({ session, token }: { session: Session; token: JWT }) {
       return {
         ...session,
         user: {
           ...session.user,
-          id: typeof token === "string" ? token : token.sub,
-          role: typeof token === "string" ? token : token.status,
+          id: token.id,
+          role: token.role,
         },
       };
     },
@@ -108,8 +134,8 @@ export const authOptions = {
 
   session: {
     strategy: "jwt" as "jwt",
-    maxAge: 60 * 60 * 24 * 7,
-    updateAge: 60 * 60,
+    maxAge: 7 * 24 * 60 * 60, // 7 days
+    updateAge: 24 * 60 * 60, // 1 day
   },
   secret: process.env.NEXTAUTH_SECRET,
   debug: process.env.NODE_ENV === "development",
