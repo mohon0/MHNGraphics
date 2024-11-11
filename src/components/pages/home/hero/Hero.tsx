@@ -129,18 +129,6 @@ export default function Hero() {
             </div>
           </div>
         </form>
-        <div className="flex flex-wrap justify-center gap-2">
-          {filters.map((filter) => (
-            <Button
-              key={filter}
-              variant="ghost"
-              className="text-white hover:bg-white hover:bg-opacity-20 focus:ring-0"
-              onClick={() => setSearchFilter(filter)}
-            >
-              {filter}
-            </Button>
-          ))}
-        </div>
       </div>
     </div>
   );

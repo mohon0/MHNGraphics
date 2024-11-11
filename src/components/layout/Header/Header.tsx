@@ -1,3 +1,4 @@
+import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import DesktopMenu from "./DesktopMenu";
 import MobileMenu from "./MobileMenu";
@@ -35,11 +36,12 @@ export default function Header({ fixed = false }: { fixed?: boolean }) {
         {/* Call to Action & Social Media for Desktop */}
         <div className="hidden items-center gap-4 lg:flex">
           {/* Call to Action Button */}
-          <Link
-            href="/"
-            className={`space-x-2 ${fixed ? "text-white" : "text-black"}`}
-          >
-            Pricing
+          <Link href="/">
+            <Button
+              className={`${fixed ? "border bg-transparent hover:bg-transparent" : "border border-primary bg-secondary text-primary hover:bg-secondary"}`}
+            >
+              Pricing
+            </Button>
           </Link>
           <User fixed={fixed} />
         </div>
