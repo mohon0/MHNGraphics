@@ -38,17 +38,30 @@ export async function GET(req: NextRequest) {
   const id = token.sub;
 
   try {
-    const userInfo = await prisma.user.findUnique({
+    const user = await prisma.user.findUnique({
       where: { id },
-      select: { name: true, email: true, image: true, bio: true },
+      select: {
+        name: true,
+        email: true,
+        image: true,
+        bio: true,
+        password: true,
+      },
     });
 
-    if (!userInfo)
+    if (!user)
       return NextResponse.json({ message: "User not found" }, { status: 404 });
+
+    const userInfo = {
+      name: user.name,
+      email: user.email,
+      image: user.image,
+      bio: user.bio,
+      password: user.password !== null,
+    };
 
     return NextResponse.json(userInfo);
   } catch (error) {
-    console.error("Error retrieving user:", error);
     return NextResponse.json({ message: "Server error" }, { status: 500 });
   }
 }
@@ -155,7 +168,6 @@ export async function PATCH(req: NextRequest, res: NextResponse) {
 
     return new NextResponse("Password updated successfully");
   } catch (error) {
-    console.error("Error:", error);
     return new NextResponse("Error updating password", { status: 500 });
   } finally {
     prisma.$disconnect();

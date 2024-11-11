@@ -182,7 +182,9 @@ export default function ProfileForm() {
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
           <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="profile">Profile</TabsTrigger>
-            <TabsTrigger value="password">Password</TabsTrigger>
+            <TabsTrigger value="password" disabled={!data?.password}>
+              Password
+            </TabsTrigger>
           </TabsList>
           <TabsContent value="profile">
             {isLoading ? (
