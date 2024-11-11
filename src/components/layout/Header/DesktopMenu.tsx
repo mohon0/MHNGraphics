@@ -1,5 +1,6 @@
 "use client";
 
+import { productCategories } from "@/components/data/ProductCategory";
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -76,16 +77,16 @@ export default function DesktopMenu({ fixed = false }: { fixed?: boolean }) {
             Image
           </NavigationMenuTrigger>
           <NavigationMenuContent>
-            <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
-              {components.map((component) => (
-                <ListItem
-                  key={component.title}
-                  title={component.title}
-                  href={component.href}
-                >
-                  {component.description}
-                </ListItem>
-              ))}
+            <ul className="grid w-[400px] gap-3 p-3 md:grid-cols-2">
+              {productCategories
+                .find((category) => category.value === "photos")
+                ?.subcategories?.map((subcategory) => (
+                  <ListItem
+                    key={subcategory.value}
+                    title={subcategory.label}
+                    href={`/design?category=photos&subcategory=${subcategory.value}&query=&page=1`}
+                  />
+                ))}
             </ul>
           </NavigationMenuContent>
         </NavigationMenuItem>
@@ -97,39 +98,20 @@ export default function DesktopMenu({ fixed = false }: { fixed?: boolean }) {
             Icons
           </NavigationMenuTrigger>
           <NavigationMenuContent>
-            <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
-              {components.map((component) => (
-                <ListItem
-                  key={component.title}
-                  title={component.title}
-                  href={component.href}
-                >
-                  {component.description}
-                </ListItem>
-              ))}
+            <ul className="grid w-[400px] gap-3 p-3 md:grid-cols-2">
+              {productCategories
+                .find((category) => category.value === "icons")
+                ?.subcategories?.map((subcategory) => (
+                  <ListItem
+                    key={subcategory.value}
+                    title={subcategory.label}
+                    href={`/design?category=icons&subcategory=${subcategory.value}&query=&page=1`}
+                  />
+                ))}
             </ul>
           </NavigationMenuContent>
         </NavigationMenuItem>
-        <NavigationMenuItem>
-          <NavigationMenuTrigger
-            className={fixed ? "text-white" : "text-black hover:text-black/80"}
-          >
-            Video
-          </NavigationMenuTrigger>
-          <NavigationMenuContent>
-            <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
-              {components.map((component) => (
-                <ListItem
-                  key={component.title}
-                  title={component.title}
-                  href={component.href}
-                >
-                  {component.description}
-                </ListItem>
-              ))}
-            </ul>
-          </NavigationMenuContent>
-        </NavigationMenuItem>
+
         <NavigationMenuItem>
           <NavigationMenuTrigger
             className={fixed ? "text-white" : "text-black hover:text-black/80"}
@@ -137,16 +119,16 @@ export default function DesktopMenu({ fixed = false }: { fixed?: boolean }) {
             Template
           </NavigationMenuTrigger>
           <NavigationMenuContent>
-            <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
-              {components.map((component) => (
-                <ListItem
-                  key={component.title}
-                  title={component.title}
-                  href={component.href}
-                >
-                  {component.description}
-                </ListItem>
-              ))}
+            <ul className="grid w-[400px] gap-3 p-3 md:grid-cols-2">
+              {productCategories
+                .find((category) => category.value === "templates")
+                ?.subcategories?.map((subcategory) => (
+                  <ListItem
+                    key={subcategory.value}
+                    title={subcategory.label}
+                    href={`/design?category=templates&subcategory=${subcategory.value}&query=&page=1`}
+                  />
+                ))}
             </ul>
           </NavigationMenuContent>
         </NavigationMenuItem>
@@ -154,19 +136,19 @@ export default function DesktopMenu({ fixed = false }: { fixed?: boolean }) {
           <NavigationMenuTrigger
             className={fixed ? "text-white" : "text-black hover:text-black/80"}
           >
-            PSD
+            Animation
           </NavigationMenuTrigger>
           <NavigationMenuContent>
-            <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
-              {components.map((component) => (
-                <ListItem
-                  key={component.title}
-                  title={component.title}
-                  href={component.href}
-                >
-                  {component.description}
-                </ListItem>
-              ))}
+            <ul className="grid w-[400px] gap-3 p-3 md:grid-cols-2">
+              {productCategories
+                .find((category) => category.value === "animations")
+                ?.subcategories?.map((subcategory) => (
+                  <ListItem
+                    key={subcategory.value}
+                    title={subcategory.label}
+                    href={`/design?category=animations&subcategory=${subcategory.value}&query=&page=1`}
+                  />
+                ))}
             </ul>
           </NavigationMenuContent>
         </NavigationMenuItem>
@@ -177,16 +159,16 @@ export default function DesktopMenu({ fixed = false }: { fixed?: boolean }) {
             Mockups
           </NavigationMenuTrigger>
           <NavigationMenuContent>
-            <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
-              {components.map((component) => (
-                <ListItem
-                  key={component.title}
-                  title={component.title}
-                  href={component.href}
-                >
-                  {component.description}
-                </ListItem>
-              ))}
+            <ul className="grid w-[400px] gap-3 p-3 md:grid-cols-2">
+              {productCategories
+                .find((category) => category.value === "mockups")
+                ?.subcategories?.map((subcategory) => (
+                  <ListItem
+                    key={subcategory.value}
+                    title={subcategory.label}
+                    href={`/design?category=mockups&subcategory=${subcategory.value}&query=&page=1`}
+                  />
+                ))}
             </ul>
           </NavigationMenuContent>
         </NavigationMenuItem>
@@ -197,44 +179,36 @@ export default function DesktopMenu({ fixed = false }: { fixed?: boolean }) {
             More
           </NavigationMenuTrigger>
           <NavigationMenuContent>
-            <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px]">
-              {components.map((component) => (
-                <ListItem
-                  key={component.title}
-                  title={component.title}
-                  href={component.href}
-                >
-                  {component.description}
-                </ListItem>
-              ))}
+            <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] lg:grid-cols-3">
+              {productCategories
+                .find((category) => category.value === "textures")
+                ?.subcategories?.map((subcategory) => (
+                  <ListItem
+                    key={subcategory.value}
+                    title={subcategory.label}
+                    href={`/design?category=textures&subcategory=${subcategory.value}&query=&page=1`}
+                  />
+                ))}
+              {productCategories
+                .find((category) => category.value === "patterns")
+                ?.subcategories?.map((subcategory) => (
+                  <ListItem
+                    key={subcategory.value}
+                    title={subcategory.label}
+                    href={`/design?category=patterns&subcategory=${subcategory.value}&query=&page=1`}
+                  />
+                ))}
+              {productCategories
+                .find((category) => category.value === "3d-models")
+                ?.subcategories?.map((subcategory) => (
+                  <ListItem
+                    key={subcategory.value}
+                    title={subcategory.label}
+                    href={`/design?category=3d-models&subcategory=${subcategory.value}&query=&page=1`}
+                  />
+                ))}
             </ul>
           </NavigationMenuContent>
-        </NavigationMenuItem>
-        <NavigationMenuItem>
-          <Link href="/docs" legacyBehavior passHref>
-            <NavigationMenuLink
-              className={
-                fixed
-                  ? "pr-1 text-white hover:text-white/80"
-                  : "pr-1 text-black hover:text-black/80"
-              }
-            >
-              Job
-            </NavigationMenuLink>
-          </Link>
-        </NavigationMenuItem>
-        <NavigationMenuItem>
-          <Link href="/docs" legacyBehavior passHref>
-            <NavigationMenuLink
-              className={
-                fixed
-                  ? "pl-2 text-white hover:text-white/80"
-                  : "pl-2 text-black hover:text-black/80"
-              }
-            >
-              Hire Freelancer
-            </NavigationMenuLink>
-          </Link>
         </NavigationMenuItem>
       </NavigationMenuList>
     </NavigationMenu>

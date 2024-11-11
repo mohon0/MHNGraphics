@@ -1,72 +1,192 @@
 "use client";
-import { motion } from "framer-motion";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Separator } from "@/components/ui/separator";
+import {
+  Briefcase,
+  Facebook,
+  Github,
+  Instagram,
+  Linkedin,
+  Send,
+  Twitter,
+} from "lucide-react";
 import Link from "next/link";
-import { FaInstagram } from "react-icons/fa";
-import { FaXTwitter } from "react-icons/fa6";
-import { LuFacebook, LuGithub } from "react-icons/lu";
-import { MdOutlineCopyright } from "react-icons/md";
-import { SlSocialLinkedin } from "react-icons/sl";
-
-// Social Media Links Data
-const socialLinks = [
-  {
-    href: "https://www.facebook.com/www.md.mohon",
-    label: "Facebook",
-    icon: <LuFacebook />,
-  },
-  {
-    href: "https://www.twitter.com/mohongraphics",
-    label: "Twitter",
-    icon: <FaXTwitter />,
-  },
-  {
-    href: "https://www.instagram.com/mohongraphics",
-    label: "Twitter",
-    icon: <FaInstagram />,
-  },
-  {
-    href: "https://linkedin.com/in/mohongraphics",
-    label: "LinkedIn",
-    icon: <SlSocialLinkedin />,
-  },
-  {
-    href: "https://www.github.com/mohon01",
-    label: "GitHub",
-    icon: <LuGithub />,
-  },
-];
 
 export default function Footer() {
-  const date = new Date();
   return (
-    <div className="mx-2 mt-20 flex flex-col items-center justify-center gap-10 py-10 md:mx-10">
-      <hr className="h-1 w-full bg-zinc-900" />
-      <h1 className="text-primary-100 text-center text-4xl font-bold md:text-6xl">
-        MHN Graphics
-      </h1>
-      <div className="flex gap-5 md:gap-20">
-        {socialLinks.map(({ href, label, icon }) => (
-          <motion.div
-            key={href}
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.9 }}
-            className="white-bg dark:dark-bg flex h-12 w-12 items-center justify-center rounded text-muted-foreground hover:text-primary md:h-16 md:w-16"
+    <footer className="bg-gradient-to-tl from-primary/10 via-primary/5 to-background px-4 pb-8 pt-16 sm:px-6 lg:px-8">
+      <div className="container mx-auto">
+        <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-5 lg:gap-12">
+          <div className="flex flex-col items-center text-center lg:col-span-2 lg:items-start lg:text-left">
+            <h2 className="mb-4 text-3xl font-bold text-primary">
+              MHN Graphics
+            </h2>
+            <p className="mb-6 max-w-xs text-muted-foreground">
+              Transforming ideas into visual masterpieces. Your vision, our
+              expertise.
+            </p>
+            <div className="mb-6 flex space-x-4">
+              {[
+                {
+                  icon: Facebook,
+                  label: "Facebook",
+                  href: "https://www.facebook.com/www.md.mohon",
+                },
+                {
+                  icon: Twitter,
+                  label: "Twitter",
+                  href: "https://www.twitter.com/mohongraphics",
+                },
+                {
+                  icon: Instagram,
+                  label: "Instagram",
+                  href: "https://www.instagram.com/mohongraphics",
+                },
+                {
+                  icon: Linkedin,
+                  label: "LinkedIn",
+                  href: "https://linkedin.com/in/mohongraphics",
+                },
+                {
+                  icon: Github,
+                  label: "GitHub",
+                  href: "https://www.github.com/mohon01",
+                },
+              ].map((social) => (
+                <Link
+                  key={social.label}
+                  href={social.href}
+                  aria-label={social.label}
+                  className="text-muted-foreground transition-colors hover:text-primary"
+                >
+                  <social.icon className="h-6 w-6" />
+                </Link>
+              ))}
+            </div>
+            <Button variant="outline">
+              <Briefcase className="mr-2 h-4 w-4" /> Hire Me
+            </Button>
+          </div>
+
+          <div className="grid grid-cols-2 gap-8 sm:grid-cols-3 lg:col-span-3 lg:grid-cols-3">
+            <nav className="space-y-4">
+              <h3 className="text-lg font-semibold">Services</h3>
+              <ul className="space-y-2">
+                {[
+                  "Branding",
+                  "Web Design",
+                  "UI/UX",
+                  "Print Design",
+                  "Motion Graphics",
+                ].map((service) => (
+                  <li key={service}>
+                    <Link
+                      href={`/services/${service.toLowerCase().replace(/\s+/g, "-")}`}
+                      className="text-muted-foreground transition-colors hover:text-primary"
+                    >
+                      {service}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+            <nav className="space-y-4">
+              <h3 className="text-lg font-semibold">Company</h3>
+              <ul className="space-y-2">
+                {["About", "Portfolio", "Careers", "Blog", "Contact"].map(
+                  (item) => (
+                    <li key={item}>
+                      <Link
+                        href={`/${item.toLowerCase()}`}
+                        className="text-muted-foreground transition-colors hover:text-primary"
+                      >
+                        {item}
+                      </Link>
+                    </li>
+                  ),
+                )}
+              </ul>
+            </nav>
+            <nav className="space-y-4">
+              <h3 className="text-lg font-semibold">Jobs</h3>
+              <ul className="space-y-2">
+                {[
+                  "Graphic Designer",
+                  "UI/UX Designer",
+                  "Web Developer",
+                  "Motion Designer",
+                  "Internships",
+                ].map((job) => (
+                  <li key={job}>
+                    <Link
+                      href={`/jobs/${job.toLowerCase().replace(/\s+/g, "-")}`}
+                      className="text-muted-foreground transition-colors hover:text-primary"
+                    >
+                      {job}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+          </div>
+        </div>
+
+        <div className="mt-12 lg:mt-16">
+          <h3 className="mb-4 text-center text-lg font-semibold">
+            Stay Inspired
+          </h3>
+          <p className="mb-4 text-center text-muted-foreground">
+            Join our newsletter for the latest design trends and exclusive
+            offers.
+          </p>
+          <form
+            onSubmit={(e) => e.preventDefault()}
+            className="mx-auto max-w-md"
           >
-            <Link
-              href={href}
-              aria-label={label}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex h-full w-full items-center justify-center"
-            >
-              {icon}
-            </Link>
-          </motion.div>
-        ))}
+            <div className="relative">
+              <Input
+                type="email"
+                placeholder="Enter your email"
+                aria-label="Email for newsletter"
+                className="border-primary/20 bg-background/50 pr-10 backdrop-blur-sm focus:border-primary"
+              />
+              <Button
+                type="submit"
+                size="icon"
+                className="absolute right-0 top-0 aspect-square h-full"
+              >
+                <Send className="h-4 w-4" />
+                <span className="sr-only">Subscribe</span>
+              </Button>
+            </div>
+          </form>
+        </div>
+
+        <Separator className="my-8 bg-primary/20" />
+
+        <div className="flex flex-col items-center justify-between text-sm text-muted-foreground sm:flex-row">
+          <p>
+            © {new Date().getFullYear()} MHN Graphics. All rights reserved.
+          </p>
+          <nav className="mt-4 flex flex-wrap justify-center space-x-4 sm:mt-0 sm:space-x-6">
+            {[
+              "Privacy Policy",
+              "Terms of Service",
+              "Cookie Policy",
+              "Sitemap",
+            ].map((item) => (
+              <Link
+                key={item}
+                href={`/${item.toLowerCase().replace(/\s+/g, "-")}`}
+                className="transition-colors hover:text-primary"
+              >
+                {item}
+              </Link>
+            ))}
+          </nav>
+        </div>
       </div>
-      <p className="mx-auto flex items-center justify-center gap-2 text-center">
-        <MdOutlineCopyright /> {date.getFullYear()} All rights reserved
-      </p>
-    </div>
+    </footer>
   );
 }

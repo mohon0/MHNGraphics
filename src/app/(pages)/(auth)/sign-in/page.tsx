@@ -85,7 +85,7 @@ export default function Login() {
         </div>
       ) : (
         <div className="my-10 flex items-center justify-center">
-          <div className="grid w-11/12 grid-cols-1 justify-around rounded-2xl border shadow-2xl md:w-10/12 md:grid-cols-5 lg:w-8/12">
+          <div className="grid w-11/12 grid-cols-1 justify-around rounded-2xl border shadow-lg md:w-10/12 md:grid-cols-5 lg:w-8/12">
             <div className="col-span-3 bg-secondary md:rounded-l-2xl">
               <section className="my-8 flex flex-col items-center justify-center gap-4">
                 <p className="text-3xl font-bold">Sign In</p>

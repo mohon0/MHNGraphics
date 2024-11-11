@@ -120,7 +120,7 @@ export default function Registration() {
             onSubmit={form.handleSubmit(onSubmit)}
             className="my-10 flex items-center justify-center"
           >
-            <div className="grid w-11/12 grid-cols-1 justify-around rounded-2xl border shadow-2xl md:grid-cols-5 lg:w-8/12">
+            <div className="grid w-11/12 grid-cols-1 justify-around rounded-2xl border shadow-lg md:grid-cols-5 lg:w-8/12">
               <div className="col-span-3 bg-muted p-4 md:rounded-l-2xl">
                 <section className="flex flex-col items-center justify-center md:my-8">
                   <h1 className="text-center text-xl font-bold underline md:text-3xl">
