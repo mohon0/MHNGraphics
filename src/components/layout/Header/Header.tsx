@@ -36,7 +36,7 @@ export default function Header({ fixed = false }: { fixed?: boolean }) {
         {/* Call to Action & Social Media for Desktop */}
         <div className="hidden items-center gap-4 lg:flex">
           {/* Call to Action Button */}
-          <Link href="/">
+          <Link href="/company/pricing">
             <Button
               className={`${fixed ? "border bg-transparent hover:bg-transparent" : "border border-primary bg-secondary text-primary hover:bg-secondary"}`}
             >
