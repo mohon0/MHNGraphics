@@ -30,6 +30,7 @@ export default function Team() {
               delay: 3000,
             }),
           ]}
+          className="group"
         >
           <CarouselContent>
             {TeamData.map((slider) => (
@@ -51,8 +52,14 @@ export default function Team() {
               </CarouselItem>
             ))}
           </CarouselContent>
-          <CarouselPrevious />
-          <CarouselNext />
+          <CarouselPrevious
+            variant="default"
+            className="ml-12 translate-x-10 opacity-0 transition-all duration-300 group-hover:translate-x-0 group-hover:opacity-100"
+          />
+          <CarouselNext
+            variant="default"
+            className="mr-12 -translate-x-10 opacity-0 transition-all duration-300 group-hover:translate-x-0 group-hover:opacity-100"
+          />
         </Carousel>
       </div>
     </div>

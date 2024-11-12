@@ -1,19 +1,63 @@
 "use client";
 import { Button } from "@/components/ui/button";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormMessage,
+} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
-import {
-  Briefcase,
-  Facebook,
-  Github,
-  Instagram,
-  Linkedin,
-  Send,
-  Twitter,
-} from "lucide-react";
+import { zodResolver } from "@hookform/resolvers/zod";
+import axios from "axios";
+import { Briefcase, Send } from "lucide-react";
 import Link from "next/link";
+import { useForm } from "react-hook-form";
+import {
+  FaFacebook,
+  FaGithub,
+  FaInstagram,
+  FaLinkedin,
+  FaTwitter,
+} from "react-icons/fa";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { z } from "zod";
+
+const FormSchema = z.object({
+  email: z.string().email(),
+});
 
 export default function Footer() {
+  const form = useForm<z.infer<typeof FormSchema>>({
+    resolver: zodResolver(FormSchema),
+    defaultValues: {
+      email: "",
+    },
+  });
+
+  async function onSubmit(data: z.infer<typeof FormSchema>) {
+    toast.loading("Please wait...");
+    try {
+      const response = await axios.post("/api/dashboard/subscribe", {
+        email: data.email,
+      });
+      toast.dismiss();
+
+      if (response.status === 200) {
+        toast.dismiss();
+        toast.success("Successfully subscribed!");
+        form.reset();
+      } else if (response.status === 409) {
+        toast.dismiss();
+        toast.info("Email already in use");
+      }
+    } catch (error: any) {
+      toast.dismiss();
+      toast.error(`${error.response.data.message}`);
+    }
+  }
   return (
     <footer className="bg-gradient-to-tl from-primary/10 via-primary/5 to-background px-4 pb-8 pt-16 sm:px-6 lg:px-8">
       <div className="container mx-auto">
@@ -29,27 +73,27 @@ export default function Footer() {
             <div className="mb-6 flex space-x-4">
               {[
                 {
-                  icon: Facebook,
+                  icon: FaFacebook,
                   label: "Facebook",
                   href: "https://www.facebook.com/www.md.mohon",
                 },
                 {
-                  icon: Twitter,
+                  icon: FaTwitter,
                   label: "Twitter",
                   href: "https://www.twitter.com/mohongraphics",
                 },
                 {
-                  icon: Instagram,
+                  icon: FaInstagram,
                   label: "Instagram",
                   href: "https://www.instagram.com/mohongraphics",
                 },
                 {
-                  icon: Linkedin,
+                  icon: FaLinkedin,
                   label: "LinkedIn",
                   href: "https://linkedin.com/in/mohongraphics",
                 },
                 {
-                  icon: Github,
+                  icon: FaGithub,
                   label: "GitHub",
                   href: "https://www.github.com/mohon01",
                 },
@@ -57,6 +101,7 @@ export default function Footer() {
                 <Link
                   key={social.label}
                   href={social.href}
+                  target="_blank"
                   aria-label={social.label}
                   className="text-muted-foreground transition-colors hover:text-primary"
                 >
@@ -64,7 +109,7 @@ export default function Footer() {
                 </Link>
               ))}
             </div>
-            <Button variant="outline">
+            <Button>
               <Briefcase className="mr-2 h-4 w-4" /> Hire Me
             </Button>
           </div>
@@ -140,27 +185,36 @@ export default function Footer() {
             Join our newsletter for the latest design trends and exclusive
             offers.
           </p>
-          <form
-            onSubmit={(e) => e.preventDefault()}
-            className="mx-auto max-w-md"
-          >
-            <div className="relative">
-              <Input
-                type="email"
-                placeholder="Enter your email"
-                aria-label="Email for newsletter"
-                className="border-primary/20 bg-background/50 pr-10 backdrop-blur-sm focus:border-primary"
-              />
-              <Button
-                type="submit"
-                size="icon"
-                className="absolute right-0 top-0 aspect-square h-full"
-              >
-                <Send className="h-4 w-4" />
-                <span className="sr-only">Subscribe</span>
-              </Button>
-            </div>
-          </form>
+          <Form {...form}>
+            <form
+              onSubmit={form.handleSubmit(onSubmit)}
+              className="mx-auto max-w-md"
+            >
+              <div className="mx-auto flex w-full justify-center gap-4">
+                <FormField
+                  control={form.control}
+                  name="email"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormControl>
+                        <Input
+                          placeholder="Email Address"
+                          aria-label="Email for newsletter"
+                          className="border-primary/20 bg-background/50 pr-10 backdrop-blur-sm focus:border-primary md:min-w-80"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <Button type="submit" size="icon">
+                  <Send className="h-4 w-4" />
+                  <span className="sr-only">Subscribe</span>
+                </Button>
+              </div>
+            </form>
+          </Form>
         </div>
 
         <Separator className="my-8 bg-primary/20" />
@@ -187,6 +241,7 @@ export default function Footer() {
           </nav>
         </div>
       </div>
+      <ToastContainer autoClose={3000} />
     </footer>
   );
 }

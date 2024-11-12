@@ -95,8 +95,14 @@ export function Slider() {
             </CarouselItem>
           ))}
         </CarouselContent>
-        <CarouselPrevious />
-        <CarouselNext />
+        <CarouselPrevious
+          variant="default"
+          className="translate-x-10 scale-125 transition-all duration-300 group-hover:translate-x-0 group-hover:opacity-100"
+        />
+        <CarouselNext
+          variant="default"
+          className="-translate-x-10 scale-125 transition-all duration-300 group-hover:translate-x-0 group-hover:opacity-100"
+        />
       </Carousel>
     </div>
   );

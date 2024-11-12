@@ -15,7 +15,7 @@ export default function Testimonials() {
   return (
     <div className="mx-3 my-16 md:mx-10 lg:mx-auto lg:max-w-7xl">
       <div className="text-center">
-        <p className="text-4xl font-bold lg:text-6xl">Testimonials</p>
+        <p className="text-4xl font-bold">What Our Client Say</p>
       </div>
 
       <div className="relative lg:mx-20">
@@ -43,7 +43,7 @@ export default function Testimonials() {
           <div className="absolute right-40 top-20 scale-150">
             <CarouselPrevious />
           </div>
-          <div className="absolute right-10 top-20 scale-150">
+          <div className="absolute right-28 top-20 scale-150">
             <CarouselNext />
           </div>
         </Carousel>

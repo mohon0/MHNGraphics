@@ -8,6 +8,8 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Check } from "lucide-react";
+import Testimonials from "../../about/Testimonials";
+import FAQSection from "./faq";
 
 export default function PricingPage() {
   const tiers = [
@@ -82,7 +84,7 @@ export default function PricingPage() {
         "Great value and quality! The Starter Pack helped me establish a professional look for my freelance business.",
     },
   ];
-
+  // TODO: Add frequently asked questions
   return (
     <div className="bg-background py-10">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
@@ -146,41 +148,10 @@ export default function PricingPage() {
         </div>
 
         {/* FAQ Section */}
-        <div className="mx-auto mt-24 max-w-4xl text-center">
-          <h2 className="text-3xl font-bold text-primary">
-            Frequently Asked Questions
-          </h2>
-          <div className="mt-8 space-y-8 text-left">
-            {faqs.map((faq) => (
-              <div key={faq.question}>
-                <h3 className="text-xl font-semibold text-primary">
-                  {faq.question}
-                </h3>
-                <p className="mt-2 text-muted-foreground">{faq.answer}</p>
-              </div>
-            ))}
-          </div>
-        </div>
+        <FAQSection />
 
         {/* Testimonials Section */}
-        <div className="mx-auto mt-24 max-w-4xl text-center">
-          <h2 className="text-3xl font-bold text-primary">
-            What Our Clients Say
-          </h2>
-          <div className="mt-8 grid gap-8 sm:grid-cols-1 md:grid-cols-2">
-            {testimonials.map((testimonial) => (
-              <div
-                key={testimonial.name}
-                className="rounded-lg border p-6 shadow-md"
-              >
-                <p className="text-lg font-medium">“{testimonial.feedback}”</p>
-                <div className="mt-4 text-sm font-semibold text-primary">
-                  {testimonial.name}, {testimonial.title}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
+        <Testimonials />
 
         {/* Contact CTA Section */}
         <div className="mt-24 text-center">
@@ -194,9 +165,7 @@ export default function PricingPage() {
             Reach out, and we&apos;ll craft a design package to meet your unique
             needs.
           </p>
-          <Button className="mt-6" variant="outline">
-            Contact our sales team
-          </Button>
+          <Button className="mt-6">Contact our sales team</Button>
         </div>
       </div>
     </div>

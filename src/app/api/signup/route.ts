@@ -1,5 +1,7 @@
 import generateCode from "@/components/helper/mail/GenerateCode";
-import sendVerificationEmail from "@/components/helper/mail/SendMail";
+import sendVerificationEmail, {
+  sendRegistrationEmail,
+} from "@/components/helper/mail/SendMail";
 import { Prisma } from "@/components/helper/prisma/Prisma";
 import bcrypt from "bcrypt";
 import { NextRequest, NextResponse } from "next/server";
@@ -65,7 +67,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
         data: {
           name,
           email,
-          status: "SUBSCRIBER",
+          status: "USER",
           password: hashedPassword,
           emailVerified: null,
           verificationCode: null,
@@ -96,7 +98,6 @@ export async function POST(req: NextRequest, res: NextResponse) {
       );
     }
   } catch (error) {
-    console.error("Error:", error);
     return new NextResponse("Internal server error", { status: 500 });
   } finally {
     await Prisma.$disconnect();
@@ -124,7 +125,7 @@ export async function PUT(req: NextRequest, res: NextResponse) {
     if (user.verificationCode === verificationCode) {
       // Update user status or perform any other verification logic
 
-      await Prisma.user.update({
+      const response = await Prisma.user.update({
         where: {
           id: userId,
         },
@@ -134,6 +135,28 @@ export async function PUT(req: NextRequest, res: NextResponse) {
         },
       });
 
+      // Check if the email is already subscribed
+      const existingSubscriber = await Prisma.subscriber.findUnique({
+        where: { email: response.email },
+      });
+
+      if (!existingSubscriber) {
+        // Save the email in the database
+        const subscriber = await Prisma.subscriber.create({
+          data: { email: response.email },
+        });
+      }
+
+      // Send welcome email
+      try {
+        await sendRegistrationEmail(response.email);
+      } catch (emailError) {
+        console.error("Failed to send welcome email:", emailError);
+        return NextResponse.json(
+          { message: "Registration successful, but email could not be sent." },
+          { status: 202 }, // Accepted with issue
+        );
+      }
       return new NextResponse("User verified successfully", { status: 200 });
     } else {
       return new NextResponse("Invalid verification code", { status: 400 });

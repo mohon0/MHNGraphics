@@ -14,7 +14,7 @@ export const TestimonialData = [
     title: "Full Stack Web Development",
     duration: "via Fiverr - Mar 4, 2024 - Aug 2, 2024",
     description:
-      "He created a stunning blog for me, exceeding all expectations. His communication is excellent, and he is always eager to ensure you're fully satisfied. A well-deserved 5 stars! If you're considering hiring him for your NextJs website, you won’t be disappointed. Keep up the great work, Sejar Parvez!",
+      "MHN Graphics' branding expertise helped us stand out in a crowded market. From logo design to marketing materials, every piece was thoughtfully crafted. They truly understand how to create impactful visual identities.",
   },
   {
     id: 2,
@@ -25,7 +25,7 @@ export const TestimonialData = [
     title: "E-commerce Website Development",
     duration: "via Upwork - Feb 1, 2024 - May 15, 2024",
     description:
-      "A true professional! Delivered our e-commerce platform ahead of schedule. The seamless integration of payment gateways and user experience was top-notch.",
+      "The print designs MHN Graphics created for our international conference were outstanding. From banners to brochures, the consistency and quality of the materials impressed all attendees. Highly recommended for event branding!",
   },
   {
     id: 3,
@@ -36,7 +36,7 @@ export const TestimonialData = [
     title: "Custom CRM System",
     duration: "via Direct Contract - Jan 10, 2024 - Jul 20, 2024",
     description:
-      "Fantastic job on our custom CRM system! The workflow automation and intuitive UI have greatly improved our efficiency. Looking forward to more collaborations.",
+      "The motion graphics created by MHN Graphics for our ad campaign were simply stunning. They brought our vision to life with their exceptional creativity and technical skills. The results exceeded our expectations.",
   },
   {
     id: 4,
@@ -47,7 +47,7 @@ export const TestimonialData = [
     title: "Website Redesign and SEO",
     duration: "via Fiverr - Apr 5, 2024 - Jun 30, 2024",
     description:
-      "Great experience working on our website redesign. The new layout is modern, and the SEO improvements have significantly boosted our traffic.",
+      "Working with MHN Graphics was a game-changer for our website. The UI/UX design they delivered increased our conversion rates significantly. Their team was responsive and professional throughout the project.",
   },
   {
     id: 5,
@@ -58,6 +58,6 @@ export const TestimonialData = [
     title: "SaaS Application Development",
     duration: "via Upwork - May 1, 2024 - Aug 31, 2024",
     description:
-      "Excellent work on our SaaS platform. The application is scalable and easy to manage. Communication was clear, and all milestones were met on time.",
+      "MHN Graphics transformed our brand identity completely. Their creativity and attention to detail exceeded our expectations. The new logo and visual elements perfectly capture our company's spirit.",
   },
 ];
