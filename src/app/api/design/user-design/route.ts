@@ -36,7 +36,7 @@ export async function GET(req: NextRequest) {
       whereClause.category = category;
     }
 
-    if (token.status !== "ADMIN") {
+    if (token.role !== "ADMIN") {
       whereClause.authorId = token.sub;
     }
     if (searchQuery) {

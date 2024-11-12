@@ -22,9 +22,9 @@ import { ChevronLeft } from "lucide-react";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import { useForm } from "react-hook-form";
-import { ToastContainer, toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 
 export default function NewDesign() {
   const [image, setImage] = useState<File | null>(null);
@@ -42,6 +42,16 @@ export default function NewDesign() {
     },
   });
 
+  const { status, data: session } = useSession();
+  const router = useRouter();
+
+  // Enhanced form reset function
+  const resetForm = () => {
+    form.reset();
+    if (image) setImage(null);
+    if (warning) setWarning("");
+  };
+
   async function onSubmit(data: NewProductFormSchemaType) {
     if (!image) {
       setWarning("Please upload an image.");
@@ -54,49 +64,41 @@ export default function NewDesign() {
         formData.append(key, value.toString());
       }
     });
-
     formData.append("image", image);
 
-    toast.loading("Please wait...");
+    toast.loading("Uploading, please wait...");
     try {
       const response = await axios.post("/api/design/single-design", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
+        headers: { "Content-Type": "multipart/form-data" },
       });
 
-      if (response.status !== 200) {
-        toast.dismiss();
-        toast.error("Failed to create design");
-        setWarning("Failed to submit the form");
-      } else {
+      if (response.status === 200) {
         toast.dismiss();
         toast.success("Design successfully added");
-        form.reset();
-        setImage(null);
-        setWarning("");
+        resetForm();
+      } else {
+        toast.error("Failed to add design");
+        throw new Error("Failed to create design");
       }
-    } catch (error) {
+    } catch (error: unknown) {
       toast.dismiss();
-      toast.error("Failed to submit the form");
-      setWarning("An error occurred while submitting the form");
+      toast.error("Failed to add design");
     }
   }
-
-  const { status, data: session } = useSession();
-  const router = useRouter();
 
   // Handle loading and unauthenticated states
   if (status === "loading") return <EditDesignSkeleton />;
   if (status === "unauthenticated") {
-    router.push("/sign-in"); // Redirect to the sign-in page if not authenticated
+    router.push("/sign-in");
     return null;
   }
 
   return (
     <>
       <SidebarProvider>
-        <DashboardSidebar />
+        <Suspense fallback={<EditDesignSkeleton />}>
+          <DashboardSidebar />
+        </Suspense>
         <main className="w-full">
           <BreadCrumb />
           <div className="flex">
@@ -126,11 +128,7 @@ export default function NewDesign() {
                               <Button
                                 variant="outline"
                                 type="button"
-                                onClick={() => {
-                                  form.reset();
-                                  setImage(null);
-                                  setWarning("");
-                                }}
+                                onClick={resetForm}
                               >
                                 Discard
                               </Button>
@@ -160,11 +158,7 @@ export default function NewDesign() {
                           variant="outline"
                           type="button"
                           size="sm"
-                          onClick={() => {
-                            form.reset();
-                            setImage(null);
-                            setWarning("");
-                          }}
+                          onClick={resetForm}
                         >
                           Discard
                         </Button>
@@ -179,7 +173,9 @@ export default function NewDesign() {
               </Form>
             </main>
           </div>
-          <Footer />
+          <Suspense fallback={<div>Loading footer...</div>}>
+            <Footer />
+          </Suspense>
         </main>
       </SidebarProvider>
     </>

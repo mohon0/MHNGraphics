@@ -1,16 +1,13 @@
 import checkIfImageExists from "@/components/helper/image/checkIfImageExists";
 import { Prisma } from "@/components/helper/prisma/Prisma";
 import { SlugToText } from "@/components/helper/slug/SlugToText";
+import cloudinary from "@/utils/cloudinary";
 import storage from "@/utils/firebaseConfig";
 import { DesignStatus } from "@prisma/client";
-import {
-  deleteObject,
-  getDownloadURL,
-  ref,
-  uploadBytes,
-} from "firebase/storage";
+import { deleteObject, ref } from "firebase/storage";
 import { getToken } from "next-auth/jwt";
 import { NextRequest, NextResponse } from "next/server";
+import { Readable } from "stream";
 
 // Helper function to extract string value from formData
 function getStringValue(formData: FormData, key: string): string {
@@ -18,13 +15,33 @@ function getStringValue(formData: FormData, key: string): string {
   return typeof value === "string" ? value : "";
 }
 
-// Function to upload image to Firebase and return download URL
-async function uploadImage(image: Blob, path: string): Promise<string> {
+// Function to upload image to Cloudinary and return URL
+async function uploadImageToCloudinary(
+  image: Blob,
+  folder: string,
+): Promise<string> {
   const filename = `${Date.now()}_${(image as File).name.replaceAll(" ", "_")}`;
-  const storageRef = ref(storage, `${path}${filename}`);
   const buffer = Buffer.from(await image.arrayBuffer());
-  await uploadBytes(storageRef, buffer);
-  return getDownloadURL(storageRef);
+
+  const result = await new Promise<string>((resolve, reject) => {
+    const uploadStream = cloudinary.uploader.upload_stream(
+      { folder, public_id: filename },
+      (error, result) => {
+        if (error) {
+          console.error("Cloudinary upload error:", error); // Log error
+          reject(error);
+        } else {
+          console.log("Cloudinary upload success:", result); // Log success result
+          resolve(result?.secure_url || "");
+        }
+      },
+    );
+
+    // Convert the buffer to a readable stream and pipe it into the Cloudinary upload stream
+    Readable.from(buffer).pipe(uploadStream);
+  });
+
+  return result;
 }
 
 const secret = process.env.NEXTAUTH_SECRET;
@@ -35,6 +52,9 @@ export async function POST(req: NextRequest) {
     const authorId = token?.sub;
 
     if (!token || !authorId) {
+      console.error(
+        "Authorization error: User not logged in or authorId missing",
+      );
       return new NextResponse("User not logged in or authorId missing", {
         status: 401,
       });
@@ -59,8 +79,8 @@ export async function POST(req: NextRequest) {
     const imageFile = formData.get("image") as Blob;
     let imageUrl = "";
     if (imageFile) {
-      // Upload the image and get the URL
-      imageUrl = await uploadImage(imageFile, "designs/");
+      // Upload the image to Cloudinary and get the URL
+      imageUrl = await uploadImageToCloudinary(imageFile, "designs/");
     }
 
     // Insert data into the database using Prisma
@@ -83,6 +103,7 @@ export async function POST(req: NextRequest) {
       design,
     });
   } catch (error) {
+    console.error("POST request error:", error); // Log the error for debugging
     return new NextResponse("Internal Server Error", { status: 500 });
   }
 }
@@ -169,7 +190,7 @@ export async function DELETE(req: NextRequest, res: NextResponse) {
       return new NextResponse("Post not found", { status: 404 });
     }
 
-    if (token.status !== "ADMIN" || token.sub === product.authorId) {
+    if (token.role !== "ADMIN" && token.sub !== product.authorId) {
       return new NextResponse("You are not authorized", { status: 403 });
     }
 
@@ -185,6 +206,7 @@ export async function DELETE(req: NextRequest, res: NextResponse) {
 
     return new NextResponse("Product deleted successfully", { status: 200 });
   } catch (error) {
+    console.log(error);
     return new NextResponse("Internal server error", { status: 500 });
   }
 }
