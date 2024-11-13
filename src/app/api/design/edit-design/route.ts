@@ -1,27 +1,14 @@
-import checkIfImageExists from "@/components/helper/image/checkIfImageExists";
+import { UploadImage } from "@/components/helper/image/UploadImage";
 import { Prisma } from "@/components/helper/prisma/Prisma";
-import storage from "@/utils/firebaseConfig";
+import cloudinary from "@/utils/cloudinary";
 import { DesignStatus } from "@prisma/client";
-import {
-  deleteObject,
-  getDownloadURL,
-  ref,
-  uploadBytes,
-} from "firebase/storage";
+
 import { NextRequest, NextResponse } from "next/server";
 
 // Helper function to get string value from form data
 function getStringValue(formData: FormData, key: string): string {
   const value = formData.get(key);
   return typeof value === "string" ? value : "";
-}
-
-// Function to upload image to Firebase and return download URL
-async function uploadImage(image: Blob, path: string): Promise<string> {
-  const filename = `${Date.now()}_${(image as File).name.replace(/\s+/g, "_")}`;
-  const storageRef = ref(storage, `${path}${filename}`);
-  await uploadBytes(storageRef, image);
-  return getDownloadURL(storageRef);
 }
 
 export async function GET(req: NextRequest, res: NextResponse) {
@@ -43,7 +30,7 @@ export async function GET(req: NextRequest, res: NextResponse) {
   }
 }
 
-export async function PATCH(req: NextRequest, res: NextResponse) {
+export async function PATCH(req: NextRequest) {
   try {
     const formData = await req.formData();
     const designId = getStringValue(formData, "productId");
@@ -56,23 +43,14 @@ export async function PATCH(req: NextRequest, res: NextResponse) {
     const description = getStringValue(formData, "description");
     const category = getStringValue(formData, "category");
     const subcategory = getStringValue(formData, "subcategory");
-    const status = getStringValue(formData, "status") as DesignStatus; // Cast to `DesignStatus` enum type
+    const status = getStringValue(formData, "status") as DesignStatus;
     const tags = getStringValue(formData, "tags")
       .split(",")
       .map((tag) => tag.trim());
     const deletedImage = getStringValue(formData, "deletedImage");
     const imageFile = formData.get("image") as Blob;
 
-    let imageUrl = "";
-    if (imageFile) {
-      imageUrl = await uploadImage(imageFile, "designs/");
-    }
-
-    if (deletedImage && (await checkIfImageExists(deletedImage))) {
-      const storageRefToDelete = ref(storage, deletedImage);
-      await deleteObject(storageRefToDelete);
-    }
-
+    // Check if the design exists
     const currentDesign = await Prisma.design.findUnique({
       where: { id: designId },
     });
@@ -80,23 +58,46 @@ export async function PATCH(req: NextRequest, res: NextResponse) {
       return new NextResponse("Design not found", { status: 404 });
     }
 
+    // Handle image deletion if flagged
+    if (deletedImage && currentDesign.imageId) {
+      const deleteResult = await cloudinary.uploader.destroy(
+        currentDesign.imageId,
+      );
+      if (deleteResult.result !== "ok") {
+        return new NextResponse("Error deleting image", { status: 400 });
+      }
+    }
+
+    // Upload new image if provided
+    let imageUrl = { secure_url: "", public_id: "" };
+    if (imageFile) {
+      imageUrl = await UploadImage(imageFile, "designs/");
+    }
+
     // Construct partial update data
-    const updatedData = {
-      name,
-      description,
-      category,
-      subcategory,
-      status,
-      tags,
-      ...(imageUrl && { image: imageUrl }), // Only include `image` if `imageUrl` exists
+    const updatedData: any = {
+      ...(name && { name }),
+      ...(description && { description }),
+      ...(category && { category }),
+      ...(subcategory && { subcategory }),
+      ...(status && { status }),
+      ...(tags.length > 0 && { tags }),
+      ...(imageUrl.secure_url && {
+        image: imageUrl.secure_url,
+        imageId: imageUrl.public_id,
+      }),
     };
 
-    await Prisma.design.update({
+    // Perform the update operation
+    const updatedDesign = await Prisma.design.update({
       where: { id: designId },
       data: updatedData,
     });
 
-    return new NextResponse("Design updated successfully", { status: 200 });
+    return NextResponse.json({
+      message: "Design updated successfully",
+      design: updatedDesign,
+    });
   } catch (error) {
     return new NextResponse("Internal Server Error", { status: 500 });
   }

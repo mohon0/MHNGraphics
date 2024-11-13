@@ -169,7 +169,6 @@ export async function DELETE(req: NextRequest, res: NextResponse) {
     if (product.imageId) {
       const result = await cloudinary.uploader.destroy(product.imageId);
       if (result.result !== "ok") {
-        console.log("Failed to delete image from Cloudinary:", result);
         return new NextResponse("error", { status: 400 });
       }
     }
