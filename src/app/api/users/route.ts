@@ -1,7 +1,5 @@
-import checkIfImageExists from "@/components/helper/image/checkIfImageExists";
 import { Prisma } from "@/components/helper/prisma/Prisma";
-import storage from "@/utils/firebaseConfig";
-import { deleteObject, ref } from "firebase/storage";
+import cloudinary from "@/utils/cloudinary";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(req: NextRequest) {
@@ -102,10 +100,10 @@ export async function DELETE(req: NextRequest) {
 
     // Delete user image from Firebase if it exists
 
-    if (user.image) {
-      if (await checkIfImageExists(user.image)) {
-        const storageRefToDelete = ref(storage, user.image);
-        await deleteObject(storageRefToDelete);
+    if (user.imageId) {
+      const result = await cloudinary.uploader.destroy(user.imageId);
+      if (result.result !== "ok") {
+        return new NextResponse("error", { status: 400 });
       }
     }
 

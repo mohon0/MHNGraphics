@@ -60,6 +60,7 @@ model User {
   googleId         String?
   bio              String?
   image            String?
+  imageId          String?
   verificationCode String?
   createdAt        DateTime    @default(now())
   status           UserStatus  @default(USER)

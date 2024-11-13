@@ -84,7 +84,7 @@ export default function PricingPage() {
         "Great value and quality! The Starter Pack helped me establish a professional look for my freelance business.",
     },
   ];
-  // TODO: Add frequently asked questions
+
   return (
     <div className="bg-background py-10">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">

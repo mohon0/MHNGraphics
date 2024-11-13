@@ -1,33 +1,13 @@
-import storage from "@/utils/firebaseConfig";
+import { UploadImage } from "@/components/helper/image/UploadImage";
+import cloudinary from "@/utils/cloudinary";
 import { PrismaClient } from "@prisma/client";
 import bcrypt from "bcrypt";
-import {
-  deleteObject,
-  getDownloadURL,
-  getMetadata,
-  ref,
-  uploadBytes,
-} from "firebase/storage";
+
 import { getToken } from "next-auth/jwt";
 import { NextRequest, NextResponse } from "next/server";
 
 const prisma = new PrismaClient();
 const secret = process.env.NEXTAUTH_SECRET;
-
-// Function to check if an image exists in Firebase Storage
-async function checkIfImageExists(imagePath: string | undefined) {
-  if (!imagePath) return false;
-  const storageRef = ref(storage, imagePath);
-
-  try {
-    const metadata = await getMetadata(storageRef);
-    return metadata.size > 0;
-  } catch (error) {
-    if ((error as any).code === "storage/object-not-found") return false;
-    console.error("Error checking image existence:", error);
-    throw error;
-  }
-}
 
 export async function GET(req: NextRequest) {
   const token = await getToken({ req, secret });
@@ -90,32 +70,36 @@ export async function PUT(req: NextRequest) {
     if (!existingUser)
       return NextResponse.json({ message: "User not found" }, { status: 404 });
 
+    let imageUrl = { secure_url: "", public_id: "" };
+
     // Only check for image existence and deletion if a new image is provided
     if (coverImageBlob instanceof File) {
       // If there's a new image, check if there's an existing one to delete
-      if (existingUser.image) {
-        const imageExists = await checkIfImageExists(existingUser.image);
-        if (imageExists) {
-          await deleteObject(ref(storage, existingUser.image));
+      if (existingUser.imageId) {
+        const result = await cloudinary.uploader.destroy(existingUser.imageId);
+        if (result.result !== "ok") {
+          return new NextResponse("error", { status: 400 });
         }
       }
 
-      // Upload the new image
-      const buffer = Buffer.from(await coverImageBlob.arrayBuffer());
-      const filename = `${Date.now()}_${encodeURIComponent(coverImageBlob.name.replace(/\s+/g, "_"))}`;
-      const storageRef = ref(storage, `profile/${filename}`);
-      await uploadBytes(storageRef, buffer);
-      existingUser.image = await getDownloadURL(storageRef);
+      // Upload the image to Cloudinary and get the URL
+      imageUrl = await UploadImage(coverImageBlob, "profile/");
     }
 
     // Update user info with new image URL if provided
     const updatedUser = await prisma.user.update({
       where: { id: token.sub },
-      data: { name, bio, image: existingUser.image || undefined },
+      data: {
+        name,
+        bio,
+        image: imageUrl.secure_url || existingUser.image, // Use the new image if uploaded, otherwise keep existing
+        imageId: imageUrl.public_id || existingUser.imageId, // Update imageId if a new image is uploaded
+      },
     });
 
     return NextResponse.json(updatedUser);
   } catch (error) {
+    console.log(error);
     return NextResponse.json(
       { message: "Error updating user" },
       { status: 500 },

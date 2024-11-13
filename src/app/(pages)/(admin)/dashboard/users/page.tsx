@@ -79,7 +79,7 @@ function Users() {
     }
   };
 
-  // TODO: add pagination
+
 
   return (
     <>
