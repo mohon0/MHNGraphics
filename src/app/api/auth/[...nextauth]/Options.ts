@@ -77,7 +77,8 @@ export const authOptions = {
               data: { googleId: profile.id },
             });
           }
-          user.id = existingUser.id; // Pass existing user ID for use in jwt
+          user.id = existingUser.id;
+          user.status = existingUser.status; // Ensure role/status is available for existing user
         } else {
           const newUser = await prisma.user.create({
             data: {
@@ -86,11 +87,12 @@ export const authOptions = {
               image: user.image || null,
               googleId: profile.id,
               password: null,
-              status: "USER",
+              status: "USER", // Default role for new users
               emailVerified: new Date(),
             },
           });
-          user.id = newUser.id; // Pass new user ID for use in jwt
+          user.id = newUser.id;
+          user.status = newUser.status; // Ensure role/status is set for new user
         }
       }
       return true;
@@ -107,15 +109,9 @@ export const authOptions = {
       trigger?: any;
       session?: Session;
     }) {
-      if (trigger === "update") {
-        token.name = session?.user?.name;
-        token.picture = session?.user?.image;
-        return { ...token, ...session?.user };
-      }
-
       if (user) {
-        token.id = user.id; // Set token ID to user ID
-        token.role = user.status; // Set role/status
+        token.id = user.id;
+        token.role = user.status; // Ensure role/status is set in the token
       }
       return token;
     },
@@ -126,7 +122,7 @@ export const authOptions = {
         user: {
           ...session.user,
           id: token.id,
-          role: token.role,
+          role: token.role, // Set role in the session from token
         },
       };
     },
