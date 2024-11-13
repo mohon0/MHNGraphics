@@ -109,6 +109,7 @@ model Design {
   category    String
   subcategory String
   image       String
+  imageId     String?
   tags        String[]
   createdAt   DateTime      @default(now())
   updatedAt   DateTime      @updatedAt
