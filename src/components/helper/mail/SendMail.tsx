@@ -63,7 +63,7 @@ export async function sendWelcomeEmail(email: string) {
   });
 
   const mailData = {
-    from: process.env.SMTP_SENDER,
+    from: `"MHN Graphics" <${process.env.SMTP_SENDER}>`,
     to: email,
     subject: "🎉 Welcome to MHN Graphics! Let’s Get Started!",
     text: `Thank you for subscribing to MHN Graphics! We're thrilled to have you with us. Stay tuned for updates, resources, and more!`,
@@ -133,7 +133,7 @@ export async function sendRegistrationEmail(email: string) {
   });
 
   const mailData = {
-    from: process.env.SMTP_SENDER,
+    from: `"MHN Graphics" <${process.env.SMTP_SENDER}>`,
     to: email,
     subject: "🎉 Welcome to MHN Graphics! Let’s Get Started!",
     text: `Thank you for joining MHN Graphics! We're thrilled to have you with us. Stay tuned for updates, resources, and more!`,

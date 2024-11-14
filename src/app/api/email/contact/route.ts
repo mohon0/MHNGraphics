@@ -26,7 +26,7 @@ export async function POST(req: NextRequest) {
     });
 
     const mailOptions = {
-      from: process.env.SMTP_SENDER,
+      from: `"MHN Graphics" <${process.env.SMTP_SENDER}>`,
       to: "contact@freelancermohon.com",
       subject: "New Contact Form Submission",
       html: `
