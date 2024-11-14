@@ -3,11 +3,10 @@ import { productCategories } from "@/components/data/ProductCategory";
 import { FetchSingleDesignById } from "@/components/fetch/design/FetchSingleDesign";
 import { NewProductName } from "@/components/form/formField/NewDesignFormField";
 import { Suspense } from "react";
-
 import EditDesignSkeleton from "@/components/common/skeleton/EditDesignSkeleton";
 import EditDesignImage from "@/components/form/formField/EditDesignFormField";
 import {
-  NewProductFormSchema,
+  NewDesignFormSchema,
   NewProductFormSchemaType,
 } from "@/components/form/formSchema/FormSchema";
 import BreadCrumb from "@/components/layout/admin/BreadCrumb";
@@ -75,15 +74,14 @@ function DesignPage() {
 
   const searchParams = useSearchParams();
   const id = searchParams.get("id") || "";
-  const { isLoading, refetch, data, isError } = FetchSingleDesignById(id);
+  const { isLoading, data, isError } = FetchSingleDesignById(id);
   const router = useRouter();
 
   const form = useForm<NewProductFormSchemaType>({
-    resolver: zodResolver(NewProductFormSchema),
+    resolver: zodResolver(NewDesignFormSchema),
     defaultValues: {
       name: "",
       description: "",
-      status: "",
       category: "",
       subcategory: "",
       tags: [],
@@ -97,7 +95,6 @@ function DesignPage() {
       form.reset({
         name: data.name || "",
         description: data.description || "",
-        status: data.status || "",
         category: data.category || "",
         subcategory: data.subcategory || "",
         tags: data.tags || [],
@@ -421,42 +418,6 @@ function DesignPage() {
                               </Card>
                             </div>
                             <div className="grid auto-rows-max items-start gap-4 lg:gap-8">
-                              <FormField
-                                control={form.control}
-                                name="status"
-                                render={({ field }) => (
-                                  <Card x-chunk="dashboard-07-chunk-3">
-                                    <CardHeader>
-                                      <CardTitle>Design Status</CardTitle>
-                                    </CardHeader>
-                                    <CardContent>
-                                      <FormItem>
-                                        <FormLabel className="flex">
-                                          <span>Design Status</span>
-                                          <CgAsterisk color="red" />
-                                        </FormLabel>
-                                        <Select
-                                          onValueChange={field.onChange}
-                                          defaultValue={data?.status}
-                                        >
-                                          <SelectTrigger>
-                                            <SelectValue placeholder="Select a status" />
-                                          </SelectTrigger>
-                                          <SelectContent>
-                                            <SelectItem value="DRAFT">
-                                              DRAFT
-                                            </SelectItem>
-                                            <SelectItem value="PUBLISHED">
-                                              PUBLISHED
-                                            </SelectItem>
-                                          </SelectContent>
-                                        </Select>
-                                        <FormMessage />
-                                      </FormItem>
-                                    </CardContent>
-                                  </Card>
-                                )}
-                              />
                               <EditDesignImage
                                 image={initialImage}
                                 newImage={newImage}

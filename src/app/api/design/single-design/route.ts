@@ -2,30 +2,53 @@ import { UploadImage } from "@/components/helper/image/UploadImage";
 import { Prisma } from "@/components/helper/prisma/Prisma";
 import { SlugToText } from "@/components/helper/slug/SlugToText";
 import cloudinary from "@/utils/cloudinary";
-import { DesignStatus } from "@prisma/client";
+import { Session } from "next-auth";
 import { getToken } from "next-auth/jwt";
+import { getServerSession } from "next-auth/next";
 import { NextRequest, NextResponse } from "next/server";
+import { authOptions } from "../../auth/[...nextauth]/Options";
 
 // Helper function to extract string value from formData
 function getStringValue(formData: FormData, key: string): string {
   const value = formData.get(key);
   return typeof value === "string" ? value : "";
 }
-
+interface CustomSession extends Session {
+  user: {
+    name: string;
+    email: string;
+    image: string;
+    id: string;
+    role: string; // Add any other roles you may have
+  };
+}
 const secret = process.env.NEXTAUTH_SECRET;
 
-export async function POST(req: NextRequest) {
+export async function POST(req: NextRequest, res: NextResponse) {
   try {
-    const token = await getToken({ req, secret });
-    const authorId = token?.sub;
+    const session = (await getServerSession(authOptions)) as CustomSession;
 
-    if (!token || !authorId) {
-      console.error(
-        "Authorization error: User not logged in or authorId missing",
-      );
+    if (!session) {
       return new NextResponse("User not logged in or authorId missing", {
         status: 401,
       });
+    }
+
+    const authorId = session.user.id;
+    const authorStatus = session.user.role;
+
+    // Declare the status variable outside of the if-else block
+    let status: "PUBLISHED" | "PENDING";
+
+    // Conditionally set the value of status
+    if (
+      authorStatus === "ADMIN" ||
+      authorStatus === "AUTHOR" ||
+      authorStatus === "MODERATOR"
+    ) {
+      status = "PUBLISHED";
+    } else {
+      status = "PENDING";
     }
 
     const formData = await req.formData();
@@ -34,7 +57,6 @@ export async function POST(req: NextRequest) {
     const description = getStringValue(formData, "description");
     const category = getStringValue(formData, "category");
     const subcategory = getStringValue(formData, "subcategory");
-    const status = getStringValue(formData, "status") as DesignStatus;
 
     const tags =
       formData
@@ -59,8 +81,8 @@ export async function POST(req: NextRequest) {
         description,
         category,
         subcategory,
-        status,
         tags,
+        status,
         image: imageUrl.secure_url,
         imageId: imageUrl.public_id,
         authorId,

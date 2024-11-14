@@ -4,10 +4,9 @@ import {
   NewProductName,
   ProductCategoryAndTags,
   ProductImage,
-  ProductStatus,
 } from "@/components/form/formField/NewDesignFormField";
 import {
-  NewProductFormSchema,
+  NewDesignFormSchema,
   NewProductFormSchemaType,
 } from "@/components/form/formSchema/FormSchema";
 import BreadCrumb from "@/components/layout/admin/BreadCrumb";
@@ -31,18 +30,17 @@ export default function NewDesign() {
   const [warning, setWarning] = useState<string>("");
 
   const form = useForm<NewProductFormSchemaType>({
-    resolver: zodResolver(NewProductFormSchema),
+    resolver: zodResolver(NewDesignFormSchema),
     defaultValues: {
       name: "",
       description: "",
-      status: "",
       category: "",
       subcategory: "",
       tags: [],
     },
   });
 
-  const { status, data: session } = useSession();
+  const { status } = useSession();
   const router = useRouter();
 
   // Enhanced form reset function
@@ -143,7 +141,6 @@ export default function NewDesign() {
                               <ProductCategoryAndTags />
                             </div>
                             <div className="grid auto-rows-max items-start gap-4 lg:gap-8">
-                              <ProductStatus />
                               <ProductImage
                                 image={image}
                                 setImage={setImage}

@@ -9,20 +9,16 @@ generator client {
 
 enum UserStatus {
   USER
+  AUTHOR
+  MODERATOR
   ADMIN
-  SUBSCRIBER
 }
 
 enum DesignStatus {
-  DRAFT
   PUBLISHED
   PENDING
 }
 
-enum PostStatus {
-  PUBLISHED
-  DRAFT
-}
 
 model Account {
   id                String  @id @default(auto()) @map("_id") @db.ObjectId
@@ -66,42 +62,12 @@ model User {
   status           UserStatus  @default(USER)
   accounts         Account[]
   sessions         Session[]
-  posts            Post[]
   design           Design[]
-  comments         Comment[]
 }
 
-model Post {
-  id              String     @id @default(auto()) @map("_id") @db.ObjectId
-  title           String
-  slug            String
-  excerpt         String
-  metaDescription String
-  tags            String[]
-  content         String
-  category        String
-  image           String
-  comments        Comment[]
-  status          PostStatus @default(DRAFT)
-  createdAt       DateTime   @default(now())
-  updatedAt       DateTime   @updatedAt
-  authorId        String     @db.ObjectId
-  author          User       @relation(fields: [authorId], references: [id], onDelete: Cascade)
 
-  @@index([slug])
-  @@index([category])
-}
 
-model Comment {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  content   String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  authorId  String   @db.ObjectId
-  postId    String   @db.ObjectId
-  author    User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
-  post      Post     @relation(fields: [postId], references: [id])
-}
+
 
 model Design {
   id          String        @id @default(auto()) @map("_id") @db.ObjectId
@@ -114,7 +80,7 @@ model Design {
   tags        String[]
   createdAt   DateTime      @default(now())
   updatedAt   DateTime      @updatedAt
-  status      DesignStatus @default(DRAFT)
+  status      DesignStatus @default(PENDING)
   authorId    String        @db.ObjectId
   author      User          @relation(fields: [authorId], references: [id], onDelete: Cascade)
 

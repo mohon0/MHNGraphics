@@ -111,9 +111,7 @@ export async function DELETE(req: NextRequest) {
     await Prisma.$transaction([
       Prisma.account.deleteMany({ where: { userId: id } }),
       Prisma.session.deleteMany({ where: { userId: id } }),
-      Prisma.post.deleteMany({ where: { authorId: id } }),
       Prisma.design.deleteMany({ where: { authorId: id } }),
-      Prisma.comment.deleteMany({ where: { authorId: id } }),
       Prisma.user.delete({ where: { id } }),
     ]);
 

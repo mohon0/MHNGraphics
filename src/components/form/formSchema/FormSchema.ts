@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const NewProductFormSchema = z.object({
+export const NewDesignFormSchema = z.object({
   name: z
     .string()
     .min(10, "Name must be at least 10 characters")
@@ -11,10 +11,9 @@ export const NewProductFormSchema = z.object({
       "Name should not contain special characters like - _ +",
     ),
   description: z.string().trim(),
-  status: z.string().min(1, "Status is required").max(100),
   category: z.string().min(1, "Required"),
   subcategory: z.string().min(1, "Required"),
   tags: z.array(z.string()),
 });
 
-export type NewProductFormSchemaType = z.infer<typeof NewProductFormSchema>;
+export type NewProductFormSchemaType = z.infer<typeof NewDesignFormSchema>;

@@ -1,7 +1,6 @@
 import { UploadImage } from "@/components/helper/image/UploadImage";
 import { Prisma } from "@/components/helper/prisma/Prisma";
 import cloudinary from "@/utils/cloudinary";
-import { DesignStatus } from "@prisma/client";
 
 import { NextRequest, NextResponse } from "next/server";
 
@@ -25,7 +24,6 @@ export async function GET(req: NextRequest, res: NextResponse) {
 
     return new NextResponse(JSON.stringify(design), { status: 200 });
   } catch (error) {
-    console.error("Error in GET:", error);
     return new NextResponse("Internal Server Error", { status: 500 });
   }
 }
@@ -43,7 +41,6 @@ export async function PATCH(req: NextRequest) {
     const description = getStringValue(formData, "description");
     const category = getStringValue(formData, "category");
     const subcategory = getStringValue(formData, "subcategory");
-    const status = getStringValue(formData, "status") as DesignStatus;
     const tags = getStringValue(formData, "tags")
       .split(",")
       .map((tag) => tag.trim());
@@ -80,7 +77,6 @@ export async function PATCH(req: NextRequest) {
       ...(description && { description }),
       ...(category && { category }),
       ...(subcategory && { subcategory }),
-      ...(status && { status }),
       ...(tags.length > 0 && { tags }),
       ...(imageUrl.secure_url && {
         image: imageUrl.secure_url,

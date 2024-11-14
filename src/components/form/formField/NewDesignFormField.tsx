@@ -71,57 +71,12 @@ export const NewProductName: React.FC = () => {
                   <span>Description</span>
                 </FormLabel>
                 <FormControl>
-                  <Textarea
-                    placeholder="SEO description"
-                    className="min-h-40"
-                    {...field}
-                  />
+                  <Textarea placeholder="SEO description" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
             )}
           />
-        </div>
-      </CardContent>
-    </Card>
-  );
-};
-
-export const ProductStatus: React.FC = () => {
-  const { control } = useFormContext<NewProductFormSchemaType>();
-  return (
-    <Card x-chunk="dashboard-07-chunk-3">
-      <CardHeader>
-        <CardTitle>Design Status</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <div className="grid gap-6">
-          <div className="grid gap-3">
-            <FormField
-              control={control}
-              name="status"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="flex">
-                    <span>Design Status</span>
-                    <CgAsterisk color="red" />
-                  </FormLabel>
-                  <Select onValueChange={field.onChange} value={field.value}>
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Design Status" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      <SelectItem value="DRAFT">Draft</SelectItem>
-                      <SelectItem value="PUBLISHED">Publish</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
         </div>
       </CardContent>
     </Card>
