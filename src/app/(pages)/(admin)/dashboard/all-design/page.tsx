@@ -40,6 +40,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import axios from "axios";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -136,6 +137,26 @@ function Design() {
     toast.error("Something went wrong while fetching the designs.");
   }
 
+  const handleStatusChange = async (id: string, newStatus: string) => {
+    toast.loading("Please wait...");
+    try {
+      const response = await axios.patch(`/api/design/single-design?id=${id}`, {
+        status: newStatus,
+      });
+      if (response.status === 200) {
+        toast.dismiss();
+        toast.success("Design updated successfully");
+        refetch();
+      } else {
+        toast.dismiss();
+        toast.error("Failed to update design");
+      }
+    } catch (error) {
+      toast.dismiss();
+      toast.error("Failed to update the design");
+    }
+  };
+
   return (
     <>
       <SidebarProvider>
@@ -207,7 +228,7 @@ function Design() {
                     <TableHeader className="w-full bg-secondary">
                       <TableRow className="w-full border-t">
                         <TableHead className="text-left">Design</TableHead>
-                        <TableHead>Name</TableHead>
+                        <TableHead className="w-80">Name</TableHead>
                         <TableHead>Category</TableHead>
                         <TableHead>Status</TableHead>
                         <TableHead>Author</TableHead>
@@ -318,7 +339,36 @@ function Design() {
                             {item.category}
                           </TableCell>
                           <TableCell className="align-top">
-                            {item.status}
+                            <Select
+                              defaultValue={item.status}
+                              onValueChange={(value) =>
+                                handleStatusChange(item.id, value)
+                              }
+                            >
+                              <SelectTrigger
+                                className={`w-[120px] ${
+                                  item.status === "PUBLISHED"
+                                    ? "text-green-600"
+                                    : "text-yellow-600"
+                                }`}
+                              >
+                                <SelectValue placeholder="Status" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem
+                                  value="PUBLISHED"
+                                  className="text-green-600 hover:text-green-600"
+                                >
+                                  Published
+                                </SelectItem>
+                                <SelectItem
+                                  value="PENDING"
+                                  className="text-yellow-600 hover:text-yellow-600"
+                                >
+                                  Pending
+                                </SelectItem>
+                              </SelectContent>
+                            </Select>
                           </TableCell>
                           <TableCell className="align-top">
                             {item.author.name}

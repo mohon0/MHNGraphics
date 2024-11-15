@@ -206,3 +206,44 @@ export async function DELETE(req: NextRequest, res: NextResponse) {
     return new NextResponse("Internal server error", { status: 500 });
   }
 }
+
+export async function PATCH(req: NextRequest, res: NextResponse) {
+  // Get session
+  const session = (await getServerSession(authOptions)) as CustomSession;
+
+  // Check if user is logged in
+  if (!session) {
+    return new NextResponse("User not logged in", { status: 401 });
+  }
+
+  // Extract authorId and role
+  const { id: authorId, role: authorRole } = session.user;
+
+  // Allow only if user is an Administrator or an Author
+  if (authorRole !== "ADMIN" && authorRole !== "AUTHOR") {
+    return new NextResponse("Access denied", { status: 403 });
+  }
+  try {
+    const url = new URL(req.url);
+    const queryParams = new URLSearchParams(url.search);
+    const postId = queryParams.get("id");
+    const data = await req.json();
+    if (!postId || !data.status) {
+      return new NextResponse("Post ID or status not found", { status: 400 });
+    }
+    const update = await Prisma.design.update({
+      where: {
+        id: postId,
+      },
+      data: {
+        status: data.status,
+      },
+    });
+    if (!update) {
+      return new NextResponse("Failed to update", { status: 400 });
+    }
+    return new NextResponse("Updated design", { status: 200 });
+  } catch (error) {
+    return new NextResponse("Internal server error", { status: 500 });
+  }
+}
