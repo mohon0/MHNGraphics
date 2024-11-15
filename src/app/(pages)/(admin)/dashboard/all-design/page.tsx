@@ -41,6 +41,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import axios from "axios";
+import { useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -98,6 +99,7 @@ function Design() {
   const categoryName = searchParams.get("category") || "All";
   const query = searchParams.get("query") || "";
   const page = parseInt(searchParams.get("page") || "1", 10);
+  const { data: session } = useSession();
 
   const { isLoading, data, isError, refetch } = FetchUserDesign({
     page,
@@ -339,36 +341,40 @@ function Design() {
                             {item.category}
                           </TableCell>
                           <TableCell className="align-top">
-                            <Select
-                              defaultValue={item.status}
-                              onValueChange={(value) =>
-                                handleStatusChange(item.id, value)
-                              }
-                            >
-                              <SelectTrigger
-                                className={`w-[120px] ${
-                                  item.status === "PUBLISHED"
-                                    ? "text-green-600"
-                                    : "text-yellow-600"
-                                }`}
+                            {session?.user?.role === "ADMIN" ? (
+                              <Select
+                                defaultValue={item.status}
+                                onValueChange={(value) =>
+                                  handleStatusChange(item.id, value)
+                                }
                               >
-                                <SelectValue placeholder="Status" />
-                              </SelectTrigger>
-                              <SelectContent>
-                                <SelectItem
-                                  value="PUBLISHED"
-                                  className="text-green-600 hover:text-green-600"
+                                <SelectTrigger
+                                  className={`w-[120px] ${
+                                    item.status === "PUBLISHED"
+                                      ? "text-green-600"
+                                      : "text-yellow-600"
+                                  }`}
                                 >
-                                  Published
-                                </SelectItem>
-                                <SelectItem
-                                  value="PENDING"
-                                  className="text-yellow-600 hover:text-yellow-600"
-                                >
-                                  Pending
-                                </SelectItem>
-                              </SelectContent>
-                            </Select>
+                                  <SelectValue placeholder="Status" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  <SelectItem
+                                    value="PUBLISHED"
+                                    className="text-green-600 hover:text-green-600"
+                                  >
+                                    Published
+                                  </SelectItem>
+                                  <SelectItem
+                                    value="PENDING"
+                                    className="text-yellow-600 hover:text-yellow-600"
+                                  >
+                                    Pending
+                                  </SelectItem>
+                                </SelectContent>
+                              </Select>
+                            ) : (
+                              <p>{item.status}</p>
+                            )}
                           </TableCell>
                           <TableCell className="align-top">
                             {item.author.name}
