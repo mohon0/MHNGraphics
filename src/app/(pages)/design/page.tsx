@@ -146,14 +146,22 @@ function SearchPageContent() {
                 key={item.id}
                 className="image-container py-2"
               >
-                <Image
-                  src={item.image}
-                  alt={item.name}
-                  className="h-full w-full object-cover py-2"
-                  width={500}
-                  height={500}
-                  loading="lazy"
-                />
+                <div className="group relative">
+                  <Image
+                    src={item.image}
+                    alt={item.name}
+                    className="h-full w-full object-cover py-2 transition-all duration-300 group-hover:brightness-50"
+                    width={500}
+                    height={500}
+                    loading="lazy"
+                  />
+
+                  <div className="absolute bottom-6 left-2 right-2 text-white opacity-0 transition-opacity group-hover:opacity-100">
+                    <h3 className="line-clamp-1 text-sm font-semibold">
+                      {item.name}
+                    </h3>
+                  </div>
+                </div>
               </Link>
             ))}
           </div>

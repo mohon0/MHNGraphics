@@ -19,6 +19,13 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import {
@@ -79,7 +86,25 @@ function Users() {
     }
   };
 
-
+  const handleStatusChange = async (id: string, newStatus: string) => {
+    toast.loading("Please wait...");
+    try {
+      const response = await axios.patch(`/api/profile?id=${id}`, {
+        status: newStatus,
+      });
+      if (response.status === 200) {
+        toast.dismiss();
+        toast.success("User updated successfully");
+        refetch();
+      } else {
+        toast.dismiss();
+        toast.error("Failed to update user");
+      }
+    } catch (error) {
+      toast.dismiss();
+      toast.error("Failed to update the user");
+    }
+  };
 
   return (
     <>
@@ -124,7 +149,7 @@ function Users() {
                       <TableHeader className="w-full bg-secondary">
                         <TableRow className="w-full border-t">
                           <TableHead className="text-left">Design</TableHead>
-                          <TableHead>Name</TableHead>
+                          <TableHead className="min-w-60">Name</TableHead>
                           <TableHead>Email</TableHead>
                           <TableHead>Status</TableHead>
                           <TableHead className="max-w-20 text-right">
@@ -212,7 +237,26 @@ function Users() {
                               {item.email}
                             </TableCell>
                             <TableCell className="align-top">
-                              {item.status}
+                              {item.status === "ADMIN" ? (
+                                "ADMIN"
+                              ) : (
+                                <Select
+                                  defaultValue={item.status}
+                                  onValueChange={(value) =>
+                                    handleStatusChange(item.id, value)
+                                  }
+                                >
+                                  <SelectTrigger>
+                                    <SelectValue placeholder="Status" />
+                                  </SelectTrigger>
+                                  <SelectContent>
+                                    <SelectItem value="USER">User</SelectItem>
+                                    <SelectItem value="AUTHOR">
+                                      Author
+                                    </SelectItem>
+                                  </SelectContent>
+                                </Select>
+                              )}
                             </TableCell>
 
                             <TableCell className="text-right align-top leading-6">

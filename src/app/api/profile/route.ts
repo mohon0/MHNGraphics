@@ -1,5 +1,18 @@
 import { Prisma } from "@/components/helper/prisma/Prisma";
+import { Session } from "next-auth";
+import { getServerSession } from "next-auth/next";
 import { NextRequest, NextResponse } from "next/server";
+import { authOptions } from "../auth/[...nextauth]/Options";
+
+interface CustomSession extends Session {
+  user: {
+    name: string;
+    email: string;
+    image: string;
+    id: string;
+    role: string; // Add any other roles you may have
+  };
+}
 
 export async function GET(req: NextRequest) {
   try {
@@ -40,5 +53,45 @@ export async function GET(req: NextRequest) {
     return NextResponse.json(response);
   } catch (error) {
     return new NextResponse("Internal Server Error", { status: 500 });
+  }
+}
+
+export async function PATCH(req: NextRequest, res: NextResponse) {
+  const session = (await getServerSession(authOptions)) as CustomSession;
+
+  // Check if user is logged in
+  if (!session) {
+    return new NextResponse("User not logged in", { status: 401 });
+  }
+
+  // Extract authorId and role
+  const { role: authorRole } = session.user;
+
+  // Allow only if user is an Administrator or an Author
+  if (authorRole !== "ADMIN") {
+    return new NextResponse("Access denied", { status: 403 });
+  }
+  try {
+    const url = new URL(req.url);
+    const queryParams = new URLSearchParams(url.search);
+    const userId = queryParams.get("id");
+    const data = await req.json();
+    if (!userId || !data.status) {
+      return new NextResponse("User ID or status not found", { status: 400 });
+    }
+    const update = await Prisma.user.update({
+      where: {
+        id: userId,
+      },
+      data: {
+        status: data.status,
+      },
+    });
+    if (!update) {
+      return new NextResponse("Failed to update", { status: 400 });
+    }
+    return new NextResponse("Updated design", { status: 200 });
+  } catch (error) {
+    return new NextResponse("Internal server error", { status: 500 });
   }
 }

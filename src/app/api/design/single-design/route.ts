@@ -217,7 +217,7 @@ export async function PATCH(req: NextRequest, res: NextResponse) {
   }
 
   // Extract authorId and role
-  const { id: authorId, role: authorRole } = session.user;
+  const { role: authorRole } = session.user;
 
   // Allow only if user is an Administrator or an Author
   if (authorRole !== "ADMIN" && authorRole !== "AUTHOR") {
