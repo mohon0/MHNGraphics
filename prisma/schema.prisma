@@ -67,8 +67,6 @@ model User {
 
 
 
-
-
 model Design {
   id          String        @id @default(auto()) @map("_id") @db.ObjectId
   name        String

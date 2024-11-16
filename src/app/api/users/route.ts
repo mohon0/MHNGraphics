@@ -92,28 +92,48 @@ export async function DELETE(req: NextRequest) {
     }
 
     // Prevent deletion of admin accounts
-    if (user.status === "ADMIN") {
+    if (user.status?.toUpperCase() === "ADMIN") {
       return new NextResponse("Admin accounts cannot be deleted", {
         status: 403,
       });
     }
 
-    // Delete user image from Firebase if it exists
-
+    // Delete user's image from Cloudinary, if any
     if (user.imageId) {
-      const result = await cloudinary.uploader.destroy(user.imageId);
-      if (result.result !== "ok") {
-        return new NextResponse("error", { status: 400 });
+      const userImageResult = await cloudinary.uploader.destroy(user.imageId);
+      if (userImageResult.result !== "ok") {
+        console.error("Failed to delete user profile image:", userImageResult);
+        return new NextResponse("Failed to delete user profile image", {
+          status: 500,
+        });
       }
     }
 
-    // Begin transaction to delete all associated records
-    await Prisma.$transaction([
-      Prisma.account.deleteMany({ where: { userId: id } }),
-      Prisma.session.deleteMany({ where: { userId: id } }),
-      Prisma.design.deleteMany({ where: { authorId: id } }),
-      Prisma.user.delete({ where: { id } }),
-    ]);
+    // Fetch all designs by the user to delete their images from Cloudinary
+    const designs = await Prisma.design.findMany({
+      where: { authorId: id },
+      select: { imageId: true },
+    });
+
+    // Delete each design image from Cloudinary
+    for (const design of designs) {
+      if (design.imageId) {
+        const designImageResult = await cloudinary.uploader.destroy(
+          design.imageId,
+        );
+        if (designImageResult.result !== "ok") {
+          console.error(
+            `Failed to delete design image: ${design.imageId}`,
+            designImageResult,
+          );
+        }
+      }
+    }
+
+    // Delete the user (cascade deletes associated records)
+    await Prisma.user.delete({
+      where: { id },
+    });
 
     return new NextResponse("User and associated data deleted successfully", {
       status: 200,
