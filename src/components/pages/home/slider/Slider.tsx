@@ -9,6 +9,7 @@ import {
 import img5 from "@/images/slider/icons.jpg";
 import img4 from "@/images/slider/mockups.jpg";
 import img1 from "@/images/slider/photo.jpg";
+import img6 from "@/images/slider/sports.jpg";
 import img3 from "@/images/slider/templates.jpg";
 import img2 from "@/images/slider/vector.jpg";
 import Image from "next/image";
@@ -44,6 +45,12 @@ const sliderData = [
     name: "Icons",
     img: img5,
     link: "/design?category=icons&query=&page=1",
+  },
+  {
+    id: 6,
+    name: "Sports",
+    img: img6,
+    link: "/design?category=sports&query=&page=1",
   },
 ];
 

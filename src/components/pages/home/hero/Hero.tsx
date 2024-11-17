@@ -78,7 +78,7 @@ export default function Hero() {
         height={1080}
         priority
         placeholder="blur"
-        className="h-[29.5rem] w-full object-cover brightness-50"
+        className="h-80 w-full object-cover brightness-50 md:h-[29.5rem]"
         onError={() => setError("Failed to load image")}
       />
       <div className="absolute inset-0 flex flex-col items-center justify-center space-y-6 bg-black bg-opacity-40 px-4 md:space-y-8 lg:space-y-10">
@@ -136,7 +136,7 @@ export default function Hero() {
                 aria-label="Submit search"
               >
                 <Search className="h-5 w-5 text-white" />
-                <span>Search</span>
+                <span className="hidden md:block">Search</span>
               </Button>
             </div>
           </div>

@@ -1,12 +1,11 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
-import { Menu } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
+import { CiMenuFries } from "react-icons/ci";
 
-import { Button } from "@/components/ui/button";
 import {
   Sheet,
   SheetContent,
@@ -29,11 +28,11 @@ export default function MobileMenu() {
 
   return (
     <Sheet open={open} onOpenChange={setOpen}>
-      <SheetTrigger asChild className="h-full w-full">
-        <Button variant="ghost" size="icon" className="text-white">
-          <Menu className="h-10 w-10" />
+      <SheetTrigger asChild>
+        <div className="cursor-pointer">
+          <CiMenuFries className="text-background" size={24} />
           <span className="sr-only">Open menu</span>
-        </Button>
+        </div>
       </SheetTrigger>
       <SheetContent side="right" className="w-[300px] p-0 sm:w-[400px]">
         <SheetHeader className="border-b p-6 text-left">
