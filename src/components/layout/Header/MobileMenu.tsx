@@ -1,11 +1,17 @@
 "use client";
 
-import { AnimatePresence, motion } from "framer-motion";
+import { Menu } from "lucide-react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { useState } from "react";
-import { CiMenuFries } from "react-icons/ci";
 
+import { productCategories } from "@/components/data/ProductCategory";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import {
   Sheet,
   SheetContent,
@@ -14,57 +20,45 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 
-const menuItems = [
-  { href: "/about", label: "About Me" },
-  { href: "/design", label: "Design" },
-  { href: "/blood-bank", label: "Blood Bank" },
-  { href: "/best-computer", label: "Best Computer T.C." },
-  { href: "/login", label: "Login" },
-];
-
 export default function MobileMenu() {
   const [open, setOpen] = useState(false);
-  const pathname = usePathname();
 
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
-        <div className="cursor-pointer">
-          <CiMenuFries className="text-background" size={24} />
-          <span className="sr-only">Open menu</span>
-        </div>
+        <Menu className="h-5 w-5 text-background" />
       </SheetTrigger>
-      <SheetContent side="right" className="w-[300px] p-0 sm:w-[400px]">
+      <SheetContent side="left" className="w-[300px] p-0 sm:w-[400px]">
         <SheetHeader className="border-b p-6 text-left">
           <SheetTitle className="text-2xl font-bold">Menu</SheetTitle>
         </SheetHeader>
-        <nav className="p-6">
-          <ul className="space-y-4">
-            <AnimatePresence>
-              {menuItems.map((item) => (
-                <motion.li
-                  key={item.href}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -20 }}
-                  transition={{ duration: 0.2 }}
-                >
-                  <Link
-                    href={item.href}
-                    className={`block py-2 text-lg transition-colors hover:text-primary ${
-                      pathname === item.href
-                        ? "font-semibold text-primary"
-                        : "text-muted-foreground"
-                    }`}
-                    onClick={() => setOpen(false)}
-                  >
-                    {item.label}
-                  </Link>
-                </motion.li>
+        <ScrollArea className="h-[calc(100vh-5rem)]">
+          <nav>
+            <Accordion type="single" collapsible className="w-full">
+              {productCategories.map((category) => (
+                <AccordionItem value={category.value} key={category.value}>
+                  <AccordionTrigger className="px-6 py-3 text-sm font-medium">
+                    {category.label}
+                  </AccordionTrigger>
+                  <AccordionContent>
+                    <div className="space-y-2 px-6 py-2">
+                      {category.subcategories?.map((subcategory) => (
+                        <Link
+                          key={subcategory.value}
+                          href={`/design?category=${category.value}&subcategory=${subcategory.value}&query=&page=1`}
+                          className="block py-2 text-sm text-muted-foreground transition-colors hover:text-foreground"
+                          onClick={() => setOpen(false)}
+                        >
+                          {subcategory.label}
+                        </Link>
+                      ))}
+                    </div>
+                  </AccordionContent>
+                </AccordionItem>
               ))}
-            </AnimatePresence>
-          </ul>
-        </nav>
+            </Accordion>
+          </nav>
+        </ScrollArea>
       </SheetContent>
     </Sheet>
   );
