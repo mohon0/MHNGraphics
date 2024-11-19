@@ -16,8 +16,8 @@ export default function ImageMarquee() {
 
   if (isLoading) {
     return (
-      <section className="my-20 space-y-6">
-        <h2 className="mb-10 text-center text-4xl font-bold text-primary">
+      <section className="space-y-6 md:my-20">
+        <h2 className="mb-6 text-center text-2xl font-bold md:mb-10 md:text-4xl">
           View Design & Sell Content
         </h2>
         <div className="space-y-4">
@@ -30,8 +30,8 @@ export default function ImageMarquee() {
 
   if (isError) {
     return (
-      <section className="my-20 space-y-6">
-        <h2 className="mb-10 text-center text-4xl font-bold">
+      <section className="space-y-6 md:my-20">
+        <h2 className="mb-6 text-center text-2xl font-bold md:mb-10 md:text-4xl">
           View Design & Sell Content
         </h2>
         <p>There was an error loading the designs. Please try again later.</p>
@@ -48,8 +48,8 @@ export default function ImageMarquee() {
     totalItems > 20 ? designs.slice(Math.ceil(designs.length / 2)) : designs;
 
   return (
-    <section className="my-20 space-y-6 overflow-hidden">
-      <h2 className="mb-10 text-center text-4xl font-bold">
+    <section className="overflow-hidden md:my-20 md:space-y-6">
+      <h2 className="mb-2 text-center text-2xl font-bold md:mb-10 md:text-4xl">
         View Design & Sell Content
       </h2>
 

@@ -26,7 +26,7 @@ export default function MobileMenu() {
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
-        <Menu className="h-5 w-5 text-background" />
+        <Menu className="h-6 w-6 text-background" />
       </SheetTrigger>
       <SheetContent side="left" className="w-[300px] p-0 sm:w-[400px]">
         <SheetHeader className="border-b p-6 text-left">
@@ -57,6 +57,9 @@ export default function MobileMenu() {
                 </AccordionItem>
               ))}
             </Accordion>
+            <Link href="/pricing" className="px-6 py-4 text-primary">
+              Pricing
+            </Link>
           </nav>
         </ScrollArea>
       </SheetContent>

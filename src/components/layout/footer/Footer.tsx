@@ -110,7 +110,9 @@ export default function Footer() {
               ))}
             </div>
             <Button>
-              <Briefcase className="mr-2 h-4 w-4" /> Hire Me
+              <Link href="/contact" className="flex items-center gap-2">
+                <Briefcase className="mr-2 h-4 w-4" /> Hire Me
+              </Link>
             </Button>
           </div>
 

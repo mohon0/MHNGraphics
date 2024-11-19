@@ -51,7 +51,7 @@ export default function Contact() {
       toast.dismiss();
       if (response.status === 200) {
         toast.success("Design successfully added");
-        // form.reset(); 
+        // form.reset();
       } else {
         toast.error("Failed to create design");
       }
@@ -62,22 +62,24 @@ export default function Contact() {
   }
 
   return (
-    <div className="mx-3 my-10 md:mx-10 lg:mx-32">
+    <div className="mx-2 my-10 md:mx-10 lg:mx-32">
       <header className="text-center">
-        <h2 className="my-4 text-4xl font-bold">Contact With Me</h2>
+        <h2 className="my-4 text-2xl font-bold md:text-4xl">Contact With Us</h2>
       </header>
 
-      <div className="mt-10 grid grid-cols-1 gap-10 md:grid-cols-12">
-        <article className="white-bg dark:dark-bg col-span-1 rounded-lg p-4 md:col-span-5 md:p-6">
+      <div className="grid grid-cols-1 gap-6 md:mt-10 md:grid-cols-12 md:gap-10">
+        <article className="white-bg dark:dark-bg col-span-1 rounded-lg p-2 md:col-span-5 md:p-6">
           <Image
             src={img}
             alt="Sejar Parvez"
             className="h-40 w-full rounded object-cover md:h-56"
           />
-          <p className="mb-2 mt-4 text-3xl font-bold">Md. Mohon</p>
+          <p className="mb-2 mt-4 text-xl font-bold md:text-3xl">
+            MHN Graphics
+          </p>
           <p className="mb-4 text-muted-foreground">
-            Feel free to get in touch with me for any inquiries, feedback, or
-            assistance. I am dedicated to providing excellent service and am
+            Feel free to get in touch with use for any inquiries, feedback, or
+            assistance. We are dedicated to providing excellent service and am
             eager to hear from you.
           </p>
           <p>
@@ -91,7 +93,7 @@ export default function Contact() {
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
-            className="dark:dark-bg col-span-1 flex flex-col rounded-lg bg-slate-50 p-4 md:col-span-7 md:p-6"
+            className="col-span-1 flex flex-col rounded-lg bg-slate-50 p-2 md:col-span-7 md:p-6"
           >
             <FormField
               control={form.control}

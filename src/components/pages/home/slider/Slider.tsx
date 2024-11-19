@@ -56,8 +56,8 @@ const sliderData = [
 
 export function Slider() {
   return (
-    <div className="my-16 px-4 md:px-10">
-      <p className="mb-10 text-center text-4xl font-bold">
+    <div className="my-8 px-4 md:my-16 md:px-10">
+      <p className="mb-6 text-center text-2xl font-bold md:mb-10 md:text-4xl">
         Many Assets Ready To Go
       </p>
       <Carousel
@@ -74,11 +74,11 @@ export function Slider() {
               className="relative md:basis-1/3 lg:basis-1/5"
             >
               <Link href={slider.link}>
-                <div className="flex h-60 w-full items-center justify-center md:h-40">
+                <div className="flex h-44 w-full items-center justify-center">
                   <Image
                     src={slider.img}
                     alt=""
-                    className="h-60 w-full object-cover brightness-50 transition-all duration-300 hover:h-44 md:h-40"
+                    className="h-44 w-full object-cover brightness-50 transition-all duration-300 hover:h-48"
                   />
                 </div>
                 <p className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 transform text-xl font-bold text-white">
@@ -88,14 +88,8 @@ export function Slider() {
             </CarouselItem>
           ))}
         </CarouselContent>
-        <CarouselPrevious
-          variant="default"
-          className="translate-x-10 scale-125 transition-all duration-300 group-hover:translate-x-0 group-hover:opacity-100"
-        />
-        <CarouselNext
-          variant="default"
-          className="-translate-x-10 scale-125 transition-all duration-300 group-hover:translate-x-0 group-hover:opacity-100"
-        />
+        <CarouselPrevious className="translate-x-8" />
+        <CarouselNext className="-translate-x-8" />
       </Carousel>
     </div>
   );
