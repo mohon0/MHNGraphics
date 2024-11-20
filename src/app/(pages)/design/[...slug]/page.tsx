@@ -3,9 +3,16 @@
 import { FetchSingleDesign } from "@/components/fetch/design/FetchSingleDesign";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Download } from "lucide-react";
+import { Download, X } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import { useState } from "react";
 
 interface PageProps {
@@ -49,13 +56,11 @@ export default function Page({ params }: PageProps) {
   // Destructure data for easier access
   const { image, name: designName, author, tags }: DesignData = data || {};
 
-  const handleDownload = () => {
-    const link = document.createElement("a");
-    link.href = image || "";
-    link.download = designName || "design";
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+  const getTransformedImageUrl = (height: number, width: number) => {
+    return image.replace(
+      "/upload/",
+      `/upload/h_${height},w_${width},f_jpg,c_fill,fl_attachment/`,
+    );
   };
 
   return (
@@ -75,7 +80,7 @@ export default function Page({ params }: PageProps) {
                   imageLoaded ? "scale-100 blur-0" : "scale-105 blur-lg"
                 }`}
                 onLoadingComplete={() => setImageLoaded(true)}
-                onError={() => setImageLoaded(true)} // Handle image loading errors
+                onError={() => setImageLoaded(true)}
               />
               {!imageLoaded && <Skeleton className="absolute inset-0" />}
             </div>
@@ -89,10 +94,59 @@ export default function Page({ params }: PageProps) {
             </>
           ) : (
             <>
-              <Button onClick={handleDownload}>
-                <Download className="mr-2 h-5 w-5" /> Download
-              </Button>
-              {/* Removed ImageWithDimensions since it's no longer needed */}
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button>
+                    <Download className="mr-2 h-5 w-5" /> Download Options
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent>
+                  <p className="p-2 text-sm text-muted-foreground">File Size</p>
+                  <DropdownMenuItem asChild>
+                    <a href={getTransformedImageUrl(667, 1000)} download>
+                      <p className="flex items-center gap-1 text-sm">
+                        <span className="font-bold">Small</span>
+                        <span>667</span>
+                        <span>
+                          <X />
+                        </span>
+                        <span>1000</span>
+                      </p>
+                    </a>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <a href={getTransformedImageUrl(1000, 1500)} download>
+                      <p className="flex items-center gap-1 text-sm">
+                        <span className="font-bold">Medium</span>
+                        <span>1000</span>
+                        <span>
+                          <X />
+                        </span>
+                        <span>1500</span>
+                      </p>
+                    </a>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <a href={getTransformedImageUrl(2000, 1333)} download>
+                      <p className="flex items-center gap-1 text-sm">
+                        <span className="font-bold">Large</span>
+                        <span>2000</span>
+                        <span>
+                          <X />
+                        </span>
+                        <span>1333</span>
+                      </p>
+                    </a>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <a href={image} download>
+                      <p className="flex items-center gap-1 text-sm">
+                        <span className="font-bold">Orginal</span>
+                      </p>
+                    </a>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </>
           )}
         </div>
@@ -107,17 +161,20 @@ export default function Page({ params }: PageProps) {
         ) : (
           <div className="space-y-2">
             <div className="mt-6 flex flex-col space-y-4 text-gray-700">
-              <div className="flex items-center space-x-4">
+              <Link
+                href={`/profile?id=${data.authorId}`}
+                className="flex items-center space-x-4"
+              >
                 <Avatar>
                   <AvatarImage src={author?.image} alt={author?.name} />
                   <AvatarFallback>
-                    {author?.name?.charAt(0) || "U"}
+                    {author?.name?.charAt(0) || "MHN"}
                   </AvatarFallback>
                 </Avatar>
                 <div>
                   <p className="text-lg font-semibold">{author?.name}</p>
                 </div>
-              </div>
+              </Link>
               <h1 className="text-2xl font-bold text-gray-900">{designName}</h1>
               <div className="space-y-2">
                 <p>Related Tags:</p>
