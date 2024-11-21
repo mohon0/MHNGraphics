@@ -1,6 +1,7 @@
 "use client";
 
 import { FetchSingleDesign } from "@/components/fetch/design/FetchSingleDesign";
+import { getImageDimensions } from "@/components/helper/image/GetImageDimensions";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
@@ -10,10 +11,10 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Download, X } from "lucide-react";
+import { Download } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 interface PageProps {
   params: { slug: string[] };
@@ -28,6 +29,11 @@ interface DesignData {
 
 export default function Page({ params }: PageProps) {
   const [imageLoaded, setImageLoaded] = useState(false);
+  const [imageDimensions, setImageDimensions] = useState<{
+    width: number;
+    height: number;
+  } | null>(null);
+
   const [category, subcategory, day, month, year, name] = params.slug;
 
   const { isLoading, data, isError } = FetchSingleDesign({
@@ -38,6 +44,16 @@ export default function Page({ params }: PageProps) {
     year,
     name,
   });
+
+  useEffect(() => {
+    if (data?.image) {
+      getImageDimensions(data.image)
+        .then((dimensions) => setImageDimensions(dimensions))
+        .catch((error) =>
+          console.error("Failed to fetch image dimensions:", error),
+        );
+    }
+  }, [data?.image]);
 
   if (isError) {
     return (
@@ -53,15 +69,33 @@ export default function Page({ params }: PageProps) {
     );
   }
 
-  // Destructure data for easier access
-  const { image, name: designName, author, tags }: DesignData = data || {};
+  const getDynamicDimensions = (
+    originalWidth: number,
+    originalHeight: number,
+    targetHeight: number,
+  ) => {
+    const aspectRatio = originalWidth / originalHeight;
+    const width = Math.round(targetHeight * aspectRatio);
+    return { width, height: targetHeight };
+  };
 
-  const getTransformedImageUrl = (height: number, width: number) => {
-    return image.replace(
+  const getTransformedImageUrl = (
+    originalWidth: number,
+    originalHeight: number,
+    targetHeight: number,
+  ) => {
+    const { width, height } = getDynamicDimensions(
+      originalWidth,
+      originalHeight,
+      targetHeight,
+    );
+    return data?.image?.replace(
       "/upload/",
       `/upload/h_${height},w_${width},f_jpg,c_fill,fl_attachment/`,
     );
   };
+
+  const { image, name: designName, author, tags }: DesignData = data || {};
 
   return (
     <div className="container mx-auto my-10 px-4 md:px-8 lg:px-16">
@@ -74,13 +108,13 @@ export default function Page({ params }: PageProps) {
               <Image
                 src={image}
                 alt={designName || "Design image"}
-                layout="fill"
-                objectFit="contain"
-                className={`transition-transform duration-700 ease-in-out ${
+                className={`aspect-video h-full w-fit object-contain transition-transform duration-700 ease-in-out ${
                   imageLoaded ? "scale-100 blur-0" : "scale-105 blur-lg"
                 }`}
-                onLoadingComplete={() => setImageLoaded(true)}
+                onLoad={() => setImageLoaded(true)}
                 onError={() => setImageLoaded(true)}
+                height={1000}
+                width={1000}
               />
               {!imageLoaded && <Skeleton className="absolute inset-0" />}
             </div>
@@ -102,49 +136,82 @@ export default function Page({ params }: PageProps) {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent>
                   <p className="p-2 text-sm text-muted-foreground">File Size</p>
-                  <DropdownMenuItem asChild>
-                    <a href={getTransformedImageUrl(667, 1000)} download>
-                      <p className="flex items-center gap-1 text-sm">
-                        <span className="font-bold">Small</span>
-                        <span>667</span>
-                        <span>
-                          <X />
-                        </span>
-                        <span>1000</span>
-                      </p>
-                    </a>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem asChild>
-                    <a href={getTransformedImageUrl(1000, 1500)} download>
-                      <p className="flex items-center gap-1 text-sm">
-                        <span className="font-bold">Medium</span>
-                        <span>1000</span>
-                        <span>
-                          <X />
-                        </span>
-                        <span>1500</span>
-                      </p>
-                    </a>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem asChild>
-                    <a href={getTransformedImageUrl(2000, 1333)} download>
-                      <p className="flex items-center gap-1 text-sm">
-                        <span className="font-bold">Large</span>
-                        <span>2000</span>
-                        <span>
-                          <X />
-                        </span>
-                        <span>1333</span>
-                      </p>
-                    </a>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem asChild>
-                    <a href={image} download>
-                      <p className="flex items-center gap-1 text-sm">
-                        <span className="font-bold">Orginal</span>
-                      </p>
-                    </a>
-                  </DropdownMenuItem>
+                  {imageDimensions && (
+                    <>
+                      <DropdownMenuItem asChild>
+                        <a
+                          href={getTransformedImageUrl(
+                            imageDimensions.width,
+                            imageDimensions.height,
+                            500, // Target height for small size
+                          )}
+                          download
+                        >
+                          Small (
+                          {
+                            getDynamicDimensions(
+                              imageDimensions.width,
+                              imageDimensions.height,
+                              500,
+                            ).width
+                          }{" "}
+                          x 500)
+                        </a>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem asChild>
+                        <a
+                          href={getTransformedImageUrl(
+                            imageDimensions.width,
+                            imageDimensions.height,
+                            1000, // Target height for medium size
+                          )}
+                          download
+                        >
+                          Medium (
+                          {
+                            getDynamicDimensions(
+                              imageDimensions.width,
+                              imageDimensions.height,
+                              1000,
+                            ).width
+                          }{" "}
+                          x 1000)
+                        </a>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem asChild>
+                        <a
+                          href={getTransformedImageUrl(
+                            imageDimensions.width,
+                            imageDimensions.height,
+                            1500, // Target height for large size
+                          )}
+                          download
+                        >
+                          Large (
+                          {
+                            getDynamicDimensions(
+                              imageDimensions.width,
+                              imageDimensions.height,
+                              1500,
+                            ).width
+                          }{" "}
+                          x 1500)
+                        </a>
+                      </DropdownMenuItem>
+                      <DropdownMenuItem asChild>
+                        <a
+                          href={data?.image?.replace(
+                            "/upload/",
+                            "/upload/fl_attachment/",
+                          )}
+                          download
+                        >
+                          Original ({imageDimensions?.width} x{" "}
+                          {imageDimensions?.height})
+                        </a>
+                      </DropdownMenuItem>
+                    </>
+                  )}
                 </DropdownMenuContent>
               </DropdownMenu>
             </>
