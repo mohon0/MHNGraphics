@@ -260,6 +260,14 @@ export default function Page({ params }: PageProps) {
                   <h2 className="mb-2 text-lg font-semibold">
                     Image Information
                   </h2>
+                  <p>
+                    <span>View:</span>
+                    <span>1000</span>
+                  </p>
+                  <p>
+                    <span>Download:</span>
+                    <span>100</span>
+                  </p>
 
                   <p>
                     <span className="font-medium">Size:</span>{" "}
