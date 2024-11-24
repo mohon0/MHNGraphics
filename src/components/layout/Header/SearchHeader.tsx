@@ -107,7 +107,7 @@ function SearchHeaderComponent({ fixed = false }: { fixed?: boolean }) {
 
       {/* Search Bar */}
       <div className="left-0 top-0 z-10 border-b bg-background lg:sticky">
-        <div className="container mx-auto px-4 py-2">
+        <div className="container mx-auto py-2">
           <div className="flex items-center gap-2">
             <div className="flex items-center">
               <motion.div

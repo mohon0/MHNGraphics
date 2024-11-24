@@ -68,10 +68,10 @@ export default function Contact() {
       </header>
 
       <div className="grid grid-cols-1 gap-6 md:mt-10 md:grid-cols-12 md:gap-10">
-        <article className="white-bg dark:dark-bg col-span-1 rounded-lg p-2 md:col-span-5 md:p-6">
+        <article className="col-span-1 rounded-lg bg-secondary p-2 md:col-span-5 md:p-6">
           <Image
             src={img}
-            alt="Sejar Parvez"
+            alt="MHN Graphics"
             className="h-40 w-full rounded object-cover md:h-56"
           />
           <p className="mb-2 mt-4 text-xl font-bold md:text-3xl">
@@ -93,7 +93,7 @@ export default function Contact() {
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
-            className="col-span-1 flex flex-col rounded-lg bg-slate-50 p-2 md:col-span-7 md:p-6"
+            className="col-span-1 flex flex-col rounded-lg bg-secondary p-2 md:col-span-7 md:p-6"
           >
             <FormField
               control={form.control}

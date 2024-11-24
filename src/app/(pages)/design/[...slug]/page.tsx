@@ -1,7 +1,14 @@
 "use client";
 
 import { FetchSingleDesign } from "@/components/fetch/design/FetchSingleDesign";
+import { convertToReadableDate } from "@/components/helper/date/convertDateString";
 import { getImageDimensions } from "@/components/helper/image/GetImageDimensions";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -12,7 +19,13 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Skeleton } from "@/components/ui/skeleton";
-import { CircleCheckBig, Download, Heart, Share2 } from "lucide-react";
+import {
+  CircleCheckBig,
+  Download,
+  Heart,
+  MessageSquare,
+  Share2,
+} from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
@@ -105,20 +118,19 @@ export default function Page({ params }: PageProps) {
       <div className="grid gap-6 lg:grid-cols-12 lg:gap-10">
         <div className="relative overflow-hidden lg:col-span-8">
           {isLoading ? (
-            <Skeleton className="aspect-[16/9] w-full" />
+            <Skeleton className="h-[33rem] w-full" />
           ) : (
-            <div className="relative aspect-auto w-full overflow-hidden rounded-lg bg-gray-100">
+            <div className="relative h-[33rem] w-full overflow-hidden rounded-lg">
               <Image
                 src={image}
                 alt={designName || "Design image"}
-                className={`h-auto w-full object-contain transition-opacity duration-700 ease-in-out ${
+                className={`h-full w-full object-contain object-top transition-opacity duration-700 ease-in-out ${
                   imageLoaded ? "opacity-100" : "opacity-0"
                 }`}
                 onLoad={() => setImageLoaded(true)}
                 onError={() => setImageLoaded(true)}
-                layout="responsive"
-                width={1000}
-                height={1000}
+                fill // Ensures the image fills the container
+                priority // Optimized for above-the-fold images
               />
               {!imageLoaded && (
                 <Skeleton className="absolute inset-0 h-full w-full" />
@@ -126,12 +138,37 @@ export default function Page({ params }: PageProps) {
             </div>
           )}
         </div>
-        <Card className="lg:col-span-4">
+
+        <Card className="h-fit lg:col-span-4">
           <CardContent className="space-y-2 pt-6">
             {isLoading ? (
               <>
                 <Skeleton className="h-12 w-full" />
                 <Skeleton className="h-8 w-full" />
+                <div>
+                  <div className="flex justify-between gap-5">
+                    <Skeleton className="h-10 w-full flex-grow" />
+                    <Skeleton className="h-10 w-full flex-grow" />
+                  </div>
+                  <div className="mt-6 flex w-full gap-4">
+                    <Skeleton className="h-10 w-full flex-grow" />
+                    <Skeleton className="h-10 w-full flex-grow" />
+                    <Skeleton className="h-10 w-full flex-grow" />
+                  </div>
+                </div>
+                <div className="w-full pt-4">
+                  <Skeleton className="h-4 w-1/3" />
+                  <Skeleton className="mt-2 h-4 w-1/3" />
+                  <div className="mt-4">
+                    <Skeleton className="h-4 w-1/4" />
+                    <div className="mt-2 space-y-1">
+                      <Skeleton className="h-4 w-1/3" />
+                      <Skeleton className="h-4 w-1/3" />
+                      <Skeleton className="h-4 w-1/3" />
+                      <Skeleton className="h-4 w-1/3" />
+                    </div>
+                  </div>
+                </div>
               </>
             ) : (
               <>
@@ -244,40 +281,59 @@ export default function Page({ params }: PageProps) {
                       </DropdownMenuContent>
                     </DropdownMenu>
                   </div>
-                  <div className="mt-10 flex w-full gap-4">
+                  <div className="mt-6 flex w-full gap-4">
                     <Button variant="outline" className="flex-grow">
-                      <Heart className="mr-2 h-5 w-5" /> Like
+                      <Heart className="mr-2 h-5 w-5" /> Love
                     </Button>
                     <Button variant="outline" className="flex-grow">
-                      <Heart className="mr-2 h-5 w-5" /> Comment
+                      <MessageSquare className="mr-2 h-5 w-5" /> Comment
                     </Button>
                     <Button variant="outline" className="flex-grow">
                       <Share2 className="mr-2 h-5 w-5" /> Share
                     </Button>
                   </div>
                 </div>
-                <div className="rounded-lg border p-4">
-                  <h2 className="mb-2 text-lg font-semibold">
-                    Image Information
-                  </h2>
-                  <p>
-                    <span>View:</span>
+                <div className="w-full pt-4">
+                  <p className="flex items-center justify-between">
+                    <span className="text-muted-foreground">View:</span>
                     <span>1000</span>
                   </p>
-                  <p>
-                    <span>Download:</span>
+                  <p className="flex items-center justify-between">
+                    <span className="text-muted-foreground">Download:</span>
                     <span>100</span>
                   </p>
 
-                  <p>
-                    <span className="font-medium">Size:</span>{" "}
-                    {imageDimensions
-                      ? `${imageDimensions.width} x ${imageDimensions.height}`
-                      : "Loading..."}
-                  </p>
-                  <p>
-                    <span className="font-medium">Type:</span> JPG
-                  </p>
+                  <Accordion type="single" collapsible>
+                    <AccordionItem value="details">
+                      <AccordionTrigger>Show details</AccordionTrigger>
+                      <AccordionContent className="space-y-1">
+                        <p className="flex items-center justify-between">
+                          <span className="text-muted-foreground">Love:</span>{" "}
+                          20
+                        </p>
+                        <p className="flex items-center justify-between">
+                          <span className="text-muted-foreground">
+                            Resolution:
+                          </span>{" "}
+                          {imageDimensions
+                            ? `${imageDimensions.width} x ${imageDimensions.height}`
+                            : "Loading..."}
+                        </p>
+                        <p className="flex items-center justify-between">
+                          <span className="text-muted-foreground">
+                            Media type:
+                          </span>{" "}
+                          JPG
+                        </p>
+                        <p className="flex items-center justify-between">
+                          <span className="text-muted-foreground">
+                            Published date:
+                          </span>
+                          {convertToReadableDate(data.createdAt)}
+                        </p>
+                      </AccordionContent>
+                    </AccordionItem>
+                  </Accordion>
                 </div>
               </>
             )}
@@ -286,13 +342,29 @@ export default function Page({ params }: PageProps) {
       </div>
       <div className="mt-8 space-y-6 lg:mt-12">
         {isLoading ? (
-          <>
+          <div className="space-y-6">
+            <div className="flex items-center space-x-4">
+              <Skeleton className="h-12 w-12 rounded-full" />
+              <div className="space-y-2">
+                <Skeleton className="h-4 w-32" />
+                <Skeleton className="h-3 w-20" />
+              </div>
+            </div>
+
             <Skeleton className="h-8 w-3/4" />
-            <Skeleton className="h-4 w-full" />
-            <Skeleton className="h-4 w-5/6" />
-          </>
+
+            <div className="space-y-2">
+              <Skeleton className="h-4 w-32" />
+              <div className="flex flex-wrap gap-2">
+                {Array.from({ length: 5 }).map((_, index) => (
+                  <Skeleton key={index} className="h-8 w-20 rounded-full" />
+                ))}
+              </div>
+            </div>
+          </div>
         ) : (
           <div className="space-y-6">
+            {/* Author Section */}
             <div className="flex flex-col space-y-4 text-gray-700 md:flex-row md:items-center md:justify-between md:space-y-0">
               <Link
                 href={`/profile?id=${data.authorId}`}
@@ -309,26 +381,33 @@ export default function Page({ params }: PageProps) {
                   <p className="text-sm text-gray-500">View Profile</p>
                 </div>
               </Link>
-              <Button variant="outline">Follow</Button>
             </div>
+
+            {/* Design Title */}
             <h1 className="text-2xl font-bold text-gray-900 md:text-3xl">
               {designName}
             </h1>
-            <div className="space-y-2">
-              <p className="font-medium">Related Tags:</p>
-              <div className="flex flex-wrap gap-2">
-                {tags?.map((tag: string, index: number) => (
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    key={index}
-                    className="rounded-full"
-                  >
-                    {tag}
-                  </Button>
-                ))}
+
+            {/* Related Tags */}
+            {tags && tags.filter((tag) => tag.trim() !== "").length > 0 && (
+              <div className="space-y-2">
+                <p className="font-medium">Related Tags:</p>
+                <div className="flex flex-wrap gap-2">
+                  {tags
+                    .filter((tag) => tag.trim() !== "")
+                    .map((tag: string, index: number) => (
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        key={index}
+                        className="rounded-full"
+                      >
+                        {tag}
+                      </Button>
+                    ))}
+                </div>
               </div>
-            </div>
+            )}
           </div>
         )}
       </div>
