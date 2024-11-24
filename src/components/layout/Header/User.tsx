@@ -61,7 +61,7 @@ export default function User({ fixed = false }: { fixed?: boolean }) {
         </Menubar>
       ) : (
         <Link href="/sign-in">
-          <Button>Sign In</Button>
+          <Button variant={fixed ? "secondary" : "default"}>Sign In</Button>
         </Link>
       )}
     </>

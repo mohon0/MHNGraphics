@@ -12,7 +12,7 @@ export const createSlug = (
   category: string,
   subcategory: string,
   name: string,
-  createdAt: Date,
+  createdAt: string,
 ): string => {
   // Format the date into dd/MM/yyyy format
   const formattedDate = format(new Date(createdAt), "dd/MM/yyyy");

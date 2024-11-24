@@ -84,7 +84,7 @@ function SearchHeaderComponent({ fixed = false }: { fixed?: boolean }) {
   return (
     <>
       <div>
-        <div className="container mx-auto px-4">
+        <div className="container mx-auto px-2">
           <div className="flex h-14 items-center justify-between">
             <div className="flex items-center space-x-8">
               <div className="z-20 ml-48 hidden lg:block">
@@ -93,11 +93,7 @@ function SearchHeaderComponent({ fixed = false }: { fixed?: boolean }) {
             </div>
             <div className="flex items-center space-x-4">
               <Link href="/company/pricing">
-                <Button
-                  className={`${fixed ? "border bg-transparent hover:bg-transparent" : "border border-primary bg-secondary text-primary hover:bg-secondary"}`}
-                >
-                  Pricing
-                </Button>
+                <Button variant="outline">Pricing</Button>
               </Link>
               <User />
             </div>
@@ -107,7 +103,7 @@ function SearchHeaderComponent({ fixed = false }: { fixed?: boolean }) {
 
       {/* Search Bar */}
       <div className="left-0 top-0 z-10 border-b bg-background lg:sticky">
-        <div className="container mx-auto py-2">
+        <div className="mx-auto py-2 md:container">
           <div className="flex items-center gap-2">
             <div className="flex items-center">
               <motion.div
@@ -128,7 +124,7 @@ function SearchHeaderComponent({ fixed = false }: { fixed?: boolean }) {
                     fixed ? "text-white" : "text-black"
                   }`}
                 >
-                  <div className="flex items-end gap-2">
+                  <div className="ml-2 flex items-end gap-2 md:ml-0">
                     <span className="text-2xl">MHN</span>
                     <span className="hidden text-xl md:block">Graphics</span>
                   </div>
@@ -140,7 +136,7 @@ function SearchHeaderComponent({ fixed = false }: { fixed?: boolean }) {
                 onValueChange={handleFilterChange}
               >
                 <SelectTrigger
-                  className={`bg-background ${isScrolled ? "md:ml-10" : "md:-ml-44"} -ml-20 min-w-32 transition-all duration-200`}
+                  className={`bg-background ${isScrolled ? "md:ml-10" : "md:-ml-44"} -ml-20 transition-all duration-200 md:min-w-32`}
                 >
                   <SelectValue placeholder="Category" />
                 </SelectTrigger>
@@ -162,7 +158,7 @@ function SearchHeaderComponent({ fixed = false }: { fixed?: boolean }) {
                 </SelectContent>
               </Select>
             </div>
-            <div className="flex flex-1 items-center gap-2">
+            <div className="mr-2 flex flex-1 items-center gap-2 md:mr-0">
               <Input
                 placeholder="Search by name"
                 value={searchQuery}

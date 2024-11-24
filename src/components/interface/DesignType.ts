@@ -18,13 +18,15 @@ export interface AllDesignType {
 export interface DesignType {
   id: string;
   image: string;
+  imageId: string;
   name: string;
   category: string;
   subcategory: string;
-  createdAt: Date;
+  createdAt: string;
   status: string;
   description: string;
   tags: string[];
+  authorId: string;
   author: {
     name: string;
     image: string;
