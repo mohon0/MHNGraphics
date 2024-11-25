@@ -18,13 +18,13 @@ export async function generateMetadata({ params }: PageProps) {
     const data = response.data;
 
     return {
-      title: response.data.title || "Blog Post",
+      title: response.data.name || "Blog Post",
       description: data.description || "Explore this amazing design",
       alternates: {
         canonical: `${siteurl}/design/${category}/${subcategory}/${day}/${month}/${year}/${name}`,
       },
       openGraph: {
-        title: response.data.title || "Blog Post",
+        title: response.data.name || "Blog Post",
         description: data.description || "Explore this amazing design",
         type: "article",
         url: `${siteurl}/design/${category}/${subcategory}/${day}/${month}/${year}/${name}`,
@@ -36,14 +36,14 @@ export async function generateMetadata({ params }: PageProps) {
         images: [
           {
             url: data.image,
-            alt: response.data.title,
+            alt: response.data.name,
           },
         ],
         locale: "en_US",
       },
       twitter: {
         card: "summary_large_image",
-        title: response.data.title,
+        title: response.data.name,
         description: data.description,
       },
     };

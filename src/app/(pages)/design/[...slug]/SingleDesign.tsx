@@ -93,7 +93,7 @@ export default function SingleDesign({ params }: PageProps) {
             {isLoading ? (
               <DesignDetailsSkeleton />
             ) : (
-              <DesignDetails data={data} imageDimensions={imageDimensions} />
+              <DesignDetails data={data} imageDimensions={imageDimensions} params={params} />
             )}
           </CardContent>
         </Card>

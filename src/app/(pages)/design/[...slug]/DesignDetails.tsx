@@ -12,25 +12,25 @@ import {
   DropdownMenuContent,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Skeleton } from "@/components/ui/skeleton";
 import { ImageDimensions } from "@/utils/imageDimensions";
-import {
-  CircleCheckBig,
-  Download,
-  Heart,
-  MessageSquare,
-  Share2,
-} from "lucide-react";
+import { CircleCheckBig, Download, Heart, MessageSquare } from "lucide-react";
 import Link from "next/link";
 import { SiCanva } from "react-icons/si";
 import DownloadMenuItem from "./DownloadMenuItem";
-import { Skeleton } from "@/components/ui/skeleton";
+import Share from "./Share";
 
 interface DesignDetailsProps {
   data: DesignType;
   imageDimensions: ImageDimensions | null;
+  params: { slug: string[] };
 }
 
-export function DesignDetails({ data, imageDimensions }: DesignDetailsProps) {
+export function DesignDetails({
+  data,
+  imageDimensions,
+  params,
+}: DesignDetailsProps) {
   return (
     <>
       <p className="inline-flex items-center gap-2 text-wrap text-sm">
@@ -84,16 +84,14 @@ export function DesignDetails({ data, imageDimensions }: DesignDetailsProps) {
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
-        <div className="mt-6 grid grid-cols-3 gap-4">
+        <div className="mt-6 flex gap-4">
           <Button variant="outline" className="w-full">
             <Heart className="mr-2 h-5 w-5" /> Love
           </Button>
           <Button variant="outline" className="w-full">
             <MessageSquare className="mr-2 h-5 w-5" /> Comment
           </Button>
-          <Button variant="outline" className="w-full">
-            <Share2 className="mr-2 h-5 w-5" /> Share
-          </Button>
+          <Share params={params} />
         </div>
       </div>
       <div className="w-full pt-4">
@@ -133,7 +131,6 @@ export function DesignDetails({ data, imageDimensions }: DesignDetailsProps) {
     </>
   );
 }
-
 
 export function DesignDetailsSkeleton() {
   return (
