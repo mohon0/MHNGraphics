@@ -3,12 +3,15 @@
 import { FetchSingleDesign } from "@/components/fetch/design/FetchSingleDesign";
 import { getImageDimensions } from "@/components/helper/image/GetImageDimensions";
 import { DesignType } from "@/components/interface/DesignType";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ImageDimensions, getAspectRatio } from "@/utils/imageDimensions";
+import { Loader2 } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { AuthorAndTags, AuthorAndTagsSkeleton } from "./AuthorAndTags";
+import { Comments } from "./Comments";
 import { DesignDetails, DesignDetailsSkeleton } from "./DesignDetails";
 
 interface PageProps {
@@ -19,10 +22,11 @@ export default function SingleDesign({ params }: PageProps) {
   const [imageLoaded, setImageLoaded] = useState(false);
   const [imageDimensions, setImageDimensions] =
     useState<ImageDimensions | null>(null);
+  const [retryCount, setRetryCount] = useState(0);
 
   const [category, subcategory, day, month, year, name] = params.slug;
 
-  const { isLoading, data, isError } = FetchSingleDesign({
+  const { isLoading, data, isError, refetch } = FetchSingleDesign({
     category,
     subcategory,
     day,
@@ -41,15 +45,25 @@ export default function SingleDesign({ params }: PageProps) {
     }
   }, [data?.image]);
 
+  const handleRetry = () => {
+    setRetryCount((prev) => prev + 1);
+    refetch();
+  };
+
   if (isError) {
     return (
       <div className="flex h-screen items-center justify-center">
-        <div
-          role="alert"
-          aria-live="assertive"
-          className="font-semibold text-red-500"
-        >
-          Error loading design.
+        <div className="text-center">
+          <div
+            role="alert"
+            aria-live="assertive"
+            className="mb-4 font-semibold text-red-500"
+          >
+            Error loading design. Please try again.
+          </div>
+          <Button onClick={handleRetry} disabled={retryCount >= 3}>
+            {retryCount >= 3 ? "Too many attempts" : "Retry"}
+          </Button>
         </div>
       </div>
     );
@@ -61,14 +75,16 @@ export default function SingleDesign({ params }: PageProps) {
     ? getAspectRatio(imageDimensions.width, imageDimensions.height)
     : 1;
   const imageContainerClass =
-    aspectRatio > 1.5 ? "h-auto aspect-[3/2]" : "h-[30rem] md:h-[40rem]";
+    aspectRatio > 1.5
+      ? "h-auto aspect-[3/2]"
+      : "h-[30rem] md:h-[40rem] lg:h-[50rem]";
 
   return (
-    <div className="container mx-auto my-6 px-2 md:my-10 md:px-0">
+    <div className="container mx-auto my-6 px-2 md:my-10 md:px-4 lg:px-0">
       <div className="grid gap-6 lg:grid-cols-12 lg:gap-10">
         <div className="lg:col-span-8">
           {isLoading ? (
-            <Skeleton className="h-[30rem] w-full md:h-[40rem]" />
+            <Skeleton className="h-[30rem] w-full md:h-[40rem] lg:h-[50rem]" />
           ) : (
             <div
               className={`relative flex w-full rounded-lg bg-secondary ${imageContainerClass}`}
@@ -83,7 +99,15 @@ export default function SingleDesign({ params }: PageProps) {
                 onError={() => setImageLoaded(true)}
                 fill
                 priority
+                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                placeholder="blur"
+                blurDataURL="/placeholder.jpg"
               />
+              {!imageLoaded && (
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <Loader2 className="h-8 w-8 animate-spin text-primary" />
+                </div>
+              )}
             </div>
           )}
         </div>
@@ -93,7 +117,11 @@ export default function SingleDesign({ params }: PageProps) {
             {isLoading ? (
               <DesignDetailsSkeleton />
             ) : (
-              <DesignDetails data={data} imageDimensions={imageDimensions} params={params} />
+              <DesignDetails
+                data={data}
+                imageDimensions={imageDimensions}
+                params={params}
+              />
             )}
           </CardContent>
         </Card>
@@ -101,6 +129,10 @@ export default function SingleDesign({ params }: PageProps) {
 
       <div className="mt-8 space-y-6 lg:mt-12">
         {isLoading ? <AuthorAndTagsSkeleton /> : <AuthorAndTags data={data} />}
+      </div>
+
+      <div className="mt-8 lg:mt-12">
+        <Comments />
       </div>
     </div>
   );

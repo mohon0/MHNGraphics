@@ -88,9 +88,11 @@ export function DesignDetails({
           <Button variant="outline" className="w-full">
             <Heart className="mr-2 h-5 w-5" /> Love
           </Button>
-          <Button variant="outline" className="w-full">
-            <MessageSquare className="mr-2 h-5 w-5" /> Comment
-          </Button>
+          <Link href="#comment">
+            <Button variant="outline" className="w-full">
+              <MessageSquare className="mr-2 h-5 w-5" /> Comment
+            </Button>
+          </Link>
           <Share params={params} />
         </div>
       </div>
