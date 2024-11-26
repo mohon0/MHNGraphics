@@ -1,3 +1,5 @@
+"use client";
+
 import { convertToReadableDate } from "@/components/helper/date/convertDateString";
 import { DesignType } from "@/components/interface/DesignType";
 import {
@@ -14,9 +16,14 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ImageDimensions } from "@/utils/imageDimensions";
-import { CircleCheckBig, Download, Heart, MessageSquare } from "lucide-react";
+import axios from "axios";
+import { CircleCheckBig, Download, MessageSquare } from "lucide-react";
+import { useSession } from "next-auth/react";
 import Link from "next/link";
+import { HiHeart, HiOutlineHeart } from "react-icons/hi";
 import { SiCanva } from "react-icons/si";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import DownloadMenuItem from "./DownloadMenuItem";
 import Share from "./Share";
 
@@ -24,13 +31,91 @@ interface DesignDetailsProps {
   data: DesignType;
   imageDimensions: ImageDimensions | null;
   params: { slug: string[] };
+  refetch: () => void;
 }
+
+interface LikeButtonProps {
+  likes: { userId: string }[]; // Define likes as an array of objects with a userId field
+  session: any; // Optionally, you could type this more precisely based on your session object.
+}
+
+const LikeButton = ({ likes, session }: LikeButtonProps) => {
+  const userId = session?.user?.id;
+
+  // Check if the current user has already liked this design
+  const isLiked = userId ? likes.some((like) => like.userId === userId) : false;
+
+  return <> {isLiked ? <HiHeart size={24} /> : <HiOutlineHeart size={24} />}</>;
+};
 
 export function DesignDetails({
   data,
   imageDimensions,
   params,
+  refetch,
 }: DesignDetailsProps) {
+  const { status, data: session } = useSession();
+
+  async function handleLike({
+    postId,
+    userId,
+  }: {
+    postId: string;
+    userId: string;
+  }) {
+    if (status === "unauthenticated") {
+      toast.error("You must be logged in to like this design");
+      return;
+    }
+
+    // Display loading toast
+    const toastId = toast.loading("Processing...");
+
+    try {
+      const response = await axios.post("/api/design/single-design/like", {
+        postId,
+        userId,
+      });
+
+      if (response.status === 200 || response.status === 201) {
+        const { message, status: likeStatus } = response.data;
+
+        // Handle success
+        if (likeStatus === "success") {
+          refetch();
+          toast.update(toastId, {
+            render: message,
+            type: "success",
+            isLoading: false,
+            autoClose: 3000,
+          });
+        } else {
+          toast.update(toastId, {
+            render: "Error updating like",
+            type: "error",
+            isLoading: false,
+            autoClose: 3000,
+          });
+        }
+      } else {
+        toast.update(toastId, {
+          render: "Error updating like",
+          type: "error",
+          isLoading: false,
+          autoClose: 3000,
+        });
+      }
+    } catch (error: any) {
+      // Handle failure
+      toast.update(toastId, {
+        render: "Error updating like",
+        type: "error",
+        isLoading: false,
+        autoClose: 3000,
+      });
+    }
+  }
+
   return (
     <>
       <p className="inline-flex items-center gap-2 text-wrap text-sm">
@@ -85,12 +170,24 @@ export function DesignDetails({
           </DropdownMenu>
         </div>
         <div className="mt-6 flex gap-4">
-          <Button variant="outline" className="w-full">
-            <Heart className="mr-2 h-5 w-5" /> Love
+          <Button
+            variant="outline"
+            className="w-full"
+            onClick={() => {
+              if (session?.user) {
+                handleLike({ postId: data.id, userId: session.user.id });
+              } else {
+                toast.error("You must be logged in to like this design");
+              }
+            }}
+          >
+            <LikeButton likes={data.likes} session={session} />
+            {data.likeCount}
           </Button>
+
           <Link href="#comment">
             <Button variant="outline" className="w-full">
-              <MessageSquare className="mr-2 h-5 w-5" /> Comment
+              <MessageSquare className="mr-2 h-5 w-5" /> 4
             </Button>
           </Link>
           <Share params={params} />
@@ -111,7 +208,8 @@ export function DesignDetails({
             <AccordionTrigger>Show details</AccordionTrigger>
             <AccordionContent className="space-y-2">
               <p className="flex items-center justify-between">
-                <span className="text-muted-foreground">Love:</span> 20
+                <span className="text-muted-foreground">Love:</span>{" "}
+                {data.likeCount}
               </p>
               <p className="flex items-center justify-between">
                 <span className="text-muted-foreground">Resolution:</span>{" "}
@@ -130,6 +228,7 @@ export function DesignDetails({
           </AccordionItem>
         </Accordion>
       </div>
+      <ToastContainer autoClose={4000} />
     </>
   );
 }

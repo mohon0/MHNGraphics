@@ -121,6 +121,7 @@ export default function SingleDesign({ params }: PageProps) {
                 data={data}
                 imageDimensions={imageDimensions}
                 params={params}
+                refetch={refetch}
               />
             )}
           </CardContent>

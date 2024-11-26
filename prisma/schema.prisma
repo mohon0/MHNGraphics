@@ -63,6 +63,7 @@ model User {
   accounts         Account[]
   sessions         Session[]
   design           Design[]
+  likes            Like[]
 }
 
 
@@ -81,6 +82,7 @@ model Design {
   status      DesignStatus @default(PENDING)
   authorId    String        @db.ObjectId
   author      User          @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  likes       Like[]
 
   @@index([category])
   @@index([subcategory])
@@ -91,4 +93,16 @@ model Subscriber {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
   email     String   @unique
   createdAt DateTime @default(now())
+}
+
+model Like {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String   @db.ObjectId
+  designId  String   @db.ObjectId
+  createdAt DateTime @default(now())
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  design Design @relation(fields: [designId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, designId]) // Prevent duplicate likes
 }

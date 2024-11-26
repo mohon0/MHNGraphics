@@ -142,10 +142,25 @@ export async function GET(req: NextRequest, res: NextResponse) {
             image: true,
           },
         },
+        likes: {
+          select: {
+            userId: true,
+          },
+        },
       },
     });
 
-    return new NextResponse(JSON.stringify(response), { status: 200 });
+    if (!response) {
+      return new NextResponse("Design not found", { status: 404 });
+    }
+
+    // Add the like count to the response object
+    const enhancedResponse = {
+      ...response,
+      likeCount: response.likes.length, // Count the number of likes
+    };
+
+    return new NextResponse(JSON.stringify(enhancedResponse), { status: 200 });
   } catch (error) {
     return new NextResponse("Internal Server Error", { status: 500 });
   }

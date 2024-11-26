@@ -31,4 +31,6 @@ export interface DesignType {
     name: string;
     image: string;
   };
+  likes: { userId: string }[];
+  likeCount: number;
 }
