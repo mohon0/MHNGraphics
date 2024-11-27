@@ -35,8 +35,8 @@ interface DesignDetailsProps {
 }
 
 interface LikeButtonProps {
-  likes: { userId: string }[]; // Define likes as an array of objects with a userId field
-  session: any; // Optionally, you could type this more precisely based on your session object.
+  likes: { userId: string }[];
+  session: any;
 }
 
 const LikeButton = ({ likes, session }: LikeButtonProps) => {
@@ -45,7 +45,16 @@ const LikeButton = ({ likes, session }: LikeButtonProps) => {
   // Check if the current user has already liked this design
   const isLiked = userId ? likes.some((like) => like.userId === userId) : false;
 
-  return <> {isLiked ? <HiHeart size={24} /> : <HiOutlineHeart size={24} />}</>;
+  return (
+    <>
+      {" "}
+      {isLiked ? (
+        <HiHeart size={24} color="red" />
+      ) : (
+        <HiOutlineHeart size={24} />
+      )}
+    </>
+  );
 };
 
 export function DesignDetails({
@@ -187,7 +196,7 @@ export function DesignDetails({
 
           <Link href="#comment">
             <Button variant="outline" className="w-full">
-              <MessageSquare className="mr-2 h-5 w-5" /> 4
+              <MessageSquare className="mr-2 h-5 w-5" /> {data.commentsCount}
             </Button>
           </Link>
           <Share params={params} />

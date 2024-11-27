@@ -131,10 +131,13 @@ export default function SingleDesign({ params }: PageProps) {
       <div className="mt-8 space-y-6 lg:mt-12">
         {isLoading ? <AuthorAndTagsSkeleton /> : <AuthorAndTags data={data} />}
       </div>
-
-      <div className="mt-8 lg:mt-12">
-        <Comments />
-      </div>
+      {isLoading ? (
+        "loading"
+      ) : (
+        <div className="mt-8 lg:mt-12">
+          <Comments data={data} refetch={refetch} />
+        </div>
+      )}
     </div>
   );
 }

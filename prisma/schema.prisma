@@ -64,6 +64,7 @@ model User {
   sessions         Session[]
   design           Design[]
   likes            Like[]
+  comments Comment[]
 }
 
 
@@ -83,6 +84,7 @@ model Design {
   authorId    String        @db.ObjectId
   author      User          @relation(fields: [authorId], references: [id], onDelete: Cascade)
   likes       Like[]
+  comments Comment[]
 
   @@index([category])
   @@index([subcategory])
@@ -105,4 +107,16 @@ model Like {
   design Design @relation(fields: [designId], references: [id], onDelete: Cascade)
 
   @@unique([userId, designId]) // Prevent duplicate likes
+}
+
+
+model Comment {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String   @db.ObjectId
+  designId  String   @db.ObjectId
+  content   String
+  createdAt DateTime @default(now())
+
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  design Design @relation(fields: [designId], references: [id], onDelete: Cascade)
 }

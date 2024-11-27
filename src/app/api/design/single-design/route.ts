@@ -147,6 +147,20 @@ export async function GET(req: NextRequest, res: NextResponse) {
             userId: true,
           },
         },
+        comments: {
+          orderBy: {
+            createdAt: "desc",
+          },
+          include: {
+            user: {
+              select: {
+                name: true,
+                image: true,
+                status: true,
+              },
+            },
+          },
+        },
       },
     });
 
@@ -158,6 +172,7 @@ export async function GET(req: NextRequest, res: NextResponse) {
     const enhancedResponse = {
       ...response,
       likeCount: response.likes.length, // Count the number of likes
+      commentsCount: response.comments.length,
     };
 
     return new NextResponse(JSON.stringify(enhancedResponse), { status: 200 });

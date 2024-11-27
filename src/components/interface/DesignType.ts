@@ -33,4 +33,17 @@ export interface DesignType {
   };
   likes: { userId: string }[];
   likeCount: number;
+  commentsCount: number;
+  comments: {
+    id: string;
+    userId: string;
+    designId: string;
+    content: string;
+    createdAt: string;
+    user: {
+      name: string;
+      image: string;
+      status: string;
+    };
+  }[];
 }
