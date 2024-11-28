@@ -119,7 +119,6 @@ function ProfileContent() {
                         <Link
                           href={createSlug(
                             design.category,
-                            design.subcategory,
                             design.name,
                             design.createdAt,
                           )}

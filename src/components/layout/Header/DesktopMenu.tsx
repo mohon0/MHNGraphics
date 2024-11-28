@@ -1,13 +1,10 @@
 "use client";
 
-import { productCategories } from "@/components/data/ProductCategory";
 import {
   NavigationMenu,
-  NavigationMenuContent,
   NavigationMenuItem,
   NavigationMenuLink,
   NavigationMenuList,
-  NavigationMenuTrigger,
 } from "@/components/ui/navigation-menu";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
@@ -16,7 +13,7 @@ import * as React from "react";
 export default function DesktopMenu({ fixed = false }: { fixed?: boolean }) {
   return (
     <NavigationMenu>
-      <NavigationMenuList>
+      <NavigationMenuList className="space-x-10">
         <NavigationMenuItem>
           <Link
             href="/design?category=all&query=&page=1"
@@ -31,146 +28,72 @@ export default function DesktopMenu({ fixed = false }: { fixed?: boolean }) {
           </Link>
         </NavigationMenuItem>
 
-        {/* Other Menu Items */}
         <NavigationMenuItem>
-          <NavigationMenuTrigger
-            className={fixed ? "text-white" : "text-black hover:text-black/80"}
+          <Link
+            href="/design?category=image&query=&page=1"
+            legacyBehavior
+            passHref
           >
-            Image
-          </NavigationMenuTrigger>
-          <NavigationMenuContent>
-            <ul className="grid w-[400px] gap-3 p-3 md:grid-cols-2">
-              {productCategories
-                .find((category) => category.value === "photos")
-                ?.subcategories?.map((subcategory) => (
-                  <ListItem
-                    key={subcategory.value}
-                    title={subcategory.label}
-                    href={`/design?category=photos&subcategory=${subcategory.value}&query=&page=1`}
-                  />
-                ))}
-            </ul>
-          </NavigationMenuContent>
+            <NavigationMenuLink
+              className={fixed ? "pl-2 text-white" : "pl-2 text-black"}
+            >
+              Image
+            </NavigationMenuLink>
+          </Link>
         </NavigationMenuItem>
 
         <NavigationMenuItem>
-          <NavigationMenuTrigger
-            className={fixed ? "text-white" : "text-black hover:text-black/80"}
+          <Link
+            href="/design?category=icons&query=&page=1"
+            legacyBehavior
+            passHref
           >
-            Icons
-          </NavigationMenuTrigger>
-          <NavigationMenuContent>
-            <ul className="grid w-[400px] gap-3 p-3 md:grid-cols-2">
-              {productCategories
-                .find((category) => category.value === "icons")
-                ?.subcategories?.map((subcategory) => (
-                  <ListItem
-                    key={subcategory.value}
-                    title={subcategory.label}
-                    href={`/design?category=icons&subcategory=${subcategory.value}&query=&page=1`}
-                  />
-                ))}
-            </ul>
-          </NavigationMenuContent>
+            <NavigationMenuLink
+              className={fixed ? "pl-2 text-white" : "pl-2 text-black"}
+            >
+              Icons
+            </NavigationMenuLink>
+          </Link>
         </NavigationMenuItem>
 
         <NavigationMenuItem>
-          <NavigationMenuTrigger
-            className={fixed ? "text-white" : "text-black hover:text-black/80"}
+          <Link
+            href="/design?category=template&query=&page=1"
+            legacyBehavior
+            passHref
           >
-            Template
-          </NavigationMenuTrigger>
-          <NavigationMenuContent>
-            <ul className="grid w-[400px] gap-3 p-3 md:grid-cols-2">
-              {productCategories
-                .find((category) => category.value === "templates")
-                ?.subcategories?.map((subcategory) => (
-                  <ListItem
-                    key={subcategory.value}
-                    title={subcategory.label}
-                    href={`/design?category=templates&subcategory=${subcategory.value}&query=&page=1`}
-                  />
-                ))}
-            </ul>
-          </NavigationMenuContent>
+            <NavigationMenuLink
+              className={fixed ? "pl-2 text-white" : "pl-2 text-black"}
+            >
+              Template
+            </NavigationMenuLink>
+          </Link>
         </NavigationMenuItem>
         <NavigationMenuItem>
-          <NavigationMenuTrigger
-            className={fixed ? "text-white" : "text-black hover:text-black/80"}
+          <Link
+            href="/design?category=animation&query=&page=1"
+            legacyBehavior
+            passHref
           >
-            Animation
-          </NavigationMenuTrigger>
-          <NavigationMenuContent>
-            <ul className="grid w-[400px] gap-3 p-3 md:grid-cols-2">
-              {productCategories
-                .find((category) => category.value === "animations")
-                ?.subcategories?.map((subcategory) => (
-                  <ListItem
-                    key={subcategory.value}
-                    title={subcategory.label}
-                    href={`/design?category=animations&subcategory=${subcategory.value}&query=&page=1`}
-                  />
-                ))}
-            </ul>
-          </NavigationMenuContent>
+            <NavigationMenuLink
+              className={fixed ? "pl-2 text-white" : "pl-2 text-black"}
+            >
+              Animation
+            </NavigationMenuLink>
+          </Link>
         </NavigationMenuItem>
         <NavigationMenuItem>
-          <NavigationMenuTrigger
-            className={fixed ? "text-white" : "text-black hover:text-black/80"}
+          <Link
+            href="/design?category=mockup&query=&page=1"
+            legacyBehavior
+            passHref
           >
-            Mockups
-          </NavigationMenuTrigger>
-          <NavigationMenuContent>
-            <ul className="grid w-[400px] gap-3 p-3 md:grid-cols-2">
-              {productCategories
-                .find((category) => category.value === "mockups")
-                ?.subcategories?.map((subcategory) => (
-                  <ListItem
-                    key={subcategory.value}
-                    title={subcategory.label}
-                    href={`/design?category=mockups&subcategory=${subcategory.value}&query=&page=1`}
-                  />
-                ))}
-            </ul>
-          </NavigationMenuContent>
-        </NavigationMenuItem>
-        <NavigationMenuItem>
-          <NavigationMenuTrigger
-            className={fixed ? "text-white" : "text-black hover:text-black/80"}
-          >
-            More
-          </NavigationMenuTrigger>
-          <NavigationMenuContent>
-            <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] lg:grid-cols-3">
-              {productCategories
-                .find((category) => category.value === "textures")
-                ?.subcategories?.map((subcategory) => (
-                  <ListItem
-                    key={subcategory.value}
-                    title={subcategory.label}
-                    href={`/design?category=textures&subcategory=${subcategory.value}&query=&page=1`}
-                  />
-                ))}
-              {productCategories
-                .find((category) => category.value === "patterns")
-                ?.subcategories?.map((subcategory) => (
-                  <ListItem
-                    key={subcategory.value}
-                    title={subcategory.label}
-                    href={`/design?category=patterns&subcategory=${subcategory.value}&query=&page=1`}
-                  />
-                ))}
-              {productCategories
-                .find((category) => category.value === "3d-models")
-                ?.subcategories?.map((subcategory) => (
-                  <ListItem
-                    key={subcategory.value}
-                    title={subcategory.label}
-                    href={`/design?category=3d-models&subcategory=${subcategory.value}&query=&page=1`}
-                  />
-                ))}
-            </ul>
-          </NavigationMenuContent>
+            <NavigationMenuLink
+              className={fixed ? "pl-2 text-white" : "pl-2 text-black"}
+            >
+              Mockup
+            </NavigationMenuLink>
+          </Link>
         </NavigationMenuItem>
       </NavigationMenuList>
     </NavigationMenu>

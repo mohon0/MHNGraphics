@@ -5,12 +5,6 @@ import Link from "next/link";
 import { useState } from "react";
 
 import { productCategories } from "@/components/data/ProductCategory";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import {
   Sheet,
@@ -34,29 +28,17 @@ export default function MobileMenu() {
         </SheetHeader>
         <ScrollArea className="h-[calc(100vh-5rem)]">
           <nav>
-            <Accordion type="single" collapsible className="w-full">
-              {productCategories.map((category) => (
-                <AccordionItem value={category.value} key={category.value}>
-                  <AccordionTrigger className="px-6 py-3 text-sm font-medium">
-                    {category.label}
-                  </AccordionTrigger>
-                  <AccordionContent>
-                    <div className="space-y-2 px-6 py-2">
-                      {category.subcategories?.map((subcategory) => (
-                        <Link
-                          key={subcategory.value}
-                          href={`/design?category=${category.value}&subcategory=${subcategory.value}&query=&page=1`}
-                          className="block py-2 text-sm text-muted-foreground transition-colors hover:text-foreground"
-                          onClick={() => setOpen(false)}
-                        >
-                          {subcategory.label}
-                        </Link>
-                      ))}
-                    </div>
-                  </AccordionContent>
-                </AccordionItem>
-              ))}
-            </Accordion>
+            {productCategories.map((category) => (
+              <Link
+                href={`/design?category=${category.value}&query=&page=1`}
+                key={category.value}
+              >
+                <p className="px-6 py-3 text-sm font-medium">
+                  {category.label}
+                </p>
+              </Link>
+            ))}
+
             <Link href="/pricing" className="px-6 py-4 text-primary">
               Pricing
             </Link>

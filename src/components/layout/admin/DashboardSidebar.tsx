@@ -31,22 +31,6 @@ export function DashboardSidebar({
   // Default nav items, common for all users
   const commonNavMain = [
     {
-      title: "Account",
-      url: "#",
-      isActive: true,
-      icon: BadgeCheck,
-      items: [
-        {
-          title: "View Profile",
-          url: `/profile?id=${session?.user?.id}`,
-        },
-        {
-          title: "Edit Profile",
-          url: "/edit-profile",
-        },
-      ],
-    },
-    {
       title: "Design",
       url: "#",
       icon: GalleryHorizontal,
@@ -59,6 +43,22 @@ export function DashboardSidebar({
         {
           title: "View All",
           url: "/dashboard/all-design?category=all&query=&page=1",
+        },
+      ],
+    },
+    {
+      title: "Account",
+      url: "#",
+      isActive: true,
+      icon: BadgeCheck,
+      items: [
+        {
+          title: "View Profile",
+          url: `/profile?id=${session?.user?.id}`,
+        },
+        {
+          title: "Edit Profile",
+          url: "/edit-profile",
         },
       ],
     },

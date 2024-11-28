@@ -74,7 +74,6 @@ model Design {
   name        String
   description String
   category    String
-  subcategory String
   image       String
   imageId     String?
   tags        String[]
@@ -87,7 +86,6 @@ model Design {
   comments Comment[]
 
   @@index([category])
-  @@index([subcategory])
 }
 
 

@@ -80,7 +80,6 @@ export async function POST(req: NextRequest, res: NextResponse) {
         name,
         description,
         category,
-        subcategory,
         tags,
         status,
         image: imageUrl.secure_url,
@@ -95,7 +94,6 @@ export async function POST(req: NextRequest, res: NextResponse) {
       design,
     });
   } catch (error) {
-    console.error("POST request error:", error); // Log the error for debugging
     return new NextResponse("Internal Server Error", { status: 500 });
   }
 }
@@ -105,13 +103,12 @@ export async function GET(req: NextRequest, res: NextResponse) {
     const url = new URL(req.url);
     const queryParams = new URLSearchParams(url.search);
     const category = queryParams.get("category");
-    const subcategory = queryParams.get("subcategory");
     const day = queryParams.get("day");
     const month = queryParams.get("month");
     const year = queryParams.get("year");
     const name = queryParams.get("name");
 
-    if (!category || !subcategory || !day || !month || !year || !name) {
+    if (!category || !day || !month || !year || !name) {
       return new NextResponse("Missing field", { status: 400 });
     }
 
@@ -123,10 +120,7 @@ export async function GET(req: NextRequest, res: NextResponse) {
           contains: category,
           mode: "insensitive",
         },
-        subcategory: {
-          contains: subcategory,
-          mode: "insensitive",
-        },
+
         name: {
           contains: SlugToText(name),
           mode: "insensitive",
@@ -177,6 +171,7 @@ export async function GET(req: NextRequest, res: NextResponse) {
 
     return new NextResponse(JSON.stringify(enhancedResponse), { status: 200 });
   } catch (error) {
+    console.log(error);
     return new NextResponse("Internal Server Error", { status: 500 });
   }
 }

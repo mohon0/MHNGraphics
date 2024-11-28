@@ -13,7 +13,7 @@ export default function Header({ fixed = false }: { fixed?: boolean }) {
     >
       <div className="flex w-full items-center justify-between px-2 py-4 md:px-10">
         {/* Mobile Menu Icon for Smaller Screens */}
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-4 md:gap-20">
           <div className="lg:hidden">
             <MobileMenu /> {/* Render the MobileMenu component here */}
           </div>

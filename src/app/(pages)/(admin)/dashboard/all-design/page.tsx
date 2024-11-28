@@ -1,4 +1,5 @@
 "use client";
+
 import PaginationUi from "@/components/common/pagination/PaginationUi";
 import DesignSkeleton from "@/components/common/skeleton/DesignSkeleton";
 import TableSkeleton from "@/components/common/skeleton/TableSkeleton";
@@ -10,6 +11,7 @@ import { DesignType } from "@/components/interface/DesignType";
 import BreadCrumb from "@/components/layout/admin/BreadCrumb";
 import { DashboardSidebar } from "@/components/layout/admin/DashboardSidebar";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 import {
   Dialog,
   DialogClose,
@@ -57,9 +59,141 @@ function DesignMessage({ message }: { message: string }) {
   );
 }
 
+function DesignCard({
+  item,
+  session,
+  onDelete,
+  onStatusChange,
+}: {
+  item: DesignType;
+  session: any;
+  onDelete: (id: string) => void;
+  onStatusChange: (id: string, status: string) => void;
+}) {
+  return (
+    <Card className="w-full">
+      <CardContent className="p-4">
+        <div className="flex gap-4">
+          <Link href={createSlug(item.category, item.name, item.createdAt)}>
+            <Image
+              src={item.image}
+              alt={item.name}
+              height={100}
+              width={100}
+              className="h-24 w-24 object-cover"
+              priority
+            />
+          </Link>
+          <div className="flex-1 space-y-2">
+            <Link
+              href={createSlug(item.category, item.name, item.createdAt)}
+              className="font-medium hover:underline"
+            >
+              {item.name}
+            </Link>
+            <div className="text-sm text-muted-foreground">
+              <p>Category: {item.category}</p>
+              <p>Author: {item.author.name}</p>
+              <p>{convertDateString(item.createdAt.toString())}</p>
+            </div>
+            <div className="pt-2">
+              {session?.user?.role === "ADMIN" ? (
+                <Select
+                  defaultValue={item.status}
+                  onValueChange={(value) => onStatusChange(item.id, value)}
+                >
+                  <SelectTrigger
+                    className={`w-full ${
+                      item.status === "PUBLISHED"
+                        ? "text-green-600"
+                        : "text-yellow-600"
+                    }`}
+                  >
+                    <SelectValue placeholder="Status" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="PUBLISHED" className="text-green-600">
+                      Published
+                    </SelectItem>
+                    <SelectItem value="PENDING" className="text-yellow-600">
+                      Pending
+                    </SelectItem>
+                  </SelectContent>
+                </Select>
+              ) : (
+                <p
+                  className={
+                    item.status === "PUBLISHED"
+                      ? "text-green-600"
+                      : "text-yellow-600"
+                  }
+                >
+                  {item.status}
+                </p>
+              )}
+            </div>
+            <div className="flex items-center gap-4 pt-2">
+              <Link
+                href={`/dashboard/edit-design?id=${item.id}`}
+                className="text-sm text-primary hover:underline"
+              >
+                Edit
+              </Link>
+              <Separator orientation="vertical" className="h-4" />
+              <Link
+                href={createSlug(item.category, item.name, item.createdAt)}
+                className="text-sm text-primary hover:underline"
+              >
+                View
+              </Link>
+              <Separator orientation="vertical" className="h-4" />
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    className="h-auto p-0 text-sm font-normal text-destructive hover:bg-transparent"
+                  >
+                    Delete
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="sm:max-w-md">
+                  <DialogHeader>
+                    <DialogTitle>Delete Design</DialogTitle>
+                    <DialogDescription>
+                      Are you sure you want to delete this design? This action
+                      cannot be undone.
+                    </DialogDescription>
+                  </DialogHeader>
+                  <DialogFooter>
+                    <DialogClose asChild>
+                      <Button type="button" variant="secondary">
+                        Cancel
+                      </Button>
+                    </DialogClose>
+                    <DialogClose asChild>
+                      <Button
+                        type="button"
+                        variant="destructive"
+                        onClick={() => onDelete(item.id)}
+                      >
+                        Delete
+                      </Button>
+                    </DialogClose>
+                  </DialogFooter>
+                </DialogContent>
+              </Dialog>
+            </div>
+          </div>
+        </div>
+      </CardContent>
+    </Card>
+  );
+}
+
 function Design() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const { data: session } = useSession();
 
   const [category, setCategory] = useState<string>(
     searchParams.get("category") || "all",
@@ -82,7 +216,6 @@ function Design() {
     (e: React.ChangeEvent<HTMLInputElement>) => {
       const newQuery = e.target.value;
       setSearchQuery(newQuery);
-      // Update URL parameters and trigger fetchDesign with debouncing within it
       router.push(
         `/dashboard/all-design?category=${category}&query=${newQuery}&page=1`,
       );
@@ -99,7 +232,6 @@ function Design() {
   const categoryName = searchParams.get("category") || "All";
   const query = searchParams.get("query") || "";
   const page = parseInt(searchParams.get("page") || "1", 10);
-  const { data: session } = useSession();
 
   const { isLoading, data, isError, refetch } = FetchUserDesign({
     page,
@@ -135,10 +267,6 @@ function Design() {
     }
   };
 
-  if (isError) {
-    toast.error("Something went wrong while fetching the designs.");
-  }
-
   const handleStatusChange = async (id: string, newStatus: string) => {
     toast.loading("Please wait...");
     try {
@@ -160,62 +288,66 @@ function Design() {
   };
 
   return (
-    <>
-      <SidebarProvider>
-        <DashboardSidebar />
-        <main className="w-full">
-          <BreadCrumb />
-          <div className="flex">
-            <main className="mx-4 w-full">
-              <>
-                <div className="mx-auto flex flex-col items-baseline gap-4 md:flex-row md:gap-20">
-                  <div className="mt-4 flex gap-4">
-                    <Select value={category} onValueChange={handleFilterChange}>
-                      <SelectTrigger className="w-[180px]">
-                        <SelectValue placeholder="Category" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectGroup>
-                          <SelectLabel>All Categories</SelectLabel>
-                          <SelectItem value="all">All</SelectItem>
-                          {productCategories.map((category) => (
-                            <SelectItem
-                              key={category.value}
-                              value={category.value
-                                .toLowerCase()
-                                .replace(/\s+/g, "_")}
-                            >
-                              {category.label}
-                            </SelectItem>
-                          ))}
-                        </SelectGroup>
-                      </SelectContent>
-                    </Select>
-                    <Button onClick={handleSearch} disabled={isLoading}>
-                      {isLoading ? "Loading..." : "Filter"}
-                    </Button>
-                  </div>
-                  <div className="flex items-center gap-4">
-                    <Input
-                      placeholder="Search by name"
-                      value={searchQuery}
-                      onChange={handleSearchChange}
-                      onKeyDown={(e) => {
-                        if (e.key === "Enter") {
-                          handleSearch();
-                        }
-                      }}
-                    />
-                    <Button
-                      onClick={handleSearch}
-                      type="submit"
-                      disabled={isLoading}
-                    >
-                      {isLoading ? "Loading..." : "Search"}
-                    </Button>
-                  </div>
+    <SidebarProvider>
+      <DashboardSidebar />
+      <main className="w-full">
+        <BreadCrumb />
+        <div className="flex">
+          <main className="mx-4 w-full">
+            <div className="space-y-6">
+              <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
+                  <Select value={category} onValueChange={handleFilterChange}>
+                    <SelectTrigger className="w-full sm:w-[180px]">
+                      <SelectValue placeholder="Category" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectGroup>
+                        <SelectLabel>All Categories</SelectLabel>
+                        <SelectItem value="all">All</SelectItem>
+                        {productCategories.map((category) => (
+                          <SelectItem
+                            key={category.value}
+                            value={category.value
+                              .toLowerCase()
+                              .replace(/\s+/g, "_")}
+                          >
+                            {category.label}
+                          </SelectItem>
+                        ))}
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                  <Button
+                    onClick={handleSearch}
+                    disabled={isLoading}
+                    className="w-full sm:w-auto"
+                  >
+                    {isLoading ? "Loading..." : "Filter"}
+                  </Button>
                 </div>
-              </>
+                <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
+                  <Input
+                    placeholder="Search by name"
+                    value={searchQuery}
+                    onChange={handleSearchChange}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        handleSearch();
+                      }
+                    }}
+                    className="w-full sm:w-auto"
+                  />
+                  <Button
+                    onClick={handleSearch}
+                    disabled={isLoading}
+                    className="w-full sm:w-auto"
+                  >
+                    {isLoading ? "Loading..." : "Search"}
+                  </Button>
+                </div>
+              </div>
+
               {isLoading ? (
                 <div className="mt-10">
                   <TableSkeleton rowCount={10} />
@@ -226,6 +358,20 @@ function Design() {
                 <DesignMessage message="No designs available." />
               ) : (
                 <>
+                  {/* Mobile View */}
+                  <div className="grid gap-4 md:hidden">
+                    {data.data.map((item: DesignType) => (
+                      <DesignCard
+                        key={item.id}
+                        item={item}
+                        session={session}
+                        onDelete={handleDelete}
+                        onStatusChange={handleStatusChange}
+                      />
+                    ))}
+                  </div>
+
+                  {/* Desktop View */}
                   <Table className="mt-4 hidden md:inline-table">
                     <TableHeader className="w-full bg-secondary">
                       <TableRow className="w-full border-t">
@@ -246,7 +392,6 @@ function Design() {
                             <Link
                               href={createSlug(
                                 item.category,
-                                item.subcategory,
                                 item.name,
                                 item.createdAt,
                               )}
@@ -266,7 +411,6 @@ function Design() {
                               <Link
                                 href={createSlug(
                                   item.category,
-                                  item.subcategory,
                                   item.name,
                                   item.createdAt,
                                 )}
@@ -287,7 +431,6 @@ function Design() {
                                 <Link
                                   href={createSlug(
                                     item.category,
-                                    item.subcategory,
                                     item.name,
                                     item.createdAt,
                                   )}
@@ -307,10 +450,10 @@ function Design() {
                                   </DialogTrigger>
                                   <DialogContent className="sm:max-w-md">
                                     <DialogHeader>
-                                      <DialogTitle>Delete Product</DialogTitle>
+                                      <DialogTitle>Delete Design</DialogTitle>
                                       <DialogDescription>
                                         Are you sure you want to delete this
-                                        product? This action cannot be undone.
+                                        design? This action cannot be undone.
                                       </DialogDescription>
                                     </DialogHeader>
                                     <DialogFooter>
@@ -360,26 +503,33 @@ function Design() {
                                 <SelectContent>
                                   <SelectItem
                                     value="PUBLISHED"
-                                    className="text-green-600 hover:text-green-600"
+                                    className="text-green-600"
                                   >
                                     Published
                                   </SelectItem>
                                   <SelectItem
                                     value="PENDING"
-                                    className="text-yellow-600 hover:text-yellow-600"
+                                    className="text-yellow-600"
                                   >
                                     Pending
                                   </SelectItem>
                                 </SelectContent>
                               </Select>
                             ) : (
-                              <p>{item.status}</p>
+                              <p
+                                className={
+                                  item.status === "PUBLISHED"
+                                    ? "text-green-600"
+                                    : "text-yellow-600"
+                                }
+                              >
+                                {item.status}
+                              </p>
                             )}
                           </TableCell>
                           <TableCell className="align-top">
                             {item.author.name}
                           </TableCell>
-
                           <TableCell className="text-right align-top leading-6">
                             {convertDateString(item.createdAt.toString())}
                           </TableCell>
@@ -390,7 +540,6 @@ function Design() {
                 </>
               )}
 
-              {/* Pagination */}
               {data?.meta && data.meta.totalPages > 1 && (
                 <div className="mt-8 text-center">
                   <PaginationUi
@@ -401,13 +550,12 @@ function Design() {
                   />
                 </div>
               )}
-            </main>
-          </div>
-        </main>
-      </SidebarProvider>
-
+            </div>
+          </main>
+        </div>
+      </main>
       <ToastContainer autoClose={3000} />
-    </>
+    </SidebarProvider>
   );
 }
 

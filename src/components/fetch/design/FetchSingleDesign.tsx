@@ -3,26 +3,18 @@ import axios from "axios";
 
 interface props {
   category: string;
-  subcategory: string;
   day: string;
   month: string;
   year: string;
   name: string;
 }
 
-export function FetchSingleDesign({
-  category,
-  subcategory,
-  day,
-  month,
-  year,
-  name,
-}: props) {
+export function FetchSingleDesign({ category, day, month, year, name }: props) {
   return useQuery({
-    queryKey: ["Single Design", category, subcategory, day, month, year],
+    queryKey: ["Single Design", category, day, month, year, name],
     queryFn: async () => {
       const response = await axios.get(
-        `/api/design/single-design?category=${category}&subcategory=${subcategory}&day=${day}&month=${month}&year=${year}&name=${name}`,
+        `/api/design/single-design?category=${category}&day=${day}&month=${month}&year=${year}&name=${name}`,
       );
       return response.data;
     },

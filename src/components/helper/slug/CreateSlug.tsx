@@ -10,7 +10,6 @@ const slugify = (text: string) => {
 
 export const createSlug = (
   category: string,
-  subcategory: string,
   name: string,
   createdAt: string,
 ): string => {
@@ -19,12 +18,12 @@ export const createSlug = (
 
   // Slugify the category, subcategory, and name
   const categorySlug = slugify(category);
-  const subcategorySlug = slugify(subcategory);
+
   const nameSlug = slugify(name);
 
   // Split the date into day, month, and year
   const [day, month, year] = formattedDate.split("/");
 
   // Return the formatted slug
-  return `/design/${categorySlug}/${subcategorySlug}/${day}/${month}/${year}/${nameSlug}`;
+  return `/design/${categorySlug}/${day}/${month}/${year}/${nameSlug}`;
 };

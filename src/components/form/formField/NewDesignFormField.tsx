@@ -20,9 +20,7 @@ import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
-  SelectGroup,
   SelectItem,
-  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
@@ -196,10 +194,6 @@ export const ProductCategoryAndTags: React.FC = () => {
   const selectedCategory = watch("category");
   const tags = watch("tags") || [];
 
-  const subcategories =
-    productCategories.find((category) => category.value === selectedCategory)
-      ?.subcategories || [];
-
   const [input, setInput] = useState("");
 
   const addTag = (tag: string) => {
@@ -236,7 +230,7 @@ export const ProductCategoryAndTags: React.FC = () => {
       </CardHeader>
       <CardContent>
         <div className="grid gap-6">
-          <div className="grid gap-4 sm:grid-cols-2">
+          <div className="grid gap-4">
             <FormField
               control={control}
               name="category"
@@ -262,42 +256,6 @@ export const ProductCategoryAndTags: React.FC = () => {
                       ))}
                     </SelectContent>
                   </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={control}
-              name="subcategory"
-              render={({ field }) => (
-                <FormItem>
-                  <RequiredLabel>Sub Category</RequiredLabel>
-                  <FormControl>
-                    <Select
-                      onValueChange={field.onChange}
-                      value={field.value}
-                      disabled={!selectedCategory}
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select a sub category" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectGroup>
-                          <SelectLabel>Subcategory</SelectLabel>
-                          {subcategories.map((subcategory) => (
-                            <SelectItem
-                              key={subcategory.value}
-                              value={subcategory.value
-                                .toLowerCase()
-                                .replace(/\s+/g, "_")}
-                            >
-                              {subcategory.label}
-                            </SelectItem>
-                          ))}
-                        </SelectGroup>
-                      </SelectContent>
-                    </Select>
-                  </FormControl>
                   <FormMessage />
                 </FormItem>
               )}

@@ -12,7 +12,6 @@ export const NewDesignFormSchema = z.object({
     ),
   description: z.string().trim(),
   category: z.string().min(1, "Required"),
-  subcategory: z.string().min(1, "Required"),
   tags: z.array(z.string()),
 });
 

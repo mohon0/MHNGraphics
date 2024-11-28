@@ -1,10 +1,9 @@
 "use client";
+import EditDesignSkeleton from "@/components/common/skeleton/EditDesignSkeleton";
 import { productCategories } from "@/components/data/ProductCategory";
 import { FetchSingleDesignById } from "@/components/fetch/design/FetchSingleDesign";
-import { NewProductName } from "@/components/form/formField/NewDesignFormField";
-import { Suspense } from "react";
-import EditDesignSkeleton from "@/components/common/skeleton/EditDesignSkeleton";
 import EditDesignImage from "@/components/form/formField/EditDesignFormField";
+import { NewProductName } from "@/components/form/formField/NewDesignFormField";
 import {
   NewDesignFormSchema,
   NewProductFormSchemaType,
@@ -25,9 +24,7 @@ import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
-  SelectGroup,
   SelectItem,
-  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
@@ -37,7 +34,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
 import { ChevronLeft, X } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useCallback, useEffect, useState } from "react";
+import { Suspense, useCallback, useEffect, useState } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { CgAsterisk } from "react-icons/cg";
 import { ToastContainer, toast } from "react-toastify";
@@ -83,7 +80,6 @@ function DesignPage() {
       name: "",
       description: "",
       category: "",
-      subcategory: "",
       tags: [],
     },
   });
@@ -96,7 +92,6 @@ function DesignPage() {
         name: data.name || "",
         description: data.description || "",
         category: data.category || "",
-        subcategory: data.subcategory || "",
         tags: data.tags || [],
       });
       setInitialImage(data.image || "");
@@ -109,10 +104,6 @@ function DesignPage() {
     name: "category",
   });
   const tags = useWatch({ control, name: "tags" });
-
-  const subcategories =
-    productCategories.find((category) => category.value === selectedCategory)
-      ?.subcategories || [];
 
   const handleAddNewImage = (file: File) => {
     setNewImage(file);
@@ -280,7 +271,7 @@ function DesignPage() {
                                   <CardTitle>Category</CardTitle>
                                 </CardHeader>
                                 <CardContent>
-                                  <div className="grid items-baseline gap-6 sm:grid-cols-2">
+                                  <div className="grid items-baseline gap-6">
                                     <div className="grid gap-3">
                                       <div>
                                         <FormField
@@ -318,52 +309,6 @@ function DesignPage() {
                                           )}
                                         />
                                       </div>
-                                    </div>
-                                    <div className="grid gap-3">
-                                      {subcategoriesLoaded && (
-                                        <FormField
-                                          name="subcategory"
-                                          render={({ field }) => (
-                                            <FormItem>
-                                              <FormLabel>
-                                                Sub Category
-                                              </FormLabel>
-                                              <Select
-                                                onValueChange={field.onChange}
-                                                defaultValue={
-                                                  data.subcategory || ""
-                                                }
-                                              >
-                                                <SelectTrigger>
-                                                  <SelectValue placeholder="Select a subcategory" />
-                                                </SelectTrigger>
-                                                <SelectContent>
-                                                  <SelectGroup>
-                                                    <SelectLabel>
-                                                      Subcategory
-                                                    </SelectLabel>
-                                                    {subcategories.map(
-                                                      (subcategory) => (
-                                                        <SelectItem
-                                                          key={
-                                                            subcategory.value
-                                                          }
-                                                          value={
-                                                            subcategory.value
-                                                          }
-                                                        >
-                                                          {subcategory.label}
-                                                        </SelectItem>
-                                                      ),
-                                                    )}
-                                                  </SelectGroup>
-                                                </SelectContent>
-                                              </Select>
-                                              <FormMessage />
-                                            </FormItem>
-                                          )}
-                                        />
-                                      )}
                                     </div>
                                   </div>
 

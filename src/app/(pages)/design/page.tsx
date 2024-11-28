@@ -76,7 +76,6 @@ function SearchPageContent() {
               <Link
                 href={createSlug(
                   item.category,
-                  item.subcategory,
                   item.name,
                   item.createdAt,
                 )}
