@@ -7,12 +7,12 @@ interface PageProps {
 
 // `generateMetadata` function for SEO
 export async function generateMetadata({ params }: PageProps) {
-  const [category, subcategory, day, month, year, name] = params.slug;
+  const [category, day, month, year, name] = params.slug;
   const siteurl = process.env.NEXT_PUBLIC_SITE_URL;
 
   try {
     const response = await axios.get(
-      `${process.env.NEXT_PUBLIC_SITE_URL}/api/design/single-design?category=${category}&subcategory=${subcategory}&day=${day}&month=${month}&year=${year}&name=${name}`,
+      `${process.env.NEXT_PUBLIC_SITE_URL}/api/design/single-design?category=${category}&day=${day}&month=${month}&year=${year}&name=${name}`,
     );
 
     const data = response.data;
@@ -21,13 +21,13 @@ export async function generateMetadata({ params }: PageProps) {
       title: response.data.name || "Blog Post",
       description: data.description || "Explore this amazing design",
       alternates: {
-        canonical: `${siteurl}/design/${category}/${subcategory}/${day}/${month}/${year}/${name}`,
+        canonical: `${siteurl}/design/${category}/${day}/${month}/${year}/${name}`,
       },
       openGraph: {
         title: response.data.name || "Blog Post",
         description: data.description || "Explore this amazing design",
         type: "article",
-        url: `${siteurl}/design/${category}/${subcategory}/${day}/${month}/${year}/${name}`,
+        url: `${siteurl}/design/${category}/${day}/${month}/${year}/${name}`,
         authors: response.data.author.name,
         publishedTime: response.data.createdAt,
         modifiedTime: response.data.updatedAt,
