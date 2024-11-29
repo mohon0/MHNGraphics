@@ -49,10 +49,12 @@ export default function User({ fixed = false }: { fixed?: boolean }) {
               <Link href="/dashboard">
                 <MenubarItem>Dashboard</MenubarItem>
               </Link>
-              <MenubarItem>Orders</MenubarItem>
-              <MenubarItem>Downloads</MenubarItem>
-              <MenubarItem>Addresses</MenubarItem>
-              <MenubarItem>Account Details</MenubarItem>
+              <Link href="/edit-profile">
+                <MenubarItem>Edit Account</MenubarItem>
+              </Link>
+              <Link href={`/profile?id=${session.user.id}`}>
+                <MenubarItem>Account Details</MenubarItem>
+              </Link>
               <MenubarSeparator />
 
               <Logout />

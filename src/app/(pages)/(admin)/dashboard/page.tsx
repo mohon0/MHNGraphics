@@ -5,6 +5,7 @@ import Footer from "@/components/layout/footer/Footer";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import AdminDashboard from "./Admin-Dashboar";
 
 export default function Dashboard() {
   const { status, data: session } = useSession();
@@ -31,7 +32,7 @@ export default function Dashboard() {
               {session?.user?.role === "ADMIN" ? (
                 // Admin-specific content
                 <div>
-                  <h1>Admin Dashboard</h1>
+                  <AdminDashboard />
                 </div>
               ) : (
                 // Content for logged-in users who are not admins

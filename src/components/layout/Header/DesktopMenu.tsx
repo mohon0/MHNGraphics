@@ -30,7 +30,7 @@ export default function DesktopMenu({ fixed = false }: { fixed?: boolean }) {
 
         <NavigationMenuItem>
           <Link
-            href="/design?category=image&query=&page=1"
+            href="/design?category=photos&query=&page=1"
             legacyBehavior
             passHref
           >
@@ -84,7 +84,7 @@ export default function DesktopMenu({ fixed = false }: { fixed?: boolean }) {
         </NavigationMenuItem>
         <NavigationMenuItem>
           <Link
-            href="/design?category=mockup&query=&page=1"
+            href="/design?category=mockups&query=&page=1"
             legacyBehavior
             passHref
           >
