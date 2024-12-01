@@ -48,7 +48,7 @@ export default function AboutPage() {
       </section>
 
       {/* Our Story Section */}
-      <section className="px-4 py-20">
+      <section className="px-2 py-20">
         <div className="container mx-auto max-w-4xl">
           <h2 className="mb-8 text-center text-3xl font-bold">Our Story</h2>
           <div className="space-y-6 text-lg text-muted-foreground">

@@ -6,8 +6,8 @@ import { DesignType } from "@/components/interface/DesignType";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { ImageDimensions, getAspectRatio } from "@/utils/imageDimensions";
-import { AlertCircle, Loader2 } from "lucide-react";
+import { ImageDimensions } from "@/utils/imageDimensions";
+import { AlertCircle } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { AuthorAndTags, AuthorAndTagsSkeleton } from "./AuthorAndTags";
@@ -19,7 +19,6 @@ interface PageProps {
 }
 
 export default function SingleDesign({ params }: PageProps) {
-  const [imageLoaded, setImageLoaded] = useState(false);
   const [imageDimensions, setImageDimensions] =
     useState<ImageDimensions | null>(null);
   const [retryCount, setRetryCount] = useState(0);
@@ -74,46 +73,45 @@ export default function SingleDesign({ params }: PageProps) {
 
   const { image, name: designName, description }: DesignType = data || {};
 
-  const aspectRatio = imageDimensions
-    ? getAspectRatio(imageDimensions.width, imageDimensions.height)
-    : 1;
-  const imageContainerClass =
-    aspectRatio > 1.5
-      ? "h-auto aspect-[3/2]"
-      : "h-[30rem] md:h-[40rem] lg:h-[50rem]";
-
   return (
-    <div className="container mx-auto my-8 px-4 md:my-12 lg:px-6">
+    <div className="container mx-auto my-8 px-2 md:my-12 lg:px-6">
       <div className="grid gap-8 lg:grid-cols-12 lg:gap-12">
+        {/* Main content */}
         <div className="lg:col-span-8">
           {isLoading ? (
             <Skeleton className="h-[30rem] w-full rounded-xl md:h-[40rem] lg:h-[50rem]" />
           ) : (
-            <Card
-              className={`relative flex w-full overflow-hidden ${imageContainerClass}`}
-            >
+            <div className="bg-secondary md:h-[38rem]">
               <Image
                 src={image}
                 alt={designName || "Design image"}
-                className={`object-contain transition-opacity duration-700 ease-in-out ${
-                  imageLoaded ? "opacity-100" : "opacity-0"
-                }`}
-                onLoad={() => setImageLoaded(true)}
-                onError={() => setImageLoaded(true)}
-                fill
+                className="h-full w-full object-scale-down"
+                height={1000}
+                width={1000}
                 priority
-                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                placeholder="blur"
-                blurDataURL="/placeholder.jpg"
               />
-              {!imageLoaded && (
-                <div className="absolute inset-0 flex items-center justify-center bg-secondary">
-                  <Loader2 className="h-8 w-8 animate-spin text-primary" />
-                </div>
-              )}
-            </Card>
+            </div>
           )}
 
+          {/* Design details for mobile */}
+          <div className="mt-6 lg:hidden">
+            <Card>
+              <CardContent className="space-y-6 p-6">
+                {isLoading ? (
+                  <DesignDetailsSkeleton />
+                ) : (
+                  <DesignDetails
+                    data={data}
+                    imageDimensions={imageDimensions}
+                    params={params}
+                    refetch={refetch}
+                  />
+                )}
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Author and Tags */}
           <div className="mt-8 space-y-6 lg:mt-12">
             {isLoading ? (
               <AuthorAndTagsSkeleton />
@@ -122,31 +120,34 @@ export default function SingleDesign({ params }: PageProps) {
             )}
           </div>
 
-          <Card className="mt-6">
-            <CardContent className="p-6">
-              {isLoading ? (
-                <Skeleton className="h-24 w-full" />
-              ) : (
+          {/* Description */}
+          {isLoading ? (
+            <Skeleton className="h-24 w-full" />
+          ) : description ? (
+            <Card className="mt-6">
+              <CardContent className="p-2 md:p-6">
                 <div
                   className="prose dark:prose-invert max-w-none"
                   dangerouslySetInnerHTML={{ __html: description || "" }}
                 />
-              )}
-            </CardContent>
-          </Card>
+              </CardContent>
+            </Card>
+          ) : (
+            ""
+          )}
 
-          <Card className="mt-8 lg:mt-12">
-            <CardContent className="p-6">
-              {isLoading ? (
-                <Skeleton className="h-48 w-full" />
-              ) : (
-                <Comments data={data} refetch={refetch} />
-              )}
-            </CardContent>
-          </Card>
+          {/* Comments */}
+          <div className="mt-8 lg:mt-12">
+            {isLoading ? (
+              <Skeleton className="h-48 w-full" />
+            ) : (
+              <Comments data={data} refetch={refetch} />
+            )}
+          </div>
         </div>
 
-        <div className="lg:col-span-4">
+        {/* Sidebar Design Details for large screens */}
+        <div className="hidden lg:col-span-4 lg:block">
           <Card className="sticky top-20">
             <CardContent className="space-y-6 p-6">
               {isLoading ? (

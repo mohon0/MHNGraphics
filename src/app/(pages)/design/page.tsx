@@ -63,7 +63,7 @@ function SearchPageContent() {
 
   return (
     <div>
-      <div className="mx-10 my-10">
+      <div className="mx-2 my-10 md:mx-10">
         {isLoading ? (
           <DesignSkeleton />
         ) : isError ? (
@@ -74,11 +74,7 @@ function SearchPageContent() {
           <div className="columns-1 gap-4 md:columns-3">
             {data.data.map((item: DesignType) => (
               <Link
-                href={createSlug(
-                  item.category,
-                  item.name,
-                  item.createdAt,
-                )}
+                href={createSlug(item.category, item.name, item.createdAt)}
                 key={item.id}
                 className="image-container py-2"
               >

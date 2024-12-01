@@ -51,11 +51,11 @@ const faqs = [
 export default function FAQSection() {
   return (
     <section className="bg-background py-24">
-      <div className="container mx-auto px-4">
+      <div className="container mx-auto px-2">
         <h2 className="mb-12 text-center text-3xl font-bold">
           Frequently Asked Questions
         </h2>
-        <div className="mx-auto max-w-3xl">
+        <div className="mx-auto max-w-4xl">
           <Accordion type="single" collapsible className="w-full">
             {faqs.map((faq, index) => (
               <AccordionItem key={`item-${index}`} value={`item-${index}`}>

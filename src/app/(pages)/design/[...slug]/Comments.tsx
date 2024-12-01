@@ -143,7 +143,7 @@ export function Comments({
   }
 
   return (
-    <Card className="mx-auto w-full max-w-3xl shadow-lg" id="comment">
+    <Card className="mx-auto w-full" id="comment">
       <CardHeader className="flex flex-row items-center justify-between rounded-t-lg bg-primary/5">
         <CardTitle className="text-2xl font-bold text-primary">
           Comments
@@ -155,13 +155,13 @@ export function Comments({
       </CardHeader>
       <CardContent className="p-0">
         <ScrollArea className="max-h-[400px]">
-          <div className="space-y-6 p-6">
+          <div className="space-y-6 md:p-6">
             {data.comments.map((comment) => (
               <div
                 key={comment.id}
                 className="flex items-start space-x-4 rounded-lg bg-secondary/10 p-4 transition-all hover:bg-secondary/20"
               >
-                <Avatar className="h-10 w-10 border-2 border-primary">
+                <Avatar className="h-10 w-10">
                   <AvatarImage
                     src={comment.user.image}
                     alt={comment.user.name}

@@ -70,21 +70,6 @@ export default function PricingPage() {
     },
   ];
 
-  const testimonials = [
-    {
-      name: "Sarah M.",
-      title: "Startup Founder",
-      feedback:
-        "The Professional Pack was perfect for our startup’s branding needs! The team was responsive and nailed our vision.",
-    },
-    {
-      name: "Alex J.",
-      title: "Freelance Designer",
-      feedback:
-        "Great value and quality! The Starter Pack helped me establish a professional look for my freelance business.",
-    },
-  ];
-
   return (
     <div className="bg-background py-10">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
