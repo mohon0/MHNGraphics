@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ImageDimensions, getAspectRatio } from "@/utils/imageDimensions";
-import { Loader2 } from "lucide-react";
+import { AlertCircle, Loader2 } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { AuthorAndTags, AuthorAndTagsSkeleton } from "./AuthorAndTags";
@@ -51,24 +51,28 @@ export default function SingleDesign({ params }: PageProps) {
 
   if (isError) {
     return (
-      <div className="flex h-screen items-center justify-center">
-        <div className="text-center">
-          <div
-            role="alert"
-            aria-live="assertive"
-            className="mb-4 font-semibold text-red-500"
-          >
-            Error loading design. Please try again.
-          </div>
-          <Button onClick={handleRetry} disabled={retryCount >= 3}>
-            {retryCount >= 3 ? "Too many attempts" : "Retry"}
-          </Button>
-        </div>
+      <div className="flex h-[calc(100vh-4rem)] items-center justify-center">
+        <Card className="w-full max-w-md">
+          <CardContent className="flex flex-col items-center space-y-4 p-6">
+            <AlertCircle className="h-12 w-12 text-red-500" />
+            <h2 className="text-xl font-semibold">Error Loading Design</h2>
+            <p className="text-center text-muted-foreground">
+              We couldn&apos;t load the design. Please try again.
+            </p>
+            <Button
+              onClick={handleRetry}
+              disabled={retryCount >= 3}
+              className="w-full"
+            >
+              {retryCount >= 3 ? "Too many attempts" : "Retry"}
+            </Button>
+          </CardContent>
+        </Card>
       </div>
     );
   }
 
-  const { image, name: designName }: DesignType = data || {};
+  const { image, name: designName, description }: DesignType = data || {};
 
   const aspectRatio = imageDimensions
     ? getAspectRatio(imageDimensions.width, imageDimensions.height)
@@ -79,19 +83,19 @@ export default function SingleDesign({ params }: PageProps) {
       : "h-[30rem] md:h-[40rem] lg:h-[50rem]";
 
   return (
-    <div className="container mx-auto my-6 px-2 md:my-10 md:px-4 lg:px-0">
-      <div className="grid gap-6 lg:grid-cols-12 lg:gap-10">
+    <div className="container mx-auto my-8 px-4 md:my-12 lg:px-6">
+      <div className="grid gap-8 lg:grid-cols-12 lg:gap-12">
         <div className="lg:col-span-8">
           {isLoading ? (
-            <Skeleton className="h-[30rem] w-full md:h-[40rem] lg:h-[50rem]" />
+            <Skeleton className="h-[30rem] w-full rounded-xl md:h-[40rem] lg:h-[50rem]" />
           ) : (
-            <div
-              className={`relative flex w-full rounded-lg bg-secondary ${imageContainerClass}`}
+            <Card
+              className={`relative flex w-full overflow-hidden ${imageContainerClass}`}
             >
               <Image
                 src={image}
                 alt={designName || "Design image"}
-                className={`rounded-lg object-contain transition-opacity duration-700 ease-in-out ${
+                className={`object-contain transition-opacity duration-700 ease-in-out ${
                   imageLoaded ? "opacity-100" : "opacity-0"
                 }`}
                 onLoad={() => setImageLoaded(true)}
@@ -103,40 +107,62 @@ export default function SingleDesign({ params }: PageProps) {
                 blurDataURL="/placeholder.jpg"
               />
               {!imageLoaded && (
-                <div className="absolute inset-0 flex items-center justify-center">
+                <div className="absolute inset-0 flex items-center justify-center bg-secondary">
                   <Loader2 className="h-8 w-8 animate-spin text-primary" />
                 </div>
               )}
-            </div>
+            </Card>
           )}
-        </div>
 
-        <Card className="h-fit lg:col-span-4">
-          <CardContent className="space-y-4 pt-6">
+          <div className="mt-8 space-y-6 lg:mt-12">
             {isLoading ? (
-              <DesignDetailsSkeleton />
+              <AuthorAndTagsSkeleton />
             ) : (
-              <DesignDetails
-                data={data}
-                imageDimensions={imageDimensions}
-                params={params}
-                refetch={refetch}
-              />
+              <AuthorAndTags data={data} />
             )}
-          </CardContent>
-        </Card>
-      </div>
+          </div>
 
-      <div className="mt-8 space-y-6 lg:mt-12">
-        {isLoading ? <AuthorAndTagsSkeleton /> : <AuthorAndTags data={data} />}
-      </div>
-      {isLoading ? (
-        "loading"
-      ) : (
-        <div className="mt-8 lg:mt-12">
-          <Comments data={data} refetch={refetch} />
+          <Card className="mt-6">
+            <CardContent className="p-6">
+              {isLoading ? (
+                <Skeleton className="h-24 w-full" />
+              ) : (
+                <div
+                  className="prose dark:prose-invert max-w-none"
+                  dangerouslySetInnerHTML={{ __html: description || "" }}
+                />
+              )}
+            </CardContent>
+          </Card>
+
+          <Card className="mt-8 lg:mt-12">
+            <CardContent className="p-6">
+              {isLoading ? (
+                <Skeleton className="h-48 w-full" />
+              ) : (
+                <Comments data={data} refetch={refetch} />
+              )}
+            </CardContent>
+          </Card>
         </div>
-      )}
+
+        <div className="lg:col-span-4">
+          <Card className="sticky top-20">
+            <CardContent className="space-y-6 p-6">
+              {isLoading ? (
+                <DesignDetailsSkeleton />
+              ) : (
+                <DesignDetails
+                  data={data}
+                  imageDimensions={imageDimensions}
+                  params={params}
+                  refetch={refetch}
+                />
+              )}
+            </CardContent>
+          </Card>
+        </div>
+      </div>
     </div>
   );
 }

@@ -24,17 +24,40 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
 import { Upload, X } from "lucide-react";
 import Image from "next/image";
 import React, { useState } from "react";
 import { useFormContext } from "react-hook-form";
 import { CgAsterisk } from "react-icons/cg";
+import dynamic from "next/dynamic";
+import "react-quill/dist/quill.snow.css";
 import { toast } from "react-toastify";
 import { NewProductFormSchemaType } from "../formSchema/FormSchema";
+const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
 
-export const NewProductName: React.FC = () => {
-  const { control } = useFormContext<NewProductFormSchemaType>();
+const modules = {
+  toolbar: [
+    [{ header: [1, 2, 3, false] }], // Header levels
+    ["bold", "italic", "underline"], // Formatting options
+    [{ list: "ordered" }, { list: "bullet" }], // List options
+    [{ indent: "-1" }, { indent: "+1" }], // Indentation
+    [{ align: [] }], // Text alignment
+    [{ color: [] }, { background: [] }], // Text color and background
+    ["link"], // Media options
+  ],
+};
+
+interface NewProductNameProps {
+  description: string;
+  setDescription: (value: string) => void;
+}
+
+export function NewProductName({
+  description,
+  setDescription,
+}: NewProductNameProps) {
+  const { control, setValue } = useFormContext<NewProductFormSchemaType>();
+
   return (
     <Card x-chunk="dashboard-07-chunk-0">
       <CardHeader>
@@ -69,7 +92,15 @@ export const NewProductName: React.FC = () => {
                   <span>Description</span>
                 </FormLabel>
                 <FormControl>
-                  <Textarea placeholder="SEO description" {...field} />
+                  <ReactQuill
+                    theme="snow"
+                    value={description}
+                    modules={modules}
+                    onChange={(value) => {
+                      setDescription(value); // Update local state
+                      setValue("description", value); // Update form value
+                    }}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -79,7 +110,7 @@ export const NewProductName: React.FC = () => {
       </CardContent>
     </Card>
   );
-};
+}
 
 interface ProductImageProps {
   image: File | null;

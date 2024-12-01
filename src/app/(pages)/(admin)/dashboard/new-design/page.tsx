@@ -25,9 +25,11 @@ import { Suspense, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast, ToastContainer } from "react-toastify";
 
+
 export default function NewDesign() {
   const [image, setImage] = useState<File | null>(null);
   const [warning, setWarning] = useState<string>("");
+  const [description, setDescription] = useState("");
 
   const form = useForm<NewProductFormSchemaType>({
     resolver: zodResolver(NewDesignFormSchema),
@@ -44,9 +46,15 @@ export default function NewDesign() {
 
   // Enhanced form reset function
   const resetForm = () => {
-    form.reset();
-    if (image) setImage(null);
-    if (warning) setWarning("");
+    form.reset({
+      name: "",
+      description: "",
+      category: "",
+      tags: [],
+    });
+    setImage(null);
+    setWarning("");
+    setDescription(""); // Clear React Quill content
   };
 
   async function onSubmit(data: NewProductFormSchemaType) {
@@ -62,6 +70,7 @@ export default function NewDesign() {
       }
     });
     formData.append("image", image);
+    formData.append("description", description); // Add custom description
 
     toast.loading("Uploading, please wait...");
     try {
@@ -136,7 +145,10 @@ export default function NewDesign() {
                           </div>
                           <div className="grid gap-4 md:grid-cols-[1fr_250px] lg:grid-cols-3 lg:gap-8">
                             <div className="grid auto-rows-max items-start gap-4 lg:col-span-2 lg:gap-8">
-                              <NewProductName />
+                              <NewProductName
+                                description={description}
+                                setDescription={setDescription}
+                              />
                               <ProductCategoryAndTags />
                             </div>
                             <div className="grid auto-rows-max items-start gap-4 lg:gap-8">

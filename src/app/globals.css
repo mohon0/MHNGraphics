@@ -53,3 +53,7 @@
     @apply bg-background text-foreground;
   }
 }
+
+.ql-editor {
+  min-height: 10rem; /* Ensures the editing area inside ReactQuill is styled */
+}

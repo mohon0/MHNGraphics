@@ -67,7 +67,7 @@ function DesignPage() {
   const [newImage, setNewImage] = useState<File | null>(null);
   const [deletedImage, setDeletedImage] = useState<string | null>(null);
   const [initialImage, setInitialImage] = useState<string | null>(null);
-  const [subcategoriesLoaded, setSubcategoriesLoaded] = useState(false);
+  const [description, setDescription] = useState<string | null>(null);
 
   const searchParams = useSearchParams();
   const id = searchParams.get("id") || "";
@@ -95,14 +95,9 @@ function DesignPage() {
         tags: data.tags || [],
       });
       setInitialImage(data.image || "");
-      setSubcategoriesLoaded(true);
     }
   }, [data, form]);
 
-  const selectedCategory = useWatch({
-    control: control,
-    name: "category",
-  });
   const tags = useWatch({ control, name: "tags" });
 
   const handleAddNewImage = (file: File) => {
@@ -264,7 +259,10 @@ function DesignPage() {
                           </div>
                           <div className="grid gap-4 md:grid-cols-[1fr_250px] lg:grid-cols-3 lg:gap-8">
                             <div className="grid auto-rows-max items-start gap-4 lg:col-span-2 lg:gap-8">
-                              <NewProductName />
+                              <NewProductName
+                                description={data.description}
+                                setDescription={setDescription}
+                              />
 
                               <Card x-chunk="dashboard-07-chunk-2">
                                 <CardHeader>
