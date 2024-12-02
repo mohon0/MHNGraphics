@@ -136,7 +136,7 @@ export default function SingleDesign({ params }: PageProps) {
             ""
           )}
 
-          {/* Comments */}
+          {/* Comments block */}
           <div className="mt-8 lg:mt-12">
             {isLoading ? (
               <Skeleton className="h-48 w-full" />
