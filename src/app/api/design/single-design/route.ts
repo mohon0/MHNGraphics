@@ -162,11 +162,6 @@ export async function GET(req: NextRequest, res: NextResponse) {
       return new NextResponse("Design not found", { status: 404 });
     }
 
-    await Prisma.design.update({
-      where: { id: design.id },
-      data: { viewCount: { increment: 1 } },
-    });
-
     // Add like and comments count to the response object
     const enhancedResponse = {
       ...design,

@@ -2,12 +2,6 @@
 
 import { convertToReadableDate } from "@/components/helper/date/convertDateString";
 import { DesignType } from "@/components/interface/DesignType";
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -203,39 +197,29 @@ export function DesignDetails({
         </div>
       </div>
       <div className="w-full pt-4">
-        <p className="flex items-center justify-between">
-          <span className="text-muted-foreground">View:</span>
-          <span>{data.viewCount}</span>
-        </p>
-        <p className="flex items-center justify-between">
-          <span className="text-muted-foreground">Download:</span>
-          <span>{data.downloadCount}</span>
-        </p>
-
-        <Accordion type="single" collapsible className="mt-4">
-          <AccordionItem value="details">
-            <AccordionTrigger>Show details</AccordionTrigger>
-            <AccordionContent className="space-y-2">
-              <p className="flex items-center justify-between">
-                <span className="text-muted-foreground">Love:</span>{" "}
-                {data.likeCount}
-              </p>
-              <p className="flex items-center justify-between">
-                <span className="text-muted-foreground">Resolution:</span>{" "}
-                {imageDimensions
-                  ? `${imageDimensions.width} x ${imageDimensions.height}`
-                  : "Loading..."}
-              </p>
-              <p className="flex items-center justify-between">
-                <span className="text-muted-foreground">Media type:</span> JPG
-              </p>
-              <p className="flex items-center justify-between">
-                <span className="text-muted-foreground">Published date:</span>
-                {convertToReadableDate(data.createdAt)}
-              </p>
-            </AccordionContent>
-          </AccordionItem>
-        </Accordion>
+        <div className="space-y-2">
+          <p className="flex items-center justify-between">
+            <span className="text-muted-foreground">Love:</span>{" "}
+            {data.likeCount}
+          </p>
+          <p className="flex items-center justify-between">
+            <span className="text-muted-foreground">Comment:</span>{" "}
+            {data.commentsCount}
+          </p>
+          <p className="flex items-center justify-between">
+            <span className="text-muted-foreground">Resolution:</span>{" "}
+            {imageDimensions
+              ? `${imageDimensions.width} x ${imageDimensions.height}`
+              : "Loading..."}
+          </p>
+          <p className="flex items-center justify-between">
+            <span className="text-muted-foreground">Media type:</span> JPG
+          </p>
+          <p className="flex items-center justify-between">
+            <span className="text-muted-foreground">Published date:</span>
+            {convertToReadableDate(data.createdAt)}
+          </p>
+        </div>
       </div>
       <ToastContainer autoClose={4000} />
     </>

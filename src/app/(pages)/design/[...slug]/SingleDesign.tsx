@@ -83,6 +83,7 @@ export default function SingleDesign({ params }: PageProps) {
           ) : (
             <div className="bg-secondary md:h-[38rem]">
               <Image
+                onContextMenu={(e) => e.preventDefault()}
                 src={image}
                 alt={designName || "Design image"}
                 className="h-full w-full object-scale-down"
