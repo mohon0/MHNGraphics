@@ -114,13 +114,13 @@ export async function GET(req: NextRequest, res: NextResponse) {
 
     const formattedDate = new Date(`${year}-${month}-${day}T00:00:00.000Z`);
 
-    const response = await Prisma.design.findFirst({
+    // Fetch the design
+    const design = await Prisma.design.findFirst({
       where: {
         category: {
           contains: category,
           mode: "insensitive",
         },
-
         name: {
           contains: SlugToText(name),
           mode: "insensitive",
@@ -158,20 +158,25 @@ export async function GET(req: NextRequest, res: NextResponse) {
       },
     });
 
-    if (!response) {
+    if (!design) {
       return new NextResponse("Design not found", { status: 404 });
     }
 
-    // Add the like count to the response object
+    await Prisma.design.update({
+      where: { id: design.id },
+      data: { viewCount: { increment: 1 } },
+    });
+
+    // Add like and comments count to the response object
     const enhancedResponse = {
-      ...response,
-      likeCount: response.likes.length, // Count the number of likes
-      commentsCount: response.comments.length,
+      ...design,
+      likeCount: design.likes.length, // Count the number of likes
+      commentsCount: design.comments.length,
     };
 
     return new NextResponse(JSON.stringify(enhancedResponse), { status: 200 });
   } catch (error) {
-    console.log(error);
+    console.error(error);
     return new NextResponse("Internal Server Error", { status: 500 });
   }
 }

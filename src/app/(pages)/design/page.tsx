@@ -7,8 +7,8 @@ import { createSlug } from "@/components/helper/slug/CreateSlug";
 import { DesignType } from "@/components/interface/DesignType";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
-import { Suspense, useCallback, useState } from "react";
+import { useSearchParams } from "next/navigation";
+import { Suspense } from "react";
 
 function DesignMessage({ message }: { message: string }) {
   return (
@@ -19,37 +19,7 @@ function DesignMessage({ message }: { message: string }) {
 }
 
 function SearchPageContent() {
-  const router = useRouter();
   const searchParams = useSearchParams();
-
-  const [category, setCategory] = useState<string>(
-    searchParams.get("category") || "all",
-  );
-  const [searchQuery, setSearchQuery] = useState<string>(
-    searchParams.get("query") || "",
-  );
-
-  const handleFilterChange = useCallback(
-    (value: string) => {
-      setCategory(value);
-      router.push(`/design?category=${value}&query=${searchQuery}&page=1`);
-    },
-    [router, searchQuery],
-  );
-
-  const handleSearchChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      const newQuery = e.target.value;
-      setSearchQuery(newQuery);
-      // Update URL parameters and trigger fetchDesign with debouncing within it
-      router.push(`/design?category=${category}&query=${newQuery}&page=1`);
-    },
-    [router, category],
-  );
-
-  const handleSearch = useCallback(() => {
-    router.push(`/design?category=${category}&query=${searchQuery}&page=1`);
-  }, [router, category, searchQuery]);
 
   const categoryName = searchParams.get("category") || "All";
   const query = searchParams.get("query") || "";

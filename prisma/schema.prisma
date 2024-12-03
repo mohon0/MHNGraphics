@@ -84,6 +84,8 @@ model Design {
   author      User          @relation(fields: [authorId], references: [id], onDelete: Cascade)
   likes       Like[]
   comments Comment[]
+  viewCount    Int           @default(0)
+  downloadCount Int          @default(0)
 
   @@index([category])
 }

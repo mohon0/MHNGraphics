@@ -205,11 +205,11 @@ export function DesignDetails({
       <div className="w-full pt-4">
         <p className="flex items-center justify-between">
           <span className="text-muted-foreground">View:</span>
-          <span>1000</span>
+          <span>{data.viewCount}</span>
         </p>
         <p className="flex items-center justify-between">
           <span className="text-muted-foreground">Download:</span>
-          <span>100</span>
+          <span>{data.downloadCount}</span>
         </p>
 
         <Accordion type="single" collapsible className="mt-4">

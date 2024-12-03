@@ -27,6 +27,8 @@ export interface DesignType {
   description: string;
   tags: string[];
   authorId: string;
+  viewCount: number;
+  downloadCount: number;
   author: {
     name: string;
     image: string;

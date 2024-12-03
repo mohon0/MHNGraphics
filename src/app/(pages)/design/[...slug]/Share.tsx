@@ -42,10 +42,11 @@ interface PageProps {
 }
 
 export default function Share({ params }: PageProps) {
-  const [category, subcategory, day, month, year, name] = params.slug;
+  const [category, day, month, year, name] = params.slug;
   const siteurl = process.env.NEXT_PUBLIC_SITE_URL;
 
-  const postlink = `${siteurl}/design/${category}/${subcategory}/${day}/${month}/${year}/${name}`;
+  const postlink = `${siteurl}/design/${category}/${day}/${month}/${year}/${name}`;
+
   const title = `Check out this design: ${name}`;
 
   const [copied, setCopied] = useState(false);
