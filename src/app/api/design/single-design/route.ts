@@ -56,7 +56,6 @@ export async function POST(req: NextRequest, res: NextResponse) {
     const name = getStringValue(formData, "name");
     const description = getStringValue(formData, "description");
     const category = getStringValue(formData, "category");
-    const subcategory = getStringValue(formData, "subcategory");
 
     const tags =
       formData
@@ -85,6 +84,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
         image: imageUrl.secure_url,
         imageId: imageUrl.public_id,
         authorId,
+        viewCount: 1,
       },
     });
 

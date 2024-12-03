@@ -123,7 +123,7 @@ export default function SingleDesign({ params }: PageProps) {
           {/* Description */}
           {isLoading ? (
             <Skeleton className="h-24 w-full" />
-          ) : description ? (
+          ) : description && description.length > 11 ? (
             <Card className="mt-6">
               <CardContent className="p-2 md:p-6">
                 <div

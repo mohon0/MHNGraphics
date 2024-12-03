@@ -158,7 +158,7 @@ function SearchHeaderComponent({ fixed = false }: { fixed?: boolean }) {
                 </SelectContent>
               </Select>
             </div>
-            <div className="mr-2 flex flex-1 items-center gap-2 md:mr-0">
+            <div className="mr-2 flex flex-1 items-center gap-2 md:mr-0 md:flex-initial">
               <Input
                 placeholder="Search by name"
                 value={searchQuery}
@@ -168,6 +168,7 @@ function SearchHeaderComponent({ fixed = false }: { fixed?: boolean }) {
                     handleSearch();
                   }
                 }}
+                className="lg:w-[30rem]"
               />
               <Button onClick={handleSearch} type="submit">
                 <span>
