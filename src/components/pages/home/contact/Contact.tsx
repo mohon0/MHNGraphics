@@ -50,14 +50,14 @@ export default function Contact() {
 
       toast.dismiss();
       if (response.status === 200) {
-        toast.success("Design successfully added");
-        // form.reset();
+        toast.success("Your Message was successfully sent");
+        form.reset();
       } else {
-        toast.error("Failed to create design");
+        toast.error("Failed to send your message");
       }
     } catch (error) {
       toast.dismiss();
-      toast.error("Failed to submit the form");
+      toast.error("Failed to send your message");
     }
   }
 
