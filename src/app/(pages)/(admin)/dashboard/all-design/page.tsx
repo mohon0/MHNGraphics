@@ -48,7 +48,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useCallback, useState } from "react";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 function DesignMessage({ message }: { message: string }) {
@@ -554,7 +554,6 @@ function Design() {
           </main>
         </div>
       </main>
-      <ToastContainer autoClose={3000} />
     </SidebarProvider>
   );
 }

@@ -15,7 +15,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
 import Image from "next/image";
 import { useForm } from "react-hook-form";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import { z } from "zod";
 
 const FormSchema = z.object({
@@ -161,7 +161,6 @@ export default function Contact() {
           </form>
         </Form>
       </div>
-      <ToastContainer autoClose={3000} />
     </div>
   );
 }

@@ -42,7 +42,7 @@ import axios from "axios";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { Suspense, useCallback, useState } from "react";
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 function DesignMessage({ message }: { message: string }) {
@@ -430,7 +430,6 @@ function Users() {
           )}
         </div>
       </main>
-      <ToastContainer autoClose={3000} />
     </SidebarProvider>
   );
 }

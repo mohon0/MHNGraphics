@@ -21,7 +21,7 @@ import {
   FaLinkedin,
   FaTwitter,
 } from "react-icons/fa";
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { z } from "zod";
 
@@ -243,7 +243,6 @@ export default function Footer() {
           </nav>
         </div>
       </div>
-      <ToastContainer autoClose={3000} />
     </footer>
   );
 }

@@ -10,7 +10,7 @@ import { ImageDimensions } from "@/utils/imageDimensions";
 import { AlertCircle } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import { AuthorAndTags, AuthorAndTagsSkeleton } from "./AuthorAndTags";
+import { Author, AuthorSkeleton, Tags, TagsSkeleton } from "./AuthorAndTags";
 import { Comments } from "./Comments";
 import { DesignDetails, DesignDetailsSkeleton } from "./DesignDetails";
 
@@ -112,18 +112,18 @@ export default function SingleDesign({ params }: PageProps) {
             </Card>
           </div>
 
-          {/* Author and Tags */}
+          {/* Author */}
           <div className="mt-8 space-y-6 lg:mt-12">
             {isLoading ? (
-              <AuthorAndTagsSkeleton />
+              <AuthorSkeleton />
             ) : (
-              <AuthorAndTags data={data} />
+              <Author author={data.author} authorId={data.authorId} />
             )}
           </div>
 
           {/* Description */}
           {isLoading ? (
-            <Skeleton className="h-24 w-full" />
+            <Skeleton className="mt-4 h-24 w-full" />
           ) : description && description.length > 11 ? (
             <Card className="mt-6">
               <CardContent className="p-2 md:p-6">
@@ -136,6 +136,11 @@ export default function SingleDesign({ params }: PageProps) {
           ) : (
             ""
           )}
+
+          {/* Tags */}
+          <div className="mt-8 space-y-6 lg:mt-12">
+            {isLoading ? <TagsSkeleton /> : <Tags tags={data.tags} />}
+          </div>
 
           {/* Comments block */}
           <div className="mt-8 lg:mt-12">

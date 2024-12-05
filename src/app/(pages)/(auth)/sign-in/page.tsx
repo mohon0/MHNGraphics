@@ -18,7 +18,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { FcGoogle } from "react-icons/fc";
 import { MdOutlineDashboard } from "react-icons/md";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import { z } from "zod";
 
 const FormSchema = z.object({
@@ -175,7 +175,6 @@ export default function Login() {
           </div>
         </div>
       )}
-      <ToastContainer autoClose={3000} />
     </>
   );
 }

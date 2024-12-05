@@ -37,7 +37,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useCallback, useEffect, useState } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { CgAsterisk } from "react-icons/cg";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 
 export default function EditDesign() {
   return (
@@ -376,7 +376,6 @@ function DesignPage() {
                   </div>
                 </form>
               </Form>
-              <ToastContainer autoClose={3000} />
             </>
           </main>
         </div>

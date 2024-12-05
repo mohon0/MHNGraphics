@@ -6,7 +6,7 @@ import { Card } from "@/components/ui/card";
 import axios from "axios";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense } from "react";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 function UnSubscribe() {
@@ -396,7 +396,6 @@ function UnSubscribe() {
           </div>
         </div>
       </div>
-      <ToastContainer position="top-center" />
     </Card>
   );
 }

@@ -19,7 +19,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { MdHome } from "react-icons/md";
 import { SiPolkadot } from "react-icons/si";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import { z } from "zod";
 
 const FormSchema = z.object({
@@ -227,7 +227,6 @@ export default function Registration() {
               </div>
             </div>
           </form>
-          <ToastContainer autoClose={3000} />
         </Form>
       )}
     </>

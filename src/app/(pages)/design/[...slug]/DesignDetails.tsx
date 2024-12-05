@@ -16,7 +16,7 @@ import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { HiHeart, HiOutlineHeart } from "react-icons/hi";
 import { SiCanva } from "react-icons/si";
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import DownloadMenuItem from "./DownloadMenuItem";
 import Share from "./Share";
@@ -221,7 +221,6 @@ export function DesignDetails({
           </p>
         </div>
       </div>
-      <ToastContainer autoClose={4000} />
     </>
   );
 }

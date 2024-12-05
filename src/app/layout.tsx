@@ -5,6 +5,7 @@ import { ReactNode } from "react";
 import "react-toastify/dist/ReactToastify.css";
 import SessionWrapper from "../../context/SessionProvider";
 import ReactQueryProvider from "../../context/TanstackQueryProvider";
+import ClientSideToastContainer from "../../context/ToastProvider";
 import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -54,6 +55,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
         <body className={inter.className}>
           <SessionWrapper>{children}</SessionWrapper>
           <ReactQueryDevtools initialIsOpen={false} />
+          <ClientSideToastContainer />
         </body>
       </html>
     </ReactQueryProvider>

@@ -23,8 +23,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Suspense, useState } from "react";
 import { useForm } from "react-hook-form";
-import { toast, ToastContainer } from "react-toastify";
-
+import { toast } from "react-toastify";
 
 export default function NewDesign() {
   const [image, setImage] = useState<File | null>(null);
@@ -177,7 +176,6 @@ export default function NewDesign() {
                     </div>
                   </div>
                 </form>
-                <ToastContainer autoClose={3000} />
               </Form>
             </main>
           </div>
