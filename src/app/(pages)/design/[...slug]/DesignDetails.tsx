@@ -165,6 +165,7 @@ export function DesignDetails({
                   <DownloadMenuItem
                     imageDimensions={imageDimensions}
                     originalImage={data.image}
+                    targetHeight={imageDimensions.height}
                     label="Original"
                   />
                 </>
