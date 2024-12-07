@@ -2,6 +2,7 @@
 
 import ProfileSkeleton from "@/components/common/skeleton/ProfileSkelton";
 import { FetchProfile } from "@/components/fetch/profile/FetchProfile";
+import { RemoveHtmlTags } from "@/components/helper/html/PerseHtml";
 import { createSlug } from "@/components/helper/slug/CreateSlug";
 import { DesignType } from "@/components/interface/DesignType";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -138,7 +139,7 @@ function ProfileContent() {
                               {design.name}
                             </h3>
                             <p className="mt-1 line-clamp-2 text-sm text-muted-foreground">
-                              {design.description}
+                              {RemoveHtmlTags(design.description)}
                             </p>
                             <div className="mt-3 flex flex-wrap gap-2">
                               {design.tags.slice(0, 3).map((tag, index) => (

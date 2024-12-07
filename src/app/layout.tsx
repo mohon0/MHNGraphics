@@ -23,7 +23,7 @@ export const metadata: Metadata = {
   keywords: [
     "graphic,logo, anydesigne, mohon, freelancermohon, best_graphic_designe_in jhenaidah, best_graphic_designe_in_bangladesh, logodesigner, logo, logodesigne, bestlogodesign, mdmohon, freelancermohonjhenaidah, Graphic design portfolio, Poster and flyer design, Social media graphics, Vector graphics design, Creative branding agency, Affordable graphic design, Corporate identity design, UI/UX design services, Visual communication design, Typography specialists, Digital illustration, Print design services, Branding and identity design, Web graphics design, Logo design experts, Freelance graphic designer, Custom graphic design, Creative design solutions, Professional graphic designer, Graphic design services, freelancermohon",
   ],
-  authors: [{ name: "freelancermohon", url: "https://freelancermohon.com" }],
+  authors: [{ name: "MHN Graphic", url: "https://freelancermohon.com" }],
   creator: "md mohon",
   openGraph: {
     title: "FreeLancer MOHON",
@@ -31,9 +31,6 @@ export const metadata: Metadata = {
     url: "https://freelancermohon.com",
     siteName: "FreeLancer MOHON",
     type: "website",
-  },
-  verification: {
-    google: "TMr7owx3VxtN03KJtxIgqV3NCg0z_CRhvq69_U1lB1Y",
   },
 
   twitter: {

@@ -54,9 +54,6 @@ const sliderData = [
   },
 ];
 
-// TODO: carousel item should be 1.2 per slide on mobile
-// TODO: Need to made the homepage responsive for tablet devices
-
 export function Slider() {
   return (
     <div className="my-8 px-4 md:my-16 md:px-10">
@@ -74,7 +71,7 @@ export function Slider() {
           {sliderData.map((slider) => (
             <CarouselItem
               key={slider.id}
-              className="relative md:basis-1/3 lg:basis-1/5"
+              className="relative basis-10/12 md:basis-1/3 lg:basis-1/5"
             >
               <Link href={slider.link}>
                 <div className="flex h-44 w-full items-center justify-center">
