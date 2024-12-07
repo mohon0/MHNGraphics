@@ -1,5 +1,6 @@
 "use client";
 
+import { Badge } from "@/components/ui/badge";
 import {
   NavigationMenu,
   NavigationMenuItem,
@@ -8,12 +9,16 @@ import {
 } from "@/components/ui/navigation-menu";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
-import * as React from "react";
+import React from "react";
+
+interface ComingSoonBadgeProps {
+  children: React.ReactNode;
+}
 
 export default function DesktopMenu({ fixed = false }: { fixed?: boolean }) {
   return (
     <NavigationMenu>
-      <NavigationMenuList className="space-x-10">
+      <NavigationMenuList className="space-x-7 text-sm">
         <NavigationMenuItem>
           <Link
             href="/design?category=all&query=&page=1"
@@ -37,7 +42,7 @@ export default function DesktopMenu({ fixed = false }: { fixed?: boolean }) {
             <NavigationMenuLink
               className={fixed ? "pl-2 text-white" : "pl-2 text-black"}
             >
-              Image
+              Photos
             </NavigationMenuLink>
           </Link>
         </NavigationMenuItem>
@@ -94,6 +99,40 @@ export default function DesktopMenu({ fixed = false }: { fixed?: boolean }) {
               Mockup
             </NavigationMenuLink>
           </Link>
+        </NavigationMenuItem>
+        <NavigationMenuItem>
+          <Link href="/shop" legacyBehavior passHref>
+            <NavigationMenuLink
+              className={
+                fixed ? "pl-2 text-sm text-white" : "pl-2 text-sm text-black"
+              }
+            >
+              MHN Shop
+            </NavigationMenuLink>
+          </Link>
+          <Badge
+            variant="secondary"
+            className="ml-1 animate-bounce px-1 py-0 text-[10px] text-black"
+          >
+            Soon
+          </Badge>
+        </NavigationMenuItem>
+        <NavigationMenuItem>
+          <Link href="/mhn-it" legacyBehavior passHref>
+            <NavigationMenuLink
+              className={
+                fixed ? "pl-2 text-sm text-white" : "pl-2 text-sm text-black"
+              }
+            >
+              MHN IT
+            </NavigationMenuLink>
+          </Link>
+          <Badge
+            variant="secondary"
+            className="ml-1 animate-bounce px-1 py-0 text-[10px] text-black delay-75"
+          >
+            Soon
+          </Badge>
         </NavigationMenuItem>
       </NavigationMenuList>
     </NavigationMenu>

@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useState } from "react";
 
 import { productCategories } from "@/components/data/ProductCategory";
+import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import {
   Sheet,
@@ -39,9 +40,32 @@ export default function MobileMenu() {
               </Link>
             ))}
 
-            <Link href="/pricing" className="px-6 py-4 text-primary">
-              Pricing
-            </Link>
+            <div className="mt-4 flex flex-col gap-4 px-6 text-primary">
+              <Link href="/pricing">Pricing</Link>
+
+              <Link href="/shop" legacyBehavior passHref>
+                <div>
+                  MHN Shop
+                  <Badge
+                    variant="secondary"
+                    className="ml-1 animate-bounce px-1 py-0 text-[10px] text-black delay-75"
+                  >
+                    Soon
+                  </Badge>
+                </div>
+              </Link>
+              <Link href="/mhn-it" legacyBehavior passHref>
+                <div>
+                  MHN IT
+                  <Badge
+                    variant="secondary"
+                    className="ml-1 animate-bounce px-1 py-0 text-[10px] text-black delay-75"
+                  >
+                    Soon
+                  </Badge>
+                </div>
+              </Link>
+            </div>
           </nav>
         </ScrollArea>
       </SheetContent>
