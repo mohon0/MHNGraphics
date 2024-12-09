@@ -7,7 +7,6 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ImageDimensions } from "@/utils/imageDimensions";
-import DOMPurify from "dompurify";
 import { AlertCircle } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useState } from "react";
@@ -74,7 +73,6 @@ export default function SingleDesign({ params }: PageProps) {
   }
 
   const { image, name: designName, description }: DesignType = data || {};
-  const sanitizedContent = DOMPurify.sanitize(description);
 
   return (
     <div className="container mx-auto my-8 px-2 md:my-12 lg:px-6">
@@ -132,7 +130,7 @@ export default function SingleDesign({ params }: PageProps) {
               <CardContent className="p-2 md:p-6">
                 <div
                   className="prose dark:prose-invert max-w-none"
-                  dangerouslySetInnerHTML={{ __html: sanitizedContent || "" }}
+                  dangerouslySetInnerHTML={{ __html: description || "" }}
                 />
               </CardContent>
             </Card>
@@ -151,16 +149,6 @@ export default function SingleDesign({ params }: PageProps) {
               <Skeleton className="h-48 w-full" />
             ) : (
               <Comments data={data} refetch={refetch} />
-            )}
-          </div>
-
-          {/* Related Design */}
-
-          <div className="mt-8 lg:mt-12">
-            {isLoading ? (
-              <Skeleton className="h-48 w-full" />
-            ) : (
-              <RelatedDesign postId={data.id} />
             )}
           </div>
         </div>
@@ -182,6 +170,15 @@ export default function SingleDesign({ params }: PageProps) {
             </CardContent>
           </Card>
         </div>
+      </div>
+      {/* Related Design */}
+
+      <div className="mt-8 lg:mt-12">
+        {isLoading ? (
+          <Skeleton className="h-48 w-full" />
+        ) : (
+          <RelatedDesign postId={data.id} />
+        )}
       </div>
     </div>
   );

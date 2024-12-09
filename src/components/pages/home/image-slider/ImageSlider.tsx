@@ -89,11 +89,7 @@ export default function ImageMarquee() {
       >
         {secondSliderData.map((design: DesignType) => (
           <Link
-            href={createSlug(
-              design.category,
-              design.name,
-              design.createdAt,
-            )}
+            href={createSlug(design.category, design.name, design.createdAt)}
             key={design.id}
           >
             <div className="group relative mx-2 h-52 w-full flex-shrink-0 overflow-hidden">
