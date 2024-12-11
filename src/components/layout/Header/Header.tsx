@@ -15,12 +15,13 @@ export default function Header({ fixed = false }: { fixed?: boolean }) {
         {/* Mobile Menu Icon for Smaller Screens */}
         <div className="flex items-center gap-4 md:gap-10">
           <div className="lg:hidden">
-            <MobileMenu /> {/* Render the MobileMenu component here */}
+            <MobileMenu fixed={fixed} />{" "}
+            {/* Render the MobileMenu component here */}
           </div>
           {/* Logo */}
           <Link
             href="/"
-            className={`font-philosopher items-baseline space-x-2 font-extrabold ${
+            className={`items-baseline space-x-2 font-philosopher font-extrabold ${
               fixed ? "text-white" : "text-black"
             }`}
           >

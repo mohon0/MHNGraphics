@@ -36,7 +36,7 @@ const profileFormSchema = z.object({
   email: z
     .string({ required_error: "Please select an email to display." })
     .email(),
-  bio: z.string().max(160),
+  bio: z.string().max(1000),
 });
 
 const passwordFormSchema = z

@@ -63,7 +63,7 @@ export default function Footer() {
       <div className="container mx-auto">
         <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-5 lg:gap-12">
           <div className="flex flex-col items-center text-center lg:col-span-2 lg:items-start lg:text-left">
-            <h2 className="font-philosopher mb-4 text-3xl font-bold text-primary">
+            <h2 className="mb-4 font-philosopher text-3xl font-bold text-primary">
               MHN Graphics
             </h2>
             <p className="mb-6 max-w-xs text-muted-foreground">
@@ -123,7 +123,6 @@ export default function Footer() {
                 {[
                   "Branding",
                   "Web Design",
-                  "UI/UX",
                   "Print Design",
                   "Motion Graphics",
                 ].map((service) => (
@@ -136,6 +135,14 @@ export default function Footer() {
                     </Link>
                   </li>
                 ))}
+                <li>
+                  <Link
+                    className="text-muted-foreground transition-colors hover:text-primary"
+                    href={"/services/ui-ux"}
+                  >
+                    UI/UX
+                  </Link>
+                </li>
               </ul>
             </nav>
             <nav className="space-y-4">

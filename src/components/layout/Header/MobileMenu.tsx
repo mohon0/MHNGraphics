@@ -15,13 +15,13 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 
-export default function MobileMenu() {
+export default function MobileMenu({ fixed = false }: { fixed?: boolean }) {
   const [open, setOpen] = useState(false);
 
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
-        <Menu className="h-6 w-6 text-background" />
+        <Menu className={fixed ? "h-6 w-6 text-white" : "h-6 w-6 text-black"} />
       </SheetTrigger>
       <SheetContent side="left" className="w-[300px] p-0 sm:w-[400px]">
         <SheetHeader className="border-b p-6 text-left">

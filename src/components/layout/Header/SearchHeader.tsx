@@ -124,7 +124,7 @@ function SearchHeaderComponent({ fixed = false }: { fixed?: boolean }) {
                     fixed ? "text-white" : "text-black"
                   }`}
                 >
-                  <div className="font-philosopher ml-2 flex items-end gap-2 md:ml-0">
+                  <div className="ml-2 flex items-end gap-2 font-philosopher md:ml-0">
                     <span className="text-2xl">MHN</span>
                     <span className="hidden text-xl md:block">Graphics</span>
                   </div>
