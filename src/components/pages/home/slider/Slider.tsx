@@ -57,7 +57,7 @@ const sliderData = [
 export function Slider() {
   return (
     <div className="my-8 px-4 md:my-16 md:px-10">
-      <p className="font-philosopher mb-6 text-center text-2xl font-bold md:mb-10 md:text-4xl">
+      <p className="mb-6 text-center text-2xl font-bold md:mb-10 md:text-4xl">
         Many Assets Ready To Go
       </p>
       <Carousel

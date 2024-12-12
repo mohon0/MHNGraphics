@@ -64,9 +64,7 @@ export default function Contact() {
   return (
     <div className="mx-2 my-10 md:mx-10 lg:mx-32">
       <header className="text-center">
-        <h2 className="font-philosopher my-4 text-2xl font-bold md:text-4xl">
-          Contact With Us
-        </h2>
+        <h2 className="my-4 text-2xl font-bold md:text-4xl">Contact With Us</h2>
       </header>
 
       <div className="grid grid-cols-1 gap-6 md:mt-10 md:grid-cols-12 md:gap-10">
@@ -76,7 +74,7 @@ export default function Contact() {
             alt="MHN Graphics"
             className="h-40 w-full rounded object-cover md:h-56"
           />
-          <p className="font-philosopher mb-2 mt-4 text-xl font-bold md:text-3xl">
+          <p className="mb-2 mt-4 text-xl font-bold md:text-3xl">
             MHN Graphics
           </p>
           <p className="mb-4 text-muted-foreground">

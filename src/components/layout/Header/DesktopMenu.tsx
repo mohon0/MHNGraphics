@@ -49,33 +49,6 @@ export default function DesktopMenu({ fixed = false }: { fixed?: boolean }) {
 
         <NavigationMenuItem>
           <Link
-            href="/design?category=icons&query=&page=1"
-            legacyBehavior
-            passHref
-          >
-            <NavigationMenuLink
-              className={fixed ? "pl-2 text-white" : "pl-2 text-black"}
-            >
-              Icons
-            </NavigationMenuLink>
-          </Link>
-        </NavigationMenuItem>
-
-        <NavigationMenuItem>
-          <Link
-            href="/design?category=template&query=&page=1"
-            legacyBehavior
-            passHref
-          >
-            <NavigationMenuLink
-              className={fixed ? "pl-2 text-white" : "pl-2 text-black"}
-            >
-              Template
-            </NavigationMenuLink>
-          </Link>
-        </NavigationMenuItem>
-        <NavigationMenuItem>
-          <Link
             href="/design?category=animation&query=&page=1"
             legacyBehavior
             passHref
@@ -88,18 +61,15 @@ export default function DesktopMenu({ fixed = false }: { fixed?: boolean }) {
           </Link>
         </NavigationMenuItem>
         <NavigationMenuItem>
-          <Link
-            href="/design?category=mockups&query=&page=1"
-            legacyBehavior
-            passHref
-          >
+          <Link href="/best-computer-training-center" legacyBehavior passHref>
             <NavigationMenuLink
               className={fixed ? "pl-2 text-white" : "pl-2 text-black"}
             >
-              Mockup
+              Best Computer T. C.
             </NavigationMenuLink>
           </Link>
         </NavigationMenuItem>
+
         <NavigationMenuItem>
           <Link href="/shop" legacyBehavior passHref>
             <NavigationMenuLink

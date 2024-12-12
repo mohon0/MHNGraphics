@@ -9,9 +9,6 @@ const config: Config = {
   ],
   theme: {
     extend: {
-      fontFamily: {
-        philosopher: ["var(--philosopher)", "sans-serif"],
-      },
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
         "gradient-conic":
@@ -36,6 +33,9 @@ const config: Config = {
         primary: {
           DEFAULT: "hsl(var(--primary))",
           foreground: "hsl(var(--primary-foreground))",
+          100: "#1dbb90",
+          200: "#1eaace",
+          300: "#ffb20e",
         },
         secondary: {
           DEFAULT: "hsl(var(--secondary))",

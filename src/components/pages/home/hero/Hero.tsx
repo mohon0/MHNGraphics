@@ -78,7 +78,7 @@ export default function Hero() {
       />
       <div className="absolute inset-0 flex flex-col items-center justify-center space-y-6 bg-black bg-opacity-40 px-4 md:space-y-8 lg:space-y-10">
         <div className="mt-10 text-center">
-          <h1 className="font-philosopher mb-4 text-2xl font-bold text-white drop-shadow-lg sm:text-3xl md:text-4xl lg:text-5xl">
+          <h1 className="mb-4 text-2xl font-bold text-white drop-shadow-lg sm:text-3xl md:text-4xl lg:text-5xl">
             Create Great Designs, Faster
           </h1>
           <p className="text-sm text-slate-200 drop-shadow sm:text-base md:text-lg lg:text-xl">

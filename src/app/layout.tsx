@@ -1,6 +1,6 @@
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { Metadata } from "next";
-import { Inter, Philosopher } from "next/font/google";
+import { Inter } from "next/font/google";
 import { ReactNode } from "react";
 import "react-toastify/dist/ReactToastify.css";
 import SessionWrapper from "../../context/SessionProvider";
@@ -14,12 +14,6 @@ const inter = Inter({
   variable: "--font-inter",
 });
 
-const philosopher = Philosopher({
-  subsets: ["latin"],
-  display: "swap",
-  variable: "--philosopher",
-  weight: ["400", "700"],
-});
 const siteurl = process.env.NEXT_PUBLIC_SITE_URL;
 export const metadata: Metadata = {
   metadataBase: new URL(`${siteurl}`),
@@ -60,7 +54,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
   return (
     <ReactQueryProvider>
       <html lang="en">
-        <body className={`${inter.className} ${philosopher.variable}`}>
+        <body className={inter.className}>
           <SessionWrapper>{children}</SessionWrapper>
           <ReactQueryDevtools initialIsOpen={false} />
           <ClientSideToastContainer />

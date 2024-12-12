@@ -49,7 +49,7 @@ export default function ImageMarquee() {
 
   return (
     <section className="overflow-hidden md:my-20 md:space-y-6">
-      <h2 className="font-philosopher mb-2 text-center text-2xl font-bold md:mb-10 md:text-4xl">
+      <h2 className="mb-2 text-center text-2xl font-bold md:mb-10 md:text-4xl">
         View Design & Sell Content
       </h2>
 

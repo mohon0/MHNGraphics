@@ -21,7 +21,7 @@ export default function Header({ fixed = false }: { fixed?: boolean }) {
           {/* Logo */}
           <Link
             href="/"
-            className={`items-baseline space-x-2 font-philosopher font-extrabold ${
+            className={`items-baseline space-x-2 font-extrabold ${
               fixed ? "text-white" : "text-black"
             }`}
           >
