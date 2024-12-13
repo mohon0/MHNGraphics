@@ -528,7 +528,9 @@ function Design() {
                             )}
                           </TableCell>
                           <TableCell className="align-top">
-                            {item.author.name}
+                            <Link href={`/profile?id=${item.authorId}`}>
+                              {item.author.name}
+                            </Link>
                           </TableCell>
                           <TableCell className="text-right align-top leading-6">
                             {convertDateString(item.createdAt.toString())}

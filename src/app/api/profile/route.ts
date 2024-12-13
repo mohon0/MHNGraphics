@@ -27,6 +27,7 @@ export async function GET(req: NextRequest) {
     // Fetch user data along with total design count
     const response = await Prisma.user.findUnique({
       where: { id },
+
       select: {
         id: true,
         name: true,
@@ -35,6 +36,9 @@ export async function GET(req: NextRequest) {
         image: true,
         bio: true,
         design: {
+          orderBy: {
+            createdAt: "desc",
+          },
           take: take,
           skip: skip, // Use skip to prevent duplication
         },
