@@ -6,6 +6,13 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import brand1 from "@/images/services/brand1.png";
+import brand10 from "@/images/services/brand10.jpg";
+import brand2 from "@/images/services/brand2.jpg";
+import brand3 from "@/images/services/brand3.png";
+import brand6 from "@/images/services/brand6.jpg";
+import brand8 from "@/images/services/brand8.png";
+import brand9 from "@/images/services/brand9.png";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -14,19 +21,19 @@ const brandingServices = [
     title: "Logo Design",
     description:
       "Create a unique and memorable logo that represents your brand identity.",
-    icon: "https://img.freepik.com/free-vector/branding-identity-corporate-vector-logo-design_460848-8717.jpg?w=740&h=740&t=st=1701694684~exp=1701695284~hmac=7f7b0d1d3bde6e4e5c9f5e5e9e9e9e9e9e9e9e9e9e9e9e9e9e9e9e9e9e9e9e",
+    icon: brand1,
   },
   {
     title: "Brand Identity",
     description:
       "Develop a cohesive visual language and brand guidelines for your business.",
-    icon: "https://img.freepik.com/free-vector/gradient-ui-ux-background_23-2149024129.jpg?w=740&h=740&t=st=1701694729~exp=1701695329~hmac=7f7b0d1d3bde6e4e5c9f5e5e9e9e9e9e9e9e9e9e9e9e9e9e9e9e9e9e9e9e9e",
+    icon: brand2,
   },
   {
     title: "Brand Strategy",
     description:
       "Craft a comprehensive strategy to position your brand in the market effectively.",
-    icon: "https://img.freepik.com/free-vector/marketing-consulting-concept-illustration_114360-9027.jpg?w=740&h=740&t=st=1701694760~exp=1701695360~hmac=7f7b0d1d3bde6e4e5c9f5e5e9e9e9e9e9e9e9e9e9e9e9e9e9e9e9e9e9e9e9e",
+    icon: brand3,
   },
 ];
 
@@ -58,7 +65,7 @@ export default function BrandingPage() {
       {/* Hero Section */}
       <section className="relative flex h-[60vh] items-center justify-center overflow-hidden">
         <Image
-          src="https://img.freepik.com/free-vector/black-wave-gradient-modern-background_343694-2084.jpg?t=st=1733926714~exp=1733930314~hmac=185a195008be74b9c21c40d04edb28a64e05eb650552b7cc7aef250a20fd9129&w=996"
+          src={brand10}
           alt="Branding Hero"
           layout="fill"
           objectFit="cover"
@@ -137,26 +144,21 @@ export default function BrandingPage() {
             Our Branding Portfolio
           </h2>
           <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
-            {[
-              "https://img.freepik.com/free-vector/abstract-logo-flame-shape_1043-44.jpg?w=740&h=740&t=st=1701694963~exp=1701695563~hmac=7f7b0d1d3bde6e4e5c9f5e5e9e9e9e9e9e9e9e9e9e9e9e9e9e9e9e9e9e9e9e",
-              "https://img.freepik.com/free-vector/elegant-circle-logo-icon_126523-971.jpg?w=740&h=740&t=st=1701694985~exp=1701695585~hmac=7f7b0d1d3bde6e4e5c9f5e5e9e9e9e9e9e9e9e9e9e9e9e9e9e9e9e9e9e9e9e",
-              "https://img.freepik.com/free-vector/elegant-circle-logo-icon_126523-967.jpg?w=740&h=740&t=st=1701695006~exp=1701695606~hmac=7f7b0d1d3bde6e4e5c9f5e5e9e9e9e9e9e9e9e9e9e9e9e9e9e9e9e9e9e9e9e",
-              "https://img.freepik.com/free-vector/logo-template-design_1195-55.jpg?w=740&h=740&t=st=1701695024~exp=1701695624~hmac=7f7b0d1d3bde6e4e5c9f5e5e9e9e9e9e9e9e9e9e9e9e9e9e9e9e9e9e9e9e9e",
-              "https://img.freepik.com/free-vector/elegant-circle-logo-icon_126523-968.jpg?w=740&h=740&t=st=1701695041~exp=1701695641~hmac=7f7b0d1d3bde6e4e5c9f5e5e9e9e9e9e9e9e9e9e9e9e9e9e9e9e9e9e9e9e9e",
-              "https://img.freepik.com/free-vector/logo-template-design_1195-45.jpg?w=740&h=740&t=st=1701695058~exp=1701695658~hmac=7f7b0d1d3bde6e4e5c9f5e5e9e9e9e9e9e9e9e9e9e9e9e9e9e9e9e9e9e9e9e",
-            ].map((src, index) => (
-              <div
-                key={index}
-                className="relative aspect-square overflow-hidden rounded-lg shadow-lg transition-transform hover:scale-105"
-              >
-                <Image
-                  src={src}
-                  alt={`Brand ${index + 1}`}
-                  layout="fill"
-                  objectFit="cover"
-                />
-              </div>
-            ))}
+            {[brand1, brand2, brand6, brand3, brand8, brand9].map(
+              (src, index) => (
+                <div
+                  key={index}
+                  className="relative aspect-square overflow-hidden rounded-lg shadow-lg transition-transform hover:scale-105"
+                >
+                  <Image
+                    src={src}
+                    alt={`Brand ${index + 1}`}
+                    layout="fill"
+                    objectFit="cover"
+                  />
+                </div>
+              ),
+            )}
           </div>
         </div>
       </section>

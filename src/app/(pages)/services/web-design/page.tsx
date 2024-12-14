@@ -6,6 +6,17 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import design1 from "@/images/services/web-design-1.jpg";
+import design10 from "@/images/services/web-design-10.jpg";
+import design11 from "@/images/services/web-design-11.jpg";
+import design2 from "@/images/services/web-design-2.jpg";
+import design3 from "@/images/services/web-design-3.jpg";
+import design4 from "@/images/services/web-design-4.jpg";
+import design5 from "@/images/services/web-design-5.jpg";
+import design6 from "@/images/services/web-design-6.jpg";
+import design7 from "@/images/services/web-design-7.jpg";
+import design8 from "@/images/services/web-design-8.jpg";
+import design9 from "@/images/services/web-design-9.jpg";
 import { CheckCircle } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -15,19 +26,19 @@ const webDesignServices = [
     title: "Responsive Design",
     description:
       "Create websites that look great on all devices, from mobile to desktop.",
-    icon: "https://img.freepik.com/free-vector/responsive-design-concept-illustration_114360-2474.jpg?w=740&h=740&t=st=1701696731~exp=1701697331~hmac=4e4e0c5e7e0f5f5e5f5e5f5e5f5e5f5e5f5e5f5e5f5e5f5e5f5e5f5e5f5e5f5e",
+    icon: design2,
   },
   {
     title: "User Experience (UX) Design",
     description:
       "Craft intuitive and user-friendly interfaces that delight your visitors.",
-    icon: "https://img.freepik.com/free-vector/ux-design-concept-illustration_114360-7241.jpg?w=740&h=740&t=st=1701696760~exp=1701697360~hmac=4e4e0c5e7e0f5f5e5f5e5f5e5f5e5f5e5f5e5f5e5f5e5f5e5f5e5f5e5f5e5f5e",
+    icon: design3,
   },
   {
     title: "Custom Web Development",
     description:
       "Build tailored websites with cutting-edge technologies to meet your specific needs.",
-    icon: "https://img.freepik.com/free-vector/programming-concept-illustration_114360-1351.jpg?w=740&h=740&t=st=1701696785~exp=1701697385~hmac=4e4e0c5e7e0f5f5e5f5e5f5e5f5e5f5e5f5e5f5e5f5e5f5e5f5e5f5e5f5e5f5e",
+    icon: design4,
   },
 ];
 
@@ -60,7 +71,7 @@ export default function WebDesignPage() {
             </div>
             <div className="md:w-1/2">
               <Image
-                src="https://img.freepik.com/free-vector/website-development-web-page-programming-coding_335657-2489.jpg?w=740&h=740&t=st=1701698830~exp=1701699430~hmac=04e4f03b9f9c9111c0aecf4af0d7f7d1a5d3e1a8e9b8f0f9e8f0f9e8f0f9e8f0"
+                src={design1}
                 alt="Web Design Illustration"
                 width={600}
                 height={600}
@@ -123,7 +134,7 @@ export default function WebDesignPage() {
             </div>
             <div className="relative h-[300px] md:h-auto">
               <Image
-                src="https://img.freepik.com/free-vector/web-development-programmer-engineering-coding-website-augmented-reality-interface-screens-developer-project-engineer-programming-software-application-design-cartoon-illustration_107791-3863.jpg?w=740&h=740&t=st=1701696900~exp=1701697500~hmac=4e4e0c5e7e0f5f5e5f5e5f5e5f5e5f5e5f5e5f5e5f5e5f5e5f5e5f5e5f5e5f5e"
+                src={design5}
                 alt="Web Design Process"
                 layout="fill"
                 objectFit="contain"
@@ -169,26 +180,21 @@ export default function WebDesignPage() {
             Our Web Design Portfolio
           </h2>
           <div className="grid grid-cols-1 gap-8 md:grid-cols-3">
-            {[
-              "https://img.freepik.com/free-vector/landing-page-template-design-website_23-2148265769.jpg?w=740&h=740&t=st=1701696946~exp=1701697546~hmac=4e4e0c5e7e0f5f5e5f5e5f5e5f5e5f5e5f5e5f5e5f5e5f5e5f5e5f5e5f5e5f5e",
-              "https://img.freepik.com/free-vector/landing-page-template-design-website_23-2148265764.jpg?w=740&h=740&t=st=1701696967~exp=1701697567~hmac=4e4e0c5e7e0f5f5e5f5e5f5e5f5e5f5e5f5e5f5e5f5e5f5e5f5e5f5e5f5e5f5e",
-              "https://img.freepik.com/free-vector/landing-page-template-design-website_23-2148265768.jpg?w=740&h=740&t=st=1701696984~exp=1701697584~hmac=4e4e0c5e7e0f5f5e5f5e5f5e5f5e5f5e5f5e5f5e5f5e5f5e5f5e5f5e5f5e5f5e",
-              "https://img.freepik.com/free-vector/landing-page-template-design-website_23-2148265767.jpg?w=740&h=740&t=st=1701697001~exp=1701697601~hmac=4e4e0c5e7e0f5f5e5f5e5f5e5f5e5f5e5f5e5f5e5f5e5f5e5f5e5f5e5f5e5f5e",
-              "https://img.freepik.com/free-vector/landing-page-template-design-website_23-2148265766.jpg?w=740&h=740&t=st=1701697018~exp=1701697618~hmac=4e4e0c5e7e0f5f5e5f5e5f5e5f5e5f5e5f5e5f5e5f5e5f5e5f5e5f5e5f5e5f5e",
-              "https://img.freepik.com/free-vector/landing-page-template-design-website_23-2148265765.jpg?w=740&h=740&t=st=1701697035~exp=1701697635~hmac=4e4e0c5e7e0f5f5e5f5e5f5e5f5e5f5e5f5e5f5e5f5e5f5e5f5e5f5e5f5e5f5e",
-            ].map((src, index) => (
-              <div
-                key={index}
-                className="relative aspect-video overflow-hidden rounded-lg shadow-lg transition-transform hover:scale-105"
-              >
-                <Image
-                  src={src}
-                  alt={`Web Design ${index + 1}`}
-                  layout="fill"
-                  objectFit="cover"
-                />
-              </div>
-            ))}
+            {[design6, design7, design8, design9, design10, design11].map(
+              (src, index) => (
+                <div
+                  key={index}
+                  className="relative aspect-video overflow-hidden rounded-lg shadow-lg transition-transform hover:scale-105"
+                >
+                  <Image
+                    src={src}
+                    alt={`Web Design ${index + 1}`}
+                    layout="fill"
+                    objectFit="cover"
+                  />
+                </div>
+              ),
+            )}
           </div>
         </div>
       </section>
