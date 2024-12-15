@@ -7,6 +7,10 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import design1 from "@/images/services/print-design-1.jpg";
+import design2 from "@/images/services/print-design-2.jpg";
+import design3 from "@/images/services/print-design-3.jpg";
+import design4 from "@/images/services/print-desing-4.jpg";
 import {
   ArrowRight,
   FileText,
@@ -17,6 +21,7 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import Testimonials from "../../about/Testimonials";
 
 const printDesignServices = [
   {
@@ -49,20 +54,17 @@ const portfolioItems = [
   {
     title: "Corporate Brochure",
     description: "A sleek tri-fold brochure design for a tech company.",
-    image:
-      "https://img.freepik.com/free-psd/business-bifold-brochure-template_1435-1541.jpg?w=1380&h=980&t=st=1701706614~exp=1701707214~hmac=d0bd5c6e7b3b7d7e7e7e7e7e7e7e7e7e7e7e7e7e7e7e7e7e7e7e7e7e7e7e7e7e",
+    image: design2,
   },
   {
     title: "Event Poster",
     description: "A vibrant poster design for a music festival.",
-    image:
-      "https://img.freepik.com/free-psd/music-event-poster-template_23-2148990720.jpg?w=1380&h=980&t=st=1701706643~exp=1701707243~hmac=d0bd5c6e7b3b7d7e7e7e7e7e7e7e7e7e7e7e7e7e7e7e7e7e7e7e7e7e7e7e7e7e",
+    image: design4,
   },
   {
     title: "Product Packaging",
     description: "Innovative packaging design for an organic food brand.",
-    image:
-      "https://img.freepik.com/free-psd/food-packaging-mockup_439185-2941.jpg?w=1380&h=980&t=st=1701706669~exp=1701707269~hmac=d0bd5c6e7b3b7d7e7e7e7e7e7e7e7e7e7e7e7e7e7e7e7e7e7e7e7e7e7e7e7e7e",
+    image: design3,
   },
 ];
 
@@ -90,7 +92,7 @@ export default function PrintDesignPage() {
             </div>
             <div className="lg:w-1/2">
               <Image
-                src="https://img.freepik.com/free-vector/gradient-geometric-design-background_23-2149120340.jpg?w=1380&h=980&t=st=1701706701~exp=1701707301~hmac=d0bd5c6e7b3b7d7e7e7e7e7e7e7e7e7e7e7e7e7e7e7e7e7e7e7e7e7e7e7e7e7e"
+                src={design1}
                 alt="Print Design Illustration"
                 width={700}
                 height={500}
@@ -196,39 +198,7 @@ export default function PrintDesignPage() {
       </section>
 
       {/* Testimonial Section */}
-      <section className="py-20">
-        <div className="container mx-auto px-4">
-          <h2 className="mb-12 text-center text-3xl font-bold">
-            What Our Clients Say
-          </h2>
-          <div className="mx-auto max-w-4xl">
-            <Card className="bg-primary text-primary-foreground">
-              <CardContent className="pt-6">
-                <p className="mb-6 text-xl italic">
-                  The print designs created by this team exceeded our
-                  expectations. Their attention to detail and creativity truly
-                  brought our brand to life on paper.
-                </p>
-                <div className="flex items-center">
-                  <Image
-                    src="https://img.freepik.com/free-vector/businessman-character-avatar-isolated_24877-60111.jpg?w=200&h=200&t=st=1701706740~exp=1701707340~hmac=d0bd5c6e7b3b7d7e7e7e7e7e7e7e7e7e7e7e7e7e7e7e7e7e7e7e7e7e7e7e7e7e"
-                    alt="Client"
-                    width={60}
-                    height={60}
-                    className="mr-4 rounded-full"
-                  />
-                  <div>
-                    <p className="font-semibold">Michael Thompson</p>
-                    <p className="text-sm opacity-75">
-                      Marketing Manager, Global Innovations
-                    </p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        </div>
-      </section>
+      <Testimonials />
 
       {/* Why Choose Us Section */}
       <section className="bg-muted/50 py-20">
