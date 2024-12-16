@@ -1,3 +1,5 @@
+import Footer from "@/components/layout/footer/Footer";
+import Header from "@/components/layout/Header/Header";
 import Courses from "./Course";
 import FeedBack from "./FeedBack";
 import Gallery from "./Gallery";
@@ -13,21 +15,25 @@ import WhyUs from "./WhyUs";
 
 export default function page() {
   return (
-    <div className="overflow-x-clip">
-      <Slider />
-      <ScrollNotice />
-      <Notice />
-      <Courses />
-      <Services />
-      <WhyUs />
-      <Insights />
-      <Members />
-      <div className="mx-2 my-16 grid grid-cols-1 gap-10 md:mx-24 md:grid-cols-2 md:gap-20">
-        <FeedBack />
-        <Gallery />
+    <>
+      <Header fixed best />
+      <div className="overflow-x-clip">
+        <Slider />
+        <ScrollNotice />
+        <Notice />
+        <Courses />
+        <Services />
+        <WhyUs />
+        <Insights />
+        <Members />
+        <div className="mx-2 my-16 grid grid-cols-1 gap-10 md:mx-24 md:grid-cols-2 md:gap-20">
+          <FeedBack />
+          <Gallery />
+        </div>
+        <WorkPlace />
+        <Payment />
       </div>
-      <WorkPlace />
-      <Payment />
-    </div>
+      <Footer />
+    </>
   );
 }

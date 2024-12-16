@@ -4,7 +4,13 @@ import DesktopMenu from "./DesktopMenu";
 import MobileMenu from "./MobileMenu";
 import User from "./User";
 
-export default function Header({ fixed = false }: { fixed?: boolean }) {
+export default function Header({
+  fixed = false,
+  best = false,
+}: {
+  fixed?: boolean;
+  best?: boolean;
+}) {
   return (
     <header
       className={`${
@@ -38,13 +44,26 @@ export default function Header({ fixed = false }: { fixed?: boolean }) {
         {/* Call to Action & Social Media for Desktop */}
         <div className="flex items-center gap-4">
           {/* Call to Action Button */}
-          <Link href="/company/pricing" className="hidden md:block">
-            <Button
-              className={`${fixed ? "border bg-transparent hover:bg-transparent" : "border border-primary bg-secondary text-primary hover:bg-secondary"}`}
+          {best ? (
+            <Link
+              href="/best-computer-training-center/application"
+              className="hidden md:block"
             >
-              Pricing
-            </Button>
-          </Link>
+              <Button
+                className={`${fixed ? "border bg-transparent hover:bg-transparent" : "border border-primary bg-secondary text-primary hover:bg-secondary"}`}
+              >
+                Apply Now
+              </Button>
+            </Link>
+          ) : (
+            <Link href="/company/pricing" className="hidden md:block">
+              <Button
+                className={`${fixed ? "border bg-transparent hover:bg-transparent" : "border border-primary bg-secondary text-primary hover:bg-secondary"}`}
+              >
+                Pricing
+              </Button>
+            </Link>
+          )}
           <User fixed={fixed} />
         </div>
       </div>
