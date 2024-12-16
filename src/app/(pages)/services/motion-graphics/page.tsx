@@ -7,9 +7,11 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import design from "@/images/services/motion-graphics.jpg";
 import { ArrowRight, Award, Film, Play, Sparkles, Zap } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import Testimonials from "../../about/Testimonials";
 
 const motionGraphicsServices = [
   {
@@ -85,7 +87,7 @@ export default function MotionGraphicsPage() {
             </div>
             <div className="lg:w-1/2">
               <Image
-                src="https://img.freepik.com/free-vector/gradient-abstract-background-with-geometric-shapes_52683-82446.jpg?w=1380&h=980&t=st=1701704614~exp=1701705214~hmac=d0bd5c6e7b3b7d7e7e7e7e7e7e7e7e7e7e7e7e7e7e7e7e7e7e7e7e7e7e7e7e7e"
+                src={design}
                 alt="Motion Graphics Illustration"
                 width={700}
                 height={500}
@@ -194,39 +196,7 @@ export default function MotionGraphicsPage() {
       </section>
 
       {/* Testimonial Section */}
-      <section className="py-20">
-        <div className="container mx-auto px-4">
-          <h2 className="mb-12 text-center text-3xl font-bold">
-            What Our Clients Say
-          </h2>
-          <div className="mx-auto max-w-4xl">
-            <Card className="bg-primary text-primary-foreground">
-              <CardContent className="pt-6">
-                <p className="mb-6 text-xl italic">
-                  The motion graphics team brought our vision to life in ways we
-                  couldn&#39;t have imagined. Their creativity and technical
-                  skills are truly outstanding.
-                </p>
-                <div className="flex items-center">
-                  <Image
-                    src="https://img.freepik.com/free-vector/businessman-character-avatar-isolated_24877-60111.jpg?w=200&h=200&t=st=1701704740~exp=1701705340~hmac=d0bd5c6e7b3b7d7e7e7e7e7e7e7e7e7e7e7e7e7e7e7e7e7e7e7e7e7e7e7e7e7e"
-                    alt="Client"
-                    width={60}
-                    height={60}
-                    className="mr-4 rounded-full"
-                  />
-                  <div>
-                    <p className="font-semibold">Sarah Johnson</p>
-                    <p className="text-sm opacity-75">
-                      Marketing Director, InnoTech Solutions
-                    </p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        </div>
-      </section>
+      <Testimonials />
 
       {/* Awards Section */}
       <section className="bg-muted/50 py-20">
