@@ -1,9 +1,9 @@
-import logo from "@/images/hero/logo3.png";
+import logo from "@/images/hero/logo2.png";
 import Image from "next/image";
 
 export default function ApplicationHeader() {
   return (
-    <div className="mb-10 flex flex-col items-center justify-center gap-6 text-center">
+    <div className="flex flex-col items-center justify-center gap-6 text-center">
       <Image src={logo} alt="logo" className="h-16 w-16 md:h-20 md:w-20" />
       <div className="text-3xl font-bold lg:text-4xl">
         Best Computer Training Center, Jhenaidah

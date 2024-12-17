@@ -19,7 +19,6 @@ enum DesignStatus {
   PENDING
 }
 
-
 model Account {
   id                String  @id @default(auto()) @map("_id") @db.ObjectId
   userId            String  @db.ObjectId
@@ -48,9 +47,9 @@ model Session {
 }
 
 model User {
-  id               String      @id @default(auto()) @map("_id") @db.ObjectId
+  id               String     @id @default(auto()) @map("_id") @db.ObjectId
   name             String
-  email            String      @unique
+  email            String     @unique
   password         String?
   emailVerified    DateTime?
   googleId         String?
@@ -58,38 +57,36 @@ model User {
   image            String?
   imageId          String?
   verificationCode String?
-  createdAt        DateTime    @default(now())
-  status           UserStatus  @default(USER)
+  createdAt        DateTime   @default(now())
+  status           UserStatus @default(USER)
   accounts         Account[]
   sessions         Session[]
   design           Design[]
   likes            Like[]
-  comments Comment[]
+  comments         Comment[]
+  applications     Application[]
 }
 
-
-
 model Design {
-  id          String        @id @default(auto()) @map("_id") @db.ObjectId
-  name        String
-  description String
-  category    String
-  image       String
-  imageId     String?
-  tags        String[]
-  createdAt   DateTime      @default(now())
-  updatedAt   DateTime      @updatedAt
-  status      DesignStatus @default(PENDING)
-  authorId    String        @db.ObjectId
-  author      User          @relation(fields: [authorId], references: [id], onDelete: Cascade)
-  likes       Like[]
-  comments Comment[]
-  viewCount    Int           @default(1)
+  id            String       @id @default(auto()) @map("_id") @db.ObjectId
+  name          String
+  description   String
+  category      String
+  image         String
+  imageId       String?
+  tags          String[]
+  createdAt     DateTime     @default(now())
+  updatedAt     DateTime     @updatedAt
+  status        DesignStatus @default(PENDING)
+  authorId      String       @db.ObjectId
+  author        User         @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  likes         Like[]
+  comments      Comment[]
+  viewCount     Int          @default(1)
   downloadCount Int          @default(1)
 
   @@index([category])
 }
-
 
 model Subscriber {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
@@ -109,7 +106,6 @@ model Like {
   @@unique([userId, designId]) // Prevent duplicate likes
 }
 
-
 model Comment {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
   userId    String   @db.ObjectId
@@ -119,4 +115,44 @@ model Comment {
 
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   design Design @relation(fields: [designId], references: [id], onDelete: Cascade)
+}
+
+model Application {
+  id               String   @id @default(auto()) @map("_id") @db.ObjectId
+  studentName      String
+  session          String?
+  fatherName       String
+  motherName       String
+  birthDay         String
+  bloodGroup       String
+  mobileNumber     String
+  guardianNumber   String
+  gender           String
+  religion         String
+  fullAddress      String
+  district         String
+  education        String
+  board            String
+  rollNumber       String
+  regNumber        String
+  passingYear      String
+  gpa              String
+  nid              String
+  nationality      String
+  course           String
+  duration         String
+  status           String
+  image            String
+  imageId          String?
+  email            String
+  pc               String
+  transactionId    String?
+  fatherOccupation String?
+  maritalStatus    String?
+  roll             Int?
+  certificate      String?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+  userId           String   @unique @db.ObjectId
+  user             User     @relation(fields: [userId], references: [id])
 }

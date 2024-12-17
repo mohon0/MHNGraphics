@@ -1,5 +1,6 @@
 "use client";
 
+import { bangladeshDistricts } from "@/components/data/District";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -21,59 +22,163 @@ import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
+  SelectGroup,
   SelectItem,
+  SelectLabel,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
+import bkash from "@/images/tools/bkash.svg";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Image from "next/image";
+import Link from "next/link";
 import { useCallback, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
+import Preview from "./ApplicationPreview";
 
-const MAX_FILE_SIZE = 5000000;
-const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/png", "image/webp"];
+const currentYear = new Date().getFullYear();
+const MAX_FILE_SIZE = 1 * 1024 * 1024; // 1MB
+const ACCEPTED_IMAGE_TYPES = [
+  "image/jpeg",
+  "image/jpg",
+  "image/png",
+  "image/webp",
+];
 
-const formSchema = z.object({
-  studentName: z.string().min(2, "Student name is required"),
-  fatherName: z.string().min(2, "Father's name is required"),
-  motherName: z.string().min(2, "Mother's name is required"),
-  fatherOccupation: z.string().min(2, "Father's occupation is required"),
-  birthDate: z.string().min(2, "Birth date is required"),
-  mobileNumber: z.string().min(11, "Valid mobile number is required"),
-  guardianNumber: z.string().min(11, "Guardian number is required"),
-  gender: z.string().min(1, "Gender is required"),
-  maritalStatus: z.string().min(1, "Marital status is required"),
-  bloodGroup: z.string().min(1, "Blood group is required"),
-  religion: z.string().min(1, "Religion is required"),
-  nationality: z.string().min(1, "Nationality is required"),
-  nidBirthReg: z.string().min(1, "NID/Birth registration is required"),
-  email: z.string().email().optional(),
-  fullAddress: z.string().min(5, "Full address is required"),
-  district: z.string().min(1, "District is required"),
-  education: z.string().min(1, "Education is required"),
-  educationBoard: z.string().min(1, "Education board is required"),
-  rollNumber: z.string().min(1, "Roll number is required"),
-  regNumber: z.string().min(1, "Registration number is required"),
-  passingYear: z.string().min(4, "Passing year is required"),
-  gpaCgpa: z.string().min(1, "GPA/CGPA is required"),
-  course: z.string().min(1, "Course is required"),
-  session: z.string().min(1, "Session is required"),
-  duration: z.string().min(1, "Duration is required"),
-  hasComputer: z.string().min(1, "Please specify if you have a computer"),
+export const formSchema = z.object({
+  studentName: z
+    .string()
+    .trim()
+    .min(1, "Student name is required")
+    .max(40, "Must be 40 characters or less"),
+
+  fatherName: z
+    .string()
+    .trim()
+    .min(1, "Father's name is required")
+    .max(40, "Must be 40 characters or less"),
+
+  motherName: z
+    .string()
+    .trim()
+    .min(1, "Mother's name is required")
+    .max(40, "Must be 40 characters or less"),
+
+  fatherOccupation: z
+    .string()
+    .trim()
+    .min(1, "Father's occupation is required")
+    .max(40, "Must be 40 characters or less"),
+
+  birthDate: z
+    .string()
+    .trim()
+    .regex(
+      /^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[0-2])\/\d{4}$/,
+      "Date must be in the format dd/mm/yyyy",
+    ),
+
+  mobileNumber: z
+    .string()
+    .trim()
+    .regex(/^\d{10,15}$/, "Mobile number must be between 10-15 digits"),
+
+  guardianNumber: z
+    .string()
+    .trim()
+    .regex(/^\d{10,15}$/, "Guardian number must be between 10-15 digits"),
+
+  gender: z.enum(["Male", "Female", "Other"], {
+    errorMap: () => ({ message: "Gender is required and must be valid" }),
+  }),
+
+  maritalStatus: z.enum(["Single", "Married", "Divorced", "Widowed"], {
+    errorMap: () => ({ message: "Marital status is required" }),
+  }),
+
+  bloodGroup: z
+    .string()
+    .trim()
+    .regex(/^(A|B|AB|O)[+-]$/, "Blood group must be valid (e.g., A+, B-, O+)"),
+
+  religion: z.string().trim().min(1, "Religion is required"),
+
+  nationality: z.string().trim().min(1, "Nationality is required"),
+
+  nidBirthReg: z.string().trim().min(1, "NID/Birth registration is required"),
+
+  email: z.string().trim().email("Invalid email address").optional(),
+
+  fullAddress: z.string().trim().min(5, "Full address is required"),
+
+  district: z.string().trim().min(1, "District is required"),
+
+  education: z.string().trim().min(1, "Education is required"),
+
+  trxId: z.string().trim().min(1, "Transaction ID is required"),
+
+  educationBoard: z.string().trim().min(1, "Education board is required"),
+
+  rollNumber: z.string().trim().min(1, "Roll number is required"),
+
+  regNumber: z.string().trim().min(1, "Registration number is required"),
+
+  passingYear: z
+    .number({
+      required_error: "Passing year is required",
+      invalid_type_error: "Passing year must be a number",
+    })
+    .min(1990, "Passing year must be 1990 or later")
+    .max(currentYear, `Passing year cannot be later than ${currentYear}`),
+
+  gpaCgpa: z
+    .string()
+    .trim()
+    .regex(/^\d+(\.\d{1,2})?$/, "GPA/CGPA must be a valid number (e.g., 4.00)")
+    .min(1, "GPA/CGPA is required"),
+
+  course: z.string().trim().min(1, "Course is required"),
+
+  session: z.string().trim().min(1, "Session is required"),
+
+  duration: z.string().trim().min(1, "Duration is required"),
+
+  pc: z.enum(["Yes", "No"], {
+    errorMap: () => ({ message: "Specify if you have a computer (Yes/No)" }),
+  }),
+
   image: z
     .any()
-    .refine((files) => files?.length == 1, "Image is required.")
+    .refine((file) => file?.length == 1, "Image is required.")
     .refine(
-      (files) => files?.[0]?.size <= MAX_FILE_SIZE,
-      `Max file size is 5MB.`,
+      (file) => file?.[0]?.size <= MAX_FILE_SIZE,
+      `Image size must be less than 5MB`,
     )
     .refine(
-      (files) => ACCEPTED_IMAGE_TYPES.includes(files?.[0]?.type),
-      ".jpg, .jpeg, .png and .webp files are accepted.",
+      (file) => ACCEPTED_IMAGE_TYPES.includes(file?.[0]?.type),
+      "Only .jpg, .jpeg, .png, and .webp files are allowed",
     ),
 });
+
+const generateSessionOptions = () => {
+  const currentYear = new Date().getFullYear();
+  const options = [];
+
+  // Include next year sessions first
+  options.push(`${currentYear + 1} July-Dec`, `${currentYear + 1} Jan-June`);
+
+  // Include current year sessions
+  options.push(`${currentYear} July-Dec`, `${currentYear} Jan-June`);
+
+  // Include previous year sessions
+  for (let year = currentYear - 1; year >= 2010; year--) {
+    options.push(`${year} July-Dec`, `${year} Jan-June`);
+  }
+
+  return options;
+};
 
 export function StudentApplicationForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -90,9 +195,10 @@ export function StudentApplicationForm() {
       birthDate: "",
       mobileNumber: "",
       guardianNumber: "",
-      gender: "",
-      maritalStatus: "",
+      gender: undefined,
+      maritalStatus: undefined,
       bloodGroup: "",
+      trxId: "",
       religion: "",
       nationality: "Bangladeshi",
       nidBirthReg: "",
@@ -103,12 +209,12 @@ export function StudentApplicationForm() {
       educationBoard: "",
       rollNumber: "",
       regNumber: "",
-      passingYear: "",
+      passingYear: currentYear,
       gpaCgpa: "",
       course: "",
       session: "",
       duration: "",
-      hasComputer: "",
+      pc: undefined,
     },
   });
 
@@ -326,8 +432,16 @@ export function StudentApplicationForm() {
                               </SelectTrigger>
                             </FormControl>
                             <SelectContent>
-                              <SelectItem value="single">Single</SelectItem>
-                              <SelectItem value="married">Married</SelectItem>
+                              <SelectGroup>
+                                <SelectLabel>Marital Status</SelectLabel>
+
+                                <SelectItem value="Single">Single</SelectItem>
+                                <SelectItem value="Married">Married</SelectItem>
+                                <SelectItem value="Widowed">Widowed</SelectItem>
+                                <SelectItem value="Divorced">
+                                  Divorced
+                                </SelectItem>
+                              </SelectGroup>
                             </SelectContent>
                           </Select>
                           <FormMessage />
@@ -500,13 +614,11 @@ export function StudentApplicationForm() {
                               </SelectTrigger>
                             </FormControl>
                             <SelectContent>
-                              <SelectItem value="dhaka">Dhaka</SelectItem>
-                              <SelectItem value="chittagong">
-                                Chittagong
-                              </SelectItem>
-                              <SelectItem value="rajshahi">Rajshahi</SelectItem>
-                              <SelectItem value="khulna">Khulna</SelectItem>
-                              <SelectItem value="sylhet">Sylhet</SelectItem>
+                              {bangladeshDistricts.map((District) => (
+                                <SelectItem key={District} value={District}>
+                                  {District}
+                                </SelectItem>
+                              ))}
                             </SelectContent>
                           </Select>
                           <FormMessage />
@@ -538,6 +650,7 @@ export function StudentApplicationForm() {
                               </SelectTrigger>
                             </FormControl>
                             <SelectContent>
+                              <SelectItem value="jsc">JSC</SelectItem>
                               <SelectItem value="ssc">SSC</SelectItem>
                               <SelectItem value="hsc">HSC</SelectItem>
                               <SelectItem value="bachelor">Bachelor</SelectItem>
@@ -664,15 +777,30 @@ export function StudentApplicationForm() {
                               </SelectTrigger>
                             </FormControl>
                             <SelectContent>
-                              <SelectItem value="web-development">
-                                Web Development
-                              </SelectItem>
-                              <SelectItem value="graphic-design">
-                                Graphic Design
-                              </SelectItem>
-                              <SelectItem value="digital-marketing">
-                                Digital Marketing
-                              </SelectItem>
+                              <SelectGroup>
+                                <SelectLabel>Course</SelectLabel>
+                                <SelectItem value="office application">
+                                  Office Application
+                                </SelectItem>
+                                <SelectItem value="database programming">
+                                  Database Programming
+                                </SelectItem>
+                                <SelectItem value="digital marketing">
+                                  Digital Marketing
+                                </SelectItem>
+                                <SelectItem value="graphics design">
+                                  Graphics Design
+                                </SelectItem>
+                                <SelectItem value="web development">
+                                  Web Design & Development
+                                </SelectItem>
+                                <SelectItem value="video editing">
+                                  Video Editing
+                                </SelectItem>
+                                <SelectItem value="ethical hacking">
+                                  Ethical Hacking
+                                </SelectItem>
+                              </SelectGroup>
                             </SelectContent>
                           </Select>
                           <FormMessage />
@@ -695,8 +823,16 @@ export function StudentApplicationForm() {
                               </SelectTrigger>
                             </FormControl>
                             <SelectContent>
-                              <SelectItem value="2023">2023</SelectItem>
-                              <SelectItem value="2024">2024</SelectItem>
+                              <SelectGroup>
+                                <SelectLabel>Session</SelectLabel>
+                                {generateSessionOptions().map(
+                                  (option, index) => (
+                                    <SelectItem key={index} value={option}>
+                                      {option}
+                                    </SelectItem>
+                                  ),
+                                )}
+                              </SelectGroup>
                             </SelectContent>
                           </Select>
                           <FormMessage />
@@ -719,9 +855,17 @@ export function StudentApplicationForm() {
                               </SelectTrigger>
                             </FormControl>
                             <SelectContent>
-                              <SelectItem value="3-months">3 Months</SelectItem>
-                              <SelectItem value="6-months">6 Months</SelectItem>
-                              <SelectItem value="1-year">1 Year</SelectItem>
+                              <SelectGroup>
+                                <SelectLabel>Course Duration</SelectLabel>
+
+                                <SelectItem value="free">
+                                  Free (conditions apply)
+                                </SelectItem>
+                                <SelectItem value="1 month">1 Month</SelectItem>
+                                <SelectItem value="3 month">3 Month</SelectItem>
+                                <SelectItem value="6 month">6 Month</SelectItem>
+                                <SelectItem value="1 year">1 Year</SelectItem>
+                              </SelectGroup>
                             </SelectContent>
                           </Select>
                           <FormMessage />
@@ -730,7 +874,7 @@ export function StudentApplicationForm() {
                     />
                     <FormField
                       control={form.control}
-                      name="hasComputer"
+                      name="pc"
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>Do you have computer?</FormLabel>
@@ -754,11 +898,55 @@ export function StudentApplicationForm() {
                     />
                   </div>
                 </div>
+                <div>
+                  <h2 className="mb-2 text-xl font-semibold">
+                    Payment Information
+                  </h2>
+                  <Separator className="mb-4" />
+                  <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                    <Link
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      href="https://shop.bkash.com/mia-store01779120023/pay/bdt100/ZHHBE3"
+                      className="relative mt-2 flex w-fit items-center gap-2 rounded-lg border bg-secondary px-2 shadow-lg"
+                    >
+                      <Image src={bkash} alt="bkash" className="w-20" />
+                      <span>Pay with bkash</span>
+                      <div className="absolute -right-6 top-0 h-3 w-3 animate-ping rounded-full bg-pink-600"></div>
+                    </Link>
+                    <FormField
+                      control={form.control}
+                      name="trxId"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel>TransactionID</FormLabel>
+                          <FormControl>
+                            <Input placeholder="TransactionID" {...field} />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  </div>
+                </div>
               </div>
-
-              <Button type="submit" className="w-full" disabled={isSubmitting}>
-                {isSubmitting ? "Submitting..." : "Submit Application"}
-              </Button>
+              <div className="rounded-sm border border-primary p-2">
+                <p>
+                  ১০০/= টাকা আবেদন ফি সহ- কোর্স ফি বিকাশ পেমেন্ট করে,
+                  Transaction ID লিখুন। তারপর Submit করুন। অবশ্যই পেমেন্ট রিসিট
+                  মূল ফরম এর সাথে সংযুক্ত করতে হবে
+                </p>
+              </div>
+              <div className="flex flex-col gap-4 md:flex-row md:gap-10">
+                <Preview />
+                <Button
+                  type="submit"
+                  className="w-full"
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? "Submitting..." : "Submit Application"}
+                </Button>
+              </div>
             </form>
           </Form>
         </CardContent>
