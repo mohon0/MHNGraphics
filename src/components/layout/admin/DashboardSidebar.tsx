@@ -1,7 +1,7 @@
 "use client";
 import {
   BadgeCheck,
-  BookOpen,
+  FileUser,
   GalleryHorizontal,
   Map,
   PieChart,
@@ -63,25 +63,18 @@ export function DashboardSidebar({
       ],
     },
     {
-      title: "Documentation",
+      title: "Application",
       url: "#",
-      icon: BookOpen,
+      icon: FileUser,
+      isActive: true,
       items: [
         {
-          title: "Introduction",
-          url: "#",
+          title: "View All",
+          url: "/dashboard/application-list?filter=All&page=1&sort=newest&certificate=All&name=",
         },
         {
-          title: "Get Started",
-          url: "#",
-        },
-        {
-          title: "Tutorials",
-          url: "#",
-        },
-        {
-          title: "Changelog",
-          url: "#",
+          title: "Free Application",
+          url: "/dashboard/application-list?type=free",
         },
       ],
     },

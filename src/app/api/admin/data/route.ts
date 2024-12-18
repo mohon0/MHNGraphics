@@ -10,13 +10,19 @@ export async function GET(req: NextRequest, res: NextResponse) {
     const subscriberCount = await Prisma.subscriber.count();
     const commentsCount = await Prisma.comment.count();
     const userCount = await Prisma.user.count();
+    const applicationCount = await Prisma.application.count();
 
-    const data = { designCount, subscriberCount, commentsCount, userCount };
+    const data = {
+      designCount,
+      subscriberCount,
+      commentsCount,
+      userCount,
+      applicationCount,
+    };
 
     // Return counts as JSON response
     return new NextResponse(JSON.stringify(data));
   } catch (error) {
-    console.error("Error fetching counts:", error);
     return new NextResponse("Internal Server Error", { status: 500 });
   }
 }

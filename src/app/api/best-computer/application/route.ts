@@ -13,34 +13,36 @@ function getStringValue(formData: FormData, key: string): string {
   return typeof value === "string" ? value : "";
 }
 
-export async function POST(req: NextRequest, res: NextResponse) {
+export async function POST(req: NextRequest) {
   try {
     const token = await getToken({ req, secret });
     const userId = token?.sub;
 
     if (!token || !userId) {
-      // User is not authenticated or authorId is missing
-      return new NextResponse("User not logged in or authorId missing");
+      return NextResponse.json(
+        { message: "User not logged in or userId missing" },
+        { status: 401 },
+      );
     }
 
-    // Check if the user has already submitted an application
+    console.log("Token:", token);
+
+    // Check for existing application
     const existingApplication = await Prisma.application.findFirst({
-      where: {
-        userId: userId,
-      },
+      where: { userId },
     });
 
     if (existingApplication) {
-      // User has already submitted an application
-      return new NextResponse("User has already submitted an application", {
-        status: 400,
-      });
+      return NextResponse.json(
+        { message: "User has already submitted an application" },
+        { status: 400 },
+      );
     }
 
     // Extract form data from the request
     const formData = await req.formData();
 
-    // Use utility function for each form field
+    // Use utility function to safely get values
     const studentName = getStringValue(formData, "studentName");
     const email = getStringValue(formData, "email");
     const fatherName = getStringValue(formData, "fatherName");
@@ -68,34 +70,37 @@ export async function POST(req: NextRequest, res: NextResponse) {
     const transactionId = getStringValue(formData, "transactionId");
     const fatherOccupation = getStringValue(formData, "fatherOccupation");
     const maritalStatus = getStringValue(formData, "maritalStatus");
-    const picture = formData.get("picture");
 
+    // Handle file upload
+    let imageUrl = { secure_url: "", public_id: "" };
+    const imageFile = formData.get("image") as Blob;
+
+    if (imageFile) {
+      try {
+        imageUrl = await UploadImage(imageFile, "application/");
+      } catch (uploadError) {
+        console.error("Image upload failed:", uploadError);
+        return NextResponse.json(
+          { message: "Image upload failed" },
+          { status: 500 },
+        );
+      }
+    }
+
+    // Generate new roll number
+    let roll = 2000;
+    const lastApplication = await Prisma.application.findFirst({
+      orderBy: { createdAt: "desc" },
+      select: { roll: true },
+    });
+
+    if (lastApplication?.roll) {
+      roll = lastApplication.roll + 1;
+    }
+
+    // Create a new application
     try {
-      // Handle image file if present
-      const imageFile = formData.get("image") as Blob;
-      let imageUrl = { secure_url: "", public_id: "" };
-
-      if (imageFile) {
-        // Upload the image to Cloudinary and get the URL
-        imageUrl = await UploadImage(imageFile, "designs/");
-      }
-
-      const lastApplication = await Prisma.application.findFirst({
-        orderBy: {
-          createdAt: "desc",
-        },
-        select: {
-          roll: true,
-        },
-      });
-      if (!lastApplication || !lastApplication.roll) {
-        return new NextResponse("There was an error. Please try again later.");
-      }
-
-      const roll = lastApplication?.roll + 1;
-
-      // Create a new post using Prisma
-      const newPost = await Prisma.application.create({
+      const newApplication = await Prisma.application.create({
         data: {
           studentName,
           fatherName,
@@ -133,15 +138,20 @@ export async function POST(req: NextRequest, res: NextResponse) {
         },
       });
 
-      return new NextResponse(JSON.stringify(newPost), {
-        status: 200,
-        headers: { "Content-Type": "application/json" },
-      });
-    } catch (error) {
-      return new NextResponse("Applications creation failed", { status: 400 });
+      return NextResponse.json(newApplication, { status: 201 });
+    } catch (createError) {
+      console.error("Application creation failed:", createError);
+      return NextResponse.json(
+        { message: "Application creation failed" },
+        { status: 500 },
+      );
     }
   } catch (error) {
-    return new NextResponse("Form data processing failed", { status: 500 });
+    console.error("Form processing failed:", error);
+    return NextResponse.json(
+      { message: "An unexpected error occurred" },
+      { status: 500 },
+    );
   }
 }
 

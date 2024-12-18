@@ -5,7 +5,13 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Layers2, MessageCircle, Users, UsersRound } from "lucide-react";
+import {
+  FileUser,
+  Layers2,
+  MessageCircle,
+  Users,
+  UsersRound,
+} from "lucide-react";
 import React from "react";
 
 export interface QuickStat {
@@ -31,6 +37,11 @@ const AdminDashboard: React.FC = () => {
           title: "Designs",
           value: data.designCount,
           icon: <Layers2 className="h-4 w-4 text-muted-foreground" />,
+        },
+        {
+          title: "Application",
+          value: data.applicationCount,
+          icon: <FileUser className="h-4 w-4 text-muted-foreground" />,
         },
         {
           title: "Subscribers",

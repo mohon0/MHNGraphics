@@ -18,8 +18,6 @@ export default function Dashboard() {
     return null;
   }
 
-  console.log(session);
-
   // Conditional rendering based on user role
   return (
     <div>

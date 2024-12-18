@@ -47,25 +47,29 @@ model Session {
 }
 
 model User {
-  id               String     @id @default(auto()) @map("_id") @db.ObjectId
-  name             String
-  email            String     @unique
-  password         String?
-  emailVerified    DateTime?
-  googleId         String?
-  bio              String?
-  image            String?
-  imageId          String?
-  verificationCode String?
-  createdAt        DateTime   @default(now())
-  status           UserStatus @default(USER)
+  id                 String     @id @default(auto()) @map("_id") @db.ObjectId
+  name               String?
+  email              String?    @unique
+  phoneNumber        String?
+  googleId           String?
+  password           String?
+  emailVerified      DateTime?
+  image              String?
+  verificationCode   String?
+  createdAt          DateTime?  @default(now())
+  bio                String?
+  imageId            String?
+  status             String?   @default("USER")
   accounts         Account[]
   sessions         Session[]
   design           Design[]
   likes            Like[]
   comments         Comment[]
   applications     Application[]
+
+  @@index([email, phoneNumber], name: "unique_email_phone_number")
 }
+
 
 model Design {
   id            String       @id @default(auto()) @map("_id") @db.ObjectId

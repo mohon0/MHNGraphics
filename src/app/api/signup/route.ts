@@ -110,9 +110,7 @@ export async function PUT(req: NextRequest, res: NextResponse) {
     const { userId, code } = data;
 
     const user = await Prisma.user.findUnique({
-      where: {
-        id: userId,
-      },
+      where: { id: userId },
     });
 
     if (!user) {
@@ -121,42 +119,44 @@ export async function PUT(req: NextRequest, res: NextResponse) {
 
     const verificationCode = code.toString();
 
-    // Check if the verification code matches the one stored in the database
+    // Check if the verification code matches
     if (user.verificationCode === verificationCode) {
-      // Update user status or perform any other verification logic
-
-      const response = await Prisma.user.update({
-        where: {
-          id: userId,
-        },
+      const updatedUser = await Prisma.user.update({
+        where: { id: userId },
         data: {
           emailVerified: new Date().toISOString(),
           verificationCode: null,
         },
       });
 
-      // Check if the email is already subscribed
-      const existingSubscriber = await Prisma.subscriber.findUnique({
-        where: { email: response.email },
-      });
-
-      if (!existingSubscriber) {
-        // Save the email in the database
-        const subscriber = await Prisma.subscriber.create({
-          data: { email: response.email },
+      if (updatedUser.email) {
+        // Check if the email is already subscribed
+        const existingSubscriber = await Prisma.subscriber.findUnique({
+          where: { email: updatedUser.email },
         });
+
+        if (!existingSubscriber) {
+          // Save email to subscriber list
+          await Prisma.subscriber.create({
+            data: { email: updatedUser.email },
+          });
+        }
+
+        // Send welcome email
+        try {
+          await sendRegistrationEmail(updatedUser.email);
+        } catch (emailError) {
+          console.error("Failed to send welcome email:", emailError);
+          return NextResponse.json(
+            {
+              message:
+                "Registration successful, but welcome email could not be sent.",
+            },
+            { status: 202 },
+          );
+        }
       }
 
-      // Send welcome email
-      try {
-        await sendRegistrationEmail(response.email);
-      } catch (emailError) {
-        console.error("Failed to send welcome email:", emailError);
-        return NextResponse.json(
-          { message: "Registration successful, but email could not be sent." },
-          { status: 202 }, // Accepted with issue
-        );
-      }
       return new NextResponse("User verified successfully", { status: 200 });
     } else {
       return new NextResponse("Invalid verification code", { status: 400 });

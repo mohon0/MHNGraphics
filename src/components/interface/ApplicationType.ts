@@ -83,3 +83,15 @@ export interface SingleApplicationUserType {
     session: string;
   };
 }
+
+export interface ApplicationListType {
+  id: string;
+  duration: string;
+  studentName: string;
+  course: string;
+  image: string;
+  status: string;
+  createdAt: string;
+  certificate: string;
+  mobileNumber: string;
+}

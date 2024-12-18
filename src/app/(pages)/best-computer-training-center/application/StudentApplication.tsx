@@ -31,10 +31,12 @@ import {
 import { Separator } from "@/components/ui/separator";
 import bkash from "@/images/tools/bkash.svg";
 import { zodResolver } from "@hookform/resolvers/zod";
+import axios from "axios";
 import Image from "next/image";
 import Link from "next/link";
 import { useCallback, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "react-toastify";
 import * as z from "zod";
 import Preview from "./ApplicationPreview";
 
@@ -240,15 +242,45 @@ export function StudentApplicationForm() {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsSubmitting(true);
+    toast.loading("Please wait...");
+
     try {
-      console.log(values);
-      await new Promise((resolve) => setTimeout(resolve, 2000));
-      alert("Application submitted successfully!");
-      form.reset();
-      setPreviewImage(null);
+      // Convert values to FormData
+      const formData = new FormData();
+
+      // Use a type guard to ensure key is a valid key
+      (Object.keys(values) as (keyof typeof values)[]).forEach((key) => {
+        if (key === "image" && values[key]) {
+          // Handle image upload separately if present
+          formData.append("image", values[key][0]); // Assuming `image` is a FileList
+        } else {
+          const value = values[key];
+          if (value !== undefined && value !== null) {
+            formData.append(key, value as string);
+          }
+        }
+      });
+
+      const response = await axios.post(
+        "/api/best-computer/application",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        },
+      );
+
+      if (response.status === 200) {
+        toast.dismiss();
+        toast.success("Application was successfully submitted");
+        setPreviewImage(null);
+      }
     } catch (error) {
-      alert("Error submitting application");
+      toast.dismiss();
+      toast.error("An error occurred");
     } finally {
+      toast.dismiss();
       setIsSubmitting(false);
     }
   }
@@ -407,9 +439,9 @@ export function StudentApplicationForm() {
                               </SelectTrigger>
                             </FormControl>
                             <SelectContent>
-                              <SelectItem value="male">Male</SelectItem>
-                              <SelectItem value="female">Female</SelectItem>
-                              <SelectItem value="other">Other</SelectItem>
+                              <SelectItem value="Male">Male</SelectItem>
+                              <SelectItem value="Female">Female</SelectItem>
+                              <SelectItem value="Other">Other</SelectItem>
                             </SelectContent>
                           </Select>
                           <FormMessage />
@@ -888,8 +920,8 @@ export function StudentApplicationForm() {
                               </SelectTrigger>
                             </FormControl>
                             <SelectContent>
-                              <SelectItem value="yes">Yes</SelectItem>
-                              <SelectItem value="no">No</SelectItem>
+                              <SelectItem value="Yes">Yes</SelectItem>
+                              <SelectItem value="No">No</SelectItem>
                             </SelectContent>
                           </Select>
                           <FormMessage />
