@@ -11,6 +11,7 @@ interface Props {
   searchQuery: string;
   certificate: string;
   sortBy: string;
+  type?: string;
 }
 
 export function FetchAllApplication({
@@ -19,6 +20,7 @@ export function FetchAllApplication({
   filter,
   searchQuery,
   sortBy,
+  type,
 }: Props) {
   const [debouncedSearchQuery, setDebouncedSearchQuery] = useState(searchQuery);
 
@@ -39,6 +41,7 @@ export function FetchAllApplication({
       certificate,
       sortBy,
       debouncedSearchQuery,
+      type,
     ],
     queryFn: async () => {
       const response = await axios.get(`/api/best-computer/all-application`, {
@@ -47,6 +50,7 @@ export function FetchAllApplication({
           filter,
           certificate,
           sortBy,
+          type,
           searchQuery: debouncedSearchQuery,
         },
       });

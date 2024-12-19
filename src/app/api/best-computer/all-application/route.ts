@@ -15,10 +15,13 @@ export async function GET(req: NextRequest) {
     const status = queryParams.get("filter");
     const search = queryParams.get("searchQuery");
     const certificate = queryParams.get("certificate");
+    const type = queryParams.get("type") || "all";
 
     // Calculate skip count for pagination
     const pageSize = 20; // Number of items per page
     const skipCount = (page - 1) * pageSize;
+
+    console.log(type);
 
     // Build the `where` condition for Prisma query
     const where: Prisma.ApplicationWhereInput = {
@@ -36,6 +39,7 @@ export async function GET(req: NextRequest) {
           }
         : {}),
       ...(certificate && certificate !== "All" ? { certificate } : {}),
+      ...(type === "free" ? { duration: "free" } : {}),
     };
 
     // Total count of applications matching the filter

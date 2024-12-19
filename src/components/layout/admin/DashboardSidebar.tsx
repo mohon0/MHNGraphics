@@ -74,7 +74,7 @@ export function DashboardSidebar({
         },
         {
           title: "Free Application",
-          url: "/dashboard/application-list?type=free",
+          url: "/dashboard/application-list?filter=All&page=1&sort=newest&certificate=All&type=free&name=",
         },
       ],
     },

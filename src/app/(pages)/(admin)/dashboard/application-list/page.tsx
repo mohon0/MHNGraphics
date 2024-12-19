@@ -37,6 +37,7 @@ function ApplicationListContent() {
     searchParams.get("name") || "",
   );
   const [page, setPage] = useState(parseInt(searchParams.get("page") || "1"));
+  const type = searchParams.get("type") || "all";
 
   const { data, isError, refetch, isFetching } = FetchAllApplication({
     page,
@@ -44,6 +45,7 @@ function ApplicationListContent() {
     searchQuery: searchInput,
     certificate,
     sortBy,
+    type,
   });
 
   useEffect(() => {
@@ -53,9 +55,10 @@ function ApplicationListContent() {
       sort: sortBy,
       certificate,
       name: searchInput,
+      type,
     });
     router.replace(`/dashboard/application-list?${query.toString()}`);
-  }, [filter, certificate, sortBy, searchInput, page, router]);
+  }, [filter, certificate, sortBy, searchInput, page, router, type]);
 
   return (
     <div className="container mx-auto px-4 py-8">
