@@ -3,7 +3,10 @@ import { Prisma } from "@/components/helper/prisma/Prisma";
 import cloudinary from "@/utils/cloudinary";
 
 import { getToken } from "next-auth/jwt";
+import { getServerSession } from "next-auth/next";
 import { NextRequest, NextResponse } from "next/server";
+import { authOptions } from "../../auth/[...nextauth]/Options";
+import { CustomSession } from "../../profile/route";
 
 const secret = process.env.NEXTAUTH_SECRET;
 const admin = process.env.NEXT_PUBLIC_ADMIN;
@@ -256,83 +259,107 @@ export async function DELETE(req: NextRequest, res: NextResponse) {
   }
 }
 
-export async function PUT(req: NextRequest, res: NextResponse) {
+export async function PUT(req: NextRequest) {
   try {
-    const token = await getToken({ req, secret });
-    const userId = token?.sub;
-    const userEmail = token?.email;
+    const session = (await getServerSession(authOptions)) as CustomSession;
 
-    if (!token || (!userId && !userEmail)) {
-      return new NextResponse("User not logged in or userId/userEmail missing");
+    // Check if user is logged in
+    if (!session) {
+      return new NextResponse("User not logged in", { status: 401 });
     }
 
-    const formData = await req.formData();
-    const id = getStringValue(formData, "id");
-    const imageData = formData.get("image");
+    const { role: authorRole } = session.user;
 
-    // Check if the user exists
-    const existingUser = await Prisma.application.findUnique({
-      where: { id },
-    });
+    // Check if the request is JSON or FormData
+    const contentType = req.headers.get("content-type");
 
-    if (!existingUser) {
-      return new NextResponse("User not found", { status: 404 });
-    }
+    if (contentType?.includes("application/json")) {
+      // Handle JSON requests (certificate updates)
+      const body = await req.json();
 
-    // Check if there’s an image to delete
-    if (existingUser.imageId) {
-      const result = await cloudinary.uploader.destroy(existingUser.imageId);
-      if (result.result !== "ok") {
-        return new NextResponse("Error deleting previous image", {
-          status: 400,
-        });
-      }
-    }
-
-    // Upload the new image
-    let image = existingUser.image;
-    let imageId = existingUser.imageId;
-
-    if (imageData && imageData instanceof Blob) {
-      const imageFile = imageData as Blob;
-      const uploadResult = await UploadImage(imageFile, "application/");
-      image = uploadResult.secure_url;
-      imageId = uploadResult.public_id;
-    }
-
-    const updatedData: Record<string, string | Date | null> = {};
-
-    // Iterate through form data and add it to updatedData
-    formData.forEach((value, key) => {
-      if (key !== "id" && key !== "image") {
-        updatedData[key] = value.toString();
-      }
-    });
-
-    // Add image and imageId to updatedData
-    updatedData.image = image;
-    updatedData.imageId = imageId;
-
-    if (userEmail === admin) {
-      // Update the application with the provided data (including imageURL)
-      const response = await Prisma.application.update({
-        where: { id },
-        data: updatedData,
+      const existingApp = await Prisma.application.findUnique({
+        where: { id: body.id },
       });
 
-      if (response) {
+      if (!existingApp) {
+        return new NextResponse("No application found", { status: 404 });
+      }
+
+      const updatedApp = await Prisma.application.update({
+        where: { id: body.id },
+        data: { certificate: body.certificate },
+      });
+
+      return new NextResponse("Updated certificate successfully", {
+        status: 200,
+      });
+    } else if (contentType?.includes("multipart/form-data")) {
+      // Handle FormData requests (image and other updates)
+      const formData = await req.formData();
+      const id = getStringValue(formData, "id");
+      const imageData = formData.get("image");
+
+      const existingApp = await Prisma.application.findUnique({
+        where: { id },
+      });
+
+      if (!existingApp) {
+        return new NextResponse("No application found", { status: 404 });
+      }
+
+      // Process image if provided
+      let image = existingApp.image;
+      let imageId = existingApp.imageId;
+
+      if (existingApp.imageId) {
+        const result = await cloudinary.uploader.destroy(existingApp.imageId);
+        if (result.result !== "ok") {
+          return new NextResponse("Error deleting previous image", {
+            status: 400,
+          });
+        }
+      }
+
+      if (imageData && imageData instanceof Blob) {
+        const uploadResult = await UploadImage(imageData, "application/");
+        image = uploadResult.secure_url;
+        imageId = uploadResult.public_id;
+      }
+
+      // Prepare updated data
+      const updatedData: Record<string, string | Date | null> = {};
+      formData.forEach((value, key) => {
+        if (key !== "id" && key !== "image") {
+          updatedData[key] = value.toString();
+        }
+      });
+      updatedData.image = image;
+      updatedData.imageId = imageId;
+
+      // Authorization check for ADMIN role
+      if (authorRole === "ADMIN") {
+        const response = await Prisma.application.update({
+          where: { id },
+          data: updatedData,
+        });
+
         return new NextResponse(JSON.stringify(response), {
           status: 200,
           headers: { "Content-Type": "application/json" },
         });
+      } else {
+        return new NextResponse(
+          "You do not have permission to update this item.",
+          { status: 403 },
+        );
       }
     } else {
-      return new NextResponse(
-        "You do not have permission to update this item.",
-        { status: 403 },
-      );
+      return new NextResponse("Unsupported content type", { status: 400 });
     }
   } catch (error) {
-    return new NextResponse("Error updating application", { status: 500 });
+    console.error("Error updating application:", error);
+    return new NextResponse("Internal server error", { status: 500 });
+  } finally {
+    Prisma.$disconnect();
   }
 }

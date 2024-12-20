@@ -13,6 +13,15 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import axios from "axios";
 import Image from "next/image";
 import Link from "next/link";
@@ -31,7 +40,7 @@ export default function ApplicationDataCard(app: ExtendedApplicationListType) {
   async function handleDelete(id: string) {
     try {
       const response = await axios.delete(
-        `/api/application/application-list?id=${id}`,
+        `/api/application/best-computer/application-list?id=${id}`,
       );
       if (response.status === 200) {
         toast.success("Successfully deleted");
@@ -57,16 +66,21 @@ export default function ApplicationDataCard(app: ExtendedApplicationListType) {
 
     try {
       toast.loading("Please wait...");
-      const response = await axios.put(`/api/application?id=${id}`, data);
+      const response = await axios.put(
+        `/api/best-computer/application?id=${id}`,
+        data,
+      );
 
       toast.dismiss();
       if (response.status === 200) {
         toast.success("Application Updated successfully");
         app.refetch();
       } else {
+        toast.dismiss();
         toast.error("Application Updating failed");
       }
     } catch (error) {
+      toast.dismiss();
       toast.error("An error occurred");
     }
   }
@@ -102,18 +116,24 @@ export default function ApplicationDataCard(app: ExtendedApplicationListType) {
     id: string;
     status: string;
   }) {
-    toast.loading("Please wait...");
-    const response = await axios.put("/api/application/application-list", {
-      certificate: status,
-      id: id,
-    });
+    try {
+      toast.loading("Please wait...");
+      const response = await axios.put("/api/best-computer/application", {
+        certificate: status,
+        id,
+      });
+      toast.dismiss();
 
-    toast.dismiss();
-    if (response.status === 200) {
-      toast.success("Updated certificate successfully");
-      app.refetch();
-    } else {
-      toast.error("Error updating certificate");
+      if (response.status === 200) {
+        toast.success("Updated certificate successfully");
+        app.refetch(); // Ensure this works in your context
+      } else {
+        toast.dismiss();
+        toast.error("Application Updating failed");
+      }
+    } catch {
+      toast.dismiss();
+      toast.error("An error occurred");
     }
   }
 
@@ -222,14 +242,14 @@ export default function ApplicationDataCard(app: ExtendedApplicationListType) {
                   : app.certificate === "Fail"
                     ? "font-bold text-destructive"
                     : app.certificate === "Received"
-                      ? "font-bold text-primary"
+                      ? "font-bold text-primary-100"
                       : ""
             }
           >
             {app.certificate}
           </span>
         </p>
-        {/* <div className="mt-3 flex items-center gap-0.5">
+        <div className="mt-3 flex items-center gap-0.5">
           <p className="text-sm font-bold">Status:</p>
           <ActionSelect Value={app.status} onValueChange={handleActionChange} />
 
@@ -240,8 +260,8 @@ export default function ApplicationDataCard(app: ExtendedApplicationListType) {
           >
             OK
           </Button>
-        </div> */}
-        {/* <div className="mt-2 flex items-center gap-0.5">
+        </div>
+        <div className="mt-2 flex items-center gap-0.5">
           <p className="text-sm font-bold">Certificate:</p>
           <CertificateSelect
             Value={app.certificate}
@@ -260,13 +280,13 @@ export default function ApplicationDataCard(app: ExtendedApplicationListType) {
           >
             OK
           </Button>
-        </div> */}
+        </div>
       </div>
       <Link
         href={`/application-list/payment-report/${app.id}`}
         className="mt-6 flex w-full"
       >
-        <Button variant="outline" className="w-full">
+        <Button variant="secondary" className="w-full text-primary-100">
           Payment Report
         </Button>
       </Link>
@@ -274,10 +294,118 @@ export default function ApplicationDataCard(app: ExtendedApplicationListType) {
         href={`/application-list/singleapplication/${app.id}`}
         className="mt-2 flex w-full"
       >
-        <Button variant="secondary" className="w-full text-primary">
-          Application Details
-        </Button>
+        <Button className="w-full">Application Details</Button>
       </Link>
     </div>
+  );
+}
+
+interface DurationSelectProps {
+  onValueChange: (value: string) => void;
+
+  Value: string;
+}
+
+function ActionSelect({
+  onValueChange,
+
+  Value,
+}: DurationSelectProps) {
+  const handleSelectChange = (value: string) => {
+    onValueChange(value);
+  };
+
+  return (
+    <>
+      <Select onValueChange={handleSelectChange} defaultValue={Value}>
+        <SelectTrigger>
+          <SelectValue placeholder="Action" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectGroup>
+            <SelectLabel>Action</SelectLabel>
+            <SelectItem
+              value="Approved"
+              onSelect={() => handleSelectChange("Approved")}
+            >
+              Approved
+            </SelectItem>
+            <SelectItem
+              value="Pending"
+              onSelect={() => handleSelectChange("Pending")}
+            >
+              Pending
+            </SelectItem>
+            <SelectItem
+              value="Rejected"
+              onSelect={() => handleSelectChange("Reject")}
+            >
+              Reject
+            </SelectItem>
+          </SelectGroup>
+        </SelectContent>
+      </Select>
+    </>
+  );
+}
+
+interface DurationSelectProps {
+  onValueChange: (value: string) => void;
+
+  Value: string;
+}
+
+function CertificateSelect({
+  onValueChange,
+
+  Value,
+}: DurationSelectProps) {
+  const handleSelectChange = (value: string) => {
+    onValueChange(value);
+  };
+
+  return (
+    <>
+      <Select onValueChange={handleSelectChange} defaultValue={Value}>
+        <SelectTrigger>
+          <SelectValue placeholder="Action" />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectGroup>
+            <SelectLabel>Action</SelectLabel>
+            <SelectItem
+              value="At Office"
+              onSelect={() => handleSelectChange("At Office")}
+            >
+              At Office
+            </SelectItem>
+            <SelectItem
+              value="Pending"
+              onSelect={() => handleSelectChange("Pending")}
+            >
+              Pending
+            </SelectItem>
+            <SelectItem
+              value="Fail"
+              onSelect={() => handleSelectChange("Fail")}
+            >
+              Fail
+            </SelectItem>
+            <SelectItem
+              value="Received"
+              onSelect={() => handleSelectChange("Received")}
+            >
+              Received
+            </SelectItem>
+            <SelectItem
+              value="Course Incomplete"
+              onSelect={() => handleSelectChange("Course Incomplete")}
+            >
+              Course Incomplete
+            </SelectItem>
+          </SelectGroup>
+        </SelectContent>
+      </Select>
+    </>
   );
 }
