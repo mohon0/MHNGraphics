@@ -30,7 +30,7 @@ function ApplicationListContent() {
 
   const [filter, setFilter] = useState(searchParams.get("filter") || "All");
   const [certificate, setCertificate] = useState(
-    searchParams.get("certificate") || "all",
+    searchParams.get("certificate") || "All",
   );
   const [sortBy, setSortBy] = useState(searchParams.get("sort") || "newest");
   const [searchInput, setSearchInput] = useState(
