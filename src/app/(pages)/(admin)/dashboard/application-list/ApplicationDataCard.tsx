@@ -291,7 +291,7 @@ export default function ApplicationDataCard(app: ExtendedApplicationListType) {
         </Button>
       </Link>
       <Link
-        href={`/application-list/singleapplication/${app.id}`}
+        href={`/dashboard/application-list/single-application?id=${app.id}`}
         className="mt-2 flex w-full"
       >
         <Button className="w-full">Application Details</Button>

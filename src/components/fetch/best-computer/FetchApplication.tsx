@@ -58,3 +58,19 @@ export function FetchAllApplication({
     },
   });
 }
+
+interface props {
+  id: string | string[];
+}
+
+export function FetchSingleApplication({ id }: props) {
+  return useQuery({
+    queryKey: ["Single Application", id],
+    queryFn: async () => {
+      const response = await axios.get(
+        `/api/best-computer/single-application?id=${id}`,
+      );
+      return response.data;
+    },
+  });
+}
