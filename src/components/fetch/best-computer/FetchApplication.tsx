@@ -74,3 +74,15 @@ export function FetchSingleApplication({ id }: props) {
     },
   });
 }
+
+export function FetchPaymentReport(id: string | string[]) {
+  return useQuery({
+    queryKey: ["Payment Report", id],
+    queryFn: async () => {
+      const response = await axios.get(
+        `/api/best-computer/application/payment-report?id=${id}`,
+      );
+      return response.data;
+    },
+  });
+}

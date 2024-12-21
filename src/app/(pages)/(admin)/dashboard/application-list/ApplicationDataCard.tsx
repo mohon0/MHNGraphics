@@ -283,7 +283,7 @@ export default function ApplicationDataCard(app: ExtendedApplicationListType) {
         </div>
       </div>
       <Link
-        href={`/application-list/payment-report/${app.id}`}
+        href={`/dashboard/application-list/payment-report?id=${app.id}`}
         className="mt-6 flex w-full"
       >
         <Button variant="secondary" className="w-full text-primary-100">

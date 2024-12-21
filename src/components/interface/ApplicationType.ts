@@ -46,8 +46,7 @@ export interface SingleApplicationType {
 
 export interface SingleApplicationUserType {
   application: {
-    firstName: string;
-    lastName: string;
+    studentName: string;
     fatherName: string;
     motherName: string;
     birthDay: string;
@@ -94,4 +93,13 @@ export interface ApplicationListType {
   createdAt: string;
   certificate: string;
   mobileNumber: string;
+}
+
+export interface PaymentReportType {
+  trxId: string;
+  id: string;
+  month: string;
+  time: string;
+  amount: number;
+  year: string;
 }

@@ -57,14 +57,6 @@ function SingleApplication({ application }: SingleApplicationUserType) {
 
   const reactToPrintFn = useReactToPrint({ contentRef });
 
-  const capitalizeFirstLetter = (str: string) => {
-    return str ? str.charAt(0).toUpperCase() + str.slice(1) : "";
-  };
-
-  const fullName =
-    capitalizeFirstLetter(application.firstName) +
-    capitalizeFirstLetter(application.lastName);
-
   return (
     <div>
       <div ref={contentRef}>
@@ -139,7 +131,7 @@ function SingleApplication({ application }: SingleApplicationUserType) {
               <Model
                 item1="Student Full Name"
                 item2="Session"
-                value1={fullName}
+                value1={application.studentName}
                 value2={application.session}
               />
               <Model
