@@ -15,7 +15,13 @@ interface ComingSoonBadgeProps {
   children: React.ReactNode;
 }
 
-export default function DesktopMenu({ fixed = false }: { fixed?: boolean }) {
+export default function DesktopMenu({
+  fixed = false,
+  best = false,
+}: {
+  fixed?: boolean;
+  best?: boolean;
+}) {
   return (
     <NavigationMenu>
       <NavigationMenuList className="space-x-7 text-sm">
@@ -60,6 +66,21 @@ export default function DesktopMenu({ fixed = false }: { fixed?: boolean }) {
             </NavigationMenuLink>
           </Link>
         </NavigationMenuItem>
+        {best && (
+          <NavigationMenuItem>
+            <Link
+              href="/best-computer-training-center/blood-donate"
+              legacyBehavior
+              passHref
+            >
+              <NavigationMenuLink
+                className={fixed ? "pl-2 text-white" : "pl-2 text-black"}
+              >
+                Blood Donate
+              </NavigationMenuLink>
+            </Link>
+          </NavigationMenuItem>
+        )}
         <NavigationMenuItem>
           <Link href="/best-computer-training-center" legacyBehavior passHref>
             <NavigationMenuLink

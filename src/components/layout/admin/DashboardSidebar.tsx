@@ -3,6 +3,7 @@ import {
   BadgeCheck,
   FileUser,
   GalleryHorizontal,
+  HeartPulse,
   Map,
   PieChart,
   Settings2,
@@ -115,9 +116,9 @@ export function DashboardSidebar({
       icon: UserRoundSearch,
     },
     {
-      name: "Sales & Marketing",
-      url: "#",
-      icon: PieChart,
+      name: "Blood Bank",
+      url: "/dashboard/blood-bank?page=1&bloodGroup=All&searchInput=",
+      icon: HeartPulse,
     },
     {
       name: "Travel",

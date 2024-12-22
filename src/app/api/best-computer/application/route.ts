@@ -28,8 +28,6 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    console.log("Token:", token);
-
     // Check for existing application
     const existingApplication = await Prisma.application.findFirst({
       where: { userId },

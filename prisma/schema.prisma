@@ -190,4 +190,5 @@ model BloodDonation {
   number2            String?
   image              String?
   imageId            String?
+  createdAt          DateTime @default(now())
 }

@@ -37,7 +37,7 @@ export default function Header({
 
           {/* Desktop Navigation */}
           <div className="hidden lg:block">
-            <DesktopMenu fixed={fixed} />
+            <DesktopMenu fixed={fixed} best={best} />
           </div>
         </div>
 
