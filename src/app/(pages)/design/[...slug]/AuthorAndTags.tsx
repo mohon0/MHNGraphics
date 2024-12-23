@@ -39,20 +39,21 @@ export function Tags({ tags }: { tags: string[] }) {
       <p className="font-medium">Related Tags:</p>
       <div className="flex flex-wrap gap-2">
         {filteredTags.map((tag, index) => (
-          <Button
-            variant="outline"
-            size="sm"
+          <Link
+            href={`/design?category=all&query=&page=1&tag=${slugify(tag)}`}
             key={index}
-            className="rounded-full"
           >
-            {tag}
-          </Button>
+            <Button variant="outline" size="sm" className="rounded-full">
+              {tag}
+            </Button>
+          </Link>
         ))}
       </div>
     </div>
   );
 }
 
+import { slugify } from "@/components/helper/slug/CreateSlug";
 import { Skeleton } from "@/components/ui/skeleton";
 
 export function AuthorSkeleton() {

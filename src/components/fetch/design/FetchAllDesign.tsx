@@ -9,9 +9,10 @@ interface Props {
   page: number;
   category: string;
   searchQuery: string;
+  tag?: string;
 }
 
-export function FetchAllDesign({ page, category, searchQuery }: Props) {
+export function FetchAllDesign({ page, category, searchQuery, tag }: Props) {
   const [debouncedSearchQuery, setDebouncedSearchQuery] = useState(searchQuery);
 
   // Debounce the search query
@@ -24,13 +25,14 @@ export function FetchAllDesign({ page, category, searchQuery }: Props) {
   }, [searchQuery]);
 
   return useQuery({
-    queryKey: ["All Design", page, category, debouncedSearchQuery],
+    queryKey: ["All Design", page, category, debouncedSearchQuery, tag],
     queryFn: async () => {
       const response = await axios.get(`/api/design/all-design`, {
         params: {
           page,
           category,
           searchQuery: debouncedSearchQuery,
+          tag,
         },
       });
       return response.data;

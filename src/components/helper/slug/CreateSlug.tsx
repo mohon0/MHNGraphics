@@ -1,7 +1,7 @@
 import { format } from "date-fns";
 
 // Helper function to slugify the name and subcategory (convert spaces to hyphens and lowercasing)
-const slugify = (text: string) => {
+export const slugify = (text: string) => {
   return text
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, "-") // Replace spaces and special characters with hyphens

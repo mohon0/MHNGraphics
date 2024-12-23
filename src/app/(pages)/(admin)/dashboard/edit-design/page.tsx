@@ -10,6 +10,7 @@ import {
 } from "@/components/form/formSchema/FormSchema";
 import BreadCrumb from "@/components/layout/admin/BreadCrumb";
 import { DashboardSidebar } from "@/components/layout/admin/DashboardSidebar";
+import Footer from "@/components/layout/footer/Footer";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -379,6 +380,7 @@ function DesignPage() {
             </>
           </main>
         </div>
+        <Footer />
       </main>
     </SidebarProvider>
   );

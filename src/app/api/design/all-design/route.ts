@@ -1,6 +1,10 @@
 import { Prisma } from "@/components/helper/prisma/Prisma";
+import { SlugToText } from "@/components/helper/slug/SlugToText";
 import { DesignStatus } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
+
+// Helper function to normalize text to lowercase
+const normalizeText = (text: string) => text.trim().toLowerCase();
 
 export async function GET(req: NextRequest) {
   try {
@@ -13,36 +17,47 @@ export async function GET(req: NextRequest) {
     const category = queryParams.get("category") || "all";
     const searchQuery = queryParams.get("searchQuery") || "";
 
+    // Ensure tag is valid before applying transformation
+    const tagParam = queryParams.get("tag");
+    const tag = tagParam ? SlugToText(tagParam) : "";
+
     const limit = 30;
     const skip = (page - 1) * limit;
 
     let whereClause: {
       category?: string;
       status?: DesignStatus;
-      name?: {
-        contains: string;
-        mode: "insensitive";
-      };
-    } = {};
-
-    whereClause.status = "PUBLISHED";
+      OR?: Array<{
+        name?: { contains: string; mode: "insensitive" };
+        category?: { contains: string; mode: "insensitive" };
+        tags?: { has: string };
+      }>;
+      tags?: { has: string };
+    } = { status: "PUBLISHED" }; // Default status is "PUBLISHED"
 
     if (category !== "all") {
       whereClause.category = category;
     }
+
+    // Handle search query filtering
     if (searchQuery) {
-      whereClause.name = {
-        contains: searchQuery,
-        mode: "insensitive",
-      };
+      whereClause.OR = [
+        { name: { contains: searchQuery, mode: "insensitive" } },
+        { category: { contains: searchQuery, mode: "insensitive" } },
+        { tags: { has: normalizeText(searchQuery) } }, // Case-insensitive tag search by normalized value
+      ];
+    }
+
+    // Handle tag filter
+    if (tag) {
+      whereClause.tags = { has: normalizeText(tag) }; // Filters for a specific tag with case insensitivity
     }
 
     // Fetch designs with pagination and filtering
     const response = await Prisma.design.findMany({
-      where: whereClause, // Add the where clause here
+      where: whereClause,
       skip,
       take: limit,
-
       orderBy: {
         createdAt: "desc",
       },
@@ -58,7 +73,7 @@ export async function GET(req: NextRequest) {
 
     // Get the total count of designs for pagination metadata with filtering
     const totalCount = await Prisma.design.count({
-      where: whereClause, // Add the where clause here
+      where: whereClause,
     });
 
     const result = {
@@ -73,6 +88,7 @@ export async function GET(req: NextRequest) {
 
     return NextResponse.json(result, { status: 200 });
   } catch (error) {
+    console.error("Error fetching designs:", error);
     return new NextResponse("Internal Server Error", { status: 500 });
   }
 }
