@@ -5,6 +5,8 @@ import Hero from "@/components/pages/home/hero/Hero";
 import ImageSlider from "@/components/pages/home/image-slider/ImageSlider";
 import { Slider } from "@/components/pages/home/slider/Slider";
 import { ReactLenis } from "../lib/react-lenis";
+import State from "@/components/pages/home/state/State";
+import Cta from "@/components/pages/home/cta/Cta";
 
 export default function Home() {
   const lenisOptions = {
@@ -18,9 +20,11 @@ export default function Home() {
       <ReactLenis root options={lenisOptions}>
         <Header fixed />
         <Hero />
+        <State />
         <Slider />
         <ImageSlider />
         <Contact />
+        <Cta />
         <Footer />
       </ReactLenis>
     </>
