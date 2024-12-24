@@ -3,13 +3,9 @@ import { Prisma } from "@/components/helper/prisma/Prisma";
 import cloudinary from "@/utils/cloudinary";
 
 import { getToken } from "next-auth/jwt";
-import { getServerSession } from "next-auth/next";
 import { NextRequest, NextResponse } from "next/server";
-import { authOptions } from "../../auth/[...nextauth]/Options";
-import { CustomSession } from "../../profile/route";
 
 const secret = process.env.NEXTAUTH_SECRET;
-const admin = process.env.NEXT_PUBLIC_ADMIN;
 
 // Utility function to safely retrieve string values
 const getStringValue = (formData: FormData, key: string): string => {
@@ -58,7 +54,7 @@ export async function POST(req: NextRequest) {
     const email = getStringValue(formData, "email");
     const fatherName = getStringValue(formData, "fatherName");
     const motherName = getStringValue(formData, "motherName");
-    const birthDay = getStringValue(formData, "birthDate");
+    const birthDay = getStringValue(formData, "birthDay");
     const bloodGroup = getStringValue(formData, "bloodGroup");
     const mobileNumber = getStringValue(formData, "mobileNumber");
     const guardianNumber = getStringValue(formData, "guardianNumber");
@@ -95,7 +91,7 @@ export async function POST(req: NextRequest) {
 
     if (imageFile) {
       try {
-        imageUrl = await UploadImage(imageFile, "application/");
+        imageUrl = await UploadImage(imageFile, "application-images/");
       } catch (uploadError) {
         console.error("Image upload failed:", uploadError);
         return NextResponse.json(
@@ -273,108 +269,85 @@ export async function DELETE(req: NextRequest, res: NextResponse) {
     return new NextResponse("Error deleting application", { status: 500 });
   }
 }
-
-export async function PUT(req: NextRequest) {
+export async function PATCH(req: NextRequest) {
   try {
-    const session = (await getServerSession(authOptions)) as CustomSession;
+    const formData = await req.formData();
+    const id = getStringValue(formData, "id");
 
-    // Check if user is logged in
-    if (!session) {
-      return new NextResponse("User not logged in", { status: 401 });
+    if (!id) {
+      return new NextResponse("Product ID is required", { status: 400 });
     }
 
-    const { role: authorRole } = session.user;
+    const deletedImage = getStringValue(formData, "deletedImage");
+    const imageFile = formData.get("image") as Blob;
 
-    // Check if the request is JSON or FormData
-    const contentType = req.headers.get("content-type");
+    console.log(deletedImage);
 
-    if (contentType?.includes("application/json")) {
-      // Handle JSON requests (certificate updates)
-      const body = await req.json();
+    // Check if the application exists
+    const currentDesign = await Prisma.application.findUnique({
+      where: { id: id },
+    });
 
-      const existingApp = await Prisma.application.findUnique({
-        where: { id: body.id },
-      });
+    if (!currentDesign) {
+      return new NextResponse("Application not found", { status: 404 });
+    }
 
-      if (!existingApp) {
-        return new NextResponse("No application found", { status: 404 });
+    let image = currentDesign.image;
+    let imageId = currentDesign.imageId;
+
+    // Handle image deletion if flagged
+    if (deletedImage && currentDesign.imageId) {
+      const deleteResult = await cloudinary.uploader.destroy(
+        currentDesign.imageId,
+      );
+      if (deleteResult.result !== "ok") {
+        return new NextResponse("Error deleting image", { status: 400 });
       }
+      // Reset image and imageId if deletion is successful
+      image = "";
+      imageId = "";
+    }
 
-      const updatedApp = await Prisma.application.update({
-        where: { id: body.id },
-        data: { certificate: body.certificate },
-      });
+    // Upload new image if provided
+    if (imageFile) {
+      const imageUrl = await UploadImage(imageFile, "application-images/");
+      image = imageUrl.secure_url;
+      imageId = imageUrl.public_id;
+    }
 
-      return new NextResponse("Updated certificate successfully", {
-        status: 200,
-      });
-    } else if (contentType?.includes("multipart/form-data")) {
-      // Handle FormData requests (image and other updates)
-      const formData = await req.formData();
-      const id = getStringValue(formData, "id");
-      const imageData = formData.get("image");
-
-      const existingApp = await Prisma.application.findUnique({
-        where: { id },
-      });
-
-      if (!existingApp) {
-        return new NextResponse("No application found", { status: 404 });
-      }
-
-      // Process image if provided
-      let image = existingApp.image;
-      let imageId = existingApp.imageId;
-
-      if (existingApp.imageId) {
-        const result = await cloudinary.uploader.destroy(existingApp.imageId);
-        if (result.result !== "ok") {
-          return new NextResponse("Error deleting previous image", {
-            status: 400,
-          });
-        }
-      }
-
-      if (imageData && imageData instanceof Blob) {
-        const uploadResult = await UploadImage(imageData, "application/");
-        image = uploadResult.secure_url;
-        imageId = uploadResult.public_id;
-      }
-
-      // Prepare updated data
-      const updatedData: Record<string, string | Date | null> = {};
-      formData.forEach((value, key) => {
-        if (key !== "id" && key !== "image") {
+    // Prepare updated data
+    const updatedData: Record<string, string | number | Date | null> = {};
+    formData.forEach((value, key) => {
+      if (key !== "id" && key !== "image" && key !== "deletedImage") {
+        if (key === "session") {
+          // Convert session to an integer
+          const intValue = parseInt(value.toString(), 10);
+          if (isNaN(intValue)) {
+            throw new Error(`Invalid session value: ${value}`);
+          }
+          updatedData[key] = intValue;
+        } else {
           updatedData[key] = value.toString();
         }
-      });
-      updatedData.image = image;
-      updatedData.imageId = imageId;
-
-      // Authorization check for ADMIN role
-      if (authorRole === "ADMIN") {
-        const response = await Prisma.application.update({
-          where: { id },
-          data: updatedData,
-        });
-
-        return new NextResponse(JSON.stringify(response), {
-          status: 200,
-          headers: { "Content-Type": "application/json" },
-        });
-      } else {
-        return new NextResponse(
-          "You do not have permission to update this item.",
-          { status: 403 },
-        );
       }
-    } else {
-      return new NextResponse("Unsupported content type", { status: 400 });
-    }
+    });
+
+    // Add image and imageId to updatedData
+    updatedData.image = image;
+    updatedData.imageId = imageId;
+
+    // Perform the update operation
+    const updatedDesign = await Prisma.application.update({
+      where: { id },
+      data: updatedData,
+    });
+
+    return NextResponse.json({
+      message: "Design updated successfully",
+      design: updatedDesign,
+    });
   } catch (error) {
-    console.error("Error updating application:", error);
-    return new NextResponse("Internal server error", { status: 500 });
-  } finally {
-    Prisma.$disconnect();
+    console.log(error);
+    return new NextResponse("Internal Server Error", { status: 500 });
   }
 }

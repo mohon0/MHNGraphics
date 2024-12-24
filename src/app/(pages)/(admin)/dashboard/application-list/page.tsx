@@ -8,6 +8,7 @@ import { FaSearch } from "react-icons/fa";
 
 import { FetchAllApplication } from "@/components/fetch/best-computer/FetchApplication";
 import { ApplicationListType } from "@/components/interface/ApplicationType";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -20,6 +21,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Loader2 } from "lucide-react";
 import ApplicationDataCard from "./ApplicationDataCard";
 import ApplicationPagination from "./ApplicationPagination";
 
@@ -60,15 +62,26 @@ function ApplicationListContent() {
     router.replace(`/dashboard/application-list?${query.toString()}`);
   }, [filter, certificate, sortBy, searchInput, page, router, type]);
 
+  if (session?.user?.role !== "ADMIN") {
+    return (
+      <Alert variant="destructive">
+        <AlertTitle>Access Denied</AlertTitle>
+        <AlertDescription>
+          You don&#39;t have permission to access this page.
+        </AlertDescription>
+      </Alert>
+    );
+  }
+
   return (
     <div className="container mx-auto px-4 py-8">
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-center text-3xl font-bold md:text-5xl">
+      <Card className="overflow-hidden">
+        <CardHeader className="bg-primary text-primary-foreground">
+          <CardTitle className="text-center text-3xl font-bold md:text-4xl">
             Application List
           </CardTitle>
         </CardHeader>
-        <CardContent>
+        <CardContent className="p-6">
           <div className="mb-8 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
             <div className="space-y-2">
               <Label htmlFor="filter">Filter By:</Label>
@@ -149,74 +162,77 @@ function ApplicationListContent() {
             </div>
           </div>
 
-          {session?.user?.role === "ADMIN" ? (
-            <>
-              {isFetching ? (
-                <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-                  {[...Array(8)].map((_, index) => (
-                    <Card key={index}>
-                      <CardContent className="p-4">
-                        <div className="mb-4 flex justify-between">
-                          <Skeleton className="h-10 w-10" />
-                          <Skeleton className="h-20 w-20 rounded-full" />
-                          <Skeleton className="h-10 w-10" />
-                        </div>
-                        <Skeleton className="mb-2 h-6 w-3/4" />
-                        <Skeleton className="mb-2 h-4 w-full" />
-                        <Skeleton className="mb-2 h-4 w-full" />
-                        <Skeleton className="mb-2 h-4 w-full" />
-                        <Skeleton className="mb-2 h-4 w-full" />
-                        <Skeleton className="mb-4 h-4 w-full" />
-                        <Skeleton className="mb-2 h-10 w-full" />
-                        <Skeleton className="h-10 w-full" />
-                      </CardContent>
-                    </Card>
-                  ))}
-                </div>
-              ) : isError ? (
-                <div className="text-center text-red-500">
-                  Error loading applications. No Application Found.
-                </div>
-              ) : data?.application?.length > 0 ? (
-                <div>
-                  <div className="grid gap-x-4 gap-y-4 sm:grid-cols-2 md:gap-y-8 lg:grid-cols-3 xl:grid-cols-4">
-                    {data.application.map((app: ApplicationListType) => (
-                      <ApplicationDataCard
-                        key={app.id}
-                        {...app}
-                        refetch={refetch}
-                      />
-                    ))}
-                  </div>
-                  {data?.totalPostsCount && data.totalPostsCount > 20 && (
-                    <div className="mt-8">
-                      <ApplicationPagination
-                        totalPages={Math.ceil(
-                          (data?.totalPostsCount || 0) / 20,
-                        )}
-                        category={filter}
-                        initialPage={page}
-                        sort={sortBy}
-                        certificate={certificate}
-                        query={searchInput}
-                        setPage={setPage}
-                      />
-                    </div>
-                  )}
-                </div>
-              ) : (
-                <div className="text-center">
-                  No application data available.
+          {isFetching ? (
+            <LoadingSkeleton />
+          ) : isError ? (
+            <Alert variant="destructive">
+              <AlertTitle>Error</AlertTitle>
+              <AlertDescription>
+                Error loading applications. Please try again later.
+              </AlertDescription>
+            </Alert>
+          ) : data?.application?.length > 0 ? (
+            <div>
+              <div className="grid gap-x-4 gap-y-4 sm:grid-cols-2 md:gap-y-8 lg:grid-cols-3 xl:grid-cols-4">
+                {data.application.map((app: ApplicationListType) => (
+                  <ApplicationDataCard
+                    key={app.id}
+                    {...app}
+                    refetch={refetch}
+                  />
+                ))}
+              </div>
+              {data?.totalPostsCount && data.totalPostsCount > 20 && (
+                <div className="mt-8">
+                  <ApplicationPagination
+                    totalPages={Math.ceil((data?.totalPostsCount || 0) / 20)}
+                    category={filter}
+                    initialPage={page}
+                    sort={sortBy}
+                    certificate={certificate}
+                    query={searchInput}
+                    setPage={setPage}
+                  />
                 </div>
               )}
-            </>
-          ) : (
-            <div className="text-center text-red-500">
-              You don&#39;t have permission to access this page.
             </div>
+          ) : (
+            <Alert>
+              <AlertTitle>No Data</AlertTitle>
+              <AlertDescription>
+                No application data available. Try adjusting your filters or
+                search criteria.
+              </AlertDescription>
+            </Alert>
           )}
         </CardContent>
       </Card>
+    </div>
+  );
+}
+
+function LoadingSkeleton() {
+  return (
+    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+      {[...Array(8)].map((_, index) => (
+        <Card key={index}>
+          <CardContent className="p-4">
+            <div className="mb-4 flex justify-between">
+              <Skeleton className="h-10 w-10 rounded-full" />
+              <Skeleton className="h-20 w-20 rounded-full" />
+              <Skeleton className="h-10 w-10 rounded-full" />
+            </div>
+            <Skeleton className="mb-2 h-6 w-3/4" />
+            <Skeleton className="mb-2 h-4 w-full" />
+            <Skeleton className="mb-2 h-4 w-full" />
+            <Skeleton className="mb-2 h-4 w-full" />
+            <Skeleton className="mb-2 h-4 w-full" />
+            <Skeleton className="mb-4 h-4 w-full" />
+            <Skeleton className="mb-2 h-10 w-full" />
+            <Skeleton className="h-10 w-full" />
+          </CardContent>
+        </Card>
+      ))}
     </div>
   );
 }
@@ -225,8 +241,8 @@ export default function ApplicationList() {
   return (
     <Suspense
       fallback={
-        <div className="text-center">
-          <Skeleton className="h-10 w-full" />
+        <div className="flex min-h-screen items-center justify-center">
+          <Loader2 className="h-8 w-8 animate-spin" />
         </div>
       }
     >

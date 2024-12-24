@@ -15,7 +15,7 @@ export interface SingleApplicationType {
   studentName: string;
   fatherName: string;
   motherName: string;
-  birthDate: string;
+  birthDay: string;
   bloodGroup: string;
   mobileNumber: string;
   guardianNumber: string;
@@ -46,6 +46,7 @@ export interface SingleApplicationType {
 
 export interface SingleApplicationUserType {
   application: {
+    id?: string;
     studentName: string;
     fatherName: string;
     motherName: string;
@@ -53,11 +54,11 @@ export interface SingleApplicationUserType {
     bloodGroup: string;
     mobileNumber: string;
     guardianNumber: string;
-    gender: string;
+    gender: "Male" | "Female" | "Other";
     gpa: string;
     nationality: string;
     nid: string;
-    passingYear: string;
+    passingYear: number;
     regNumber: string;
     religion: string;
     rollNumber: string;
@@ -69,11 +70,12 @@ export interface SingleApplicationUserType {
     education: string;
     board: string;
     course: string;
-    pc: string;
+    pc: "Yes" | "No" | undefined;
     email: string;
     transactionId: string;
     fatherOccupation: string;
-    maritalStatus: string;
+    maritalStatus: "Single" | "Married" | "Divorced" | "Widowed";
+
     roll: number;
     user: {
       phoneNumber: string;

@@ -17,7 +17,7 @@ export default function Preview() {
   const { watch } = useFormContext<SingleApplicationType>();
   const values = watch();
 
-  const [day, month, year] = values.birthDate.split("/").map(Number);
+  const [day, month, year] = values.birthDay.split("/").map(Number);
 
   const dateObject = new Date(year, month - 1, day);
 

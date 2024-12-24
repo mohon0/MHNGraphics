@@ -64,15 +64,23 @@ export default function ApplicationDataCard(app: ExtendedApplicationListType) {
     status: string;
     id: string;
   }) {
-    const data = new FormData();
-    data.set("status", status);
-    if (id) data.set("id", id);
-
     try {
       toast.loading("Please wait...");
-      const response = await axios.put(
-        `/api/best-computer/application?id=${id}`,
-        data,
+
+      // Create FormData object and append values
+      const formData = new FormData();
+      formData.append("status", status);
+      formData.append("id", id);
+
+      // Send data as FormData
+      const response = await axios.patch(
+        `/api/best-computer/application`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        },
       );
 
       toast.dismiss();
@@ -122,10 +130,23 @@ export default function ApplicationDataCard(app: ExtendedApplicationListType) {
   }) {
     try {
       toast.loading("Please wait...");
-      const response = await axios.put("/api/best-computer/application", {
-        certificate: status,
-        id,
-      });
+
+      // Create FormData to send the data
+      const formData = new FormData();
+      formData.append("id", id);
+      formData.append("certificate", status);
+
+      // Send the request with FormData
+      const response = await axios.patch(
+        "/api/best-computer/application",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data", // Ensure the correct header is set
+          },
+        },
+      );
+
       toast.dismiss();
 
       if (response.status === 200) {
@@ -133,11 +154,12 @@ export default function ApplicationDataCard(app: ExtendedApplicationListType) {
         app.refetch(); // Ensure this works in your context
       } else {
         toast.dismiss();
-        toast.error("Application Updating failed");
+        toast.error("Application updating failed");
       }
-    } catch {
+    } catch (error) {
       toast.dismiss();
       toast.error("An error occurred");
+      console.error(error); // Log the error for debugging purposes
     }
   }
 
@@ -148,7 +170,7 @@ export default function ApplicationDataCard(app: ExtendedApplicationListType) {
     >
       <div className="flex justify-between">
         <Link
-          href={`/application-list/editapplication/${app.id}`}
+          href={`/dashboard/application-list/edit-application?id=${app.id}`}
           className="h-fit w-fit"
         >
           <Button size="icon" variant="secondary">
@@ -306,15 +328,10 @@ export default function ApplicationDataCard(app: ExtendedApplicationListType) {
 
 interface DurationSelectProps {
   onValueChange: (value: string) => void;
-
   Value: string;
 }
 
-function ActionSelect({
-  onValueChange,
-
-  Value,
-}: DurationSelectProps) {
+function ActionSelect({ onValueChange, Value }: DurationSelectProps) {
   const handleSelectChange = (value: string) => {
     onValueChange(value);
   };
@@ -351,12 +368,6 @@ function ActionSelect({
       </Select>
     </>
   );
-}
-
-interface DurationSelectProps {
-  onValueChange: (value: string) => void;
-
-  Value: string;
 }
 
 function CertificateSelect({

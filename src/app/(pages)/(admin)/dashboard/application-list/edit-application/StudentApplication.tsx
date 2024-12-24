@@ -1,6 +1,9 @@
 "use client";
 
+import Preview from "@/app/(pages)/best-computer-training-center/application/ApplicationPreview";
 import { bangladeshDistricts } from "@/components/data/District";
+import EditApplicationImage from "@/components/form/formField/EditApplicationFormField";
+import { SingleApplicationUserType } from "@/components/interface/ApplicationType";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -12,14 +15,12 @@ import {
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
@@ -33,14 +34,12 @@ import { Separator } from "@/components/ui/separator";
 import bkash from "@/images/tools/bkash.svg";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
-import { Upload } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useCallback, useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import * as z from "zod";
-import Preview from "./ApplicationPreview";
 
 const currentYear = new Date().getFullYear();
 const MAX_FILE_SIZE = 500000;
@@ -52,6 +51,7 @@ const ACCEPTED_IMAGE_TYPES = [
 ];
 
 export const formSchema = z.object({
+  id: z.string(),
   studentName: z
     .string()
     .trim()
@@ -111,7 +111,7 @@ export const formSchema = z.object({
 
   nationality: z.string().trim().min(1, "Nationality is required"),
 
-  nidBirthReg: z.string().trim().min(1, "NID/Birth registration is required"),
+  nid: z.string().trim().min(1, "NID/Birth registration is required"),
 
   email: z.string().trim().email("Invalid email address").optional(),
 
@@ -121,9 +121,9 @@ export const formSchema = z.object({
 
   education: z.string().trim().min(1, "Education is required"),
 
-  trxId: z.string().trim().min(1, "Transaction ID is required"),
+  transactionId: z.string().trim().min(1, "Transaction ID is required"),
 
-  educationBoard: z.string().trim().min(1, "Education board is required"),
+  board: z.string().trim().min(1, "Education board is required"),
 
   rollNumber: z.string().trim().min(1, "Roll number is required"),
 
@@ -137,7 +137,7 @@ export const formSchema = z.object({
     .min(1990, "Passing year must be 1990 or later")
     .max(currentYear, `Passing year cannot be later than ${currentYear}`),
 
-  gpaCgpa: z
+  gpa: z
     .string()
     .trim()
     .regex(/^\d+(\.\d{1,2})?$/, "GPA/CGPA must be a valid number (e.g., 4.00)")
@@ -162,18 +162,6 @@ export const formSchema = z.object({
   pc: z.enum(["Yes", "No"], {
     errorMap: () => ({ message: "Specify if you have a computer (Yes/No)" }),
   }),
-
-  image: z
-    .any()
-    .refine((file) => file?.length == 1, "Image is required.")
-    .refine(
-      (file) => file?.[0]?.size <= MAX_FILE_SIZE,
-      `Image size must be less than 500KB`,
-    )
-    .refine(
-      (file) => ACCEPTED_IMAGE_TYPES.includes(file?.[0]?.type),
-      "Only .jpg, .jpeg, .png, and .webp files are allowed",
-    ),
 });
 
 const generateSessionOptions = (): string[] => {
@@ -185,69 +173,76 @@ const generateSessionOptions = (): string[] => {
   );
 };
 
-export function StudentApplicationForm() {
+export function StudentApplicationForm({
+  application,
+}: SingleApplicationUserType) {
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [newImage, setNewImage] = useState<File | null>(null);
+  const [deletedImage, setDeletedImage] = useState<string | null>(null);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      studentName: "",
-      fatherName: "",
-      motherName: "",
-      fatherOccupation: "",
-      birthDay: "",
-      mobileNumber: "",
-      guardianNumber: "",
-      gender: undefined,
-      maritalStatus: undefined,
-      bloodGroup: "",
-      trxId: "",
-      religion: "",
-      nationality: "Bangladeshi",
-      nidBirthReg: "",
-      email: "",
-      fullAddress: "",
-      district: "",
-      education: "",
-      educationBoard: "",
-      rollNumber: "",
-      regNumber: "",
-      passingYear: currentYear,
-      gpaCgpa: "",
-      course: "",
-      session: "",
-      duration: "",
-      pc: undefined,
-      image: null,
+      id: application.id,
+      studentName: application.studentName,
+      fatherName: application.fatherName,
+      motherName: application.motherName,
+      fatherOccupation: application.fatherOccupation,
+      birthDay: application.birthDay,
+      mobileNumber: application.mobileNumber,
+      guardianNumber: application.guardianNumber,
+      gender: application.gender,
+      maritalStatus: application.maritalStatus,
+      bloodGroup: application.bloodGroup,
+      transactionId: application.transactionId,
+      religion: application.religion,
+      nationality: application.nationality,
+      nid: application.nid,
+      email: application.email,
+      fullAddress: application.fullAddress,
+      district: application.district,
+      education: application.education,
+      board: application.board,
+      rollNumber: application.rollNumber,
+      regNumber: application.regNumber,
+      passingYear: Number(application.passingYear),
+      gpa: application.gpa,
+      course: application.course,
+      session: String(application.session),
+      duration: application.duration,
+      pc: application.pc,
     },
   });
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
+    const totalImages = application.image ? 1 : newImage ? 1 : 0;
+
+    if (totalImages === 0) {
+      toast.error("Please upload an image");
+      return;
+    }
     setIsSubmitting(true);
 
-    // Toast ID for managing specific toast notifications
-    const toastId = toast.loading("Please wait...");
+    const submissionData = new FormData();
+    Object.entries(values).forEach(([key, value]) => {
+      if (value !== undefined && value !== null) {
+        submissionData.append(key, value.toString());
+      }
+    });
+
+    if (newImage) {
+      submissionData.append("image", newImage);
+    }
+
+    if (deletedImage) {
+      submissionData.append("deletedImage", deletedImage);
+    }
+    toast.loading("Please wait...");
 
     try {
-      // Convert values to FormData
-      const formData = new FormData();
-      (Object.keys(values) as (keyof typeof values)[]).forEach((key) => {
-        if (key === "image" && values[key]) {
-          // Handle image upload separately
-          formData.append("image", values[key][0]); // Assuming `image` is a FileList
-        } else {
-          const value = values[key];
-          if (value !== undefined && value !== null) {
-            formData.append(key, value as string);
-          }
-        }
-      });
-
-      // Send POST request
-      const response = await axios.post(
+      const response = await axios.patch(
         "/api/best-computer/application",
-        formData,
+        submissionData,
         {
           headers: {
             "Content-Type": "multipart/form-data",
@@ -255,64 +250,29 @@ export function StudentApplicationForm() {
         },
       );
 
-      if (response.status === 201) {
-        toast.update(toastId, {
-          render: "Application was successfully submitted",
-          type: "success",
-          isLoading: false,
-          autoClose: 3000,
-        });
-        form.reset();
-        setImagePreview(null);
+      if (response.status !== 200) {
+        toast.dismiss();
+        toast.error("Failed to update design");
       } else {
-        toast.update(toastId, {
-          render: "An error occurred",
-          type: "error",
-          isLoading: false,
-          autoClose: 3000,
-        });
+        toast.dismiss();
+        toast.success("Design successfully updated");
       }
     } catch (error) {
-      toast.update(toastId, {
-        render: "An error occurred",
-        type: "error",
-        isLoading: false,
-        autoClose: 3000,
-      });
+      toast.dismiss();
+      toast.error("Failed to update the form");
     } finally {
       setIsSubmitting(false);
     }
   }
 
-  const handleImageClick = useCallback(() => {
-    document.getElementById("image-upload")?.click();
-  }, []);
+  const handleAddNewImage = (file: File) => {
+    setNewImage(file);
+  };
 
-  const onImageChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      const file = e.target.files?.[0];
-      if (file) {
-        if (file.size > MAX_FILE_SIZE) {
-          toast.error("File size exceeds 500KB limit");
-          e.target.value = "";
-          return;
-        }
-        if (!ACCEPTED_IMAGE_TYPES.includes(file.type)) {
-          toast.error(
-            "Invalid file type. Only .jpg, .jpeg, .png and .webp are allowed.",
-          );
-          e.target.value = "";
-          return;
-        }
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          setImagePreview(e.target?.result as string);
-        };
-        reader.readAsDataURL(file);
-      }
-    },
-    [],
-  );
+  const handleDeleteImage = () => {
+    setDeletedImage(application.image);
+    setNewImage(null);
+  };
 
   return (
     <div className="container mx-auto py-10">
@@ -351,59 +311,12 @@ export function StudentApplicationForm() {
                       />
                     </div>
                     <div className="md:row-span-3">
-                      <FormField
-                        control={form.control}
-                        name="image"
-                        render={({ field: { onChange, value, ...rest } }) => (
-                          <FormItem>
-                            <FormLabel>Profile Picture</FormLabel>
-                            <FormControl>
-                              <>
-                                <Label htmlFor="image-upload">
-                                  <div
-                                    className="h-32 w-32 cursor-pointer overflow-hidden rounded-lg border-2 border-dashed border-gray-300 transition-colors duration-200 hover:border-gray-400"
-                                    onClick={handleImageClick}
-                                  >
-                                    {imagePreview ? (
-                                      <Image
-                                        src={imagePreview}
-                                        alt="Preview"
-                                        width={128}
-                                        height={128}
-                                        objectFit="cover"
-                                        layout="responsive"
-                                      />
-                                    ) : (
-                                      <div className="flex h-full flex-col items-center justify-center text-gray-400">
-                                        <Upload className="mb-2 h-8 w-8" />
-                                        <span>Upload</span>
-                                      </div>
-                                    )}
-                                  </div>
-                                </Label>
-                                <Input
-                                  id="image-upload"
-                                  type="file"
-                                  accept={ACCEPTED_IMAGE_TYPES.join(",")}
-                                  className="hidden"
-                                  onChange={(e) => {
-                                    const files = e.target.files;
-                                    if (files) {
-                                      onChange(files);
-                                      onImageChange(e);
-                                    }
-                                  }}
-                                  {...rest}
-                                />
-                              </>
-                            </FormControl>
-                            <FormDescription>
-                              Upload your profile picture (max 500KB, .jpg,
-                              .jpeg, .png, .webp).
-                            </FormDescription>
-                            <FormMessage />
-                          </FormItem>
-                        )}
+                      <EditApplicationImage
+                        image={application.image}
+                        newImage={newImage}
+                        deletedImage={deletedImage}
+                        handleAddNewImage={handleAddNewImage}
+                        handleDeleteImage={handleDeleteImage}
                       />
                     </div>
                     <FormField
@@ -592,7 +505,7 @@ export function StudentApplicationForm() {
                     />
                     <FormField
                       control={form.control}
-                      name="nidBirthReg"
+                      name="nid"
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>NID/Birth Reg.</FormLabel>
@@ -733,7 +646,7 @@ export function StudentApplicationForm() {
                     />
                     <FormField
                       control={form.control}
-                      name="educationBoard"
+                      name="board"
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>Education Board</FormLabel>
@@ -811,7 +724,7 @@ export function StudentApplicationForm() {
                     />
                     <FormField
                       control={form.control}
-                      name="gpaCgpa"
+                      name="gpa"
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>GPA/CGPA</FormLabel>
@@ -885,7 +798,7 @@ export function StudentApplicationForm() {
                           <FormLabel>Session</FormLabel>
                           <Select
                             onValueChange={field.onChange}
-                            defaultValue={field.value}
+                            defaultValue={String(field.value)}
                           >
                             <FormControl>
                               <SelectTrigger>
@@ -986,7 +899,7 @@ export function StudentApplicationForm() {
                     </Link>
                     <FormField
                       control={form.control}
-                      name="trxId"
+                      name="transactionId"
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>TransactionID</FormLabel>

@@ -201,7 +201,7 @@ function SingleApplication({ application }: SingleApplicationUserType) {
               <Model
                 item1="Passing Year"
                 item2="GPA/CGPA"
-                value1={application.passingYear}
+                value1={String(application.passingYear)}
                 value2={application.gpa}
               />
               <Model
