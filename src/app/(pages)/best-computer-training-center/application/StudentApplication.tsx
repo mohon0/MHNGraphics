@@ -143,7 +143,17 @@ export const formSchema = z.object({
 
   course: z.string().trim().min(1, "Course is required"),
 
-  session: z.string().trim().min(1, "Session is required"),
+  session: z
+    .string()
+    .regex(/^\d{4}$/, "Session must be a valid year") // Ensures it's a 4-digit year
+    .refine(
+      (value) => {
+        const year = parseInt(value, 10);
+        const currentYear = new Date().getFullYear();
+        return year >= 2010 && year <= currentYear + 1;
+      },
+      { message: "Session must be between 2010 and next year" },
+    ),
 
   duration: z.string().trim().min(1, "Duration is required"),
 
@@ -164,22 +174,13 @@ export const formSchema = z.object({
     ),
 });
 
-const generateSessionOptions = () => {
+const generateSessionOptions = (): string[] => {
   const currentYear = new Date().getFullYear();
-  const options = [];
 
-  // Include next year sessions first
-  options.push(`${currentYear + 1} July-Dec`, `${currentYear + 1} Jan-June`);
-
-  // Include current year sessions
-  options.push(`${currentYear} July-Dec`, `${currentYear} Jan-June`);
-
-  // Include previous year sessions
-  for (let year = currentYear - 1; year >= 2010; year--) {
-    options.push(`${year} July-Dec`, `${year} Jan-June`);
-  }
-
-  return options;
+  // Generate years from next year down to 2010
+  return Array.from({ length: currentYear - 2009 + 2 }, (_, i) =>
+    String(currentYear + 1 - i),
+  );
 };
 
 export function StudentApplicationForm() {
@@ -242,16 +243,16 @@ export function StudentApplicationForm() {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsSubmitting(true);
-    toast.loading("Please wait...");
+
+    // Toast ID for managing specific toast notifications
+    const toastId = toast.loading("Please wait...");
 
     try {
       // Convert values to FormData
       const formData = new FormData();
-
-      // Use a type guard to ensure key is a valid key
       (Object.keys(values) as (keyof typeof values)[]).forEach((key) => {
         if (key === "image" && values[key]) {
-          // Handle image upload separately if present
+          // Handle image upload separately
           formData.append("image", values[key][0]); // Assuming `image` is a FileList
         } else {
           const value = values[key];
@@ -261,6 +262,7 @@ export function StudentApplicationForm() {
         }
       });
 
+      // Send POST request
       const response = await axios.post(
         "/api/best-computer/application",
         formData,
@@ -271,16 +273,31 @@ export function StudentApplicationForm() {
         },
       );
 
-      if (response.status === 200) {
-        toast.dismiss();
-        toast.success("Application was successfully submitted");
+      if (response.status === 201) {
+        toast.update(toastId, {
+          render: "Application was successfully submitted",
+          type: "success",
+          isLoading: false,
+          autoClose: 3000,
+        });
+        form.reset();
         setPreviewImage(null);
+      } else {
+        toast.update(toastId, {
+          render: "An error occurred",
+          type: "error",
+          isLoading: false,
+          autoClose: 3000,
+        });
       }
     } catch (error) {
-      toast.dismiss();
-      toast.error("An error occurred");
+      toast.update(toastId, {
+        render: "An error occurred",
+        type: "error",
+        isLoading: false,
+        autoClose: 3000,
+      });
     } finally {
-      toast.dismiss();
       setIsSubmitting(false);
     }
   }

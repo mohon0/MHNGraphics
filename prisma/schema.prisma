@@ -124,7 +124,7 @@ model Comment {
 model Application {
   id               String   @id @default(auto()) @map("_id") @db.ObjectId
   studentName      String
-  session          String?
+  session          Int
   fatherName       String
   motherName       String
   birthDay         String

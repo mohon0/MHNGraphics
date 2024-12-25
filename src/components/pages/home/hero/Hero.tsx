@@ -15,6 +15,7 @@ import img2 from "@/images/hero/2.jpg";
 import img3 from "@/images/hero/3.jpg";
 import { ChevronDown, Search } from "lucide-react";
 import Image, { StaticImageData } from "next/image";
+import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -51,7 +52,7 @@ export default function Hero() {
 
   if (isLoading) {
     return (
-      <div className="relative h-80 md:h-[29.5rem]">
+      <div className="relative h-96 md:h-[29.5rem]">
         <Skeleton className="h-full w-full bg-gray-300" />
         <div className="absolute inset-0 flex flex-col items-center justify-center space-y-6 px-4 md:space-y-8 lg:space-y-10">
           <div className="w-full max-w-2xl text-center">
@@ -73,7 +74,7 @@ export default function Hero() {
         height={1080}
         priority
         placeholder="blur"
-        className="h-80 w-full object-cover brightness-50 md:h-[29.5rem]"
+        className="h-96 w-full object-cover brightness-50 md:h-[29.5rem]"
         onError={() => setError("Failed to load image")}
       />
       <div className="absolute inset-0 flex flex-col items-center justify-center space-y-6 bg-black bg-opacity-40 px-4 md:space-y-8 lg:space-y-10">
@@ -135,7 +136,18 @@ export default function Hero() {
             </div>
           </div>
         </form>
+        <div className="flex flex-wrap gap-10">
+          <Link href='/design?category=all&query=&page=1'>
+            <Button variant='secondary'>Design</Button>
+          </Link>
+          <Link href='/design?category=photos&query=&page=1'>
+            <Button variant='secondary'>Photos</Button>
+          </Link>
+          <Link href='/design?category=animation&query=&page=1'>
+            <Button variant='secondary'>Animation</Button>
+          </Link>
+        </div>
       </div>
-    </div>
+    </div >
   );
 }

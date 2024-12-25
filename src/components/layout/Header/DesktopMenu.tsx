@@ -11,13 +11,8 @@ import { cn } from "@/lib/utils";
 import Link from "next/link";
 import React from "react";
 
-interface ComingSoonBadgeProps {
-  children: React.ReactNode;
-}
-
 export default function DesktopMenu({
   fixed = false,
-  best = false,
 }: {
   fixed?: boolean;
   best?: boolean;
@@ -26,71 +21,14 @@ export default function DesktopMenu({
     <NavigationMenu>
       <NavigationMenuList className="space-x-7 text-sm">
         <NavigationMenuItem>
-          <Link
-            href="/design?category=all&query=&page=1"
-            legacyBehavior
-            passHref
-          >
+          <Link href="/" legacyBehavior passHref>
             <NavigationMenuLink
               className={fixed ? "pl-2 text-white" : "pl-2 text-black"}
             >
-              Design
+              Home
             </NavigationMenuLink>
           </Link>
         </NavigationMenuItem>
-
-        <NavigationMenuItem>
-          <Link
-            href="/design?category=photos&query=&page=1"
-            legacyBehavior
-            passHref
-          >
-            <NavigationMenuLink
-              className={fixed ? "pl-2 text-white" : "pl-2 text-black"}
-            >
-              Photos
-            </NavigationMenuLink>
-          </Link>
-        </NavigationMenuItem>
-
-        <NavigationMenuItem>
-          <Link
-            href="/design?category=animation&query=&page=1"
-            legacyBehavior
-            passHref
-          >
-            <NavigationMenuLink
-              className={fixed ? "pl-2 text-white" : "pl-2 text-black"}
-            >
-              Animation
-            </NavigationMenuLink>
-          </Link>
-        </NavigationMenuItem>
-        {best && (
-          <NavigationMenuItem>
-            <Link
-              href="/best-computer-training-center/blood-donate"
-              legacyBehavior
-              passHref
-            >
-              <NavigationMenuLink
-                className={fixed ? "pl-2 text-white" : "pl-2 text-black"}
-              >
-                Blood Donate
-              </NavigationMenuLink>
-            </Link>
-          </NavigationMenuItem>
-        )}
-        <NavigationMenuItem>
-          <Link href="/best-computer-training-center" legacyBehavior passHref>
-            <NavigationMenuLink
-              className={fixed ? "pl-2 text-white" : "pl-2 text-black"}
-            >
-              Best Computer T. C.
-            </NavigationMenuLink>
-          </Link>
-        </NavigationMenuItem>
-
         <NavigationMenuItem>
           <Link href="/shop" legacyBehavior passHref>
             <NavigationMenuLink
@@ -115,7 +53,7 @@ export default function DesktopMenu({
                 fixed ? "pl-2 text-sm text-white" : "pl-2 text-sm text-black"
               }
             >
-              MHN IT
+              MHN IT Agency
             </NavigationMenuLink>
           </Link>
           <Badge
@@ -124,6 +62,30 @@ export default function DesktopMenu({
           >
             Soon
           </Badge>
+        </NavigationMenuItem>
+
+        <NavigationMenuItem>
+          <Link
+            href="/best-computer-training-center/blood-donate"
+            legacyBehavior
+            passHref
+          >
+            <NavigationMenuLink
+              className={fixed ? "pl-2 text-white" : "pl-2 text-black"}
+            >
+              Blood Donate
+            </NavigationMenuLink>
+          </Link>
+        </NavigationMenuItem>
+
+        <NavigationMenuItem>
+          <Link href="/best-computer-training-center" legacyBehavior passHref>
+            <NavigationMenuLink
+              className={fixed ? "pl-2 text-white" : "pl-2 text-black"}
+            >
+              Best Computer T. C.
+            </NavigationMenuLink>
+          </Link>
         </NavigationMenuItem>
       </NavigationMenuList>
     </NavigationMenu>

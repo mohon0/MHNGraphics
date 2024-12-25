@@ -128,12 +128,18 @@ function SingleApplication({ application }: SingleApplicationUserType) {
         <div className="flex flex-col print:mx-10 print:text-black">
           <table className="w-full">
             <tbody>
-              <Model
-                item1="Student Full Name"
-                item2="Session"
-                value1={application.studentName}
-                value2={application.session}
-              />
+              <tr className="flex flex-col md:flex-row print:flex-row">
+                <td className="w-full border p-1 px-2 md:w-1/2 print:w-1/2">
+                  <span className="font-bold">Student Full Name: </span>
+                  <span className="pl-3">
+                    {capitalizeFirstLetter(application.studentName)}
+                  </span>
+                </td>
+                <td className="w-full border p-1 px-2 md:w-1/2 print:w-1/2">
+                  <span className="font-bold">Session: </span>
+                  <span className="pl-3">{application.session}</span>
+                </td>
+              </tr>
               <Model
                 item1="Father Name"
                 item2="Mother Name"
@@ -294,11 +300,15 @@ type props = {
   value2: string;
 };
 
-function Model({ item1, value1, value2, item2 }: props) {
-  const capitalizeFirstLetter = (str: string) => {
-    return str ? str.charAt(0).toUpperCase() + str.slice(1) : "";
-  };
+const capitalizeFirstLetter = (str: string): string => {
+  if (!str) return ""; // Return an empty string if input is falsy
+  return str
+    .split(" ") // Split string into an array of words
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()) // Capitalize each word
+    .join(" "); // Join the array of words back into a string
+};
 
+function Model({ item1, value1, value2, item2 }: props) {
   return (
     <>
       <tr className="flex flex-col md:flex-row print:flex-row">

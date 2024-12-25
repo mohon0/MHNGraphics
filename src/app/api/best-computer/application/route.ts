@@ -11,10 +11,20 @@ import { CustomSession } from "../../profile/route";
 const secret = process.env.NEXTAUTH_SECRET;
 const admin = process.env.NEXT_PUBLIC_ADMIN;
 
-function getStringValue(formData: FormData, key: string): string {
+// Utility function to safely retrieve string values
+const getStringValue = (formData: FormData, key: string): string => {
   const value = formData.get(key);
   return typeof value === "string" ? value : "";
-}
+};
+
+// Utility function to safely retrieve number values
+const getNumberValue = (formData: FormData, key: string): number | null => {
+  const value = formData.get(key);
+  if (typeof value === "string" && /^\d+$/.test(value)) {
+    return parseInt(value, 10);
+  }
+  return null;
+};
 
 export async function POST(req: NextRequest) {
   try {
@@ -43,12 +53,12 @@ export async function POST(req: NextRequest) {
     // Extract form data from the request
     const formData = await req.formData();
 
-    // Use utility function to safely get values
+    // Use utility functions to safely get values
     const studentName = getStringValue(formData, "studentName");
     const email = getStringValue(formData, "email");
     const fatherName = getStringValue(formData, "fatherName");
     const motherName = getStringValue(formData, "motherName");
-    const birthDay = getStringValue(formData, "birthDay");
+    const birthDay = getStringValue(formData, "birthDate");
     const bloodGroup = getStringValue(formData, "bloodGroup");
     const mobileNumber = getStringValue(formData, "mobileNumber");
     const guardianNumber = getStringValue(formData, "guardianNumber");
@@ -57,20 +67,27 @@ export async function POST(req: NextRequest) {
     const fullAddress = getStringValue(formData, "fullAddress");
     const district = getStringValue(formData, "district");
     const education = getStringValue(formData, "education");
-    const board = getStringValue(formData, "board");
+    const board = getStringValue(formData, "educationBoard");
     const rollNumber = getStringValue(formData, "rollNumber");
     const regNumber = getStringValue(formData, "regNumber");
     const passingYear = getStringValue(formData, "passingYear");
-    const gpa = getStringValue(formData, "gpa");
-    const nid = getStringValue(formData, "nid");
+    const gpa = getStringValue(formData, "gpaCgpa");
+    const nid = getStringValue(formData, "nidBirthReg");
     const nationality = getStringValue(formData, "nationality");
     const course = getStringValue(formData, "course");
     const duration = getStringValue(formData, "duration");
     const pc = getStringValue(formData, "pc");
-    const session = getStringValue(formData, "session");
-    const transactionId = getStringValue(formData, "transactionId");
+    const session = getNumberValue(formData, "session");
+    const transactionId = getStringValue(formData, "trxId");
     const fatherOccupation = getStringValue(formData, "fatherOccupation");
     const maritalStatus = getStringValue(formData, "maritalStatus");
+
+    if (session === null) {
+      return NextResponse.json(
+        { message: "Invalid session value" },
+        { status: 400 },
+      );
+    }
 
     // Handle file upload
     let imageUrl = { secure_url: "", public_id: "" };
@@ -227,7 +244,7 @@ export async function DELETE(req: NextRequest, res: NextResponse) {
     }
 
     // Check if the user has the right to delete the application
-    if (userId === application.userId || userEmail === admin) {
+    if (userId === application.userId || token.role === "ADMIN") {
       // Check if there’s an image to delete
       if (application.imageId) {
         const result = await cloudinary.uploader.destroy(application.imageId);

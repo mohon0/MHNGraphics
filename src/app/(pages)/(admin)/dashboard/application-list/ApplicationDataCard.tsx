@@ -39,16 +39,20 @@ export default function ApplicationDataCard(app: ExtendedApplicationListType) {
   const [certificate, setCertificate] = useState("");
   async function handleDelete(id: string) {
     try {
+      toast.loading("Please wait...");
       const response = await axios.delete(
-        `/api/application/best-computer/application-list?id=${id}`,
+        `/api/best-computer/application?id=${id}`,
       );
       if (response.status === 200) {
+        toast.dismiss();
         toast.success("Successfully deleted");
         app.refetch();
       } else {
+        toast.dismiss();
         toast.error("Error deleting application");
       }
     } catch (error) {
+      toast.dismiss();
       toast.error("Error deleting application");
     }
   }
