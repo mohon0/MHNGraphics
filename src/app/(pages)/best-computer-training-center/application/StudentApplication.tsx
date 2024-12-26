@@ -12,6 +12,7 @@ import {
 import {
   Form,
   FormControl,
+  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -32,16 +33,17 @@ import { Separator } from "@/components/ui/separator";
 import bkash from "@/images/tools/bkash.svg";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
+import { Upload } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import * as z from "zod";
 import Preview from "./ApplicationPreview";
 
 const currentYear = new Date().getFullYear();
-const MAX_FILE_SIZE = 1 * 1024 * 1024; // 1MB
+const MAX_FILE_SIZE = 500000;
 const ACCEPTED_IMAGE_TYPES = [
   "image/jpeg",
   "image/jpg",
@@ -166,7 +168,7 @@ export const formSchema = z.object({
     .refine((file) => file?.length == 1, "Image is required.")
     .refine(
       (file) => file?.[0]?.size <= MAX_FILE_SIZE,
-      `Image size must be less than 5MB`,
+      `Image size must be less than 500KB`,
     )
     .refine(
       (file) => ACCEPTED_IMAGE_TYPES.includes(file?.[0]?.type),
@@ -185,8 +187,7 @@ const generateSessionOptions = (): string[] => {
 
 export function StudentApplicationForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [previewImage, setPreviewImage] = useState<string | null>(null);
-  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -218,28 +219,9 @@ export function StudentApplicationForm() {
       session: "",
       duration: "",
       pc: undefined,
+      image: null,
     },
   });
-
-  const onImageChange = useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      const file = e.target.files?.[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onloadend = () => {
-          setPreviewImage(reader.result as string);
-        };
-        reader.readAsDataURL(file);
-      } else {
-        setPreviewImage(null);
-      }
-    },
-    [],
-  );
-
-  const handleImageClick = () => {
-    fileInputRef.current?.click();
-  };
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     setIsSubmitting(true);
@@ -281,7 +263,7 @@ export function StudentApplicationForm() {
           autoClose: 3000,
         });
         form.reset();
-        setPreviewImage(null);
+        setImagePreview(null);
       } else {
         toast.update(toastId, {
           render: "An error occurred",
@@ -301,6 +283,36 @@ export function StudentApplicationForm() {
       setIsSubmitting(false);
     }
   }
+
+  const handleImageClick = useCallback(() => {
+    document.getElementById("image-upload")?.click();
+  }, []);
+
+  const onImageChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const file = e.target.files?.[0];
+      if (file) {
+        if (file.size > MAX_FILE_SIZE) {
+          toast.error("File size exceeds 500KB limit");
+          e.target.value = "";
+          return;
+        }
+        if (!ACCEPTED_IMAGE_TYPES.includes(file.type)) {
+          toast.error(
+            "Invalid file type. Only .jpg, .jpeg, .png and .webp are allowed.",
+          );
+          e.target.value = "";
+          return;
+        }
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          setImagePreview(e.target?.result as string);
+        };
+        reader.readAsDataURL(file);
+      }
+    },
+    [],
+  );
 
   return (
     <div className="container mx-auto py-10">
@@ -347,39 +359,48 @@ export function StudentApplicationForm() {
                             <FormLabel>Profile Picture</FormLabel>
                             <FormControl>
                               <>
-                                <Label>
+                                <Label htmlFor="image-upload">
                                   <div
-                                    className="h-32 w-32 cursor-pointer overflow-hidden rounded-lg border-2 border-dashed"
+                                    className="h-32 w-32 cursor-pointer overflow-hidden rounded-lg border-2 border-dashed border-gray-300 transition-colors duration-200 hover:border-gray-400"
                                     onClick={handleImageClick}
                                   >
-                                    {previewImage ? (
+                                    {imagePreview ? (
                                       <Image
-                                        src={previewImage}
+                                        src={imagePreview}
                                         alt="Preview"
                                         width={128}
                                         height={128}
                                         objectFit="cover"
+                                        layout="responsive"
                                       />
                                     ) : (
-                                      <div className="flex h-full items-center justify-center text-gray-400">
-                                        Click to upload
+                                      <div className="flex h-full flex-col items-center justify-center text-gray-400">
+                                        <Upload className="mb-2 h-8 w-8" />
+                                        <span>Upload</span>
                                       </div>
                                     )}
                                   </div>
-
-                                  <Input
-                                    type="file"
-                                    accept="image/*"
-                                    className="hidden"
-                                    onChange={(e) => {
-                                      onChange(e.target.files);
-                                      onImageChange(e);
-                                    }}
-                                    {...rest}
-                                  />
                                 </Label>
+                                <Input
+                                  id="image-upload"
+                                  type="file"
+                                  accept={ACCEPTED_IMAGE_TYPES.join(",")}
+                                  className="hidden"
+                                  onChange={(e) => {
+                                    const files = e.target.files;
+                                    if (files) {
+                                      onChange(files);
+                                      onImageChange(e);
+                                    }
+                                  }}
+                                  {...rest}
+                                />
                               </>
                             </FormControl>
+                            <FormDescription>
+                              Upload your profile picture (max 500KB, .jpg,
+                              .jpeg, .png, .webp).
+                            </FormDescription>
                             <FormMessage />
                           </FormItem>
                         )}
