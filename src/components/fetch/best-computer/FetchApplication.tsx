@@ -86,3 +86,13 @@ export function FetchPaymentReport(id: string | string[]) {
     },
   });
 }
+
+export function FetchUserApplication() {
+  return useQuery({
+    queryKey: ["User Application Data"],
+    queryFn: async () => {
+      const response = await axios.get(`/api/best-computer/application`);
+      return response.data;
+    },
+  });
+}

@@ -151,7 +151,7 @@ export default function ApplicationDataCard(app: ExtendedApplicationListType) {
 
       if (response.status === 200) {
         toast.success("Updated certificate successfully");
-        app.refetch(); // Ensure this works in your context
+        app.refetch();
       } else {
         toast.dismiss();
         toast.error("Application updating failed");
@@ -159,7 +159,6 @@ export default function ApplicationDataCard(app: ExtendedApplicationListType) {
     } catch (error) {
       toast.dismiss();
       toast.error("An error occurred");
-      console.error(error); // Log the error for debugging purposes
     }
   }
 
