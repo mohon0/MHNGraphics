@@ -12,7 +12,9 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import {
   Select,
   SelectContent,
@@ -22,12 +24,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Separator } from "@/components/ui/separator";
 import axios from "axios";
+import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
-import { FaRegEdit } from "react-icons/fa";
-import { FaTrash } from "react-icons/fa6";
+import { FaFileAlt, FaMoneyBillWave, FaRegEdit, FaTrash } from "react-icons/fa";
 import { toast } from "react-toastify";
 
 interface ExtendedApplicationListType extends ApplicationListType {
@@ -35,17 +38,18 @@ interface ExtendedApplicationListType extends ApplicationListType {
 }
 
 export default function ApplicationDataCard(app: ExtendedApplicationListType) {
-  const [action, setAction] = useState("");
-  const [certificate, setCertificate] = useState("");
+  const [action, setAction] = useState(app.status);
+  const [certificate, setCertificate] = useState(app.certificate);
+
   async function handleDelete(id: string) {
     try {
-      toast.loading("Please wait...");
+      toast.loading("Deleting application...");
       const response = await axios.delete(
         `/api/best-computer/application?id=${id}`,
       );
       if (response.status === 200) {
         toast.dismiss();
-        toast.success("Successfully deleted");
+        toast.success("Application deleted successfully");
         app.refetch();
       } else {
         toast.dismiss();
@@ -57,39 +61,25 @@ export default function ApplicationDataCard(app: ExtendedApplicationListType) {
     }
   }
 
-  async function UpdateApplication({
-    status,
-    id,
-  }: {
-    status: string;
-    id: string;
-  }) {
+  async function updateApplication(status: string) {
     try {
-      toast.loading("Please wait...");
-
-      // Create FormData object and append values
+      toast.loading("Updating application...");
       const formData = new FormData();
       formData.append("status", status);
-      formData.append("id", id);
-
-      // Send data as FormData
+      formData.append("id", app.id);
       const response = await axios.patch(
         `/api/best-computer/application`,
         formData,
         {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
+          headers: { "Content-Type": "multipart/form-data" },
         },
       );
-
       toast.dismiss();
       if (response.status === 200) {
-        toast.success("Application Updated successfully");
+        toast.success("Application updated successfully");
         app.refetch();
       } else {
-        toast.dismiss();
-        toast.error("Application Updating failed");
+        toast.error("Error updating application");
       }
     } catch (error) {
       toast.dismiss();
@@ -97,329 +87,200 @@ export default function ApplicationDataCard(app: ExtendedApplicationListType) {
     }
   }
 
-  const handleActionChange = (value: string) => {
-    if (!value.trim()) {
-      toast.error("Action cannot be empty");
-    } else {
-      setAction(value);
-    }
-  };
-
-  function handleCertificateChange(value: string) {
-    if (!value.trim()) {
-      toast.error("Action cannot be empty");
-    } else {
-      setCertificate(value);
+  async function updateCertificate(status: string) {
+    try {
+      toast.loading("Updating certificate status...");
+      const formData = new FormData();
+      formData.append("id", app.id);
+      formData.append("certificate", status);
+      const response = await axios.patch(
+        "/api/best-computer/application",
+        formData,
+        {
+          headers: { "Content-Type": "multipart/form-data" },
+        },
+      );
+      toast.dismiss();
+      if (response.status === 200) {
+        toast.success("Certificate status updated successfully");
+        app.refetch();
+      } else {
+        toast.error("Error updating certificate status");
+      }
+    } catch (error) {
+      toast.dismiss();
+      toast.error("An error occurred");
     }
   }
 
   function formatDate(isoDateString: string): string {
     const date = new Date(isoDateString);
-    const day = date.getDate().toString().padStart(2, "0");
-    const month = (date.getMonth() + 1).toString().padStart(2, "0");
-    const year = date.getFullYear();
-    return `${day}-${month}-${year}`;
-  }
-
-  async function UpdateCertificate({
-    id,
-    status,
-  }: {
-    id: string;
-    status: string;
-  }) {
-    try {
-      toast.loading("Please wait...");
-
-      // Create FormData to send the data
-      const formData = new FormData();
-      formData.append("id", id);
-      formData.append("certificate", status);
-
-      // Send the request with FormData
-      const response = await axios.patch(
-        "/api/best-computer/application",
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data", // Ensure the correct header is set
-          },
-        },
-      );
-
-      toast.dismiss();
-
-      if (response.status === 200) {
-        toast.success("Updated certificate successfully");
-        app.refetch();
-      } else {
-        toast.dismiss();
-        toast.error("Application updating failed");
-      }
-    } catch (error) {
-      toast.dismiss();
-      toast.error("An error occurred");
-    }
+    return date.toLocaleDateString("en-GB", {
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
+    });
   }
 
   return (
-    <div
-      key={app.id}
-      className="flex w-full flex-col justify-between rounded-lg border p-4"
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3 }}
     >
-      <div className="flex justify-between">
-        <Link
-          href={`/dashboard/application-list/edit-application?id=${app.id}`}
-          className="h-fit w-fit"
-        >
-          <Button size="icon" variant="secondary">
-            <FaRegEdit size="16" />
-          </Button>
-        </Link>
-        <Image
-          src={app.image}
-          alt=""
-          height={200}
-          width={200}
-          className="mx-auto mb-4 h-20 w-20 rounded-full"
-        />
-
-        <AlertDialog>
-          <AlertDialogTrigger asChild>
-            <Button variant="destructive" size="icon">
-              <FaTrash />
+      <Card className="overflow-hidden transition-all duration-300 hover:shadow-md">
+        <CardContent className="p-6">
+          <div className="mb-4 flex items-center justify-between">
+            <Link
+              href={`/dashboard/application-list/edit-application?id=${app.id}`}
+            >
+              <Button size="icon">
+                <FaRegEdit className="h-4 w-4" />
+              </Button>
+            </Link>
+            <div className="relative h-20 w-20">
+              <Image
+                src={app.image}
+                alt={app.studentName}
+                layout="fill"
+                objectFit="cover"
+                className="rounded-full"
+              />
+            </div>
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <Button size="icon" variant="destructive">
+                  <FaTrash className="h-4 w-4" />
+                </Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Delete Application?</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    This action cannot be undone. The application data will be
+                    permanently deleted from the database.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                  <AlertDialogAction onClick={() => handleDelete(app.id)}>
+                    Delete
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+          </div>
+          <div className="mb-4 text-center">
+            <h3 className="text-lg font-semibold text-primary">
+              {app.studentName}
+            </h3>
+            <p className="text-sm text-muted-foreground">
+              {app.course} - {app.duration}
+            </p>
+          </div>
+          <Separator className="my-4" />
+          <div className="grid grid-cols-2 gap-2 text-sm">
+            <div className="text-muted-foreground">Date:</div>
+            <div className="font-medium">{formatDate(app.createdAt)}</div>
+            <div className="text-muted-foreground">Number:</div>
+            <div className="font-medium">{app.mobileNumber}</div>
+          </div>
+          <div className="mt-4 flex flex-wrap justify-center gap-2">
+            <StatusBadge label="Status" value={app.status} />
+            <StatusBadge label="Certificate" value={app.certificate} />
+          </div>
+          <div className="mt-4 space-y-2">
+            <Select
+              value={action}
+              onValueChange={(value) => {
+                setAction(value);
+                updateApplication(value);
+              }}
+            >
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Update Status" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectLabel>Update Status</SelectLabel>
+                  <SelectItem value="Approved">Approved</SelectItem>
+                  <SelectItem value="Pending">Pending</SelectItem>
+                  <SelectItem value="Rejected">Rejected</SelectItem>
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+            <Select
+              value={certificate}
+              onValueChange={(value) => {
+                setCertificate(value);
+                updateCertificate(value);
+              }}
+            >
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Update Certificate" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectLabel>Update Certificate</SelectLabel>
+                  <SelectItem value="At Office">At Office</SelectItem>
+                  <SelectItem value="Pending">Pending</SelectItem>
+                  <SelectItem value="Fail">Fail</SelectItem>
+                  <SelectItem value="Received">Received</SelectItem>
+                  <SelectItem value="Course Incomplete">
+                    Course Incomplete
+                  </SelectItem>
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+          </div>
+        </CardContent>
+        <CardFooter className="flex justify-center gap-2 bg-muted/50 p-4">
+          <Link
+            href={`/dashboard/application-list/payment-report?id=${app.id}`}
+          >
+            <Button size="sm" variant="outline">
+              <FaMoneyBillWave className="mr-2 h-4 w-4" />
+              Payment
             </Button>
-          </AlertDialogTrigger>
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-              <AlertDialogDescription>
-                Application data will be deleted from the database.
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogCancel>Cancel</AlertDialogCancel>
-              <AlertDialogAction
-                onClick={() => {
-                  handleDelete(app.id);
-                }}
-              >
-                Delete
-              </AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
-      </div>
-      <div className="flex flex-col">
-        <p className="mb-2 text-lg font-bold text-primary">{app.studentName}</p>
-        <p>
-          <span className="font-semibold text-secondary-foreground">
-            Course:{" "}
-          </span>
-          {app.course}
-        </p>
-        <p>
-          <span className="font-semibold text-secondary-foreground">
-            Type:{" "}
-          </span>
-          {app.duration}
-        </p>
-        <p>
-          <span className="font-semibold text-secondary-foreground">
-            Date:{" "}
-          </span>
-          {formatDate(app.createdAt)}
-        </p>
-        <p>
-          <span className="font-semibold text-secondary-foreground">
-            Number:{" "}
-          </span>
-          {app.mobileNumber}
-        </p>
-        <p>
-          <span className="font-semibold text-secondary-foreground">
-            Status:{" "}
-          </span>
-          <span
-            className={
-              app.status === "Approved"
-                ? "font-bold text-primary-100"
-                : app.status === "Pending"
-                  ? "font-bold text-yellow-500"
-                  : app.status === "Rejected"
-                    ? "font-bold text-destructive"
-                    : ""
-            }
+          </Link>
+          <Link
+            href={`/dashboard/application-list/single-application?id=${app.id}`}
           >
-            {app.status}
-          </span>
-        </p>
-        <p>
-          <span className="font-bold text-secondary-foreground">
-            Certificate:{" "}
-          </span>
-          <span
-            className={
-              app.certificate === "At Office"
-                ? "font-bold text-cyan-500"
-                : app.certificate === "Pending"
-                  ? "font-bold text-yellow-500"
-                  : app.certificate === "Fail"
-                    ? "font-bold text-destructive"
-                    : app.certificate === "Received"
-                      ? "font-bold text-primary-100"
-                      : ""
-            }
-          >
-            {app.certificate}
-          </span>
-        </p>
-        <div className="mt-3 flex items-center gap-0.5">
-          <p className="text-sm font-bold">Status:</p>
-          <ActionSelect Value={app.status} onValueChange={handleActionChange} />
-
-          <Button
-            size="sm"
-            variant="secondary"
-            onClick={() => UpdateApplication({ status: action, id: app.id })}
-          >
-            OK
-          </Button>
-        </div>
-        <div className="mt-2 flex items-center gap-0.5">
-          <p className="text-sm font-bold">Certificate:</p>
-          <CertificateSelect
-            Value={app.certificate}
-            onValueChange={handleCertificateChange}
-          />
-
-          <Button
-            size="sm"
-            variant="secondary"
-            onClick={() =>
-              UpdateCertificate({
-                status: certificate,
-                id: app.id,
-              })
-            }
-          >
-            OK
-          </Button>
-        </div>
-      </div>
-      <Link
-        href={`/dashboard/application-list/payment-report?id=${app.id}`}
-        className="mt-6 flex w-full"
-      >
-        <Button variant="secondary" className="w-full text-primary-100">
-          Payment Report
-        </Button>
-      </Link>
-      <Link
-        href={`/dashboard/application-list/single-application?id=${app.id}`}
-        className="mt-2 flex w-full"
-      >
-        <Button className="w-full">Application Details</Button>
-      </Link>
-    </div>
+            <Button size="sm" variant="default">
+              <FaFileAlt className="mr-2 h-4 w-4" />
+              Details
+            </Button>
+          </Link>
+        </CardFooter>
+      </Card>
+    </motion.div>
   );
 }
 
-interface DurationSelectProps {
-  onValueChange: (value: string) => void;
-  Value: string;
-}
-
-function ActionSelect({ onValueChange, Value }: DurationSelectProps) {
-  const handleSelectChange = (value: string) => {
-    onValueChange(value);
+function StatusBadge({ label, value }: { label: string; value: string }) {
+  const getStatusColor = (status: string) => {
+    switch (status.toLowerCase()) {
+      case "approved":
+      case "received":
+        return "bg-primary/10 text-primary hover:bg-primary/20";
+      case "pending":
+        return "bg-yellow-500/10 text-yellow-700 hover:bg-yellow-500/20";
+      case "rejected":
+      case "fail":
+        return "bg-destructive/10 text-destructive hover:bg-destructive/20";
+      case "at office":
+        return "bg-blue-500/10 text-blue-700 hover:bg-blue-500/20";
+      default:
+        return "bg-secondary hover:bg-secondary/80";
+    }
   };
 
   return (
-    <>
-      <Select onValueChange={handleSelectChange} defaultValue={Value}>
-        <SelectTrigger>
-          <SelectValue placeholder="Action" />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectGroup>
-            <SelectLabel>Action</SelectLabel>
-            <SelectItem
-              value="Approved"
-              onSelect={() => handleSelectChange("Approved")}
-            >
-              Approved
-            </SelectItem>
-            <SelectItem
-              value="Pending"
-              onSelect={() => handleSelectChange("Pending")}
-            >
-              Pending
-            </SelectItem>
-            <SelectItem
-              value="Rejected"
-              onSelect={() => handleSelectChange("Reject")}
-            >
-              Reject
-            </SelectItem>
-          </SelectGroup>
-        </SelectContent>
-      </Select>
-    </>
-  );
-}
-
-function CertificateSelect({
-  onValueChange,
-
-  Value,
-}: DurationSelectProps) {
-  const handleSelectChange = (value: string) => {
-    onValueChange(value);
-  };
-
-  return (
-    <>
-      <Select onValueChange={handleSelectChange} defaultValue={Value}>
-        <SelectTrigger>
-          <SelectValue placeholder="Action" />
-        </SelectTrigger>
-        <SelectContent>
-          <SelectGroup>
-            <SelectLabel>Action</SelectLabel>
-            <SelectItem
-              value="At Office"
-              onSelect={() => handleSelectChange("At Office")}
-            >
-              At Office
-            </SelectItem>
-            <SelectItem
-              value="Pending"
-              onSelect={() => handleSelectChange("Pending")}
-            >
-              Pending
-            </SelectItem>
-            <SelectItem
-              value="Fail"
-              onSelect={() => handleSelectChange("Fail")}
-            >
-              Fail
-            </SelectItem>
-            <SelectItem
-              value="Received"
-              onSelect={() => handleSelectChange("Received")}
-            >
-              Received
-            </SelectItem>
-            <SelectItem
-              value="Course Incomplete"
-              onSelect={() => handleSelectChange("Course Incomplete")}
-            >
-              Course Incomplete
-            </SelectItem>
-          </SelectGroup>
-        </SelectContent>
-      </Select>
-    </>
+    <Badge
+      variant="outline"
+      className={`${getStatusColor(value)} transition-colors`}
+    >
+      {label}: {value}
+    </Badge>
   );
 }
