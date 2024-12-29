@@ -1,6 +1,7 @@
 "use client";
 
 import { bangladeshDistricts } from "@/components/data/District";
+import { FetchDuration } from "@/components/fetch/admin/FetchDuration";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -188,6 +189,7 @@ const generateSessionOptions = (): string[] => {
 export function StudentApplicationForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const { isLoading, data, isError } = FetchDuration();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -915,33 +917,52 @@ export function StudentApplicationForm() {
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>Duration</FormLabel>
-                          <Select
-                            onValueChange={field.onChange}
-                            defaultValue={field.value}
-                          >
-                            <FormControl>
-                              <SelectTrigger>
-                                <SelectValue placeholder="Course Duration" />
-                              </SelectTrigger>
-                            </FormControl>
-                            <SelectContent>
-                              <SelectGroup>
-                                <SelectLabel>Course Duration</SelectLabel>
+                          {isLoading ? (
+                            <div className="text-sm text-gray-500">
+                              Loading options...
+                            </div>
+                          ) : isError ? (
+                            <div className="text-sm text-red-500">
+                              Failed to load options
+                            </div>
+                          ) : (
+                            <Select
+                              onValueChange={field.onChange}
+                              defaultValue={field.value}
+                            >
+                              <FormControl>
+                                <SelectTrigger>
+                                  <SelectValue placeholder="Course Duration" />
+                                </SelectTrigger>
+                              </FormControl>
+                              <SelectContent>
+                                <SelectGroup>
+                                  <SelectLabel>Course Duration</SelectLabel>
 
-                                <SelectItem value="free">
-                                  Free (conditions apply)
-                                </SelectItem>
-                                <SelectItem value="1 month">1 Month</SelectItem>
-                                <SelectItem value="3 month">3 Month</SelectItem>
-                                <SelectItem value="6 month">6 Month</SelectItem>
-                                <SelectItem value="1 year">1 Year</SelectItem>
-                              </SelectGroup>
-                            </SelectContent>
-                          </Select>
+                                  {data.button === "On" && (
+                                    <SelectItem value="free">
+                                      Free (conditions apply)
+                                    </SelectItem>
+                                  )}
+                                  <SelectItem value="1 month">
+                                    1 Month
+                                  </SelectItem>
+                                  <SelectItem value="3 month">
+                                    3 Month
+                                  </SelectItem>
+                                  <SelectItem value="6 month">
+                                    6 Month
+                                  </SelectItem>
+                                  <SelectItem value="1 year">1 Year</SelectItem>
+                                </SelectGroup>
+                              </SelectContent>
+                            </Select>
+                          )}
                           <FormMessage />
                         </FormItem>
                       )}
                     />
+
                     <FormField
                       control={form.control}
                       name="pc"
