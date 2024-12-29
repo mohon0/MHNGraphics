@@ -130,7 +130,7 @@ function PaymentReport() {
               )}
               <div className="mt-2">
                 <p className="text-2xl font-bold uppercase text-primary">
-                  {data.firstName} {data.lastName}
+                  {data.studentName}
                 </p>
                 <p>{data.fullAddress}</p>
                 <p>{data.mobileNumber}</p>

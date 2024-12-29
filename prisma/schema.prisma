@@ -192,3 +192,8 @@ model BloodDonation {
   imageId            String?
   createdAt          DateTime @default(now())
 }
+
+model duration {
+  id              String  @id @default(auto()) @map("_id") @db.ObjectId
+  button          String
+}
