@@ -53,3 +53,26 @@ export function FetchSingleDonar(id: string | string[]) {
     },
   });
 }
+
+interface Props {
+  currentPage: number;
+  filterBy: string;
+  searchInput: string;
+}
+
+export function FetchAddress({
+  currentPage,
+  filterBy,
+
+  searchInput,
+}: Props) {
+  return useQuery({
+    queryKey: ["address", currentPage, filterBy, searchInput],
+    queryFn: async () => {
+      const response = await axios.get(
+        `/api/best-computer/blood-bank/address?page=${currentPage}&filterBy=${filterBy}&search=${searchInput}`,
+      );
+      return response.data;
+    },
+  });
+}

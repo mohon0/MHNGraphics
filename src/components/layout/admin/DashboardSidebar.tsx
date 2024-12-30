@@ -6,7 +6,6 @@ import {
   HeartPulse,
   Map,
   PieChart,
-  Settings2,
   UserRoundSearch,
 } from "lucide-react";
 import * as React from "react";
@@ -84,25 +83,17 @@ export function DashboardSidebar({
   // Admin-only nav items
   const adminNavMain = [
     {
-      title: "Settings",
+      title: "Blood Bank",
       url: "#",
-      icon: Settings2,
+      icon: HeartPulse,
       items: [
         {
-          title: "General",
-          url: "#",
+          title: "Blood Bank",
+          url: "/dashboard/blood-bank?page=1&bloodGroup=All&searchInput=",
         },
         {
-          title: "Team",
-          url: "#",
-        },
-        {
-          title: "Billing",
-          url: "#",
-        },
-        {
-          title: "Limits",
-          url: "#",
+          title: "Address",
+          url: "/dashboard/blood-bank/address",
         },
       ],
     },
@@ -115,11 +106,7 @@ export function DashboardSidebar({
       url: `/dashboard/users?page=1`,
       icon: UserRoundSearch,
     },
-    {
-      name: "Blood Bank",
-      url: "/dashboard/blood-bank?page=1&bloodGroup=All&searchInput=",
-      icon: HeartPulse,
-    },
+
     {
       name: "Travel",
       url: "#",

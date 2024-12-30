@@ -37,6 +37,7 @@ import axios from "axios";
 import { Upload } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useCallback, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
@@ -190,6 +191,7 @@ export function StudentApplicationForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const { isLoading, data, isError } = FetchDuration();
+  const router = useRouter();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -264,7 +266,7 @@ export function StudentApplicationForm() {
           isLoading: false,
           autoClose: 3000,
         });
-        form.reset();
+        router.push("/best-computer-training-center");
         setImagePreview(null);
       } else {
         toast.update(toastId, {
@@ -805,7 +807,16 @@ export function StudentApplicationForm() {
                         <FormItem>
                           <FormLabel>Passing Year</FormLabel>
                           <FormControl>
-                            <Input placeholder="Passing Year" {...field} />
+                            <Input
+                              placeholder="Passing Year"
+                              type="number"
+                              {...field}
+                              onChange={(e) =>
+                                field.onChange(
+                                  parseInt(e.target.value, 10) || "",
+                                )
+                              }
+                            />
                           </FormControl>
                           <FormMessage />
                         </FormItem>

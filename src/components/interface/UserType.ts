@@ -7,3 +7,13 @@ export interface UserType {
   createdAt: Date;
   status: string;
 }
+
+export interface AddressListType {
+  id: string;
+  studentName: string;
+  email: string;
+  image: string;
+  mobileNumber: string;
+  bloodGroup: string;
+  fullAddress: string;
+}

@@ -265,7 +265,6 @@ export async function DELETE(req: NextRequest, res: NextResponse) {
       });
     }
   } catch (error) {
-    console.error("Error deleting application:", error);
     return new NextResponse("Error deleting application", { status: 500 });
   }
 }

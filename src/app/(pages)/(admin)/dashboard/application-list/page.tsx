@@ -76,8 +76,8 @@ function ApplicationListContent() {
   return (
     <div className="container mx-auto px-4 pb-8">
       <Card className="overflow-hidden">
-        <CardHeader className="bg-secondary">
-          <CardTitle className="text-center text-3xl font-bold md:text-4xl">
+        <CardHeader className="bg-primary">
+          <CardTitle className="text-center text-3xl font-bold text-primary-foreground md:text-4xl">
             Application List
           </CardTitle>
         </CardHeader>
