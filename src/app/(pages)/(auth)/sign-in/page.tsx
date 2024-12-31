@@ -22,11 +22,18 @@ import { toast } from "react-toastify";
 import { z } from "zod";
 
 const FormSchema = z.object({
-  email: z.string().email(),
+  email: z.string().refine(
+    (value) =>
+      /\S+@\S+\.\S+/.test(value) || // Check for valid email format
+      /^01[0-9]{9}$/.test(value), // Check for valid Bangladeshi phone number without country code
+    {
+      message: "Please enter a valid email or phone number",
+    },
+  ),
   password: z
     .string()
     .min(6, "Password must be 6 characters long")
-    .max(15, "Password can not be more than 15 characters"),
+    .max(15, "Password cannot be more than 15 characters"),
 });
 
 export default function Login() {
@@ -100,7 +107,7 @@ export default function Login() {
                       name="email"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Email</FormLabel>
+                          <FormLabel>Email / Phone Number</FormLabel>
                           <FormControl>
                             <Input placeholder="john@email.com" {...field} />
                           </FormControl>

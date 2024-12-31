@@ -26,28 +26,57 @@ export const authOptions = {
         email: { label: "email", type: "email" },
       },
       async authorize(credentials) {
+        console.log("Authorizing user with credentials:", credentials);
+
         if (!credentials?.email || !credentials.password) {
+          console.error("Email and password are required.");
           throw new Error("Email and password are required.");
         }
-        const user = await prisma.user.findUnique({
-          where: { email: credentials.email },
-        });
 
-        if (!user || user.emailVerified === null) {
+        let user;
+        // Check if the input is an email or a phone number
+        if (/\S+@\S+\.\S+/.test(credentials.email)) {
+          // If it's an email, search by email
+          console.log("Input is an email. Searching by email:", credentials.email);
+          user = await prisma.user.findUnique({
+            where: { email: credentials.email },
+          });
+        } else if (/^01[0-9]{9}$/.test(credentials.email)) {
+          // If it's a phone number, search by phone number directly
+          console.log("Input is a phone number. Searching by phone number:", credentials.email);
+
+          user = await prisma.user.findUnique({
+            where: { phoneNumber: credentials.email },
+          });
+        } else {
+          console.error("Invalid email or phone number format:", credentials.email);
+          throw new Error("Invalid email or phone number format.");
+        }
+
+        if (!user) {
+          console.error("User not found or email not verified.");
           throw new Error("User not found.");
         }
 
-        if (user.password) {
-          const passwordMatch = bcrypt.compareSync(
-            credentials.password,
-            user.password,
-          );
-          if (!passwordMatch) throw new Error("Incorrect password.");
+        if (user.emailVerified === null) {
+          console.error("User's email is not verified.");
+          throw new Error("User's email is not verified.");
         }
 
+        if (user.password) {
+          const passwordMatch = bcrypt.compareSync(credentials.password, user.password);
+          if (!passwordMatch) {
+            console.error("Incorrect password.");
+            throw new Error("Incorrect password.");
+          }
+        }
+
+        console.log("User authenticated successfully:", user);
         return user;
       },
     }),
+
+
 
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID!,
