@@ -22,8 +22,13 @@ interface ProductImageProps {
   handleDeleteImage: (url: string) => void;
 }
 
-const MAX_IMAGE_SIZE_KB = 500;
-const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/png", "image/webp"];
+const MAX_IMAGE_SIZE_KB = 300;
+const ACCEPTED_IMAGE_TYPES = [
+  "image/jpeg",
+  "image/jpg",
+  "image/png",
+  "image/webp",
+];
 
 export default function EditApplicationImage({
   image,

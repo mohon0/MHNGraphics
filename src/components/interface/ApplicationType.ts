@@ -70,7 +70,7 @@ export interface SingleApplicationUserType {
     education: string;
     board: string;
     course: string;
-    pc: "Yes" | "No" | undefined;
+    pc: "laptop" | "pc" | "no" | undefined;
     email: string;
     transactionId: string;
     fatherOccupation: string;

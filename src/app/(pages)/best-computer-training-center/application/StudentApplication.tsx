@@ -45,7 +45,7 @@ import * as z from "zod";
 import Preview from "./ApplicationPreview";
 
 const currentYear = new Date().getFullYear();
-const MAX_FILE_SIZE = 500000;
+const MAX_FILE_SIZE = 300000;
 const ACCEPTED_IMAGE_TYPES = [
   "image/jpeg",
   "image/jpg",
@@ -161,8 +161,8 @@ export const formSchema = z.object({
 
   duration: z.string().trim().min(1, "Duration is required"),
 
-  pc: z.enum(["Yes", "No"], {
-    errorMap: () => ({ message: "Specify if you have a computer (Yes/No)" }),
+  pc: z.enum(["laptop", "pc", "no"], {
+    errorMap: () => ({ message: "Specify if you have a computer" }),
   }),
 
   image: z
@@ -170,7 +170,7 @@ export const formSchema = z.object({
     .refine((file) => file?.length == 1, "Image is required.")
     .refine(
       (file) => file?.[0]?.size <= MAX_FILE_SIZE,
-      `Image size must be less than 500KB`,
+      `Image size must be less than 300KB`,
     )
     .refine(
       (file) => ACCEPTED_IMAGE_TYPES.includes(file?.[0]?.type),
@@ -210,7 +210,7 @@ export function StudentApplicationForm() {
       religion: "",
       nationality: "Bangladeshi",
       nidBirthReg: "",
-      email: "",
+      email: undefined,
       fullAddress: "",
       district: "",
       education: "",
@@ -288,10 +288,6 @@ export function StudentApplicationForm() {
     }
   }
 
-  const handleImageClick = useCallback(() => {
-    document.getElementById("image-upload")?.click();
-  }, []);
-
   const onImageChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       const file = e.target.files?.[0];
@@ -364,10 +360,7 @@ export function StudentApplicationForm() {
                             <FormControl>
                               <>
                                 <Label htmlFor="image-upload">
-                                  <div
-                                    className="h-32 w-32 cursor-pointer overflow-hidden rounded-lg border-2 border-dashed border-gray-300 transition-colors duration-200 hover:border-gray-400"
-                                    onClick={handleImageClick}
-                                  >
+                                  <div className="h-32 w-32 cursor-pointer overflow-hidden rounded-lg border-2 border-dashed border-gray-300 transition-colors duration-200 hover:border-gray-400">
                                     {imagePreview ? (
                                       <Image
                                         src={imagePreview}
@@ -990,8 +983,9 @@ export function StudentApplicationForm() {
                               </SelectTrigger>
                             </FormControl>
                             <SelectContent>
-                              <SelectItem value="Yes">Yes</SelectItem>
-                              <SelectItem value="No">No</SelectItem>
+                              <SelectItem value="laptop">Laptop</SelectItem>
+                              <SelectItem value="pc">pc</SelectItem>
+                              <SelectItem value="no">No</SelectItem>
                             </SelectContent>
                           </Select>
                           <FormMessage />
@@ -1034,9 +1028,9 @@ export function StudentApplicationForm() {
               </div>
               <div className="rounded-sm border border-primary p-2">
                 <p>
-                  ১০০/= টাকা আবেদন ফি সহ- কোর্স ফি বিকাশ পেমেন্ট করে,
-                  Transaction ID লিখুন। তারপর Submit করুন। অবশ্যই পেমেন্ট রিসিট
-                  মূল ফরম এর সাথে সংযুক্ত করতে হবে
+                  ১০০/= টাকা আবেদন ফি বিকাশ পেমেন্ট করে, Transaction ID লিখুন।
+                  তারপর Submit করুন। অবশ্যই পেমেন্ট রিসিট মূল ফরম এর সাথে
+                  সংযুক্ত করতে হবে
                 </p>
               </div>
               <div className="flex flex-col gap-4 md:flex-row md:gap-10">

@@ -41,7 +41,7 @@ import {
   GraduationCapIcon,
   Loader2,
 } from "lucide-react";
-import { signIn, useSession } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Suspense } from "react";
@@ -137,9 +137,9 @@ function VisitorView() {
             account, please log in to continue. If you don&#39;e an account,
             please register first.
           </p>
-          <Button onClick={() => signIn()} className="w-full">
-            Log In
-          </Button>
+          <Link href="/sign-in">
+            <Button className="w-full">Log In</Button>
+          </Link>
         </CardContent>
       </Card>
     </div>

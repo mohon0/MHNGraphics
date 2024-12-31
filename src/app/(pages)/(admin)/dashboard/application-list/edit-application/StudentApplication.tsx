@@ -42,13 +42,6 @@ import { toast } from "react-toastify";
 import * as z from "zod";
 
 const currentYear = new Date().getFullYear();
-const MAX_FILE_SIZE = 500000;
-const ACCEPTED_IMAGE_TYPES = [
-  "image/jpeg",
-  "image/jpg",
-  "image/png",
-  "image/webp",
-];
 
 export const formSchema = z.object({
   id: z.string(),
@@ -159,7 +152,7 @@ export const formSchema = z.object({
 
   duration: z.string().trim().min(1, "Duration is required"),
 
-  pc: z.enum(["Yes", "No"], {
+  pc: z.enum(["laptop", "pc", "no"], {
     errorMap: () => ({ message: "Specify if you have a computer (Yes/No)" }),
   }),
 });
@@ -871,8 +864,9 @@ export function StudentApplicationForm({
                               </SelectTrigger>
                             </FormControl>
                             <SelectContent>
-                              <SelectItem value="Yes">Yes</SelectItem>
-                              <SelectItem value="No">No</SelectItem>
+                              <SelectItem value="laptop">Laptop</SelectItem>
+                              <SelectItem value="pc">pc</SelectItem>
+                              <SelectItem value="no">No</SelectItem>
                             </SelectContent>
                           </Select>
                           <FormMessage />
