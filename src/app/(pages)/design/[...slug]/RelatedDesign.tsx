@@ -38,13 +38,7 @@ export default function RelatedDesign({ postId }: { postId: string }) {
               key={design.id}
               className="basis-10/12 transition-all duration-300 hover:brightness-75 md:basis-1/3 lg:basis-1/5"
             >
-              <Link
-                href={createSlug(
-                  design.category,
-                  design.name,
-                  design.createdAt,
-                )}
-              >
+              <Link href={createSlug({ name: design.name, id: design.id })}>
                 <div className="space-y-3">
                   <Image
                     src={design.image}

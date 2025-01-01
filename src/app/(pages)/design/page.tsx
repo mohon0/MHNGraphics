@@ -70,7 +70,7 @@ function SearchPageContent() {
             <div className="columns-1 gap-4 md:columns-3">
               {data.data.map((item: DesignType) => (
                 <Link
-                  href={createSlug(item.category, item.name, item.createdAt)}
+                  href={createSlug({ name: item.name, id: item.id })}
                   key={item.id}
                   className="image-container py-2"
                 >

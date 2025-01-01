@@ -1,6 +1,5 @@
 import { UploadImage } from "@/components/helper/image/UploadImage";
 import { Prisma } from "@/components/helper/prisma/Prisma";
-import { SlugToText } from "@/components/helper/slug/SlugToText";
 import cloudinary from "@/utils/cloudinary";
 import { Session } from "next-auth";
 import { getToken } from "next-auth/jwt";
@@ -102,32 +101,16 @@ export async function GET(req: NextRequest, res: NextResponse) {
   try {
     const url = new URL(req.url);
     const queryParams = new URLSearchParams(url.search);
-    const category = queryParams.get("category");
-    const day = queryParams.get("day");
-    const month = queryParams.get("month");
-    const year = queryParams.get("year");
-    const name = queryParams.get("name");
+    const id = queryParams.get("id");
 
-    if (!category || !day || !month || !year || !name) {
+    if (!id) {
       return new NextResponse("Missing field", { status: 400 });
     }
 
-    const formattedDate = new Date(`${year}-${month}-${day}T00:00:00.000Z`);
-
     // Fetch the design
-    const design = await Prisma.design.findFirst({
+    const design = await Prisma.design.findUnique({
       where: {
-        category: {
-          contains: category,
-          mode: "insensitive",
-        },
-        name: {
-          contains: SlugToText(name),
-          mode: "insensitive",
-        },
-        createdAt: {
-          gte: formattedDate,
-        },
+        id: id,
       },
       include: {
         author: {

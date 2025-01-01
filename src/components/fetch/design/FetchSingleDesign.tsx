@@ -2,20 +2,14 @@ import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 
 interface props {
-  category: string;
-  day: string;
-  month: string;
-  year: string;
-  name: string;
+  id: string;
 }
 
-export function FetchSingleDesign({ category, day, month, year, name }: props) {
+export function FetchSingleDesign({ id }: props) {
   return useQuery({
-    queryKey: ["Single Design", category, day, month, year, name],
+    queryKey: ["Single Design", id],
     queryFn: async () => {
-      const response = await axios.get(
-        `/api/design/single-design?category=${category}&day=${day}&month=${month}&year=${year}&name=${name}`,
-      );
+      const response = await axios.get(`/api/design/single-design?id=${id}`);
       return response.data;
     },
   });

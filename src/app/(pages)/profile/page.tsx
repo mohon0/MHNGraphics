@@ -118,11 +118,10 @@ function ProfileContent() {
                     >
                       <Card className="h-full overflow-hidden transition-transform duration-300 hover:scale-105">
                         <Link
-                          href={createSlug(
-                            design.category,
-                            design.name,
-                            design.createdAt,
-                          )}
+                          href={createSlug({
+                            name: design.name,
+                            id: design.id,
+                          })}
                         >
                           <div className="relative aspect-square">
                             <Image

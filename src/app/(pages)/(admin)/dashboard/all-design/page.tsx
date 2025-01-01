@@ -74,7 +74,12 @@ function DesignCard({
     <Card className="w-full">
       <CardContent className="p-4">
         <div className="flex gap-4">
-          <Link href={createSlug(item.category, item.name, item.createdAt)}>
+          <Link
+            href={createSlug({
+              name: item.name,
+              id: item.id,
+            })}
+          >
             <Image
               src={item.image}
               alt={item.name}
@@ -86,7 +91,10 @@ function DesignCard({
           </Link>
           <div className="flex-1 space-y-2">
             <Link
-              href={createSlug(item.category, item.name, item.createdAt)}
+              href={createSlug({
+                name: item.name,
+                id: item.id,
+              })}
               className="font-medium hover:underline"
             >
               {item.name}
@@ -141,7 +149,10 @@ function DesignCard({
               </Link>
               <Separator orientation="vertical" className="h-4" />
               <Link
-                href={createSlug(item.category, item.name, item.createdAt)}
+                href={createSlug({
+                  name: item.name,
+                  id: item.id,
+                })}
                 className="text-sm text-primary hover:underline"
               >
                 View
@@ -390,11 +401,10 @@ function Design() {
                         <TableRow key={item.id} className="group">
                           <TableCell className="items-start align-top">
                             <Link
-                              href={createSlug(
-                                item.category,
-                                item.name,
-                                item.createdAt,
-                              )}
+                              href={createSlug({
+                                name: item.name,
+                                id: item.id,
+                              })}
                             >
                               <Image
                                 src={item.image}
@@ -409,11 +419,10 @@ function Design() {
                           <TableCell className="align-top">
                             <div className="space-y-2">
                               <Link
-                                href={createSlug(
-                                  item.category,
-                                  item.name,
-                                  item.createdAt,
-                                )}
+                                href={createSlug({
+                                  name: item.name,
+                                  id: item.id,
+                                })}
                               >
                                 {item.name}
                               </Link>
@@ -429,11 +438,10 @@ function Design() {
                                   className="h-3 bg-black"
                                 />
                                 <Link
-                                  href={createSlug(
-                                    item.category,
-                                    item.name,
-                                    item.createdAt,
-                                  )}
+                                  href={createSlug({
+                                    name: item.name,
+                                    id: item.id,
+                                  })}
                                   className="text-primary"
                                 >
                                   View

@@ -24,14 +24,11 @@ export default function SingleDesign({ params }: PageProps) {
     useState<ImageDimensions | null>(null);
   const [retryCount, setRetryCount] = useState(0);
 
-  const [category, day, month, year, name] = params.slug;
+  const [name] = params.slug;
+  const id = name.split("_")[1];
 
   const { isLoading, data, isError, refetch } = FetchSingleDesign({
-    category,
-    day,
-    month,
-    year,
-    name,
+    id,
   });
 
   useEffect(() => {

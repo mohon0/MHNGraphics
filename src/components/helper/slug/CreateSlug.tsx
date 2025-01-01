@@ -1,5 +1,3 @@
-import { format } from "date-fns";
-
 // Helper function to slugify the name and subcategory (convert spaces to hyphens and lowercasing)
 export const slugify = (text: string) => {
   return text
@@ -8,22 +6,20 @@ export const slugify = (text: string) => {
     .replace(/^-+|-+$/g, ""); // Remove leading or trailing hyphens
 };
 
-export const createSlug = (
-  category: string,
-  name: string,
-  createdAt: string,
-): string => {
-  // Format the date into dd/MM/yyyy format
-  const formattedDate = format(new Date(createdAt), "dd/MM/yyyy");
+export const createSlug = ({
+  id,
+  name,
+}: {
+  id: string;
+  name: string;
+}): string => {
+  if (!id || !name) {
+    throw new Error("Both 'id' and 'name' are required to create a slug.");
+  }
 
-  // Slugify the category, subcategory, and name
-  const categorySlug = slugify(category);
-
+  // Generate a URL-friendly slug from the name
   const nameSlug = slugify(name);
 
-  // Split the date into day, month, and year
-  const [day, month, year] = formattedDate.split("/");
-
   // Return the formatted slug
-  return `/design/${categorySlug}/${day}/${month}/${year}/${nameSlug}`;
+  return `/design/${nameSlug}_${id}`;
 };
