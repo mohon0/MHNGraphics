@@ -62,6 +62,10 @@ export function DashboardSidebar({
         },
       ],
     },
+  ];
+
+  // Admin-only nav items
+  const adminNavMain = [
     {
       title: "Application",
       url: "#",
@@ -78,10 +82,6 @@ export function DashboardSidebar({
         },
       ],
     },
-  ];
-
-  // Admin-only nav items
-  const adminNavMain = [
     {
       title: "Blood Bank",
       url: "#",
