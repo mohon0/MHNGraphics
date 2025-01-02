@@ -95,7 +95,7 @@ export default function ImageMarquee() {
             <div className="group relative mx-2 h-52 w-full flex-shrink-0 overflow-hidden">
               <Image
                 src={design.image}
-                alt={design.name || "Design Image"}
+                alt={"Design Image"}
                 width={160}
                 height={160}
                 className="h-full w-full object-contain transition-transform group-hover:scale-110"

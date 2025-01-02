@@ -10,3 +10,21 @@ export function FetchAdminData() {
     },
   });
 }
+export function FetchRecentApplication() {
+  return useQuery({
+    queryKey: ["Recent applications"],
+    queryFn: async () => {
+      const response = await axios.get(`/api/admin/recent-data/application`);
+      return response.data;
+    },
+  });
+}
+export function FetchRecentDesign() {
+  return useQuery({
+    queryKey: ["Recent design"],
+    queryFn: async () => {
+      const response = await axios.get(`/api/admin/recent-data/design`);
+      return response.data;
+    },
+  });
+}

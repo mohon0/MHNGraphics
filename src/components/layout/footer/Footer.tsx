@@ -109,7 +109,7 @@ export default function Footer() {
                 </Link>
               ))}
             </div>
-            <Button>
+            <Button size="lg">
               <Link href="/contact" className="flex items-center gap-2">
                 <Briefcase className="mr-2 h-4 w-4" /> Hire Me
               </Link>
