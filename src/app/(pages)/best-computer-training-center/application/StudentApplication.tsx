@@ -474,9 +474,9 @@ export function StudentApplicationForm() {
                               </SelectTrigger>
                             </FormControl>
                             <SelectContent>
-                              <SelectItem value="Male">Male</SelectItem>
-                              <SelectItem value="Female">Female</SelectItem>
-                              <SelectItem value="Other">Other</SelectItem>
+                              <SelectItem value="male">Male</SelectItem>
+                              <SelectItem value="female">Female</SelectItem>
+                              <SelectItem value="other">Other</SelectItem>
                             </SelectContent>
                           </Select>
                           <FormMessage />
@@ -561,13 +561,20 @@ export function StudentApplicationForm() {
                               </SelectTrigger>
                             </FormControl>
                             <SelectContent>
-                              <SelectItem value="islam">Islam</SelectItem>
-                              <SelectItem value="hinduism">Hinduism</SelectItem>
-                              <SelectItem value="christianity">
+                              <SelectItem value="Islam">Islam</SelectItem>
+                              <SelectItem value="Hinduism">Hinduism</SelectItem>
+                              <SelectItem value="Christianity">
                                 Christianity
                               </SelectItem>
-                              <SelectItem value="buddhism">Buddhism</SelectItem>
-                              <SelectItem value="other">Other</SelectItem>
+                              <SelectItem value="Buddhism">Buddhism</SelectItem>
+                              <SelectItem value="Judaism">Judaism</SelectItem>
+                              <SelectItem value="Sikhism">Sikhism</SelectItem>
+                              <SelectItem value="Jainism">Jainism</SelectItem>
+                              <SelectItem value="Bahá'í Faith">
+                                Bahá&#39;í Faith
+                              </SelectItem>
+                              <SelectItem value="Shinto">Shinto</SelectItem>
+                              <SelectItem value="Others">Other</SelectItem>
                             </SelectContent>
                           </Select>
                           <FormMessage />
@@ -744,18 +751,18 @@ export function StudentApplicationForm() {
                               </SelectTrigger>
                             </FormControl>
                             <SelectContent>
-                              <SelectItem value="dhaka">Dhaka</SelectItem>
-                              <SelectItem value="chittagong">
+                              <SelectItem value="Dhaka">Dhaka</SelectItem>
+                              <SelectItem value="Chittagong">
                                 Chittagong
                               </SelectItem>
-                              <SelectItem value="rajshahi">Rajshahi</SelectItem>
-                              <SelectItem value="jessore">Jessore</SelectItem>
-                              <SelectItem value="comilla">Comilla</SelectItem>
-                              <SelectItem value="sylhet">Sylhet</SelectItem>
-                              <SelectItem value="dinajpur">Dinajpur</SelectItem>
-                              <SelectItem value="barishal">Barishal</SelectItem>
-                              <SelectItem value="madrasah">Madrasah</SelectItem>
-                              <SelectItem value="technical">
+                              <SelectItem value="Rajshahi">Rajshahi</SelectItem>
+                              <SelectItem value="Jessore">Jessore</SelectItem>
+                              <SelectItem value="Comilla">Comilla</SelectItem>
+                              <SelectItem value="Sylhet">Sylhet</SelectItem>
+                              <SelectItem value="Dinajpur">Dinajpur</SelectItem>
+                              <SelectItem value="Barishal">Barishal</SelectItem>
+                              <SelectItem value="Madrasah">Madrasah</SelectItem>
+                              <SelectItem value="Technical">
                                 Technical
                               </SelectItem>
                             </SelectContent>

@@ -54,7 +54,7 @@ export interface SingleApplicationUserType {
     bloodGroup: string;
     mobileNumber: string;
     guardianNumber: string;
-    gender: "Male" | "Female" | "Other";
+    gender: "male" | "female" | "other";
     gpa: string;
     nationality: string;
     nid: string;

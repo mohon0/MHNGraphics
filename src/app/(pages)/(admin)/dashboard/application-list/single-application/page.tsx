@@ -152,12 +152,16 @@ function SingleApplication({ application }: SingleApplicationUserType) {
                 value1={application.fatherOccupation}
                 value2={application.maritalStatus}
               />
-              <Model
-                item1="Date Of Birth"
-                item2="Blood Group"
-                value1={application.birthDay}
-                value2={application.bloodGroup}
-              />
+              <tr className="flex flex-col md:flex-row print:flex-row">
+                <td className="w-full border p-1 px-2 md:w-1/2 print:w-1/2">
+                  <span className="font-bold">BirthDay: </span>
+                  <span className="pl-3">{application.birthDay}</span>
+                </td>
+                <td className="w-full border p-1 px-2 md:w-1/2 print:w-1/2">
+                  <span className="font-bold">Blood Group: </span>
+                  <span className="pl-3">{application.bloodGroup}</span>
+                </td>
+              </tr>
               <Model
                 item1="Mobile Number"
                 item2="Guardian Number"
