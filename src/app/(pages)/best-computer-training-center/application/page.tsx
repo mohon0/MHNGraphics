@@ -15,17 +15,6 @@ import { motion } from "framer-motion";
 import { AlertCircle, CheckCircle2, XCircle } from "lucide-react";
 
 import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
-import {
   Card,
   CardContent,
   CardDescription,
@@ -34,7 +23,6 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import axios from "axios";
 import {
   CalendarIcon,
   ClockIcon,
@@ -45,8 +33,6 @@ import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Suspense } from "react";
-import { FaTrash } from "react-icons/fa";
-import { toast } from "react-toastify";
 import ScrollNotice from "../ScrollNotice";
 import ApplicationHeader from "./ApplicationHeader";
 import { StudentApplicationForm } from "./StudentApplication";
@@ -235,26 +221,6 @@ function UserApplicationCard({ application }: UserApplicationCardProps) {
     }
   };
 
-  async function handleDelete(id: string) {
-    try {
-      toast.loading("Please wait...");
-      const response = await axios.delete(
-        `/api/best-computer/application?id=${id}`,
-      );
-      if (response.status === 200) {
-        toast.dismiss();
-        toast.success("Successfully deleted");
-        router.refresh();
-      } else {
-        toast.dismiss();
-        toast.error("Error deleting application");
-      }
-    } catch (error) {
-      toast.dismiss();
-      toast.error("Error deleting application");
-    }
-  }
-
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -357,31 +323,6 @@ function UserApplicationCard({ application }: UserApplicationCardProps) {
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>
-          <AlertDialog>
-            <AlertDialogTrigger asChild>
-              <Button variant="destructive" size="icon">
-                <FaTrash />
-              </Button>
-            </AlertDialogTrigger>
-            <AlertDialogContent>
-              <AlertDialogHeader>
-                <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-                <AlertDialogDescription>
-                  Application data will be deleted from the database.
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogCancel>Cancel</AlertDialogCancel>
-                <AlertDialogAction
-                  onClick={() => {
-                    handleDelete(id);
-                  }}
-                >
-                  Delete
-                </AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
         </CardFooter>
       </Card>
     </motion.div>
