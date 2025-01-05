@@ -15,6 +15,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
@@ -25,10 +26,10 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
+import { Switch } from "@/components/ui/switch";
 import axios from "axios";
 import { motion } from "framer-motion";
 import Image from "next/image";
-import Link from "next/link";
 import { useState } from "react";
 import { FaFileAlt, FaMoneyBillWave, FaRegEdit, FaTrash } from "react-icons/fa";
 import { toast } from "react-toastify";
@@ -130,53 +131,26 @@ export default function ApplicationDataCard(app: ExtendedApplicationListType) {
     >
       <Card className="overflow-hidden transition-all duration-300 hover:shadow-md">
         <CardContent className="p-6">
-          <div className="mb-4 flex items-center justify-between">
-            <Link
-              href={`/dashboard/application-list/edit-application?id=${app.id}`}
-            >
-              <Button size="icon">
-                <FaRegEdit className="h-4 w-4" />
-              </Button>
-            </Link>
-            <div className="relative h-20 w-20">
-              <Image
-                src={app.image}
-                alt={app.studentName}
-                layout="fill"
-                objectFit="cover"
-                className="rounded-full"
-              />
-            </div>
-            <AlertDialog>
-              <AlertDialogTrigger asChild>
-                <Button size="icon" variant="destructive">
-                  <FaTrash className="h-4 w-4" />
-                </Button>
-              </AlertDialogTrigger>
-              <AlertDialogContent>
-                <AlertDialogHeader>
-                  <AlertDialogTitle>Delete Application?</AlertDialogTitle>
-                  <AlertDialogDescription>
-                    This action cannot be undone. The application data will be
-                    permanently deleted from the database.
-                  </AlertDialogDescription>
-                </AlertDialogHeader>
-                <AlertDialogFooter>
-                  <AlertDialogCancel>Cancel</AlertDialogCancel>
-                  <AlertDialogAction onClick={() => handleDelete(app.id)}>
-                    Delete
-                  </AlertDialogAction>
-                </AlertDialogFooter>
-              </AlertDialogContent>
-            </AlertDialog>
+          <div className="relative mx-auto mb-4 h-20 w-20">
+            <Image
+              src={app.image}
+              alt={app.studentName}
+              layout="fill"
+              objectFit="cover"
+              className="rounded-full"
+            />
           </div>
+
           <div className="mb-4 text-center">
             <h3 className="text-lg font-semibold text-primary">
               {app.studentName}
             </h3>
-            <p className="text-sm text-muted-foreground">
-              {app.course} - {app.duration}
-            </p>
+            <p className="text-sm text-muted-foreground">{app.course}</p>
+            <Badge>{app.duration}</Badge>
+            <div className="mt-4 flex items-center justify-center gap-6">
+              <Label>Editable:</Label>
+              <Switch />
+            </div>
           </div>
           <Separator className="my-4" />
           <div className="grid grid-cols-2 gap-2 text-sm">
@@ -184,103 +158,133 @@ export default function ApplicationDataCard(app: ExtendedApplicationListType) {
             <div className="font-medium">{formatDate(app.createdAt)}</div>
             <div className="text-muted-foreground">Number:</div>
             <div className="font-medium">{app.mobileNumber}</div>
+            <div className="text-muted-foreground">Status:</div>
+            <StatusBadge value={app.status} />
+            <div className="text-muted-foreground">Certificate:</div>
+            <StatusBadge value={app.certificate} />
           </div>
-          <div className="mt-4 flex flex-wrap justify-center gap-2">
-            <StatusBadge label="Status" value={app.status} />
-            <StatusBadge label="Certificate" value={app.certificate} />
-          </div>
+
           <div className="mt-4 space-y-2">
-            <Select
-              value={action}
-              onValueChange={(value) => {
-                setAction(value);
-                updateApplication(value);
-              }}
-            >
-              <SelectTrigger className="w-full">
-                <SelectValue placeholder="Update Status" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
-                  <SelectLabel>Update Status</SelectLabel>
-                  <SelectItem value="Approved">Approved</SelectItem>
-                  <SelectItem value="Pending">Pending</SelectItem>
-                  <SelectItem value="Rejected">Rejected</SelectItem>
-                </SelectGroup>
-              </SelectContent>
-            </Select>
-            <Select
-              value={certificate}
-              onValueChange={(value) => {
-                setCertificate(value);
-                updateCertificate(value);
-              }}
-            >
-              <SelectTrigger className="w-full">
-                <SelectValue placeholder="Update Certificate" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
-                  <SelectLabel>Update Certificate</SelectLabel>
-                  <SelectItem value="At Office">At Office</SelectItem>
-                  <SelectItem value="Pending">Pending</SelectItem>
-                  <SelectItem value="Fail">Fail</SelectItem>
-                  <SelectItem value="Received">Received</SelectItem>
-                  <SelectItem value="Course Incomplete">
-                    Course Incomplete
-                  </SelectItem>
-                </SelectGroup>
-              </SelectContent>
-            </Select>
+            <div>
+              <Label>Update Status:</Label>
+              <Select
+                value={action}
+                onValueChange={(value) => {
+                  setAction(value);
+                  updateApplication(value);
+                }}
+              >
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Update Status" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    <SelectLabel>Update Status</SelectLabel>
+                    <SelectItem value="Approved">Approved</SelectItem>
+                    <SelectItem value="Pending">Pending</SelectItem>
+                    <SelectItem value="Rejected">Rejected</SelectItem>
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+            </div>
+            <div>
+              <Label>Update Certificate:</Label>
+              <Select
+                value={certificate}
+                onValueChange={(value) => {
+                  setCertificate(value);
+                  updateCertificate(value);
+                }}
+              >
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Update Certificate" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    <SelectLabel>Update Certificate</SelectLabel>
+                    <SelectItem value="At Office">At Office</SelectItem>
+                    <SelectItem value="Pending">Pending</SelectItem>
+                    <SelectItem value="Fail">Fail</SelectItem>
+                    <SelectItem value="Received">Received</SelectItem>
+                    <SelectItem value="Course Incomplete">
+                      Course Incomplete
+                    </SelectItem>
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+            </div>
           </div>
         </CardContent>
-        <CardFooter className="flex justify-center gap-2 bg-muted/50 p-4">
-          <Link
-            href={`/dashboard/application-list/payment-report?id=${app.id}`}
-          >
-            <Button size="sm" variant="outline">
-              <FaMoneyBillWave className="mr-2 h-4 w-4" />
+        <CardFooter className="flex flex-wrap justify-between gap-2 bg-muted/50 p-2">
+          <Button size="sm" variant="outline" className="flex-1" asChild>
+            <a href={`/dashboard/application-list/payment-report?id=${app.id}`}>
+              <FaMoneyBillWave className="mr-2 h-3 w-3" />
               Payment
-            </Button>
-          </Link>
-          <Link
-            href={`/dashboard/application-list/single-application?id=${app.id}`}
-          >
-            <Button size="sm" variant="default">
-              <FaFileAlt className="mr-2 h-4 w-4" />
+            </a>
+          </Button>
+          <Button size="sm" variant="outline" className="flex-1" asChild>
+            <a
+              href={`/dashboard/application-list/single-application?id=${app.id}`}
+            >
+              <FaFileAlt className="mr-2 h-3 w-3" />
               Details
-            </Button>
-          </Link>
+            </a>
+          </Button>
+          <Button size="sm" variant="outline" className="flex-1" asChild>
+            <a
+              href={`/dashboard/application-list/edit-application?id=${app.id}`}
+            >
+              <FaRegEdit className="mr-2 h-3 w-3" />
+              Edit
+            </a>
+          </Button>
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <Button size="sm" variant="destructive" className="flex-1">
+                <FaTrash className="mr-2 h-3 w-3" />
+                Delete
+              </Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Delete Application?</AlertDialogTitle>
+                <AlertDialogDescription>
+                  This action cannot be undone. The application data will be
+                  permanently deleted.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogAction onClick={() => handleDelete(app.id)}>
+                  Delete
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
         </CardFooter>
       </Card>
     </motion.div>
   );
 }
 
-function StatusBadge({ label, value }: { label: string; value: string }) {
+function StatusBadge({ value }: { value: string }) {
   const getStatusColor = (status: string) => {
     switch (status.toLowerCase()) {
       case "approved":
+        return "text-primary-100";
       case "received":
-        return "bg-primary/10 text-primary hover:bg-primary/20";
+        return "text-primary-200";
       case "pending":
-        return "bg-yellow-500/10 text-yellow-700 hover:bg-yellow-500/20";
+        return "text-yellow-600";
       case "rejected":
       case "fail":
-        return "bg-destructive/10 text-destructive hover:bg-destructive/20";
+        return " text-destructive";
       case "at office":
-        return "bg-blue-500/10 text-blue-700 hover:bg-blue-500/20";
+        return " text-blue-700";
       default:
-        return "bg-secondary hover:bg-secondary/80";
+        return "text-primary";
     }
   };
 
-  return (
-    <Badge
-      variant="outline"
-      className={`${getStatusColor(value)} transition-colors`}
-    >
-      {label}: {value}
-    </Badge>
-  );
+  return <p className={`${getStatusColor(value)} font-bold`}>{value}</p>;
 }
