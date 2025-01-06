@@ -95,6 +95,7 @@ export interface ApplicationListType {
   createdAt: string;
   certificate: string;
   mobileNumber: string;
+  editable: boolean | null;
 }
 
 export interface PaymentReportType {

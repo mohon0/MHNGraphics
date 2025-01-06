@@ -272,17 +272,17 @@ export async function PATCH(req: NextRequest) {
   try {
     const formData = await req.formData();
     const id = getStringValue(formData, "id");
+    const token = await getToken({ req, secret });
 
-    if (!id) {
-      return new NextResponse("Product ID is required", { status: 400 });
+    if (!id || !token) {
+      return new NextResponse("Product ID and token are required", {
+        status: 400,
+      });
     }
 
-    const deletedImage = getStringValue(formData, "deletedImage");
-    const imageFile = formData.get("image") as Blob;
+    const role = token.role;
 
-    console.log(deletedImage);
-
-    // Check if the application exists
+    // Check if the user is an admin or if they are the author and the application is editable
     const currentDesign = await Prisma.application.findUnique({
       where: { id: id },
     });
@@ -290,6 +290,25 @@ export async function PATCH(req: NextRequest) {
     if (!currentDesign) {
       return new NextResponse("Application not found", { status: 404 });
     }
+
+    // If the role is not ADMIN, make sure the user is the author and the application is editable
+    if (role !== "ADMIN") {
+      if (token.sub !== currentDesign.userId) {
+        return new NextResponse(
+          "Unauthorized: You are not the author of this application",
+          {
+            status: 403,
+          },
+        );
+      }
+
+      if (currentDesign.editable === false || currentDesign.editable === null) {
+        return new NextResponse("Application is not editable", { status: 400 });
+      }
+    }
+
+    const deletedImage = getStringValue(formData, "deletedImage");
+    const imageFile = formData.get("image") as Blob;
 
     let image = currentDesign.image;
     let imageId = currentDesign.imageId;
@@ -302,7 +321,6 @@ export async function PATCH(req: NextRequest) {
       if (deleteResult.result !== "ok") {
         return new NextResponse("Error deleting image", { status: 400 });
       }
-      // Reset image and imageId if deletion is successful
       image = "";
       imageId = "";
     }
@@ -315,16 +333,19 @@ export async function PATCH(req: NextRequest) {
     }
 
     // Prepare updated data
-    const updatedData: Record<string, string | number | Date | null> = {};
+    const updatedData: Record<string, string | number | Date | boolean | null> =
+      {};
+
     formData.forEach((value, key) => {
       if (key !== "id" && key !== "image" && key !== "deletedImage") {
         if (key === "session") {
-          // Convert session to an integer
           const intValue = parseInt(value.toString(), 10);
           if (isNaN(intValue)) {
             throw new Error(`Invalid session value: ${value}`);
           }
           updatedData[key] = intValue;
+        } else if (key === "editable") {
+          updatedData[key] = value === "true";
         } else {
           updatedData[key] = value.toString();
         }
@@ -346,7 +367,6 @@ export async function PATCH(req: NextRequest) {
       design: updatedDesign,
     });
   } catch (error) {
-    console.log(error);
     return new NextResponse("Internal Server Error", { status: 500 });
   }
 }

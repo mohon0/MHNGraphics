@@ -31,8 +31,8 @@ import {
 } from "lucide-react";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { Suspense } from "react";
+import { toast } from "react-toastify";
 import ScrollNotice from "../ScrollNotice";
 import ApplicationHeader from "./ApplicationHeader";
 import { StudentApplicationForm } from "./StudentApplication";
@@ -172,6 +172,7 @@ interface UserApplication {
   course: string;
   createdAt: string;
   certificate: string;
+  editable: boolean | null;
 }
 
 interface UserApplicationCardProps {
@@ -188,8 +189,8 @@ function UserApplicationCard({ application }: UserApplicationCardProps) {
     createdAt,
     certificate,
     id,
+    editable,
   } = application;
-  const router = useRouter();
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString("en-US", {
@@ -282,47 +283,66 @@ function UserApplicationCard({ application }: UserApplicationCardProps) {
             </Badge>
           </motion.div>
         </CardContent>
-        <CardFooter className="flex justify-end gap-2 bg-gray-50 p-6 dark:bg-gray-900">
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Link
-                  href={`/dashboard/application-list/single-application?id=${id}`}
-                >
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="bg-blue-500 text-white hover:bg-blue-600"
+        <CardFooter className="flex w-full flex-col space-y-4">
+          <div className="flex w-full justify-end gap-4">
+            {/* View Button with Tooltip */}
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Link
+                    href={`/dashboard/application-list/single-application?id=${id}`}
                   >
-                    View
-                  </Button>
-                </Link>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>View full application details</p>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Link
-                  href={`/dashboard/application-list/edit-application?id=${id}`}
-                >
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    className="bg-green-500 text-white hover:bg-green-600"
-                  >
-                    Edit
-                  </Button>
-                </Link>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>Edit application information</p>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="rounded-lg bg-blue-500 text-white hover:bg-blue-600 focus:ring-2 focus:ring-blue-500"
+                    >
+                      View
+                    </Button>
+                  </Link>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>View full application details</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+
+            {/* Edit Button or Disabled Edit */}
+            {editable === true ? (
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Link
+                      href={`/dashboard/application-list/edit-application?id=${id}`}
+                    >
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="rounded-lg bg-green-500 text-white hover:bg-green-600 focus:ring-2 focus:ring-green-500"
+                      >
+                        Edit
+                      </Button>
+                    </Link>
+                  </TooltipTrigger>
+                </Tooltip>
+              </TooltipProvider>
+            ) : (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => toast.info("Contact Admin to edit application")}
+              >
+                Edit
+              </Button>
+            )}
+          </div>
+
+          {/* Message if not editable */}
+          {editable !== true && (
+            <p className="mt-2 text-right text-sm text-gray-500">
+              Contact Admin to edit or delete the Application
+            </p>
+          )}
         </CardFooter>
       </Card>
     </motion.div>

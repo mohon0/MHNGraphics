@@ -28,7 +28,6 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { Switch } from "@/components/ui/switch";
 import axios from "axios";
-import { motion } from "framer-motion";
 import Image from "next/image";
 import { useState } from "react";
 import { FaFileAlt, FaMoneyBillWave, FaRegEdit, FaTrash } from "react-icons/fa";
@@ -40,6 +39,7 @@ interface ExtendedApplicationListType extends ApplicationListType {
 
 export default function ApplicationDataCard(app: ExtendedApplicationListType) {
   const [action, setAction] = useState(app.status);
+  const [checked, setChecked] = useState(app.editable || false);
   const [certificate, setCertificate] = useState(app.certificate);
 
   async function handleDelete(id: string) {
@@ -62,58 +62,6 @@ export default function ApplicationDataCard(app: ExtendedApplicationListType) {
     }
   }
 
-  async function updateApplication(status: string) {
-    try {
-      toast.loading("Updating application...");
-      const formData = new FormData();
-      formData.append("status", status);
-      formData.append("id", app.id);
-      const response = await axios.patch(
-        `/api/best-computer/application`,
-        formData,
-        {
-          headers: { "Content-Type": "multipart/form-data" },
-        },
-      );
-      toast.dismiss();
-      if (response.status === 200) {
-        toast.success("Application updated successfully");
-        app.refetch();
-      } else {
-        toast.error("Error updating application");
-      }
-    } catch (error) {
-      toast.dismiss();
-      toast.error("An error occurred");
-    }
-  }
-
-  async function updateCertificate(status: string) {
-    try {
-      toast.loading("Updating certificate status...");
-      const formData = new FormData();
-      formData.append("id", app.id);
-      formData.append("certificate", status);
-      const response = await axios.patch(
-        "/api/best-computer/application",
-        formData,
-        {
-          headers: { "Content-Type": "multipart/form-data" },
-        },
-      );
-      toast.dismiss();
-      if (response.status === 200) {
-        toast.success("Certificate status updated successfully");
-        app.refetch();
-      } else {
-        toast.error("Error updating certificate status");
-      }
-    } catch (error) {
-      toast.dismiss();
-      toast.error("An error occurred");
-    }
-  }
-
   function formatDate(isoDateString: string): string {
     const date = new Date(isoDateString);
     return date.toLocaleDateString("en-GB", {
@@ -123,12 +71,40 @@ export default function ApplicationDataCard(app: ExtendedApplicationListType) {
     });
   }
 
+  async function updateApplicationData(updateFields: Record<string, string>) {
+    try {
+      toast.loading("Updating application...");
+      const formData = new FormData();
+      formData.append("id", app.id);
+      Object.entries(updateFields).forEach(([key, value]) => {
+        formData.append(key, value);
+      });
+
+      const response = await axios.patch(
+        "/api/best-computer/application",
+        formData,
+        {
+          headers: { "Content-Type": "multipart/form-data" },
+        },
+      );
+
+      toast.dismiss();
+      if (response.status === 200) {
+        toast.success("Application updated successfully");
+        app.refetch();
+      } else {
+        toast.error("Error updating application");
+        setChecked(app.editable || false);
+      }
+    } catch (error) {
+      toast.dismiss();
+      toast.error("An error occurred");
+      setChecked(app.editable || false);
+    }
+  }
+
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3 }}
-    >
+    <div>
       <Card className="overflow-hidden transition-all duration-300 hover:shadow-md">
         <CardContent className="p-6">
           <div className="relative mx-auto mb-4 h-20 w-20">
@@ -149,7 +125,13 @@ export default function ApplicationDataCard(app: ExtendedApplicationListType) {
             <Badge>{app.duration}</Badge>
             <div className="mt-4 flex items-center justify-center gap-6">
               <Label>Editable:</Label>
-              <Switch />
+              <Switch
+                checked={checked}
+                onCheckedChange={(value) => {
+                  setChecked(value);
+                  updateApplicationData({ editable: value ? "true" : "false" });
+                }}
+              />
             </div>
           </div>
           <Separator className="my-4" />
@@ -171,7 +153,7 @@ export default function ApplicationDataCard(app: ExtendedApplicationListType) {
                 value={action}
                 onValueChange={(value) => {
                   setAction(value);
-                  updateApplication(value);
+                  updateApplicationData({ status: value });
                 }}
               >
                 <SelectTrigger className="w-full">
@@ -193,7 +175,7 @@ export default function ApplicationDataCard(app: ExtendedApplicationListType) {
                 value={certificate}
                 onValueChange={(value) => {
                   setCertificate(value);
-                  updateCertificate(value);
+                  updateApplicationData({ certificate: value });
                 }}
               >
                 <SelectTrigger className="w-full">
@@ -263,10 +245,9 @@ export default function ApplicationDataCard(app: ExtendedApplicationListType) {
           </AlertDialog>
         </CardFooter>
       </Card>
-    </motion.div>
+    </div>
   );
 }
-
 function StatusBadge({ value }: { value: string }) {
   const getStatusColor = (status: string) => {
     switch (status.toLowerCase()) {

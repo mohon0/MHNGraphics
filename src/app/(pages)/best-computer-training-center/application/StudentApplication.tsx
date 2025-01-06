@@ -96,7 +96,7 @@ export const formSchema = z.object({
     .trim()
     .regex(/^\d{10,15}$/, "Guardian number must be between 10-15 digits"),
 
-  gender: z.enum(["Male", "Female", "Other"], {
+  gender: z.enum(["male", "female", "other"], {
     errorMap: () => ({ message: "Gender is required and must be valid" }),
   }),
 

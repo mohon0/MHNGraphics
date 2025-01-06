@@ -31,7 +31,6 @@ function EditApplicationComponent() {
 }
 
 function EditApplication({ application }: SingleApplicationUserType) {
-  console.log(application);
   return (
     <div className="mt-10">
       <ApplicationHeader />

@@ -64,6 +64,7 @@ export async function GET(req: NextRequest) {
         createdAt: true,
         certificate: true,
         mobileNumber: true,
+        editable: true,
       },
       where,
       orderBy: {
