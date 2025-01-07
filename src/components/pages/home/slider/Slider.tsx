@@ -12,6 +12,7 @@ import img1 from "@/images/slider/photo.jpg";
 import img6 from "@/images/slider/sports.jpg";
 import img3 from "@/images/slider/templates.jpg";
 import img2 from "@/images/slider/vector.jpg";
+import Autoplay from "embla-carousel-autoplay";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -33,6 +34,12 @@ const sliderData = [
     name: "Mock Up",
     img: img3,
     link: "/design?category=mockups&query=&page=1",
+  },
+  {
+    id: 7,
+    name: "People",
+    img: img1,
+    link: "/design?category=people&query=&page=1",
   },
   {
     id: 4,
@@ -66,6 +73,11 @@ export function Slider() {
           loop: true,
           dragFree: true,
         }}
+        plugins={[
+          Autoplay({
+            delay: 2000,
+          }),
+        ]}
       >
         <CarouselContent>
           {sliderData.map((slider) => (

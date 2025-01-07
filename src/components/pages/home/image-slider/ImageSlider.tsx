@@ -60,7 +60,7 @@ export default function ImageMarquee() {
             href={createSlug({ name: design.name, id: design.id })}
             key={design.id}
           >
-            <div className="group relative mx-2 h-52 w-full flex-shrink-0 overflow-hidden">
+            <div className="group relative mx-2 h-40 w-full flex-shrink-0 overflow-hidden md:h-52">
               <Image
                 src={design.image}
                 alt={design.name || "Design Image"}
@@ -92,7 +92,7 @@ export default function ImageMarquee() {
             href={createSlug({ name: design.name, id: design.id })}
             key={design.id}
           >
-            <div className="group relative mx-2 h-52 w-full flex-shrink-0 overflow-hidden">
+            <div className="group relative mx-2 h-40 w-full flex-shrink-0 overflow-hidden md:h-52">
               <Image
                 src={design.image}
                 alt={"Design Image"}

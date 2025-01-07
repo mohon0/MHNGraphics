@@ -1,4 +1,5 @@
 "use client";
+
 import PaginationUi from "@/components/common/pagination/PaginationUi";
 import DesignSkeleton from "@/components/common/skeleton/DesignSkeleton";
 import { FetchAllDesign } from "@/components/fetch/design/FetchAllDesign";
@@ -7,7 +8,7 @@ import { SlugToText } from "@/components/helper/slug/SlugToText";
 import { DesignType } from "@/components/interface/DesignType";
 import Image from "next/image";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense } from "react";
 
 function DesignMessage({ message }: { message: string }) {
@@ -20,6 +21,7 @@ function DesignMessage({ message }: { message: string }) {
 
 function SearchPageContent() {
   const searchParams = useSearchParams();
+  const router = useRouter();
 
   const categoryName = searchParams.get("category") || "All";
   const query = searchParams.get("query") || "";
@@ -35,9 +37,9 @@ function SearchPageContent() {
 
   // Function to clear the tag filter
   const clearTagFilter = () => {
-    const url = new URL(window.location.href);
-    url.searchParams.delete("tag"); // Remove the "tag" query parameter
-    window.history.pushState({}, "", url.toString()); // Update the URL without reloading the page
+    const params = new URLSearchParams(searchParams.toString());
+    params.delete("tag");
+    router.push(`/design?${params.toString()}`);
   };
 
   return (
@@ -61,6 +63,7 @@ function SearchPageContent() {
                 <button
                   onClick={clearTagFilter}
                   className="ml-4 text-sm text-red-500 hover:text-red-700"
+                  aria-label="Clear tag filter"
                 >
                   Clear Tag
                 </button>

@@ -32,33 +32,45 @@ function SearchHeaderComponent({ fixed = false }: { fixed?: boolean }) {
     searchParams.get("category") || "all",
   );
   const [searchQuery, setSearchQuery] = useState<string>(
-    searchParams.get("query") || "",
+    searchParams.get("query")?.replace(/\+/g, " ") || "",
   );
 
   useMotionValueEvent(scrollY, "change", (latest) => {
     setIsScrolled(latest > 50);
   });
 
+  // Synchronize state with URL parameters
+  useEffect(() => {
+    const currentCategory = searchParams.get("category") || "all";
+    const currentQuery = searchParams.get("query")?.replace(/\+/g, " ") || "";
+    setCategory(currentCategory);
+    setSearchQuery(currentQuery);
+  }, [searchParams]);
+
   const handleFilterChange = useCallback(
     (value: string) => {
       setCategory(value);
-      router.push(`/design?category=${value}&query=${searchQuery}&page=1`);
+      router.push(
+        `/design?category=${encodeURIComponent(value)}&query=${searchQuery
+          .trim()
+          .replace(/ /g, "+")}&page=1`,
+      );
     },
     [router, searchQuery],
   );
 
   const handleSearchChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
-      const newQuery = e.target.value;
-      setSearchQuery(newQuery);
-      // Update URL parameters and trigger fetchDesign with debouncing within it
-      router.push(`/design?category=${category}&query=${newQuery}&page=1`);
+      setSearchQuery(e.target.value);
     },
-    [router, category],
+    [],
   );
 
   const handleSearch = useCallback(() => {
-    router.push(`/design?category=${category}&query=${searchQuery}&page=1`);
+    const encodedQuery = searchQuery.trim().replace(/ /g, "+"); // Replace spaces with +
+    router.push(
+      `/design?category=${encodeURIComponent(category)}&query=${encodedQuery}&page=1`,
+    );
   }, [router, category, searchQuery]);
 
   // Disable animation on small screens
@@ -76,10 +88,6 @@ function SearchHeaderComponent({ fixed = false }: { fixed?: boolean }) {
       window.removeEventListener("resize", handleResize);
     };
   }, []);
-
-  useMotionValueEvent(scrollY, "change", (latest) => {
-    setIsScrolled(latest > 50);
-  });
 
   return (
     <>
@@ -124,7 +132,7 @@ function SearchHeaderComponent({ fixed = false }: { fixed?: boolean }) {
                     fixed ? "text-white" : "text-black"
                   }`}
                 >
-                  <div className="ml-2 flex items-end gap-2 font-philosopher md:ml-0">
+                  <div className="font-philosopher ml-2 flex items-end gap-2 md:ml-0">
                     <span className="text-2xl">MHN</span>
                     <span className="hidden text-xl md:block">Graphics</span>
                   </div>
@@ -136,7 +144,9 @@ function SearchHeaderComponent({ fixed = false }: { fixed?: boolean }) {
                 onValueChange={handleFilterChange}
               >
                 <SelectTrigger
-                  className={`bg-background ${isScrolled ? "md:ml-10" : "md:-ml-44"} -ml-20 transition-all duration-200 md:min-w-32`}
+                  className={`bg-background ${
+                    isScrolled ? "md:ml-10" : "md:-ml-44"
+                  } -ml-20 transition-all duration-200 md:min-w-32`}
                 >
                   <SelectValue placeholder="Category" />
                 </SelectTrigger>
