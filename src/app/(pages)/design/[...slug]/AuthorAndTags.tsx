@@ -5,27 +5,32 @@ import Link from "next/link";
 
 export function Author({
   author,
+  title,
   authorId,
 }: {
   author: DesignType["author"];
   authorId: string;
+  title: string
 }) {
   return (
-    <div className="flex flex-col space-y-4 text-gray-700 sm:flex-row sm:items-center sm:justify-between sm:space-y-0">
-      <Link
-        href={`/profile?id=${authorId}`}
-        className="flex items-center space-x-4"
-      >
-        <Avatar>
-          <AvatarImage src={author?.image} alt={author?.name} />
-          <AvatarFallback>{author?.name?.charAt(0) || "MHN"}</AvatarFallback>
-        </Avatar>
-        <div>
-          <p className="text-lg font-semibold">{author?.name}</p>
-          <p className="text-sm text-gray-500">View Profile</p>
-        </div>
-      </Link>
-    </div>
+    <>
+      <p className="text-2xl md:text-3xl font-bold text-primary text-pretty">{title}</p>
+      <div className="flex flex-col space-y-4 text-gray-700 sm:flex-row sm:items-center sm:justify-between sm:space-y-0">
+        <Link
+          href={`/profile?id=${authorId}`}
+          className="flex items-center space-x-4"
+        >
+          <Avatar>
+            <AvatarImage src={author?.image} alt={author?.name} />
+            <AvatarFallback>{author?.name?.charAt(0) || "MHN"}</AvatarFallback>
+          </Avatar>
+          <div>
+            <p className="text-lg font-semibold">{author?.name}</p>
+            <p className="text-sm text-gray-500">View Profile</p>
+          </div>
+        </Link>
+      </div>
+    </>
   );
 }
 

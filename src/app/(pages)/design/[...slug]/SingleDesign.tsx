@@ -115,7 +115,7 @@ export default function SingleDesign({ params }: PageProps) {
             {isLoading ? (
               <AuthorSkeleton />
             ) : (
-              <Author author={data.author} authorId={data.authorId} />
+              <Author author={data.author} title={data.name} authorId={data.authorId} />
             )}
           </div>
 
