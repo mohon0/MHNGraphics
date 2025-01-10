@@ -26,7 +26,15 @@ const FormSchema = z.object({
   name: z.string().min(4, {
     message: "Username must be at least 2 characters.",
   }),
-  email: z.string().email(),
+  email: z
+    .string()
+    .refine(
+      (value) =>
+        /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value) || /^\d{10,15}$/.test(value),
+      {
+        message: "Must be a valid email or phone number.",
+      },
+    ),
   password: z
     .string()
     .min(6, "Password must be 6 characters long")
@@ -58,6 +66,7 @@ export default function Registration() {
 
     try {
       if (showPopUp) {
+        // If the pop-up is shown, verify the code entered by the user
         const response = await toast.promise(
           axios.put("/api/signup", {
             userId,
@@ -76,21 +85,47 @@ export default function Registration() {
           }, 1000);
         }
       } else {
-        const response = await toast
-          .promise(axios.post("/api/signup", values), {
-            pending: "Sending the verification code",
-            success: "Email sent successfully 👌",
-            error: "An error occurred",
-          })
+        // Check if the input is an email
+        const isEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(values.email);
 
-          .catch((error) => {
-            toast.error(error.response.data);
-          });
+        if (isEmail) {
+          // If email is valid, send the email verification request
+          const response = await toast
+            .promise(
+              axios.post("/api/signup", values), // This sends the email for verification
+              {
+                pending: "Sending the verification code",
+                success: "Email sent successfully 👌",
+                error: "An error occurred",
+              },
+            )
+            .catch((error) => {
+              toast.error(error.response.data);
+            });
 
-        if (response && response.status === 200) {
-          setUserId(response.data.userId);
-          setShowPopUp(true);
-          setReadOnly(true);
+          if (response && response.status === 200) {
+            setUserId(response.data.userId);
+            setShowPopUp(true);
+            setReadOnly(true); // Disable input until the code is verified
+          }
+        } else {
+          // If it's not a valid email, handle as a normal registration process
+          const response = await toast
+            .promise(axios.post("/api/signup", values), {
+              pending: "Processing registration",
+              success: "Registration successful 👌",
+              error: "An error occurred",
+            })
+            .catch((error) => {
+              toast.error(error.response.data);
+            });
+
+          if (response && response.status === 200) {
+            toast.success("User registered successfully! Redirecting...");
+            setTimeout(() => {
+              router.push("/sign-in");
+            }, 1000);
+          }
         }
       }
     } catch (error) {
@@ -151,10 +186,10 @@ export default function Registration() {
                       name="email"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Email</FormLabel>
+                          <FormLabel>Email / Phone</FormLabel>
                           <FormControl>
                             <Input
-                              placeholder="Email Address"
+                              placeholder="Email or Phone Number"
                               {...field}
                               disabled={readOnly}
                             />

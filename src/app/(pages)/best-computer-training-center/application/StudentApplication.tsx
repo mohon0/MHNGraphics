@@ -395,7 +395,7 @@ export function StudentApplicationForm() {
                               </>
                             </FormControl>
                             <FormDescription>
-                              Upload your profile picture (max 500KB, .jpg,
+                              Upload your profile picture (max 300KB, .jpg,
                               .jpeg, .png, .webp).
                             </FormDescription>
                             <FormMessage />

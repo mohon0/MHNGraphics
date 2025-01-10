@@ -18,41 +18,48 @@ export async function POST(req: NextRequest, res: NextResponse) {
       });
     }
 
-    const existingUser = await Prisma.user.findFirst({
-      where: {
-        email: email,
-      },
+    const isEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    const isPhone = /^(\+?[1-9]\d{1,14}|0\d{9,15})$/.test(email);
+
+    if (!isEmail && !isPhone) {
+      return new NextResponse("Invalid email or phone number format", {
+        status: 400,
+      });
+    }
+
+    const queryCondition = isEmail ? { email: email } : { phoneNumber: email };
+
+    const existingUser = await Prisma.user.findUnique({
+      where: queryCondition,
     });
 
     if (existingUser?.emailVerified) {
-      return new NextResponse("Email is already registered", { status: 409 });
-    } else if (existingUser?.emailVerified === null) {
-      // Update the existing user with data from the request
+      return new NextResponse("User is already registered", { status: 409 });
+    } else if (existingUser) {
       const updatedUser = await Prisma.user.update({
-        where: {
-          email: email,
-        },
+        where: queryCondition,
         data: {
           name,
           password: hashedPassword,
-          emailVerified: null,
+          emailVerified: isEmail ? null : new Date(),
           verificationCode: null,
         },
       });
 
-      // Send verification code
-      const verificationCode = generateCode();
-      await sendVerificationEmail(email, verificationCode);
-
-      // Save the verification code in the database
-      await Prisma.user.update({
-        where: { id: updatedUser.id },
-        data: { verificationCode: verificationCode },
-      });
+      if (isEmail) {
+        const verificationCode = generateCode();
+        await sendVerificationEmail(email, verificationCode);
+        await Prisma.user.update({
+          where: { id: updatedUser.id },
+          data: { verificationCode: verificationCode },
+        });
+      }
 
       return new NextResponse(
         JSON.stringify({
-          message: "Verification code sent successfully",
+          message: isEmail
+            ? "Verification code sent successfully"
+            : "User registered successfully",
           userId: updatedUser.id,
         }),
         {
@@ -66,27 +73,29 @@ export async function POST(req: NextRequest, res: NextResponse) {
       const user = await Prisma.user.create({
         data: {
           name,
-          email,
+          email: isEmail ? email : null,
+          phoneNumber: isPhone ? email : null,
           status: "USER",
           password: hashedPassword,
-          emailVerified: null,
+          emailVerified: isEmail ? null : new Date(),
           verificationCode: null,
         },
       });
 
-      // Send verification code
-      const verificationCode = generateCode();
-      await sendVerificationEmail(email, verificationCode);
-
-      // Save the verification code in the database
-      await Prisma.user.update({
-        where: { id: user.id },
-        data: { verificationCode: verificationCode },
-      });
+      if (isEmail) {
+        const verificationCode = generateCode();
+        await sendVerificationEmail(email, verificationCode);
+        await Prisma.user.update({
+          where: { id: user.id },
+          data: { verificationCode: verificationCode },
+        });
+      }
 
       return new NextResponse(
         JSON.stringify({
-          message: "Verification code sent successfully",
+          message: isEmail
+            ? "Verification code sent successfully"
+            : "User registered successfully",
           userId: user.id,
         }),
         {
@@ -146,7 +155,6 @@ export async function PUT(req: NextRequest, res: NextResponse) {
         try {
           await sendRegistrationEmail(updatedUser.email);
         } catch (emailError) {
-          console.error("Failed to send welcome email:", emailError);
           return NextResponse.json(
             {
               message:
@@ -162,7 +170,6 @@ export async function PUT(req: NextRequest, res: NextResponse) {
       return new NextResponse("Invalid verification code", { status: 400 });
     }
   } catch (error) {
-    console.error("Error during verification:", error);
     return new NextResponse("Internal server error", { status: 500 });
   } finally {
     await Prisma.$disconnect();
