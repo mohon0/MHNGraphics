@@ -1,8 +1,9 @@
 
 'use client'
 
-import { useState } from 'react'
+import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import {
   Select,
@@ -11,12 +12,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
 import { Slider } from "@/components/ui/slider"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { ArrowRight, Download, Filter, Search, ShoppingCart, Star } from 'lucide-react'
 import Image from "next/image"
-import { Search, Filter, Download, ShoppingCart, Star, ArrowRight } from 'lucide-react'
+import { useState } from 'react'
 
 const categories = [
   "All",
@@ -114,6 +113,7 @@ export default function ShopPage() {
     (selectedCategory === "All" || product.category === selectedCategory) &&
     product.price >= priceRange[0] && product.price <= priceRange[1]
   )
+
 
   return (
     <div className="container mx-auto px-4 py-8">
