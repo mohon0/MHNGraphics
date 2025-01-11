@@ -1,6 +1,6 @@
 import { Prisma } from "@/components/helper/prisma/Prisma";
-import { DesignStatus } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
+import { DesignStatus } from "../../../../prisma/generated/client";
 
 export async function GET(req: NextRequest) {
   try {

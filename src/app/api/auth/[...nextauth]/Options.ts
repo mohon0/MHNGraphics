@@ -1,11 +1,11 @@
-import { PrismaClient } from "@prisma/client";
+import { Prisma } from "@/components/helper/prisma/Prisma";
 import bcrypt from "bcrypt";
 import { Session } from "next-auth";
 import { JWT } from "next-auth/jwt";
 import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
 
-const prisma = new PrismaClient();
+
 
 interface UserWithRole {
   id: string;
@@ -41,7 +41,7 @@ export const authOptions = {
             "Input is an email. Searching by email:",
             credentials.email,
           );
-          user = await prisma.user.findUnique({
+          user = await Prisma.user.findUnique({
             where: { email: credentials.email },
           });
         } else if (/^01[0-9]{9}$/.test(credentials.email)) {
@@ -51,7 +51,7 @@ export const authOptions = {
             credentials.email,
           );
 
-          user = await prisma.user.findUnique({
+          user = await Prisma.user.findUnique({
             where: { phoneNumber: credentials.email },
           });
         } else {
@@ -105,13 +105,13 @@ export const authOptions = {
       profile: any;
     }) {
       if (account.provider === "google") {
-        const existingUser = await prisma.user.findUnique({
+        const existingUser = await Prisma.user.findUnique({
           where: { email: user.email },
         });
 
         if (existingUser) {
           if (!existingUser.googleId) {
-            await prisma.user.update({
+            await Prisma.user.update({
               where: { email: user.email },
               data: { googleId: profile.id },
             });
@@ -119,7 +119,7 @@ export const authOptions = {
           user.id = existingUser.id;
           user.status = existingUser.status; // Ensure role/status is available for existing user
         } else {
-          const newUser = await prisma.user.create({
+          const newUser = await Prisma.user.create({
             data: {
               email: user.email,
               name: user.name,

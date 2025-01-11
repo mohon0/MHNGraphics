@@ -1,7 +1,7 @@
-import { PrismaClient } from "@prisma/client";
+import { Prisma } from "@/components/helper/prisma/Prisma";
 import { NextRequest, NextResponse } from "next/server";
 
-const prisma = new PrismaClient();
+
 
 export async function GET(req: NextRequest, res: NextResponse) {
   try {
@@ -39,7 +39,7 @@ export async function GET(req: NextRequest, res: NextResponse) {
     }
 
     const [allUsers, totalUsersCount] = await Promise.all([
-      prisma.application.findMany({
+      Prisma.application.findMany({
         select: {
           id: true,
           email: true,
@@ -57,7 +57,7 @@ export async function GET(req: NextRequest, res: NextResponse) {
           createdAt: "desc",
         },
       }),
-      prisma.application.count({ where: whereClause }),
+      Prisma.application.count({ where: whereClause }),
     ]);
 
     if (allUsers.length > 0) {
@@ -75,6 +75,6 @@ export async function GET(req: NextRequest, res: NextResponse) {
       headers: { "Content-Type": "text/plain" },
     });
   } finally {
-    await prisma.$disconnect();
+    await Prisma.$disconnect();
   }
 }
