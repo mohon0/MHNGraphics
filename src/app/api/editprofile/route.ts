@@ -1,12 +1,13 @@
 import { UploadImage } from "@/components/helper/image/UploadImage";
+import { Prisma } from "@/components/helper/prisma/Prisma";
 import cloudinary from "@/utils/cloudinary";
-import { PrismaClient } from "@prisma/client";
+
 import bcrypt from "bcrypt";
 
 import { getToken } from "next-auth/jwt";
 import { NextRequest, NextResponse } from "next/server";
 
-const prisma = new PrismaClient();
+
 const secret = process.env.NEXTAUTH_SECRET;
 
 export async function GET(req: NextRequest) {
@@ -18,7 +19,7 @@ export async function GET(req: NextRequest) {
   const id = token.sub;
 
   try {
-    const user = await prisma.user.findUnique({
+    const user = await Prisma.user.findUnique({
       where: { id },
       select: {
         name: true,
@@ -64,7 +65,7 @@ export async function PUT(req: NextRequest) {
         { status: 401 },
       );
 
-    const existingUser = await prisma.user.findUnique({
+    const existingUser = await Prisma.user.findUnique({
       where: { id: token.sub },
     });
     if (!existingUser)
@@ -87,7 +88,7 @@ export async function PUT(req: NextRequest) {
     }
 
     // Update user info with new image URL if provided
-    const updatedUser = await prisma.user.update({
+    const updatedUser = await Prisma.user.update({
       where: { id: token.sub },
       data: {
         name,
@@ -122,7 +123,7 @@ export async function PATCH(req: NextRequest, res: NextResponse) {
         { status: 401 },
       );
 
-    const existingUser = await prisma.user.findUnique({
+    const existingUser = await Prisma.user.findUnique({
       where: { id: token.sub },
     });
     if (!existingUser)
@@ -143,7 +144,7 @@ export async function PATCH(req: NextRequest, res: NextResponse) {
 
     const hashedNewPassword = await bcrypt.hash(newPassword, 10);
 
-    await prisma.user.update({
+    await Prisma.user.update({
       where: { id: token.sub },
       data: {
         password: hashedNewPassword,
@@ -154,6 +155,6 @@ export async function PATCH(req: NextRequest, res: NextResponse) {
   } catch (error) {
     return new NextResponse("Error updating password", { status: 500 });
   } finally {
-    prisma.$disconnect();
+    Prisma.$disconnect();
   }
 }
