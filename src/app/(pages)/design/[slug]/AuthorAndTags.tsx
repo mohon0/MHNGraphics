@@ -10,11 +10,13 @@ export function Author({
 }: {
   author: DesignType["author"];
   authorId: string;
-  title: string
+  title: string;
 }) {
   return (
     <>
-      <p className="text-2xl md:text-3xl font-bold text-primary text-pretty">{title}</p>
+      <p className="text-2xl md:text-3xl font-bold text-primary text-pretty">
+        {title}
+      </p>
       <div className="flex flex-col space-y-4 text-gray-700 sm:flex-row sm:items-center sm:justify-between sm:space-y-0">
         <Link
           href={`/profile?id=${authorId}`}

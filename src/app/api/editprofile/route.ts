@@ -7,7 +7,6 @@ import bcrypt from "bcrypt";
 import { getToken } from "next-auth/jwt";
 import { NextRequest, NextResponse } from "next/server";
 
-
 const secret = process.env.NEXTAUTH_SECRET;
 
 export async function GET(req: NextRequest) {
@@ -108,7 +107,7 @@ export async function PUT(req: NextRequest) {
   }
 }
 
-export async function PATCH(req: NextRequest, res: NextResponse) {
+export async function PATCH(req: NextRequest) {
   try {
     const data = await req.json();
     const { currentPassword, newPassword } = data;

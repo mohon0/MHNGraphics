@@ -38,7 +38,7 @@ import {
 } from "react-share";
 
 interface PageProps {
-  params: { slug: string[] };
+  params: { slug: string };
 }
 
 export default function Share({ params }: PageProps) {

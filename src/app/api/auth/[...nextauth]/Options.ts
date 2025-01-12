@@ -5,8 +5,6 @@ import { JWT } from "next-auth/jwt";
 import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
 
-
-
 interface UserWithRole {
   id: string;
   email: string;

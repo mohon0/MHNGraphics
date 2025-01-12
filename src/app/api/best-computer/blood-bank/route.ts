@@ -11,7 +11,7 @@ function getStringValue(formData: FormData, key: string): string {
   return typeof value === "string" ? value : "";
 }
 
-export async function POST(req: NextRequest, res: NextResponse) {
+export async function POST(req: NextRequest) {
   try {
     const formData = await req.formData();
 
@@ -73,7 +73,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
   }
 }
 
-export async function PUT(req: NextRequest, res: NextResponse) {
+export async function PUT(req: NextRequest) {
   try {
     const formData = await req.formData();
 
@@ -151,7 +151,7 @@ export async function PUT(req: NextRequest, res: NextResponse) {
   }
 }
 
-export async function GET(req: NextRequest, res: NextResponse) {
+export async function GET(req: NextRequest) {
   try {
     const url = new URL(req.url);
     const queryParams = new URLSearchParams(url.search);
@@ -227,7 +227,7 @@ export async function GET(req: NextRequest, res: NextResponse) {
   }
 }
 
-export async function DELETE(req: NextRequest, res: NextResponse) {
+export async function DELETE(req: NextRequest) {
   try {
     const session = (await getServerSession(authOptions)) as CustomSession;
 

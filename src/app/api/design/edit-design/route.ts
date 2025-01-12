@@ -10,7 +10,7 @@ function getStringValue(formData: FormData, key: string): string {
   return typeof value === "string" ? value : "";
 }
 
-export async function GET(req: NextRequest, res: NextResponse) {
+export async function GET(req: NextRequest) {
   try {
     const id = new URL(req.url).searchParams.get("id");
     if (!id) {

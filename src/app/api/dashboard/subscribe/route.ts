@@ -93,7 +93,7 @@ export async function DELETE(req: NextRequest) {
   }
 }
 
-export async function GET(req: NextRequest, res: NextResponse) {
+export async function GET(req: NextRequest) {
   try {
     const url = new URL(req.url);
     const email = url.searchParams.get("mail");
