@@ -60,7 +60,7 @@ export async function GET(req: NextRequest) {
   }
 }
 
-export async function PATCH(req: NextRequest, res: NextResponse) {
+export async function PATCH(req: NextRequest) {
   const session = (await getServerSession(authOptions)) as CustomSession;
 
   // Check if user is logged in

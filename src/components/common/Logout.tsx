@@ -20,7 +20,7 @@ export default function Logout() {
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
-        <Button variant='destructive'>
+        <Button variant="destructive">
           <span className="flex items-center gap-4">
             <FaPowerOff size={14} /> Log Out
           </span>

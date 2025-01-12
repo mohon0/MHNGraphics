@@ -24,7 +24,7 @@ import Share from "./Share";
 interface DesignDetailsProps {
   data: DesignType;
   imageDimensions: ImageDimensions | null;
-  params: { slug: string[] };
+  params: { slug: string };
   refetch: () => void;
 }
 

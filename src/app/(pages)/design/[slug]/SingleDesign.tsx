@@ -9,23 +9,23 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { ImageDimensions } from "@/utils/imageDimensions";
 import { AlertCircle } from "lucide-react";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 import { Author, AuthorSkeleton, Tags, TagsSkeleton } from "./AuthorAndTags";
 import { Comments } from "./Comments";
 import { DesignDetails, DesignDetailsSkeleton } from "./DesignDetails";
 import RelatedDesign from "./RelatedDesign";
 
-interface PageProps {
-  params: { slug: string[] };
-}
+type Params = Promise<{ slug: string }>;
 
-export default function SingleDesign({ params }: PageProps) {
+export default function SingleDesign(props: { params: Params }) {
   const [imageDimensions, setImageDimensions] =
     useState<ImageDimensions | null>(null);
   const [retryCount, setRetryCount] = useState(0);
 
-  const [name] = params.slug;
-  const id = name.split("_")[1];
+  const params = use(props.params);
+
+  const slug = params.slug;
+  const id = slug.split("_")[1];
 
   const { isLoading, data, isError, refetch } = FetchSingleDesign({
     id,
@@ -115,7 +115,11 @@ export default function SingleDesign({ params }: PageProps) {
             {isLoading ? (
               <AuthorSkeleton />
             ) : (
-              <Author author={data.author} title={data.name} authorId={data.authorId} />
+              <Author
+                author={data.author}
+                title={data.name}
+                authorId={data.authorId}
+              />
             )}
           </div>
 

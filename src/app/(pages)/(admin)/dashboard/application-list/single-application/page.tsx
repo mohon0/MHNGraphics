@@ -55,7 +55,9 @@ function SingleApplication({ application }: SingleApplicationUserType) {
 
   const contentRef = useRef<HTMLDivElement>(null);
 
-  const reactToPrintFn = useReactToPrint({ contentRef });
+  const reactToPrintFn = useReactToPrint({
+    contentRef: contentRef as React.RefObject<Element | Text>,
+  });
 
   return (
     <div>
@@ -97,8 +99,7 @@ function SingleApplication({ application }: SingleApplicationUserType) {
           </div>
           <Button
             variant="secondary"
-            className="mx-auto my-4 bg-cyan-700 text-lg font-bold text-white"
-          >
+            className="mx-auto my-4 bg-cyan-700 text-lg font-bold text-white">
             Admission Form
           </Button>
           <div className="mr-1 flex flex-col justify-end border print:text-black">
@@ -288,8 +289,7 @@ function SingleApplication({ application }: SingleApplicationUserType) {
       <Button
         onClick={() => reactToPrintFn()}
         size="lg"
-        className="mx-auto mb-10 mt-10 flex items-center gap-3 print:hidden"
-      >
+        className="mx-auto mb-10 mt-10 flex items-center gap-3 print:hidden">
         <IoMdPrint />
         Print
       </Button>
@@ -336,8 +336,7 @@ export default function SingleApplicationPageComponent() {
         <div className="text-center">
           <Skeleton className="h-10 w-full" />
         </div>
-      }
-    >
+      }>
       <SingleApplicationPage />
     </Suspense>
   );

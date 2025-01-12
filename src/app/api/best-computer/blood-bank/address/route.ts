@@ -1,9 +1,7 @@
 import { Prisma } from "@/components/helper/prisma/Prisma";
 import { NextRequest, NextResponse } from "next/server";
 
-
-
-export async function GET(req: NextRequest, res: NextResponse) {
+export async function GET(req: NextRequest) {
   try {
     const url = new URL(req.url);
     const queryParams = new URLSearchParams(url.search);

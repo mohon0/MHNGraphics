@@ -1,21 +1,33 @@
+"use client";
 
-'use client'
-
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"
-import { Slider } from "@/components/ui/slider"
-import { ArrowRight, Download, Filter, Search, ShoppingCart, Star } from 'lucide-react'
-import Image from "next/image"
-import { useState } from 'react'
+} from "@/components/ui/select";
+import { Slider } from "@/components/ui/slider";
+import {
+  ArrowRight,
+  Download,
+  Filter,
+  Search,
+  ShoppingCart,
+  Star,
+} from "lucide-react";
+import Image from "next/image";
+import { useState } from "react";
 
 const categories = [
   "All",
@@ -25,7 +37,7 @@ const categories = [
   "Icons",
   "Templates",
   "3D Assets",
-]
+];
 
 const products = [
   {
@@ -34,7 +46,8 @@ const products = [
     category: "Vectors",
     price: 9.99,
     downloads: 1234,
-    image: "https://img.freepik.com/free-vector/abstract-geometric-background_1045-764.jpg?w=740&t=st=1703373391~exp=1703373991~hmac=7f7f7f7f7f7f7f7f7f7f7f7f7f7f7f7f7f7f7f7f7f7f7f7f7f7f7f7f7f7f7f7f",
+    image:
+      "https://img.freepik.com/free-vector/abstract-geometric-background_1045-764.jpg?w=740&t=st=1703373391~exp=1703373991~hmac=7f7f7f7f7f7f7f7f7f7f7f7f7f7f7f7f7f7f7f7f7f7f7f7f7f7f7f7f7f7f7f7f",
   },
   {
     id: 2,
@@ -42,7 +55,8 @@ const products = [
     category: "Icons",
     price: 14.99,
     downloads: 5678,
-    image: "https://img.freepik.com/free-vector/gradient-ui-ux-background_23-2149052117.jpg?w=826&t=st=1703373425~exp=1703374025~hmac=8f8f8f8f8f8f8f8f8f8f8f8f8f8f8f8f8f8f8f8f8f8f8f8f8f8f8f8f8f8f8f8f",
+    image:
+      "https://img.freepik.com/free-vector/gradient-ui-ux-background_23-2149052117.jpg?w=826&t=st=1703373425~exp=1703374025~hmac=8f8f8f8f8f8f8f8f8f8f8f8f8f8f8f8f8f8f8f8f8f8f8f8f8f8f8f8f8f8f8f8f",
   },
   {
     id: 3,
@@ -50,7 +64,8 @@ const products = [
     category: "Photos",
     price: 24.99,
     downloads: 3456,
-    image: "https://img.freepik.com/free-photo/beautiful-shot-small-lake-surrounded-by-snow-covered-mountains_181624-46748.jpg?w=740&t=st=1703373455~exp=1703374055~hmac=9f9f9f9f9f9f9f9f9f9f9f9f9f9f9f9f9f9f9f9f9f9f9f9f9f9f9f9f9f9f9f9f",
+    image:
+      "https://img.freepik.com/free-photo/beautiful-shot-small-lake-surrounded-by-snow-covered-mountains_181624-46748.jpg?w=740&t=st=1703373455~exp=1703374055~hmac=9f9f9f9f9f9f9f9f9f9f9f9f9f9f9f9f9f9f9f9f9f9f9f9f9f9f9f9f9f9f9f9f",
   },
   {
     id: 4,
@@ -58,7 +73,8 @@ const products = [
     category: "3D Assets",
     price: 39.99,
     downloads: 789,
-    image: "https://img.freepik.com/free-psd/3d-illustration-person-with-sunglasses_23-2149436188.jpg?w=740&t=st=1703373484~exp=1703374084~hmac=0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a",
+    image:
+      "https://img.freepik.com/free-psd/3d-illustration-person-with-sunglasses_23-2149436188.jpg?w=740&t=st=1703373484~exp=1703374084~hmac=0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a0a",
   },
   {
     id: 5,
@@ -66,7 +82,8 @@ const products = [
     category: "Templates",
     price: 19.99,
     downloads: 2345,
-    image: "https://img.freepik.com/free-vector/social-media-post-collection_52683-43131.jpg?w=740&t=st=1703373515~exp=1703374115~hmac=1b1b1b1b1b1b1b1b1b1b1b1b1b1b1b1b1b1b1b1b1b1b1b1b1b1b1b1b1b1b1b1b",
+    image:
+      "https://img.freepik.com/free-vector/social-media-post-collection_52683-43131.jpg?w=740&t=st=1703373515~exp=1703374115~hmac=1b1b1b1b1b1b1b1b1b1b1b1b1b1b1b1b1b1b1b1b1b1b1b1b1b1b1b1b1b1b1b1b",
   },
   {
     id: 6,
@@ -74,9 +91,10 @@ const products = [
     category: "Illustrations",
     price: 29.99,
     downloads: 1567,
-    image: "https://img.freepik.com/free-vector/hand-drawn-abstract-shapes_23-2149097292.jpg?w=740&t=st=1703373543~exp=1703374143~hmac=2c2c2c2c2c2c2c2c2c2c2c2c2c2c2c2c2c2c2c2c2c2c2c2c2c2c2c2c2c2c2c2c",
+    image:
+      "https://img.freepik.com/free-vector/hand-drawn-abstract-shapes_23-2149097292.jpg?w=740&t=st=1703373543~exp=1703374143~hmac=2c2c2c2c2c2c2c2c2c2c2c2c2c2c2c2c2c2c2c2c2c2c2c2c2c2c2c2c2c2c2c2c",
   },
-]
+];
 
 const featuredProducts = [
   {
@@ -85,7 +103,8 @@ const featuredProducts = [
     category: "Templates",
     price: 34.99,
     downloads: 8901,
-    image: "https://img.freepik.com/free-psd/business-card-mockup_1389-1200.jpg?w=826&t=st=1703375619~exp=1703376219~hmac=3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d",
+    image:
+      "https://img.freepik.com/free-psd/business-card-mockup_1389-1200.jpg?w=826&t=st=1703375619~exp=1703376219~hmac=3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d3d",
   },
   {
     id: 8,
@@ -93,7 +112,8 @@ const featuredProducts = [
     category: "Illustrations",
     price: 19.99,
     downloads: 6789,
-    image: "https://img.freepik.com/free-vector/watercolor-stains-abstract-background_23-2149107181.jpg?w=826&t=st=1703375657~exp=1703376257~hmac=4e4e4e4e4e4e4e4e4e4e4e4e4e4e4e4e4e4e4e4e4e4e4e4e4e4e4e4e4e4e4e4e",
+    image:
+      "https://img.freepik.com/free-vector/watercolor-stains-abstract-background_23-2149107181.jpg?w=826&t=st=1703375657~exp=1703376257~hmac=4e4e4e4e4e4e4e4e4e4e4e4e4e4e4e4e4e4e4e4e4e4e4e4e4e4e4e4e4e4e4e4e",
   },
   {
     id: 9,
@@ -101,19 +121,21 @@ const featuredProducts = [
     category: "Icons",
     price: 24.99,
     downloads: 5432,
-    image: "https://img.freepik.com/free-vector/isometric-office-collection_23-2148403773.jpg?w=826&t=st=1703375688~exp=1703376288~hmac=5f5f5f5f5f5f5f5f5f5f5f5f5f5f5f5f5f5f5f5f5f5f5f5f5f5f5f5f5f5f5f5f",
+    image:
+      "https://img.freepik.com/free-vector/isometric-office-collection_23-2148403773.jpg?w=826&t=st=1703375688~exp=1703376288~hmac=5f5f5f5f5f5f5f5f5f5f5f5f5f5f5f5f5f5f5f5f5f5f5f5f5f5f5f5f5f5f5f5f",
   },
-]
+];
 
 export default function ShopPage() {
-  const [priceRange, setPriceRange] = useState([0, 100])
-  const [selectedCategory, setSelectedCategory] = useState("All")
+  const [priceRange, setPriceRange] = useState([0, 100]);
+  const [selectedCategory, setSelectedCategory] = useState("All");
 
-  const filteredProducts = products.filter(product =>
-    (selectedCategory === "All" || product.category === selectedCategory) &&
-    product.price >= priceRange[0] && product.price <= priceRange[1]
-  )
-
+  const filteredProducts = products.filter(
+    (product) =>
+      (selectedCategory === "All" || product.category === selectedCategory) &&
+      product.price >= priceRange[0] &&
+      product.price <= priceRange[1],
+  );
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -124,7 +146,10 @@ export default function ShopPage() {
         <h2 className="text-2xl font-semibold mb-6">Featured Products</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {featuredProducts.map((product) => (
-            <Card key={product.id} className="flex flex-col overflow-hidden group">
+            <Card
+              key={product.id}
+              className="flex flex-col overflow-hidden group"
+            >
               <div className="relative aspect-square overflow-hidden">
                 <Image
                   src={product.image}
@@ -134,15 +159,21 @@ export default function ShopPage() {
                   className="group-hover:scale-105 transition-transform duration-300"
                 />
                 <div className="absolute top-2 left-2">
-                  <Badge variant="secondary" className="bg-zinc-900 text-white">Featured</Badge>
+                  <Badge variant="secondary" className="bg-zinc-900 text-white">
+                    Featured
+                  </Badge>
                 </div>
               </div>
               <CardContent className="flex-grow p-4">
-                <CardTitle className="text-lg mb-2 line-clamp-2">{product.name}</CardTitle>
+                <CardTitle className="text-lg mb-2 line-clamp-2">
+                  {product.name}
+                </CardTitle>
                 <Badge variant="outline" className="mb-2">
                   {product.category}
                 </Badge>
-                <p className="text-2xl font-bold text-zinc-900">${product.price.toFixed(2)}</p>
+                <p className="text-2xl font-bold text-zinc-900">
+                  ${product.price.toFixed(2)}
+                </p>
               </CardContent>
               <CardFooter className="flex justify-between items-center p-4 bg-zinc-50">
                 <div className="flex items-center text-sm text-zinc-600">
@@ -163,8 +194,13 @@ export default function ShopPage() {
       <section className="mb-16">
         <div className="relative overflow-hidden rounded-lg bg-gradient-to-r from-purple-600 to-indigo-600 text-white p-8">
           <div className="relative z-10">
-            <h2 className="text-3xl font-bold mb-4">Summer Sale: 30% Off All Templates!</h2>
-            <p className="text-lg mb-6">Elevate your designs with our premium templates. Limited time offer.</p>
+            <h2 className="text-3xl font-bold mb-4">
+              Summer Sale: 30% Off All Templates!
+            </h2>
+            <p className="text-lg mb-6">
+              Elevate your designs with our premium templates. Limited time
+              offer.
+            </p>
             <Button variant="secondary" size="lg">
               Shop Templates <ArrowRight className="ml-2 h-5 w-5" />
             </Button>
@@ -194,7 +230,10 @@ export default function ShopPage() {
             </div>
           </div>
           <div className="flex gap-4">
-            <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+            <Select
+              value={selectedCategory}
+              onValueChange={setSelectedCategory}
+            >
               <SelectTrigger className="w-[180px]">
                 <SelectValue placeholder="Category" />
               </SelectTrigger>
@@ -233,7 +272,10 @@ export default function ShopPage() {
       <section className="mb-16">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {filteredProducts.map((product) => (
-            <Card key={product.id} className="flex flex-col overflow-hidden group">
+            <Card
+              key={product.id}
+              className="flex flex-col overflow-hidden group"
+            >
               <div className="relative aspect-square overflow-hidden">
                 <Image
                   src={product.image}
@@ -244,18 +286,25 @@ export default function ShopPage() {
                 />
               </div>
               <CardContent className="flex-grow p-4">
-                <CardTitle className="text-lg mb-2 line-clamp-2">{product.name}</CardTitle>
+                <CardTitle className="text-lg mb-2 line-clamp-2">
+                  {product.name}
+                </CardTitle>
                 <Badge variant="outline" className="mb-2">
                   {product.category}
                 </Badge>
-                <p className="text-2xl font-bold text-zinc-900">${product.price.toFixed(2)}</p>
+                <p className="text-2xl font-bold text-zinc-900">
+                  ${product.price.toFixed(2)}
+                </p>
               </CardContent>
               <CardFooter className="flex justify-between items-center p-4 bg-zinc-50">
                 <div className="flex items-center text-sm text-zinc-600">
                   <Download className="mr-1 h-4 w-4" />
                   {product.downloads.toLocaleString()}
                 </div>
-                <Button variant="outline" className="group-hover:bg-zinc-900 group-hover:text-white transition-colors">
+                <Button
+                  variant="outline"
+                  className="group-hover:bg-zinc-900 group-hover:text-white transition-colors"
+                >
                   <ShoppingCart className="mr-2 h-4 w-4" />
                   Add to Cart
                 </Button>
@@ -273,19 +322,22 @@ export default function ShopPage() {
             {
               name: "Alex Johnson",
               role: "Graphic Designer",
-              comment: "The quality of assets on MHN Graphics is outstanding. It has significantly improved my workflow.",
+              comment:
+                "The quality of assets on MHN Graphics is outstanding. It has significantly improved my workflow.",
               rating: 5,
             },
             {
               name: "Sarah Lee",
               role: "Marketing Specialist",
-              comment: "I love the variety of templates available. They're perfect for my social media campaigns.",
+              comment:
+                "I love the variety of templates available. They're perfect for my social media campaigns.",
               rating: 4,
             },
             {
               name: "Michael Chen",
               role: "Web Developer",
-              comment: "The 3D assets are top-notch. I've used them in several projects with great results.",
+              comment:
+                "The 3D assets are top-notch. I've used them in several projects with great results.",
               rating: 5,
             },
           ].map((review, index) => (
@@ -293,7 +345,10 @@ export default function ShopPage() {
               <CardHeader>
                 <div className="flex items-center mb-2">
                   {[...Array(5)].map((_, i) => (
-                    <Star key={i} className={`h-5 w-5 ${i < review.rating ? 'text-yellow-400 fill-yellow-400' : 'text-zinc-300'}`} />
+                    <Star
+                      key={i}
+                      className={`h-5 w-5 ${i < review.rating ? "text-yellow-400 fill-yellow-400" : "text-zinc-300"}`}
+                    />
                   ))}
                 </div>
                 <CardTitle>{review.name}</CardTitle>
@@ -310,14 +365,23 @@ export default function ShopPage() {
       {/* Pagination */}
       <section className="flex justify-center">
         <div className="join">
-          <Button variant="outline" className="join-item">Previous</Button>
-          <Button variant="outline" className="join-item">1</Button>
-          <Button variant="outline" className="join-item">2</Button>
-          <Button variant="outline" className="join-item">3</Button>
-          <Button variant="outline" className="join-item">Next</Button>
+          <Button variant="outline" className="join-item">
+            Previous
+          </Button>
+          <Button variant="outline" className="join-item">
+            1
+          </Button>
+          <Button variant="outline" className="join-item">
+            2
+          </Button>
+          <Button variant="outline" className="join-item">
+            3
+          </Button>
+          <Button variant="outline" className="join-item">
+            Next
+          </Button>
         </div>
       </section>
     </div>
-  )
+  );
 }
-

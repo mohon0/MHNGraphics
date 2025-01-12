@@ -31,16 +31,14 @@ export default function AboutPage() {
               className="mb-4 text-4xl font-bold text-white md:text-6xl"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8 }}
-            >
+              transition={{ duration: 0.8 }}>
               About MHN Graphics
             </motion.h1>
             <motion.p
               className="mx-auto max-w-2xl text-xl text-white"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.2 }}
-            >
+              transition={{ duration: 0.8, delay: 0.2 }}>
               Transforming ideas into visual masterpieces since 2010
             </motion.p>
           </div>
@@ -72,8 +70,7 @@ export default function AboutPage() {
                 opacity: isExpanded ? 1 : 0,
               }}
               transition={{ duration: 0.3 }}
-              className="overflow-hidden"
-            >
+              className="overflow-hidden">
               <p>
                 Our commitment to innovation and excellence has earned us
                 recognition in the design community, including awards for our
@@ -92,8 +89,7 @@ export default function AboutPage() {
               <Button
                 variant="ghost"
                 onClick={() => setIsExpanded(!isExpanded)}
-                className="mt-4"
-              >
+                className="mt-4">
                 {isExpanded ? "Read Less" : "Read More"}
                 <ChevronDown
                   className={`ml-2 h-4 w-4 transition-transform duration-200 ${isExpanded ? "rotate-180" : ""}`}

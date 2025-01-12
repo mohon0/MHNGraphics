@@ -23,7 +23,7 @@ interface CustomSession extends Session {
 }
 const secret = process.env.NEXTAUTH_SECRET;
 
-export async function POST(req: NextRequest, res: NextResponse) {
+export async function POST(req: NextRequest) {
   try {
     const session = (await getServerSession(authOptions)) as CustomSession;
 
@@ -97,7 +97,7 @@ export async function POST(req: NextRequest, res: NextResponse) {
   }
 }
 
-export async function GET(req: NextRequest, res: NextResponse) {
+export async function GET(req: NextRequest) {
   try {
     const url = new URL(req.url);
     const queryParams = new URLSearchParams(url.search);
@@ -159,7 +159,7 @@ export async function GET(req: NextRequest, res: NextResponse) {
   }
 }
 
-export async function DELETE(req: NextRequest, res: NextResponse) {
+export async function DELETE(req: NextRequest) {
   try {
     const token = await getToken({ req, secret });
 
@@ -215,7 +215,7 @@ export async function DELETE(req: NextRequest, res: NextResponse) {
   }
 }
 
-export async function PATCH(req: NextRequest, res: NextResponse) {
+export async function PATCH(req: NextRequest) {
   // Get session
   const session = (await getServerSession(authOptions)) as CustomSession;
 

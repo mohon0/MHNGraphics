@@ -1,7 +1,6 @@
 import { UploadImage } from "@/components/helper/image/UploadImage";
 import { Prisma } from "@/components/helper/prisma/Prisma";
 import cloudinary from "@/utils/cloudinary";
-
 import { getToken } from "next-auth/jwt";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -169,7 +168,7 @@ export async function POST(req: NextRequest) {
   }
 }
 
-export async function GET(req: NextRequest, res: NextResponse) {
+export async function GET(req: NextRequest) {
   try {
     const token = await getToken({ req, secret });
     const userId = token?.sub;
@@ -207,7 +206,7 @@ export async function GET(req: NextRequest, res: NextResponse) {
   }
 }
 
-export async function DELETE(req: NextRequest, res: NextResponse) {
+export async function DELETE(req: NextRequest) {
   try {
     const token = await getToken({ req, secret });
     const userId = token?.sub;

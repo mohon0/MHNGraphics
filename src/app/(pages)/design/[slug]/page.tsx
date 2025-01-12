@@ -2,9 +2,7 @@ import { RemoveHtmlTags } from "@/components/helper/html/PerseHtml";
 import axios from "axios";
 import SingleDesign from "./SingleDesign";
 
-interface PageProps {
-  params: { slug: string[] };
-}
+type Params = Promise<{ slug: string }>;
 
 // Utility to truncate strings to a specific length
 function truncateString(str: string, maxLength: number): string {
@@ -12,8 +10,9 @@ function truncateString(str: string, maxLength: number): string {
 }
 
 // `generateMetadata` function for SEO
-export async function generateMetadata({ params }: PageProps) {
-  const [name] = params.slug;
+export async function generateMetadata(props: { params: Params }) {
+  const params = await props.params;
+  const name = params.slug;
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL;
   const id = name.split("_")[1];
 
@@ -81,6 +80,6 @@ export async function generateMetadata({ params }: PageProps) {
 }
 
 // The page component
-export default function Page({ params }: PageProps) {
-  return <SingleDesign params={params} />;
+export default function Page(props: { params: Params }) {
+  return <SingleDesign params={props.params} />;
 }
