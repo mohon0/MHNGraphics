@@ -35,19 +35,11 @@ export const authOptions = {
         // Check if the input is an email or a phone number
         if (/\S+@\S+\.\S+/.test(credentials.email)) {
           // If it's an email, search by email
-          console.log(
-            "Input is an email. Searching by email:",
-            credentials.email,
-          );
           user = await Prisma.user.findUnique({
             where: { email: credentials.email },
           });
         } else if (/^01[0-9]{9}$/.test(credentials.email)) {
           // If it's a phone number, search by phone number directly
-          console.log(
-            "Input is a phone number. Searching by phone number:",
-            credentials.email,
-          );
 
           user = await Prisma.user.findUnique({
             where: { phoneNumber: credentials.email },
@@ -65,7 +57,10 @@ export const authOptions = {
           throw new Error("User not found.");
         }
 
-        if (user.emailVerified === null) {
+        if (
+          /\S+@\S+\.\S+/.test(credentials.email) &&
+          user.emailVerified === null
+        ) {
           console.error("User's email is not verified.");
           throw new Error("User's email is not verified.");
         }

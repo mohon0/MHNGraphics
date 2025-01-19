@@ -172,8 +172,8 @@ export default function Login() {
               </span>
               <span className="flex h-1 w-20 rounded-full"></span>
               <span className="my-4">
-                New to MHN Graphics? Let&#39;s create a free account to start
-                your journey with us.
+                New Here? Let&#39;s create a free account to start your journey
+                with us.
               </span>
               <Link href="/sign-up">
                 <Button>Sign Up</Button>
