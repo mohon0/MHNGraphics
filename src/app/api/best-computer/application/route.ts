@@ -190,6 +190,7 @@ export async function GET(req: NextRequest) {
         course: true,
         createdAt: true,
         certificate: true,
+        roll: true,
       },
     });
 

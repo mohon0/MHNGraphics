@@ -6,6 +6,7 @@ import { SidebarProvider } from "@/components/ui/sidebar";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import AdminDashboard from "./Admin-Dashboar";
+import UserDashboard from "./User-Dashboard";
 
 export default function Dashboard() {
   const { status, data: session } = useSession();
@@ -34,10 +35,7 @@ export default function Dashboard() {
                 </div>
               ) : (
                 // Content for logged-in users who are not admins
-                <div>
-                  <h1>User Dashboard</h1>
-                  <p>Welcome, {session?.user?.name}!</p>
-                </div>
+                <UserDashboard />
               )}
             </main>
           </div>

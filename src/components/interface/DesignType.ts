@@ -49,3 +49,9 @@ export interface DesignType {
     };
   }[];
 }
+
+export interface CommentType {
+  id: string;
+  content: string;
+  createdAt: string;
+}
