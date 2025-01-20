@@ -1,6 +1,7 @@
 "use client";
 
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
   NavigationMenu,
   NavigationMenuItem,
@@ -79,11 +80,35 @@ export default function DesktopMenu({
         </NavigationMenuItem>
 
         <NavigationMenuItem>
-          <Link href="/best-computer-training-center" legacyBehavior passHref>
+          <Link
+            href="/best-computer-training-center"
+            className="overflow-hidden"
+            legacyBehavior
+            passHref
+          >
             <NavigationMenuLink
-              className={fixed ? "pl-2 text-white" : "pl-2 text-black"}
+              className={
+                fixed
+                  ? "overflow-hidden pl-2 text-white"
+                  : "overflow-hidden pl-2 text-black"
+              }
             >
-              Best Computer T. C.
+              <Button
+                variant="ghost"
+                className={
+                  fixed
+                    ? "overflow-hidden pl-2 text-white hover:bg-transparent hover:text-white"
+                    : "overflow-hidden pl-2 text-black hover:bg-transparent hover:text-black"
+                }
+              >
+                <span className="hover:shadow-cyanshadow relative overflow-hidden px-4 py-1.5 duration-300">
+                  <span className="animate-animate1 absolute left-0 top-0 block h-0.5 w-full bg-primary-100"></span>
+                  <span className="animate-animate2 absolute right-0 block h-full w-0.5 bg-primary-100"></span>
+                  <span className="animate-animate3 absolute bottom-0 right-0 block h-0.5 w-full bg-primary-100"></span>
+                  <span className="animate-animate4 absolute -bottom-6 left-0 block h-full w-0.5 bg-primary-100"></span>
+                  Best Computer T.C.
+                </span>
+              </Button>
             </NavigationMenuLink>
           </Link>
         </NavigationMenuItem>

@@ -1,71 +1,86 @@
 "use client";
+
 import Logout from "@/components/common/Logout";
 import LoadingSpinner from "@/components/common/skeleton/LoadingSpinner";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
-  Menubar,
-  MenubarContent,
-  MenubarItem,
-  MenubarMenu,
-  MenubarSeparator,
-  MenubarTrigger,
-} from "@/components/ui/menubar";
-
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { useSession } from "next-auth/react";
-import Image from "next/image";
 import Link from "next/link";
-import { FaUser } from "react-icons/fa";
 
 export default function User({ fixed = false }: { fixed?: boolean }) {
   const { status, data: session } = useSession();
 
-  return (
-    <>
-      {status === "loading" ? (
-        <LoadingSpinner />
-      ) : status === "authenticated" && session.user ? (
-        <Menubar className="border-none bg-transparent p-0">
-          <MenubarMenu>
-            <MenubarTrigger className="rounded-full p-0">
-              {session.user.image ? (
-                <Image
-                  src={session.user.image}
-                  alt=""
-                  className="h-10 w-10 rounded-full object-cover"
-                  width={50}
-                  height={50}
-                />
-              ) : (
-                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-background">
-                  <FaUser size={16} />
-                </div>
-              )}
-            </MenubarTrigger>
-            <MenubarContent>
-              <MenubarItem className="font-bold">
-                {session.user.name}
-              </MenubarItem>
-              <MenubarSeparator />
-              <Link href="/dashboard">
-                <MenubarItem>Dashboard</MenubarItem>
-              </Link>
-              <Link href="/edit-profile">
-                <MenubarItem>Edit Account</MenubarItem>
-              </Link>
-              <Link href={`/profile?id=${session.user.id}`}>
-                <MenubarItem>Account Details</MenubarItem>
-              </Link>
-              <MenubarSeparator />
+  const getInitials = (name: string | null | undefined) => {
+    if (!name) return "US";
+    return name
+      .split(" ")
+      .map((n) => n[0])
+      .join("")
+      .toUpperCase()
+      .slice(0, 2);
+  };
 
-              <Logout />
-            </MenubarContent>
-          </MenubarMenu>
-        </Menubar>
-      ) : (
-        <Link href="/sign-in">
-          <Button variant={fixed ? "secondary" : "default"}>Sign In</Button>
-        </Link>
-      )}
-    </>
+  if (status === "loading") {
+    return <LoadingSpinner />;
+  }
+
+  if (status === "authenticated" && session?.user) {
+    const initials = getInitials(session.user.name);
+
+    return (
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button variant="ghost" className="relative h-10 w-10 rounded-full">
+            <Avatar className="h-10 w-10">
+              <AvatarImage
+                src={session.user.image || undefined}
+                alt={session.user.name || ""}
+              />
+              <AvatarFallback>{initials}</AvatarFallback>
+            </Avatar>
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent className="w-56" align="end" forceMount>
+          <DropdownMenuLabel className="font-normal">
+            <div className="flex flex-col space-y-1">
+              <p className="text-sm font-medium leading-none">
+                {session.user.name}
+              </p>
+              <p className="text-xs leading-none text-muted-foreground">
+                {session.user.email}
+              </p>
+            </div>
+          </DropdownMenuLabel>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem asChild>
+            <Link href="/dashboard">Dashboard</Link>
+          </DropdownMenuItem>
+          <DropdownMenuItem asChild>
+            <Link href="/edit-profile">Edit Account</Link>
+          </DropdownMenuItem>
+          <DropdownMenuItem asChild>
+            <Link href={`/profile?id=${session.user.id}`}>Account Details</Link>
+          </DropdownMenuItem>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem>
+            <Logout />
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    );
+  }
+
+  return (
+    <Link href="/sign-in">
+      <Button variant={fixed ? "secondary" : "default"}>Sign In</Button>
+    </Link>
   );
 }

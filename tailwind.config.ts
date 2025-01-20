@@ -91,10 +91,46 @@ const config: Config = {
             height: "0",
           },
         },
+        animate1: {
+          "0%": {
+            left: "-100%",
+          },
+          "50%, 100%": {
+            left: "100%",
+          },
+        },
+        animate2: {
+          "0%": {
+            top: "-100%",
+          },
+          "50%, 100%": {
+            top: "100%",
+          },
+        },
+        animate3: {
+          "0%": {
+            right: "-100%",
+          },
+          "50%, 100%": {
+            right: "100%",
+          },
+        },
+        animate4: {
+          "0%": {
+            bottom: "-100%",
+          },
+          "50%, 100%": {
+            bottom: "100%",
+          },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
+        animate1: "animate1 1s linear infinite",
+        animate2: "animate2 1s linear infinite 0.25s",
+        animate3: "animate3 1s linear infinite 0.5s",
+        animate4: "animate4 1s linear infinite 0.75s",
       },
     },
   },

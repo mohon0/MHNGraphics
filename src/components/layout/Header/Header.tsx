@@ -1,4 +1,7 @@
 import { Button } from "@/components/ui/button";
+import logo2 from "@/images/logoblack.png";
+import logo from "@/images/logowhite.png";
+import Image from "next/image";
 import Link from "next/link";
 import DesktopMenu from "./DesktopMenu";
 import MobileMenu from "./MobileMenu";
@@ -31,19 +34,20 @@ export default function Header({
               fixed ? "text-white" : "text-black"
             }`}
           >
-            <span className="text-xl md:text-2xl">MHN</span>
-            <span className="md:text-xl">Graphics</span>
+            {/* <span className="text-xl md:text-2xl">MHN</span>
+            <span className="md:text-xl">Graphics</span> */}
+            <Image src={fixed ? logo : logo2} alt="logo" width={200} className="w-40" />
           </Link>
 
-          {/* Desktop Navigation */}
-          <div className="hidden lg:block">
-            <DesktopMenu fixed={fixed} best={best} />
-          </div>
         </div>
 
         {/* Call to Action & Social Media for Desktop */}
         <div className="flex items-center gap-4">
           {/* Call to Action Button */}
+          {/* Desktop Navigation */}
+          <div className="hidden lg:block">
+            <DesktopMenu fixed={fixed} best={best} />
+          </div>
           {best ? (
             <Link
               href="/best-computer-training-center/application"

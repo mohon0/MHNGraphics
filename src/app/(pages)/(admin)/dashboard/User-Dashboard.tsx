@@ -66,10 +66,7 @@ export default function UserDashboard() {
   if (isLoading) return <DashboardSkeleton />;
   if (isError) return <ErrorMessage message="Error fetching user data" />;
 
-  const userImage =
-    userData?.image ||
-    userData?.applications?.[0]?.image ||
-    "/default-avatar.png";
+  const userImage = userData?.image || userData?.applications?.[0]?.image;
 
   return (
     <div className="container mx-auto space-y-6 p-4">
