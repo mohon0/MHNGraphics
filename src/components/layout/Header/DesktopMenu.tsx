@@ -102,10 +102,10 @@ export default function DesktopMenu({
                 }
               >
                 <span className="hover:shadow-cyanshadow relative overflow-hidden px-4 py-1.5 duration-300">
-                  <span className="animate-animate1 absolute left-0 top-0 block h-0.5 w-full bg-primary-100"></span>
-                  <span className="animate-animate2 absolute right-0 block h-full w-0.5 bg-primary-100"></span>
-                  <span className="animate-animate3 absolute bottom-0 right-0 block h-0.5 w-full bg-primary-100"></span>
-                  <span className="animate-animate4 absolute -bottom-6 left-0 block h-full w-0.5 bg-primary-100"></span>
+                  <span className="absolute left-0 top-0 block h-0.5 w-full animate-animate1 bg-primary-100"></span>
+                  <span className="absolute right-0 block h-full w-0.5 animate-animate2 bg-primary-100"></span>
+                  <span className="absolute bottom-0 right-0 block h-0.5 w-full animate-animate3 bg-primary-100"></span>
+                  <span className="absolute -bottom-6 left-0 block h-full w-0.5 animate-animate4 bg-primary-100"></span>
                   Best Computer T.C.
                 </span>
               </Button>

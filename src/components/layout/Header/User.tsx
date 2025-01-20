@@ -70,9 +70,7 @@ export default function User({ fixed = false }: { fixed?: boolean }) {
             <Link href={`/profile?id=${session.user.id}`}>Account Details</Link>
           </DropdownMenuItem>
           <DropdownMenuSeparator />
-          <DropdownMenuItem>
-            <Logout />
-          </DropdownMenuItem>
+          <Logout />
         </DropdownMenuContent>
       </DropdownMenu>
     );
