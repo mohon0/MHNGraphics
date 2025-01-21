@@ -179,9 +179,7 @@ export default function NewDesign() {
               </Form>
             </main>
           </div>
-          <Suspense fallback={<div>Loading footer...</div>}>
-            <Footer />
-          </Suspense>
+          <Footer />
         </main>
       </SidebarProvider>
     </>

@@ -14,7 +14,7 @@ export function Author({
 }) {
   return (
     <>
-      <p className="text-2xl md:text-3xl font-bold text-primary text-pretty">
+      <p className="text-pretty text-2xl font-bold text-primary md:text-3xl">
         {title}
       </p>
       <div className="flex flex-col space-y-4 text-gray-700 sm:flex-row sm:items-center sm:justify-between sm:space-y-0">
@@ -47,7 +47,7 @@ export function Tags({ tags }: { tags: string[] }) {
       <div className="flex flex-wrap gap-2">
         {filteredTags.map((tag, index) => (
           <Link
-            href={`/design?category=all&query=&page=1&tag=${slugify(tag)}`}
+            href={`/design?category=all&query=&page=1&tag=${generateSlug(tag)}`}
             key={index}
           >
             <Button variant="outline" size="sm" className="rounded-full">
@@ -60,7 +60,7 @@ export function Tags({ tags }: { tags: string[] }) {
   );
 }
 
-import { slugify } from "@/components/helper/slug/CreateSlug";
+import { generateSlug } from "@/components/helper/slug/CreateSlug";
 import { Skeleton } from "@/components/ui/skeleton";
 
 export function AuthorSkeleton() {

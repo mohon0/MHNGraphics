@@ -1,5 +1,4 @@
 "use client";
-
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -16,6 +15,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import { FcGoogle } from "react-icons/fc";
 import { MdOutlineDashboard } from "react-icons/md";
 import { toast } from "react-toastify";
@@ -38,6 +38,7 @@ const FormSchema = z.object({
 
 export default function Login() {
   const [submitting, setSubmitting] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const router = useRouter();
   const { status } = useSession();
@@ -122,11 +123,24 @@ export default function Login() {
                         <FormItem>
                           <FormLabel>Password</FormLabel>
                           <FormControl>
-                            <Input
-                              placeholder="password"
-                              type="password"
-                              {...field}
-                            />
+                            <div className="relative">
+                              <Input
+                                placeholder="password"
+                                type={showPassword ? "text" : "password"} // Toggle between text and password
+                                {...field}
+                              />
+                              <button
+                                type="button"
+                                className="absolute right-2 top-2 text-gray-500"
+                                onClick={() => setShowPassword(!showPassword)} // Toggle visibility
+                              >
+                                {showPassword ? (
+                                  <AiOutlineEyeInvisible size={20} />
+                                ) : (
+                                  <AiOutlineEye size={20} />
+                                )}
+                              </button>
+                            </div>
                           </FormControl>
                           <FormMessage />
                         </FormItem>

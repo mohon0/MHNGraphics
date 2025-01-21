@@ -1,11 +1,19 @@
-// Helper function to slugify the name and subcategory (convert spaces to hyphens and lowercasing)
-export const slugify = (text: string) => {
-  return text
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, "-") // Replace spaces and special characters with hyphens
-    .replace(/^-+|-+$/g, ""); // Remove leading or trailing hyphens
+import slugify from "@sindresorhus/slugify";
+
+// Helper function to generate a slug
+export const generateSlug = (text: string) => {
+  if (!text) {
+    throw new Error("Text is required to generate a slug.");
+  }
+  // Generate slug with @sindresorhus/slugify
+  return slugify(text, {
+    lowercase: true, // Convert to lowercase
+    decamelize: false, // Avoid splitting camelCase words
+    customReplacements: [["#", ""]], // Example: Remove specific characters if needed
+  });
 };
 
+// Function to create a full slug for a design
 export const createSlug = ({
   id,
   name,
@@ -18,7 +26,7 @@ export const createSlug = ({
   }
 
   // Generate a URL-friendly slug from the name
-  const nameSlug = slugify(name);
+  const nameSlug = generateSlug(name);
 
   // Return the formatted slug
   return `/design/${nameSlug}_${id}`;

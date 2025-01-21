@@ -7,8 +7,8 @@ export const NewDesignFormSchema = z.object({
     .max(200)
     .trim()
     .regex(
-      /^[a-zA-Z0-9\s]+$/,
-      "Name should not contain special characters like - _ +",
+      /^[^\s_]+(?:[\s^\s_][^\s_]+)*$/,
+      "Name must not include underscores (_).",
     ),
   description: z.string().trim(),
   category: z.string().min(1, "Required"),

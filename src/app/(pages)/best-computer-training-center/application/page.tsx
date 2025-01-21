@@ -278,6 +278,7 @@ function UserApplicationCard({ application }: UserApplicationCardProps) {
             whileHover={{ scale: 1.02 }}
             transition={{ type: "spring", stiffness: 300 }}
           >
+            <div>Certificate Status:</div>
             <Badge variant="outline" className="border-2 px-3 py-1 text-lg">
               {certificate}
             </Badge>
@@ -339,9 +340,21 @@ function UserApplicationCard({ application }: UserApplicationCardProps) {
 
           {/* Message if not editable */}
           {editable !== true && (
-            <p className="mt-2 text-right text-sm text-gray-500">
-              Contact Admin to edit or delete the Application
-            </p>
+            <div className="mt-4 rounded-lg bg-gray-100 p-4 shadow-md">
+              <p className="text-sm text-gray-700">
+                You don&#39;t have permission to edit or delete this
+                application. Please contact the admin for assistance.
+              </p>
+              <div className="mt-2 flex items-center justify-between text-sm">
+                <span className="text-gray-500">Contact Admin:</span>
+                <a
+                  href="tel:01989491248"
+                  className="font-medium text-blue-600 hover:underline"
+                >
+                  01989491248
+                </a>
+              </div>
+            </div>
           )}
         </CardFooter>
       </Card>

@@ -211,6 +211,26 @@ export default function UserDashboard() {
                           )}
                         </div>
                       </CardFooter>
+                      {app.editable !== true && (
+                        <div className="mt-4 rounded-lg bg-gray-100 p-4 shadow-md">
+                          <p className="text-sm text-gray-700">
+                            You don&#39;t have permission to edit or delete this
+                            application. Please contact the admin for
+                            assistance.
+                          </p>
+                          <div className="mt-2 flex items-center justify-between text-sm">
+                            <span className="text-gray-500">
+                              Contact Admin:
+                            </span>
+                            <a
+                              href="tel:01989491248"
+                              className="font-medium text-blue-600 hover:underline"
+                            >
+                              01989491248
+                            </a>
+                          </div>
+                        </div>
+                      )}
                     </Card>
                   ))}
                 </ScrollArea>

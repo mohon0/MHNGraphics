@@ -3,7 +3,7 @@
 import PaginationUi from "@/components/common/pagination/PaginationUi";
 import DesignSkeleton from "@/components/common/skeleton/DesignSkeleton";
 import { FetchAllDesign } from "@/components/fetch/design/FetchAllDesign";
-import { createSlug } from "@/components/helper/slug/CreateSlug";
+import { createSlug, generateSlug } from "@/components/helper/slug/CreateSlug";
 import { SlugToText } from "@/components/helper/slug/SlugToText";
 import { DesignType } from "@/components/interface/DesignType";
 import Image from "next/image";
@@ -18,6 +18,12 @@ function DesignMessage({ message }: { message: string }) {
     </div>
   );
 }
+
+const name = "বাংলা ডিজাইন!"; // Bangla text
+const id = "67890";
+
+const slug = generateSlug(name); // "বাংলা-ডিজাইন"
+console.log(slug);
 
 function SearchPageContent() {
   const searchParams = useSearchParams();

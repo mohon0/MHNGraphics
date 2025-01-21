@@ -25,25 +25,25 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Upload, X } from "lucide-react";
+import dynamic from "next/dynamic";
 import Image from "next/image";
 import React, { useState } from "react";
 import { useFormContext } from "react-hook-form";
 import { CgAsterisk } from "react-icons/cg";
-import dynamic from "next/dynamic";
-import "react-quill/dist/quill.snow.css";
+import "react-quill-new/dist/quill.snow.css";
 import { toast } from "react-toastify";
 import { NewProductFormSchemaType } from "../formSchema/FormSchema";
-const ReactQuill = dynamic(() => import("react-quill"), { ssr: false });
+const ReactQuill = dynamic(() => import("react-quill-new"), { ssr: false });
 
 const modules = {
   toolbar: [
-    [{ header: [1, 2, 3, false] }], // Header levels
-    ["bold", "italic", "underline"], // Formatting options
-    [{ list: "ordered" }, { list: "bullet" }], // List options
-    [{ indent: "-1" }, { indent: "+1" }], // Indentation
-    [{ align: [] }], // Text alignment
-    [{ color: [] }, { background: [] }], // Text color and background
-    ["link"], // Media options
+    [{ header: [1, 2, 3, false] }],
+    ["bold", "italic", "underline"],
+    [{ list: "ordered" }, { list: "bullet" }],
+    [{ indent: "-1" }, { indent: "+1" }],
+    [{ align: [] }],
+    [{ color: [] }, { background: [] }],
+    ["link"],
   ],
 };
 
@@ -97,8 +97,8 @@ export function NewProductName({
                     value={description}
                     modules={modules}
                     onChange={(value) => {
-                      setDescription(value); // Update local state
-                      setValue("description", value); // Update form value
+                      setDescription(value);
+                      setValue("description", value);
                     }}
                   />
                 </FormControl>

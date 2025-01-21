@@ -17,7 +17,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { MdHome } from "react-icons/md";
+import { MdHome, MdVisibility, MdVisibilityOff } from "react-icons/md";
 import { SiPolkadot } from "react-icons/si";
 import { toast } from "react-toastify";
 import { z } from "zod";
@@ -47,7 +47,7 @@ export default function Registration() {
   const [readOnly, setReadOnly] = useState(false);
   const [userId, setUserId] = useState("");
   const [submitting, setSubmitting] = useState(false);
-
+  const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
   const { status } = useSession();
 
@@ -164,6 +164,7 @@ export default function Registration() {
                   <span className="flex h-1 w-20 rounded-full"></span>
 
                   <div className="my-6 flex w-full flex-col gap-3 md:w-2/3">
+                    {/* Name Field */}
                     <FormField
                       control={form.control}
                       name="name"
@@ -181,6 +182,8 @@ export default function Registration() {
                         </FormItem>
                       )}
                     />
+
+                    {/* Email Field */}
                     <FormField
                       control={form.control}
                       name="email"
@@ -198,6 +201,8 @@ export default function Registration() {
                         </FormItem>
                       )}
                     />
+
+                    {/* Password Field with Toggle */}
                     <FormField
                       control={form.control}
                       name="password"
@@ -205,17 +210,31 @@ export default function Registration() {
                         <FormItem>
                           <FormLabel>Password</FormLabel>
                           <FormControl>
-                            <Input
-                              placeholder="Password"
-                              {...field}
-                              disabled={readOnly}
-                            />
+                            <div className="relative">
+                              <Input
+                                placeholder="Password"
+                                type={showPassword ? "text" : "password"}
+                                {...field}
+                                disabled={readOnly}
+                              />
+                              <span
+                                className="absolute inset-y-0 right-3 flex cursor-pointer items-center"
+                                onClick={() => setShowPassword(!showPassword)}
+                              >
+                                {showPassword ? (
+                                  <MdVisibilityOff size={20} />
+                                ) : (
+                                  <MdVisibility size={20} />
+                                )}
+                              </span>
+                            </div>
                           </FormControl>
                           <FormMessage />
                         </FormItem>
                       )}
                     />
 
+                    {/* Verification Code Field */}
                     {showPopUp && (
                       <FormField
                         control={form.control}
@@ -231,11 +250,15 @@ export default function Registration() {
                         )}
                       />
                     )}
+
+                    {/* Submit Button */}
                     <Button type="submit" disabled={submitting}>
                       {showPopUp ? "Verify Code" : "Sign Up"}
                     </Button>
                   </div>
                 </section>
+
+                {/* Additional Links */}
                 <div className="space-x-1 text-center md:hidden">
                   <span>Already have an account?</span>
                   <Link href={"/sign-in"} className="font-bold text-primary">
@@ -248,6 +271,8 @@ export default function Registration() {
                   <Link href={"/terms"}>Terms & Conditions</Link>
                 </div>
               </div>
+
+              {/* Right Panel */}
               <div className="col-span-2 hidden flex-col items-center justify-center gap-4 p-2 text-center md:flex md:rounded-r-2xl lg:p-16">
                 <span className="text-lightgray-100 text-3xl font-bold">
                   Hi, There!
