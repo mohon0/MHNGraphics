@@ -198,3 +198,11 @@ model duration {
   id              String  @id @default(auto()) @map("_id") @db.ObjectId
   button          String
 }
+
+model Notice {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  title       String
+  pdfUrl      String
+  pdfPublicId String
+  createdAt   DateTime @default(now())
+}

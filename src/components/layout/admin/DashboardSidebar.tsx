@@ -1,15 +1,4 @@
 "use client";
-import {
-  BadgeCheck,
-  FileUser,
-  GalleryHorizontal,
-  HeartPulse,
-  Map,
-  PieChart,
-  UserRoundSearch,
-} from "lucide-react";
-import * as React from "react";
-
 import { NavMain } from "@/components/layout/admin/nav-main";
 import { NavProjects } from "@/components/layout/admin/nav-projects";
 import { NavUser } from "@/components/layout/admin/nav-user";
@@ -21,7 +10,18 @@ import {
   SidebarHeader,
   SidebarRail,
 } from "@/components/ui/sidebar";
+import {
+  BadgeCheck,
+  FileUser,
+  GalleryHorizontal,
+  HeartPulse,
+  Map,
+  Megaphone,
+  PieChart,
+  UserRoundSearch,
+} from "lucide-react";
 import { useSession } from "next-auth/react";
+import * as React from "react";
 
 export function DashboardSidebar({
   ...props
@@ -94,6 +94,21 @@ export function DashboardSidebar({
         {
           title: "Address",
           url: "/dashboard/blood-bank/address",
+        },
+      ],
+    },
+    {
+      title: "Notice",
+      url: "#",
+      icon: Megaphone,
+      items: [
+        {
+          title: "Add new",
+          url: "/dashboard/new-notice",
+        },
+        {
+          title: "View all",
+          url: "/best-computer-training-center/notice-list",
         },
       ],
     },
