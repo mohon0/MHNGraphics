@@ -1,8 +1,17 @@
 "use client";
 
+import { useFetchNotice } from "@/components/fetch/best-computer/FetchNotice";
 import Footer from "@/components/layout/footer/Footer";
 import Header from "@/components/layout/Header/Header";
 import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import {
   Pagination,
   PaginationContent,
@@ -28,9 +37,11 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { useQuery } from "@tanstack/react-query";
-import { FileDown } from "lucide-react";
+import axios from "axios";
+import { FileDown, Trash } from "lucide-react";
+import { useSession } from "next-auth/react";
 import { useState } from "react";
+import { toast } from "react-toastify";
 
 interface Notice {
   id: string;
@@ -39,28 +50,36 @@ interface Notice {
   pdfUrl: string;
 }
 
-interface NoticeResponse {
-  notices: Notice[];
-  page: number;
-  pageSize: number;
-  totalPages: number;
-  totalNotices: number;
-}
-
 export default function Notice() {
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState("20");
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [noticeToDelete, setNoticeToDelete] = useState<string | null>(null);
 
-  const { data, isLoading, error } = useQuery<NoticeResponse>({
-    queryKey: ["notices", currentPage, pageSize],
-    queryFn: async () => {
-      const res = await fetch(
-        `/api/notice?page=${currentPage}&pageSize=${pageSize}`,
-      );
-      if (!res.ok) throw new Error("Failed to fetch notices");
-      return res.json();
-    },
-  });
+  // Get current session
+  const { data: session } = useSession();
+
+  const handleDelete = async (id: string) => {
+    try {
+      await toast.promise(axios.delete("/api/notice", { params: { id } }), {
+        pending: "Please wait...",
+        success: "Notice deleted successfully!",
+        error: "Failed to delete notice. Please try again.",
+      });
+      refetch();
+    } catch (error) {
+      console.error("Error deleting notice:", error);
+      toast.error("An unexpected error occurred.");
+    } finally {
+      setIsDeleteDialogOpen(false);
+      setNoticeToDelete(null);
+    }
+  };
+
+  const { error, data, isLoading, refetch } = useFetchNotice(
+    currentPage,
+    Number(pageSize),
+  );
 
   const NoticeSkeleton = () => (
     <TableRow>
@@ -73,9 +92,14 @@ export default function Notice() {
       <TableCell className="hidden py-2 md:table-cell md:py-4">
         <Skeleton className="h-4 w-24" />
       </TableCell>
-      <TableCell className="py-2 md:py-4">
+      <TableCell className="px-2 py-2 md:px-4 md:py-4">
         <Skeleton className="h-4 w-8" />
       </TableCell>
+      {session?.user?.role === "ADMIN" && (
+        <TableCell className="px-2 py-2 md:px-4 md:py-4">
+          <Skeleton className="h-4 w-8" />
+        </TableCell>
+      )}
     </TableRow>
   );
 
@@ -127,6 +151,11 @@ export default function Notice() {
                 <TableHead className="w-[60px] px-2 py-3 md:w-[100px] md:px-4 md:py-4">
                   Download
                 </TableHead>
+                {session?.user?.role === "ADMIN" && (
+                  <TableHead className="w-[60px] px-2 py-3 md:w-[100px] md:px-4 md:py-4">
+                    Actions
+                  </TableHead>
+                )}
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -137,7 +166,7 @@ export default function Notice() {
               ) : error ? (
                 <TableRow>
                   <TableCell
-                    colSpan={4}
+                    colSpan={session?.user?.role === "ADMIN" ? 5 : 4}
                     className="px-2 py-4 text-center text-red-500 md:px-4"
                   >
                     Error loading notices. Please try again later.
@@ -146,20 +175,20 @@ export default function Notice() {
               ) : data?.notices.length === 0 ? (
                 <TableRow>
                   <TableCell
-                    colSpan={4}
+                    colSpan={session?.user?.role === "ADMIN" ? 5 : 4}
                     className="px-2 py-4 text-center md:px-4"
                   >
                     No notices found.
                   </TableCell>
                 </TableRow>
               ) : (
-                data?.notices.map((notice, index) => (
+                data?.notices.map((notice: Notice, index: number) => (
                   <TableRow key={notice.id}>
                     <TableCell className="px-2 py-2 md:px-4 md:py-4">
                       {startNumber + index}
                     </TableCell>
                     <TableCell className="px-2 py-2 md:px-4 md:py-4">
-                      <div className="line-clamp-2 md:line-clamp-1">
+                      <div className="line-clamp-3 md:line-clamp-2">
                         {notice.title}
                       </div>
                     </TableCell>
@@ -173,10 +202,24 @@ export default function Notice() {
                           size="icon"
                           onClick={() => window.open(notice.pdfUrl, "_blank")}
                         >
-                          <FileDown className="h-4 w-4 text-red-500" />
+                          <FileDown className="h-4 w-4" />
                         </Button>
                       )}
                     </TableCell>
+                    {session?.user?.role === "ADMIN" && (
+                      <TableCell className="px-2 py-2 md:px-4 md:py-4">
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => {
+                            setNoticeToDelete(notice.id);
+                            setIsDeleteDialogOpen(true);
+                          }}
+                        >
+                          <Trash className="h-4 w-4 text-red-500" />
+                        </Button>
+                      </TableCell>
+                    )}
                   </TableRow>
                 ))
               )}
@@ -247,6 +290,30 @@ export default function Notice() {
         )}
       </div>
       <Footer />
+
+      <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Confirm Deletion</DialogTitle>
+            <DialogDescription>
+              Are you sure you want to delete this notice?
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => setIsDeleteDialogOpen(false)}
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={() => noticeToDelete && handleDelete(noticeToDelete)}
+            >
+              Confirm
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </>
   );
 }

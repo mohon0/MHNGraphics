@@ -1,5 +1,5 @@
 import { Prisma } from "@/components/helper/prisma/Prisma";
-import { UploadPDF } from "@/utils/cloudinary";
+import { deletePDF, UploadPDF } from "@/utils/cloudinary";
 import { NextRequest, NextResponse } from "next/server";
 
 // POST: Upload a PDF and save a new Notice record
@@ -73,6 +73,48 @@ export async function GET(req: NextRequest) {
     );
   } catch (error) {
     console.error("Error in GET /api/notice:", error);
+    return new NextResponse("Internal Server Error", { status: 500 });
+  }
+}
+
+export async function DELETE(req: NextRequest) {
+  try {
+    // Retrieve the 'id' parameter from the query string.
+    const { searchParams } = req.nextUrl;
+    const id = searchParams.get("id");
+
+    if (!id) {
+      return new NextResponse("Notice ID is required", { status: 400 });
+    }
+
+    // Find the notice by its ID.
+    const notice = await Prisma.notice.findUnique({
+      where: { id },
+    });
+
+    if (!notice) {
+      return new NextResponse("Notice not found", { status: 404 });
+    }
+
+    // Optionally delete the associated PDF from Cloudinary if a public ID exists.
+    if (notice.pdfPublicId) {
+      await deletePDF(notice.pdfPublicId);
+    }
+
+    // Delete the notice record from the database.
+    await Prisma.notice.delete({
+      where: { id },
+    });
+
+    return new NextResponse(
+      JSON.stringify({ message: "Notice deleted successfully" }),
+      {
+        status: 200,
+        headers: { "Content-Type": "application/json" },
+      },
+    );
+  } catch (error) {
+    console.error("Error in DELETE /api/notice:", error);
     return new NextResponse("Internal Server Error", { status: 500 });
   }
 }

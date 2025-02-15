@@ -1,5 +1,4 @@
 import { v2 as cloudinary } from "cloudinary";
-import { Readable } from "stream";
 
 cloudinary.config({
   cloud_name: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
@@ -31,9 +30,25 @@ export async function UploadPDF(
           }
         },
       );
-      Readable.from(buffer).pipe(uploadStream);
+      uploadStream.end(buffer);
     },
   );
 
   return result;
+}
+
+export async function deletePDF(publicId: string): Promise<{ result: string }> {
+  return new Promise((resolve, reject) => {
+    cloudinary.uploader.destroy(
+      publicId,
+      { resource_type: "raw" },
+      (error, result) => {
+        if (error) {
+          reject(error);
+        } else {
+          resolve(result as { result: string });
+        }
+      },
+    );
+  });
 }
