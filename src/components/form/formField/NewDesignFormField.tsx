@@ -1,4 +1,4 @@
-import { productCategories } from "@/components/data/ProductCategory";
+import { designCategories } from "@/components/data/ProductCategory";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -275,7 +275,7 @@ export const ProductCategoryAndTags: React.FC = () => {
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      {productCategories.map((category) => (
+                      {designCategories.map((category) => (
                         <SelectItem
                           key={category.value}
                           value={category.value

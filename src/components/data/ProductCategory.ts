@@ -1,9 +1,9 @@
-export type ProductCategory = {
+export type designCategory = {
   value: string;
   label: string;
 };
 
-export const productCategories: ProductCategory[] = [
+export const designCategories: designCategory[] = [
   {
     value: "illustrations",
     label: "Illustrations",

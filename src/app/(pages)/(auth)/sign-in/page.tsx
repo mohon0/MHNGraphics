@@ -9,6 +9,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { SingInSchema } from "@/lib/Schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { signIn, useSession } from "next-auth/react";
 import Link from "next/link";
@@ -18,23 +19,8 @@ import { useForm } from "react-hook-form";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 import { FcGoogle } from "react-icons/fc";
 import { MdOutlineDashboard } from "react-icons/md";
-import { toast } from "react-toastify";
+import { toast } from "sonner";
 import { z } from "zod";
-
-const FormSchema = z.object({
-  email: z.string().refine(
-    (value) =>
-      /\S+@\S+\.\S+/.test(value) || // Check for valid email format
-      /^01[0-9]{9}$/.test(value), // Check for valid Bangladeshi phone number without country code
-    {
-      message: "Please enter a valid email or phone number",
-    },
-  ),
-  password: z
-    .string()
-    .min(6, "Password must be 6 characters long")
-    .max(15, "Password cannot be more than 15 characters"),
-});
 
 export default function Login() {
   const [submitting, setSubmitting] = useState(false);
@@ -43,34 +29,35 @@ export default function Login() {
   const router = useRouter();
   const { status } = useSession();
 
-  const form = useForm<z.infer<typeof FormSchema>>({
-    resolver: zodResolver(FormSchema),
+  const form = useForm<z.infer<typeof SingInSchema>>({
+    resolver: zodResolver(SingInSchema),
     defaultValues: {
       email: "",
       password: "",
     },
   });
 
-  async function onSubmit(data: z.infer<typeof FormSchema>) {
+  async function onSubmit(data: z.infer<typeof SingInSchema>) {
     try {
       setSubmitting(true);
-      toast.loading("Please wait...");
-      const response = await signIn("credentials", {
-        ...data,
-        redirect: false,
-      });
-      toast.dismiss();
-      if (response?.error) {
-        toast.error(response.error);
-      } else {
-        toast.success("Successful sign-in");
-        setTimeout(() => {
-          router.back();
-        }, 2000);
-        return;
-      }
+      toast.promise(
+        signIn("credentials", {
+          ...data,
+          redirect: false,
+        }),
+        {
+          loading: "Please wait...",
+          success: (response) => {
+            if (response?.error) {
+              throw new Error(response.error);
+            }
+            router.back();
+            return "Successful sign-in";
+          },
+          error: "Sign in failed",
+        },
+      );
     } catch (error) {
-      toast.dismiss();
       toast.error("Sign in failed");
     } finally {
       setSubmitting(false);

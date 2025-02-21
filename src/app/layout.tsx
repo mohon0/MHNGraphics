@@ -1,3 +1,4 @@
+import { Toaster } from "@/components/ui/sonner";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { Metadata } from "next";
 import { Inter } from "next/font/google";
@@ -58,6 +59,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
           <SessionWrapper>{children}</SessionWrapper>
           <ReactQueryDevtools initialIsOpen={false} />
           <ClientSideToastContainer />
+          <Toaster position="top-right" richColors />
         </body>
       </html>
     </ReactQueryProvider>

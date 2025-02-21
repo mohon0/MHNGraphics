@@ -1,6 +1,5 @@
 "use client";
-
-import { productCategories } from "@/components/data/ProductCategory";
+import { designCategories } from "@/components/data/ProductCategory";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -154,7 +153,7 @@ function SearchHeaderComponent({ fixed = false }: { fixed?: boolean }) {
                   <SelectGroup>
                     <SelectLabel>All Categories</SelectLabel>
                     <SelectItem value="all">All</SelectItem>
-                    {productCategories.map((category) => (
+                    {designCategories.map((category) => (
                       <SelectItem
                         key={category.value}
                         value={category.value

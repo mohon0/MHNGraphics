@@ -10,6 +10,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { SignUpSchema } from "@/lib/Schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
 import { useSession } from "next-auth/react";
@@ -19,28 +20,8 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { MdHome, MdVisibility, MdVisibilityOff } from "react-icons/md";
 import { SiPolkadot } from "react-icons/si";
-import { toast } from "react-toastify";
+import { toast } from "sonner";
 import { z } from "zod";
-
-const FormSchema = z.object({
-  name: z.string().min(4, {
-    message: "Username must be at least 2 characters.",
-  }),
-  email: z
-    .string()
-    .refine(
-      (value) =>
-        /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value) || /^\d{10,15}$/.test(value),
-      {
-        message: "Must be a valid email or phone number.",
-      },
-    ),
-  password: z
-    .string()
-    .min(6, "Password must be 6 characters long")
-    .max(15, "Password can not be more than 15 characters"),
-  code: z.string().optional(),
-});
 
 export default function Registration() {
   const [showPopUp, setShowPopUp] = useState(false);
@@ -51,8 +32,8 @@ export default function Registration() {
   const router = useRouter();
   const { status } = useSession();
 
-  const form = useForm<z.infer<typeof FormSchema>>({
-    resolver: zodResolver(FormSchema),
+  const form = useForm<z.infer<typeof SignUpSchema>>({
+    resolver: zodResolver(SignUpSchema),
     defaultValues: {
       name: "",
       email: "",
@@ -61,23 +42,25 @@ export default function Registration() {
     },
   });
 
-  async function onSubmit(values: z.infer<typeof FormSchema>) {
+  async function onSubmit(values: z.infer<typeof SignUpSchema>) {
     setSubmitting(true);
 
     try {
       if (showPopUp) {
-        // If the pop-up is shown, verify the code entered by the user
-        const response = await toast.promise(
-          axios.put("/api/signup", {
-            userId,
-            code: values.code,
-          }),
-          {
-            pending: "Verifying the code",
-            success: "Code verified successfully 👍",
-            error: "Invalid code. Please try again 🤯",
-          },
-        );
+        // Verify code
+        const response = await toast
+          .promise(
+            axios.put("/api/signup", {
+              userId,
+              code: values.code,
+            }),
+            {
+              loading: "Verifying the code",
+              success: "Code verified successfully 👍",
+              error: "Invalid code. Please try again 🤯",
+            },
+          )
+          .unwrap(); // Use unwrap() to get the actual Axios response
 
         if (response.status === 200) {
           setTimeout(() => {
@@ -85,42 +68,44 @@ export default function Registration() {
           }, 1000);
         }
       } else {
-        // Check if the input is an email
         const isEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(values.email);
 
         if (isEmail) {
-          // If email is valid, send the email verification request
+          // Email verification
           const response = await toast
             .promise(
-              axios.post("/api/signup", values), // This sends the email for verification
+              axios.post("/api/signup", values).catch((error) => {
+                throw new Error(error.response?.data || "An error occurred");
+              }),
               {
-                pending: "Sending the verification code",
+                loading: "Sending the verification code",
                 success: "Email sent successfully 👌",
-                error: "An error occurred",
+                error: (err) => err.message,
               },
             )
-            .catch((error) => {
-              toast.error(error.response.data);
-            });
+            .unwrap(); // Use unwrap() to get the actual Axios response
 
-          if (response && response.status === 200) {
+          if (response.status === 200) {
             setUserId(response.data.userId);
             setShowPopUp(true);
-            setReadOnly(true); // Disable input until the code is verified
+            setReadOnly(true);
           }
         } else {
-          // If it's not a valid email, handle as a normal registration process
+          // Normal registration
           const response = await toast
-            .promise(axios.post("/api/signup", values), {
-              pending: "Processing registration",
-              success: "Registration successful 👌",
-              error: "An error occurred",
-            })
-            .catch((error) => {
-              toast.error(error.response.data);
-            });
+            .promise(
+              axios.post("/api/signup", values).catch((error) => {
+                throw new Error(error.response?.data || "An error occurred");
+              }),
+              {
+                loading: "Processing registration",
+                success: "Registration successful 👌",
+                error: (err) => err.message,
+              },
+            )
+            .unwrap(); // Use unwrap() to get the actual Axios response
 
-          if (response && response.status === 200) {
+          if (response.status === 200) {
             toast.success("User registered successfully! Redirecting...");
             setTimeout(() => {
               router.push("/sign-in");
@@ -129,10 +114,10 @@ export default function Registration() {
         }
       }
     } catch (error) {
-      toast.error("An error occurred");
+      toast.error("An unexpected error occurred");
+    } finally {
+      setSubmitting(false);
     }
-
-    setSubmitting(false);
   }
 
   return (

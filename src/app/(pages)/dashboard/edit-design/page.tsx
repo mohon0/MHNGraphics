@@ -1,6 +1,6 @@
 "use client";
 import EditDesignSkeleton from "@/components/common/skeleton/EditDesignSkeleton";
-import { productCategories } from "@/components/data/ProductCategory";
+import { designCategories } from "@/components/data/ProductCategory";
 import { FetchSingleDesignById } from "@/components/fetch/design/FetchSingleDesign";
 import EditDesignImage from "@/components/form/formField/EditDesignFormField";
 import { NewProductName } from "@/components/form/formField/NewDesignFormField";
@@ -291,7 +291,7 @@ function DesignPage() {
                                                   <SelectValue placeholder="Select Category" />
                                                 </SelectTrigger>
                                                 <SelectContent>
-                                                  {productCategories.map(
+                                                  {designCategories.map(
                                                     (category) => (
                                                       <SelectItem
                                                         key={category.value}
