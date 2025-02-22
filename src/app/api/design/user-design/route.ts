@@ -17,10 +17,13 @@ export async function GET(req: NextRequest) {
     const page = queryParams.get("page")
       ? parseInt(queryParams.get("page")!, 10)
       : 1;
+    const pageSize = queryParams.get("pageSize")
+      ? parseInt(queryParams.get("pageSize")!, 10)
+      : 1;
     const category = queryParams.get("category") || "all";
     const searchQuery = queryParams.get("searchQuery") || "";
 
-    const limit = 30;
+    const limit = pageSize;
     const skip = (page - 1) * limit;
 
     let whereClause: {

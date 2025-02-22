@@ -1,11 +1,10 @@
 "use client";
-
 import PaginationUi from "@/components/common/pagination/PaginationUi";
 import DesignSkeleton from "@/components/common/skeleton/DesignSkeleton";
-import { FetchAllDesign } from "@/components/fetch/design/FetchAllDesign";
 import { createSlug, generateSlug } from "@/components/helper/slug/CreateSlug";
 import { SlugToText } from "@/components/helper/slug/SlugToText";
 import { DesignType } from "@/components/interface/DesignType";
+import { useFetchAllDesign } from "@/services/design";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -34,7 +33,7 @@ function SearchPageContent() {
   const tag = searchParams.get("tag") || "";
   const page = parseInt(searchParams.get("page") || "1", 10);
 
-  const { isLoading, data, isError } = FetchAllDesign({
+  const { isLoading, data, isError } = useFetchAllDesign({
     page,
     category: categoryName,
     searchQuery: query,

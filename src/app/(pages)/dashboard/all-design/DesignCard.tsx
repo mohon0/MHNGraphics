@@ -133,8 +133,8 @@ export default function DesignCard({
             <Image
               src={design.image || "/placeholder.svg"}
               alt={design.name}
-              height={300}
-              width={300}
+              height={400}
+              width={400}
               className="object-cover transition-transform duration-300 group-hover:scale-105"
             />
 

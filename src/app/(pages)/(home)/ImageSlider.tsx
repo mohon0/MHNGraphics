@@ -1,17 +1,18 @@
 "use client";
-import { FetchAllDesign } from "@/components/fetch/design/FetchAllDesign";
 import { createSlug } from "@/components/helper/slug/CreateSlug";
 import { DesignType } from "@/components/interface/DesignType";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useFetchAllDesign } from "@/services/design";
 import Image from "next/image";
 import Link from "next/link";
 import Marquee from "react-fast-marquee";
 
 export default function ImageMarquee() {
-  const { isLoading, data, isError } = FetchAllDesign({
+  const { isLoading, data, isError } = useFetchAllDesign({
     page: 1,
     category: "all",
     searchQuery: "",
+    tag: "",
   });
 
   if (isLoading) {
