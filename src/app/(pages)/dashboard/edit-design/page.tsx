@@ -3,7 +3,6 @@ import EditDesignSkeleton from "@/components/common/skeleton/EditDesignSkeleton"
 import { designCategories } from "@/components/data/ProductCategory";
 import { FetchSingleDesignById } from "@/components/fetch/design/FetchSingleDesign";
 import EditDesignImage from "@/components/form/formField/EditDesignFormField";
-import { NewProductName } from "@/components/form/formField/NewDesignFormField";
 import {
   NewDesignFormSchema,
   NewProductFormSchemaType,
@@ -16,6 +15,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Form,
+  FormControl,
   FormField,
   FormItem,
   FormLabel,
@@ -31,14 +31,15 @@ import {
 } from "@/components/ui/select";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { Skeleton } from "@/components/ui/skeleton";
+import TiptapEditor, { TiptapEditorRef } from "@/editor";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
 import { ChevronLeft, X } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Suspense, useCallback, useEffect, useState } from "react";
+import { Suspense, useCallback, useEffect, useRef, useState } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { CgAsterisk } from "react-icons/cg";
-import { toast } from "react-toastify";
+import { toast } from "sonner";
 
 export default function EditDesign() {
   return (
@@ -68,7 +69,7 @@ function DesignPage() {
   const [newImage, setNewImage] = useState<File | null>(null);
   const [deletedImage, setDeletedImage] = useState<string | null>(null);
   const [initialImage, setInitialImage] = useState<string | null>(null);
-  const [description, setDescription] = useState<string | null>(null);
+  const editorRef = useRef<TiptapEditorRef>(null);
 
   const searchParams = useSearchParams();
   const id = searchParams.get("id") || "";
@@ -260,11 +261,56 @@ function DesignPage() {
                           </div>
                           <div className="grid gap-4 md:grid-cols-[1fr_250px] lg:grid-cols-3 lg:gap-8">
                             <div className="grid auto-rows-max items-start gap-4 lg:col-span-2 lg:gap-8">
-                              <NewProductName
-                                description={data.description}
-                                setDescription={setDescription}
+                              <FormField
+                                control={form.control}
+                                name="name"
+                                render={({ field }) => (
+                                  <FormItem>
+                                    <FormLabel>Design Title</FormLabel>
+                                    <FormControl>
+                                      <Input
+                                        placeholder="Title of the design"
+                                        {...field}
+                                      />
+                                    </FormControl>
+                                    <FormMessage />
+                                  </FormItem>
+                                )}
                               />
-
+                              <FormField
+                                control={form.control}
+                                name="description"
+                                render={({ field }) => (
+                                  <FormItem>
+                                    <FormLabel>Design Content</FormLabel>
+                                    <FormControl>
+                                      <TiptapEditor
+                                        ref={editorRef}
+                                        ssr
+                                        output="html"
+                                        placeholder={{
+                                          paragraph:
+                                            "Type your content here...",
+                                        }}
+                                        onContentChange={field.onChange}
+                                        initialContent={
+                                          field.value || data?.description || ""
+                                        }
+                                      />
+                                    </FormControl>
+                                    <FormMessage />
+                                  </FormItem>
+                                )}
+                              />
+                            </div>
+                            <div className="grid auto-rows-max items-start gap-4 lg:gap-8">
+                              <EditDesignImage
+                                image={initialImage}
+                                newImage={newImage}
+                                deletedImage={deletedImage}
+                                handleAddNewImage={handleAddNewImage}
+                                handleDeleteImage={handleDeleteImage}
+                              />
                               <Card x-chunk="dashboard-07-chunk-2">
                                 <CardHeader>
                                   <CardTitle>Category</CardTitle>
@@ -360,15 +406,6 @@ function DesignPage() {
                                   </div>
                                 </CardContent>
                               </Card>
-                            </div>
-                            <div className="grid auto-rows-max items-start gap-4 lg:gap-8">
-                              <EditDesignImage
-                                image={initialImage}
-                                newImage={newImage}
-                                deletedImage={deletedImage}
-                                handleAddNewImage={handleAddNewImage}
-                                handleDeleteImage={handleDeleteImage}
-                              />
                             </div>
                           </div>
                         </div>
