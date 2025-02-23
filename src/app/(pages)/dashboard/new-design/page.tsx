@@ -1,37 +1,57 @@
 "use client";
-import EditDesignSkeleton from "@/components/common/skeleton/EditDesignSkeleton";
-import {
-  NewProductName,
-  ProductCategoryAndTags,
-  ProductImage,
-} from "@/components/form/formField/NewDesignFormField";
-import {
-  NewDesignFormSchema,
-  NewProductFormSchemaType,
-} from "@/components/form/formSchema/FormSchema";
-import BreadCrumb from "@/components/layout/admin/BreadCrumb";
-import { DashboardSidebar } from "@/components/layout/admin/DashboardSidebar";
-import Footer from "@/components/layout/footer/Footer";
 import { Button } from "@/components/ui/button";
-import { Form } from "@/components/ui/form";
-import { SidebarProvider } from "@/components/ui/sidebar";
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import TiptapEditor, { TiptapEditorRef } from "@/editor";
+import { NewDesignSchema, NewDesignSchemaType } from "@/lib/Schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
 import { ChevronLeft } from "lucide-react";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Suspense, useState } from "react";
+import { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
-import { toast } from "react-toastify";
+import { toast } from "sonner";
+import * as z from "zod";
+import { CategoryAndTags } from "./CategoryAndTags";
+import { DesignImage } from "./DesignImage";
+import { DesignSkeleton } from "./skeleton";
 
 export default function NewDesign() {
+  const { status } = useSession();
+  const router = useRouter();
+
+  // Handle loading and unauthenticated states
+  if (status === "loading") return <DesignSkeleton />;
+  if (status === "unauthenticated") {
+    router.push("/login");
+    return null;
+  }
+
+  return (
+    <>
+      <div className="mx-2 md:mx-4">
+        <NewArticleForm />
+      </div>
+    </>
+  );
+}
+
+function NewArticleForm() {
+  const editorRef = useRef<TiptapEditorRef>(null);
   const [image, setImage] = useState<File | null>(null);
   const [warning, setWarning] = useState<string>("");
-  const [description, setDescription] = useState("");
 
-  const form = useForm<NewProductFormSchemaType>({
-    resolver: zodResolver(NewDesignFormSchema),
+  const form = useForm<z.infer<typeof NewDesignSchema>>({
+    resolver: zodResolver(NewDesignSchema),
     defaultValues: {
       name: "",
       description: "",
@@ -40,23 +60,19 @@ export default function NewDesign() {
     },
   });
 
-  const { status } = useSession();
-  const router = useRouter();
-
-  // Enhanced form reset function
   const resetForm = () => {
-    form.reset({
-      name: "",
-      description: "",
-      category: "",
-      tags: [],
-    });
+    form.reset({ name: "", description: "", category: "", tags: [] });
     setImage(null);
     setWarning("");
-    setDescription(""); // Clear React Quill content
+
+    // Clear the Tiptap editor content manually
+    const editor = editorRef.current?.getInstance();
+    if (editor) {
+      editor.commands.setContent("");
+    }
   };
 
-  async function onSubmit(data: NewProductFormSchemaType) {
+  async function onSubmit(data: NewDesignSchemaType) {
     if (!image) {
       setWarning("Please upload an image.");
       return;
@@ -64,124 +80,98 @@ export default function NewDesign() {
 
     const formData = new FormData();
     Object.entries(data).forEach(([key, value]) => {
-      if (value !== undefined && value !== null) {
-        formData.append(key, value.toString());
-      }
+      formData.append(key, value.toString());
     });
     formData.append("image", image);
-    formData.append("description", description); // Add custom description
 
-    toast.loading("Uploading, please wait...");
-    try {
-      const response = await axios.post("/api/design/single-design", formData, {
+    const postPromise = axios
+      .post("/api/design/single-design", formData, {
         headers: { "Content-Type": "multipart/form-data" },
+      })
+      .then((response) => {
+        if (response.status !== 200) {
+          throw new Error("Server error");
+        }
+        resetForm();
+        return response;
       });
 
-      if (response.status === 200) {
-        toast.dismiss();
-        toast.success("Design successfully added");
-        resetForm();
-      } else {
-        toast.error("Failed to add design");
-        throw new Error("Failed to create design");
-      }
-    } catch (error: unknown) {
-      toast.dismiss();
-      toast.error("Failed to add design");
-    }
-  }
-
-  // Handle loading and unauthenticated states
-  if (status === "loading") return <EditDesignSkeleton />;
-  if (status === "unauthenticated") {
-    router.push("/sign-in");
-    return null;
+    toast.promise(postPromise, {
+      loading: "Uploading, please wait...",
+      success: "Article successfully added",
+      error: (err) => err.message || "Failed to add article",
+    });
   }
 
   return (
-    <>
-      <SidebarProvider>
-        <Suspense fallback={<EditDesignSkeleton />}>
-          <DashboardSidebar />
-        </Suspense>
-        <main className="w-full">
-          <BreadCrumb />
-          <div className="flex">
-            <main className="w-full">
-              <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)}>
-                  <div className="flex min-h-screen w-full flex-col">
-                    <div className="flex flex-col sm:gap-4">
-                      <main className="grid flex-1 items-start gap-4 sm:py-0 md:gap-8">
-                        <div className="mx-auto grid max-w-[59rem] flex-1 auto-rows-max gap-4">
-                          <div className="flex items-center gap-4">
-                            <Link href="/admin-dashboard/">
-                              <Button
-                                variant="outline"
-                                type="button"
-                                size="icon"
-                                className="h-7 w-7"
-                              >
-                                <ChevronLeft className="h-4 w-4" />
-                                <span className="sr-only">Back</span>
-                              </Button>
-                            </Link>
-                            <h1 className="flex-1 shrink-0 whitespace-nowrap text-xl font-semibold tracking-tight sm:grow-0">
-                              New Design
-                            </h1>
-                            <div className="hidden items-center gap-2 md:ml-auto md:flex">
-                              <Button
-                                variant="outline"
-                                type="button"
-                                onClick={resetForm}
-                              >
-                                Discard
-                              </Button>
-                              <Button size="sm" type="submit">
-                                Save Design
-                              </Button>
-                            </div>
-                          </div>
-                          <div className="grid gap-4 md:grid-cols-[1fr_250px] lg:grid-cols-3 lg:gap-8">
-                            <div className="grid auto-rows-max items-start gap-4 lg:col-span-2 lg:gap-8">
-                              <NewProductName
-                                description={description}
-                                setDescription={setDescription}
-                              />
-                              <ProductCategoryAndTags />
-                            </div>
-                            <div className="grid auto-rows-max items-start gap-4 lg:gap-8">
-                              <ProductImage
-                                image={image}
-                                setImage={setImage}
-                                error={warning}
-                              />
-                            </div>
-                          </div>
-                        </div>
-                      </main>
-                      <div className="mt-10 flex items-center justify-center gap-8 md:hidden">
-                        <Button
-                          variant="outline"
-                          type="button"
-                          size="sm"
-                          onClick={resetForm}
-                        >
-                          Discard
-                        </Button>
-                        <Button size="sm" type="submit">
-                          Save Design
-                        </Button>
-                      </div>
-                    </div>
-                  </div>
-                </form>
-              </Form>
-            </main>
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+        <div className="flex flex-wrap items-center gap-4">
+          <Link href="/dashboard/">
+            <Button
+              variant="outline"
+              type="button"
+              size="icon"
+              className="h-9 w-9"
+            >
+              <ChevronLeft className="h-5 w-5" />
+              <span className="sr-only">Back</span>
+            </Button>
+          </Link>
+          <h1 className="text-lg font-semibold sm:text-xl">New Design</h1>
+          <div className="ml-auto flex gap-2">
+            <Button variant="outline" type="button" onClick={resetForm}>
+              Discard
+            </Button>
+            <Button type="submit">Save Article</Button>
           </div>
-          <Footer />
-        </main>
-      </SidebarProvider>
-    </>
+        </div>
+
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-3 lg:grid-cols-12">
+          <div className="space-y-6 md:col-span-2 lg:col-span-8">
+            <FormField
+              control={form.control}
+              name="name"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Design Title</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Title of the design" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="description"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Design Content</FormLabel>
+                  <FormControl>
+                    <TiptapEditor
+                      ref={editorRef}
+                      ssr
+                      output="html"
+                      placeholder={{
+                        paragraph: "Type your content here...",
+                      }}
+                      onContentChange={field.onChange}
+                      initialContent={field.value}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+
+          <div className="space-y-6 lg:col-span-4">
+            <DesignImage image={image} setImage={setImage} error={warning} />
+            <CategoryAndTags />
+          </div>
+        </div>
+      </form>
+    </Form>
   );
 }

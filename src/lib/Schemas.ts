@@ -34,3 +34,20 @@ export const SignUpSchema = z.object({
     .max(15, "Password can not be more than 15 characters"),
   code: z.string().optional(),
 });
+
+export const NewDesignSchema = z.object({
+  name: z
+    .string()
+    .min(10, "Name must be at least 10 characters")
+    .max(200)
+    .trim()
+    .regex(
+      /^[^\s_]+(?:[\s^\s_][^\s_]+)*$/,
+      "Name must not include underscores (_).",
+    ),
+  description: z.string().trim(),
+  category: z.string().min(1, "Required"),
+  tags: z.array(z.string()),
+});
+
+export type NewDesignSchemaType = z.infer<typeof NewDesignSchema>;
