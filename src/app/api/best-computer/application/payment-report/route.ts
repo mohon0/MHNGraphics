@@ -38,23 +38,18 @@ export async function GET(req: NextRequest) {
 
 export async function POST(req: NextRequest) {
   try {
-    const url = new URL(req.url);
-    const queryParams = new URLSearchParams(url.search);
-
-    const id = queryParams.get("id");
-    if (!id) {
+    const body = await req.json();
+    if (!body.applicationId) {
       return new NextResponse("Invalid query parameter");
     }
-    const body = await req.json();
-    const amount = parseFloat(body.amount);
+
     const response = await Prisma.transaction.create({
       data: {
-        trxId: body.trxId,
-        month: body.month,
-        amount: amount,
-        year: body.year,
-        applicationId: id,
-        time: body.date,
+        comment: body.comment,
+        PaymentMonth: body.PaymentMonth,
+        amount: body.amount,
+        PaymentReceiveDate: body.PaymentReceiveDate,
+        applicationId: body.applicationId,
       },
     });
     return new NextResponse(JSON.stringify(response), { status: 201 });

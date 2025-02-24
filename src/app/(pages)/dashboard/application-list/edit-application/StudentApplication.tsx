@@ -1,7 +1,6 @@
 "use client";
 
 import Preview from "@/app/(pages)/best-computer-training-center/application/ApplicationPreview";
-import { bangladeshDistricts } from "@/components/data/District";
 import EditApplicationImage from "@/components/form/formField/EditApplicationFormField";
 import { SingleApplicationUserType } from "@/components/interface/ApplicationType";
 import { Button } from "@/components/ui/button";
@@ -31,6 +30,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
+import { bangladeshDistricts } from "@/constant/District";
 import bkash from "@/images/tools/bkash.svg";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";

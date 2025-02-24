@@ -1,6 +1,5 @@
 "use client";
 
-import { bangladeshDistricts } from "@/components/data/District";
 import { FetchDuration } from "@/components/fetch/admin/FetchDuration";
 import { Button } from "@/components/ui/button";
 import {
@@ -31,6 +30,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
+import { bangladeshDistricts } from "@/constant/District";
 import bkash from "@/images/tools/bkash.svg";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";

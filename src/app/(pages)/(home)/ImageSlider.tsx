@@ -68,7 +68,7 @@ export default function ImageMarquee() {
                 width={160}
                 height={160}
                 className="h-full w-full object-contain transition-transform group-hover:scale-110"
-                loading="lazy" // Lazy load images for better performance
+                loading="lazy"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
               <div className="absolute bottom-2 left-2 right-2 text-white opacity-0 transition-opacity group-hover:opacity-100">
@@ -100,7 +100,7 @@ export default function ImageMarquee() {
                 width={160}
                 height={160}
                 className="h-full w-full object-contain transition-transform group-hover:scale-110"
-                loading="lazy" // Lazy load images for better performance
+                loading="lazy"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
               <div className="absolute bottom-2 left-2 right-2 text-white opacity-0 transition-opacity group-hover:opacity-100">

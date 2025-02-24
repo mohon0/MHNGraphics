@@ -1,10 +1,5 @@
 "use client";
 
-import {
-  FetchAdminData,
-  FetchRecentApplication,
-  FetchRecentDesign,
-} from "@/components/fetch/admin/FetchAdminData";
 import { FetchDuration } from "@/components/fetch/admin/FetchDuration";
 import { createSlug } from "@/components/helper/slug/CreateSlug";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -14,6 +9,11 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Switch } from "@/components/ui/switch";
+import {
+  FetchRecentApplication,
+  FetchRecentDesign,
+  useFetchAdminData,
+} from "@/services/admin";
 import axios from "axios";
 import { formatDistanceToNow } from "date-fns";
 import {
@@ -33,29 +33,18 @@ import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
 export default function AdminDashboard() {
-  const { isLoading, data } = FetchAdminData();
+  const { isLoading, data } = useFetchAdminData();
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <div className="container mx-auto p-6">
-        <DashboardHeader />
-        <div className="mt-6 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-          <QuickStats isLoading={isLoading} data={data} />
-          <DurationToggle />
-        </div>
-        <div className="mt-8 grid gap-6 md:grid-cols-2">
-          <RecentActivity />
-          <TopPerformingDesigns />
-        </div>
+      <div className="mt-6 grid grid-cols-2 gap-2 md:gap-6 lg:grid-cols-4">
+        <QuickStats isLoading={isLoading} data={data} />
+        <DurationToggle />
       </div>
-    </div>
-  );
-}
-
-function DashboardHeader() {
-  return (
-    <div className="flex items-center justify-between">
-      <h2 className="text-3xl font-bold text-gray-800">Admin Dashboard</h2>
+      <div className="mt-8 grid gap-6 md:grid-cols-2">
+        <RecentActivity />
+        <TopPerformingDesigns />
+      </div>
     </div>
   );
 }
@@ -206,7 +195,9 @@ function QuickStats({ isLoading, data }: QuickStatsProps) {
                 </div>
               </CardHeader>
               <CardContent>
-                <div className="text-2xl font-bold">{stat.value}</div>
+                <div className="text-lg font-bold md:text-2xl">
+                  {stat.value}
+                </div>
               </CardContent>
             </Card>
           ))}
@@ -229,11 +220,11 @@ export function RecentActivity() {
     <Card className="overflow-hidden bg-gradient-to-br from-white to-gray-50 shadow-lg">
       <CardHeader className="border-b border-gray-100 bg-white pb-4">
         <div className="flex items-center justify-between">
-          <CardTitle className="text-2xl font-bold text-gray-800">
+          <CardTitle className="text-lg font-bold text-gray-800 md:text-2xl">
             Recent Applications
           </CardTitle>
           <Link href="/dashboard/application-list?filter=All&page=1&sort=newest&certificate=All&name=&type=all">
-            <Button variant="ghost" size="sm">
+            <Button variant="link" size="sm">
               View All
             </Button>
           </Link>
@@ -264,7 +255,7 @@ export function RecentActivity() {
                     <p className="font-semibold text-gray-800">
                       {app.studentName}
                     </p>
-                    <div className="flex items-center space-x-2">
+                    <div className="flex flex-wrap items-center space-x-2 space-y-1">
                       <Badge variant="secondary" className="capitalize">
                         {app.course}
                       </Badge>
@@ -341,11 +332,11 @@ export function TopPerformingDesigns() {
     <Card className="overflow-hidden bg-gradient-to-br from-white to-gray-50 shadow-lg">
       <CardHeader className="border-b border-gray-100 bg-white pb-4">
         <div className="flex items-center justify-between">
-          <CardTitle className="text-2xl font-bold text-gray-800">
+          <CardTitle className="text-lg font-bold text-gray-800 md:text-2xl">
             Recent Designs
           </CardTitle>
           <Link href="/dashboard/all-design?category=all&query=&page=1">
-            <Button variant="ghost" size="sm">
+            <Button variant="link" size="sm">
               View All
             </Button>
           </Link>

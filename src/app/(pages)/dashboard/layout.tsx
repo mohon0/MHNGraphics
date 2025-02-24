@@ -15,7 +15,7 @@ export default function layout({
         <main className="w-full">
           <BreadCrumb />
           <div className="flex">
-            <main className="w-full">{children}</main>
+            <main className="mx-2 w-full md:mx-6">{children}</main>
           </div>
           <Footer />
         </main>

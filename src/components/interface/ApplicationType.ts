@@ -97,12 +97,3 @@ export interface ApplicationListType {
   mobileNumber: string;
   editable: boolean | null;
 }
-
-export interface PaymentReportType {
-  trxId: string;
-  id: string;
-  month: string;
-  time: string;
-  amount: number;
-  year: string;
-}

@@ -1,5 +1,4 @@
 "use client";
-import { bangladeshDistricts } from "@/components/data/District";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -20,6 +19,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
+import { bangladeshDistricts } from "@/constant/District";
 import img from "@/images/best-computer/logo.png";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";

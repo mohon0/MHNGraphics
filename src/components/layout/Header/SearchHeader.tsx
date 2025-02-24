@@ -1,5 +1,4 @@
 "use client";
-import { designCategories } from "@/components/data/ProductCategory";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -12,6 +11,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
+import { designCategories } from "@/constant/DesignCategory";
 import { motion, useMotionValueEvent, useScroll } from "framer-motion";
 import { LucideSearch } from "lucide-react";
 import Link from "next/link";

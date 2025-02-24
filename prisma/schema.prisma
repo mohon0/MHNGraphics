@@ -166,12 +166,11 @@ model Application {
 
 model Transaction {
   id          String  @id @default(auto()) @map("_id") @db.ObjectId
-  month       String
-  year        String
-  trxId       String
+  comment     String
   createdAt   DateTime @default(now())
+  PaymentMonth DateTime
+  PaymentReceiveDate DateTime
   amount      Float
-  time        String
   application Application @relation(fields: [applicationId], references: [id])
   applicationId String @db.ObjectId
 }

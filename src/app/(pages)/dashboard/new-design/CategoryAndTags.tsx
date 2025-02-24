@@ -1,4 +1,3 @@
-import { designCategories } from "@/components/data/ProductCategory";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -18,6 +17,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { designCategories } from "@/constant/DesignCategory";
 import { NewDesignSchemaType } from "@/lib/Schemas";
 import { X } from "lucide-react";
 import { useState } from "react";

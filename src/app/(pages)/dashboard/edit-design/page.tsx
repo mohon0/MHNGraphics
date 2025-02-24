@@ -1,6 +1,5 @@
 "use client";
 import EditDesignSkeleton from "@/components/common/skeleton/EditDesignSkeleton";
-import { designCategories } from "@/components/data/ProductCategory";
 import { FetchSingleDesignById } from "@/components/fetch/design/FetchSingleDesign";
 import EditDesignImage from "@/components/form/formField/EditDesignFormField";
 import {
@@ -31,6 +30,7 @@ import {
 } from "@/components/ui/select";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { Skeleton } from "@/components/ui/skeleton";
+import { designCategories } from "@/constant/DesignCategory";
 import TiptapEditor, { TiptapEditorRef } from "@/editor";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";

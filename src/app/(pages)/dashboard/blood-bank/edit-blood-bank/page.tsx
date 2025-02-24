@@ -4,7 +4,6 @@ import BloodDonateNotice from "@/app/(pages)/best-computer-training-center/blood
 import MemberModel, {
   MemberModelData,
 } from "@/app/(pages)/best-computer-training-center/blood-donate/MemberModel";
-import { bangladeshDistricts } from "@/components/data/District";
 import { FetchSingleDonar } from "@/components/fetch/best-computer/FetchBloodBank";
 import { Button } from "@/components/ui/button";
 import {
@@ -27,6 +26,7 @@ import {
 } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
+import { bangladeshDistricts } from "@/constant/District";
 import img from "@/images/best-computer/logo.png";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";

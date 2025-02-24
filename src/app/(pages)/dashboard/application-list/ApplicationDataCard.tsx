@@ -1,5 +1,22 @@
 "use client";
 
+import axios from "axios";
+import { format } from "date-fns";
+import {
+  CheckCircle2,
+  Clock,
+  FileText,
+  Loader2,
+  MoreVertical,
+  Receipt,
+  Settings,
+  TrashIcon,
+  XCircle,
+} from "lucide-react";
+import Link from "next/link";
+import * as React from "react";
+import { toast } from "react-toastify";
+
 import { ApplicationListType } from "@/components/interface/ApplicationType";
 import {
   AlertDialog,
@@ -10,70 +27,94 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardFooter } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
+import { Card } from "@/components/ui/card";
 import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectLabel,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Separator } from "@/components/ui/separator";
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuPortal,
+  DropdownMenuSeparator,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { Switch } from "@/components/ui/switch";
-import axios from "axios";
-import Image from "next/image";
-import { useState } from "react";
-import { FaFileAlt, FaMoneyBillWave, FaRegEdit, FaTrash } from "react-icons/fa";
-import { toast } from "react-toastify";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 interface ExtendedApplicationListType extends ApplicationListType {
   refetch: () => void;
 }
 
-export default function ApplicationDataCard(app: ExtendedApplicationListType) {
-  const [action, setAction] = useState(app.status);
-  const [checked, setChecked] = useState(app.editable || false);
-  const [certificate, setCertificate] = useState(app.certificate);
+const statusConfig = {
+  Approved: {
+    icon: CheckCircle2,
+    color: "text-green-500",
+    bgColor: "bg-green-50",
+  },
+  Pending: { icon: Clock, color: "text-yellow-500", bgColor: "bg-yellow-50" },
+  Rejected: { icon: XCircle, color: "text-red-500", bgColor: "bg-red-50" },
+  "At Office": {
+    icon: FileText,
+    color: "text-blue-600",
+    bgColor: "bg-blue-50",
+  },
+  Received: {
+    icon: CheckCircle2,
+    color: "text-green-600",
+    bgColor: "bg-green-50",
+  },
+  Fail: { icon: XCircle, color: "text-red-600", bgColor: "bg-red-50" },
+  "Course Incomplete": {
+    icon: Clock,
+    color: "text-yellow-600",
+    bgColor: "bg-yellow-50",
+  },
+} as const;
 
-  async function handleDelete(id: string) {
+type StatusType = keyof typeof statusConfig;
+
+export default function ApplicationDataCard(app: ExtendedApplicationListType) {
+  const [isUpdating, setIsUpdating] = React.useState(false);
+  const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState(false);
+
+  async function handleDelete() {
     try {
-      toast.loading("Deleting application...");
+      const toastId = toast.loading("Deleting application...");
       const response = await axios.delete(
-        `/api/best-computer/application?id=${id}`,
+        `/api/best-computer/application?id=${app.id}`,
       );
+
       if (response.status === 200) {
-        toast.dismiss();
-        toast.success("Application deleted successfully");
+        toast.update(toastId, {
+          render: "Application deleted successfully",
+          type: "success",
+          isLoading: false,
+          autoClose: 2000,
+        });
         app.refetch();
-      } else {
-        toast.dismiss();
-        toast.error("Error deleting application");
       }
     } catch (error) {
-      toast.dismiss();
       toast.error("Error deleting application");
+    } finally {
+      setIsDeleteDialogOpen(false);
     }
-  }
-
-  function formatDate(isoDateString: string): string {
-    const date = new Date(isoDateString);
-    return date.toLocaleDateString("en-GB", {
-      day: "2-digit",
-      month: "2-digit",
-      year: "numeric",
-    });
   }
 
   async function updateApplicationData(updateFields: Record<string, string>) {
     try {
-      toast.loading("Updating application...");
+      setIsUpdating(true);
       const formData = new FormData();
       formData.append("id", app.id);
       Object.entries(updateFields).forEach(([key, value]) => {
@@ -88,184 +129,231 @@ export default function ApplicationDataCard(app: ExtendedApplicationListType) {
         },
       );
 
-      toast.dismiss();
       if (response.status === 200) {
         toast.success("Application updated successfully");
         app.refetch();
-      } else {
-        toast.error("Error updating application");
-        setChecked(app.editable || false);
       }
     } catch (error) {
-      toast.dismiss();
-      toast.error("An error occurred");
-      setChecked(app.editable || false);
+      toast.error("Error updating application");
+    } finally {
+      setIsUpdating(false);
     }
   }
 
+  const StatusIcon = statusConfig[app.status as StatusType]?.icon || Clock;
+  const CertificateIcon =
+    statusConfig[app.certificate as StatusType]?.icon || Clock;
+
+  const isStatusDisabled = (status: string) => status === app.status;
+  const isCertificateDisabled = (status: string) => status === app.certificate;
+
   return (
-    <div>
-      <Card className="overflow-hidden transition-all duration-300 hover:shadow-md">
-        <CardContent className="p-6">
-          <div className="relative mx-auto mb-4 h-20 w-20">
-            <Image
-              src={app.image}
-              alt={app.studentName}
-              layout="fill"
-              objectFit="cover"
-              className="rounded-full"
-            />
+    <TooltipProvider>
+      <Card className="relative overflow-hidden">
+        <div className="p-4">
+          {/* Header with Image and Actions */}
+          <div className="flex items-start justify-between">
+            <div className="flex gap-3">
+              <div className="relative h-12 w-12">
+                <Avatar>
+                  <AvatarImage src={app.image} />
+                  <AvatarFallback>{app.studentName.slice(0, 3)}</AvatarFallback>
+                </Avatar>
+                {isUpdating && (
+                  <div className="absolute inset-0 flex items-center justify-center rounded-full bg-black/50">
+                    <Loader2 className="h-4 w-4 animate-spin text-white" />
+                  </div>
+                )}
+              </div>
+
+              <h3 className="font-semibold">{app.studentName}</h3>
+            </div>
+
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" size="icon" className="h-8 w-8">
+                  <MoreVertical className="h-4 w-4" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-56">
+                <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                <DropdownMenuGroup>
+                  <DropdownMenuItem asChild>
+                    <Link
+                      href={`/dashboard/application-list/single-application?id=${app.id}`}
+                    >
+                      <FileText className="mr-2 h-4 w-4" />
+                      View Details
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link
+                      href={`/dashboard/application-list/payment-report?id=${app.id}`}
+                    >
+                      <Receipt className="mr-2 h-4 w-4" />
+                      Payment Report
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem asChild>
+                    <Link
+                      href={`/dashboard/application-list/edit-application?id=${app.id}`}
+                    >
+                      <Settings className="mr-2 h-4 w-4" />
+                      Edit Application
+                    </Link>
+                  </DropdownMenuItem>
+                </DropdownMenuGroup>
+                <DropdownMenuSeparator />
+                <DropdownMenuSub>
+                  <DropdownMenuSubTrigger>
+                    <StatusIcon className="mr-2 h-4 w-4" />
+                    Update Status
+                  </DropdownMenuSubTrigger>
+                  <DropdownMenuPortal>
+                    <DropdownMenuSubContent>
+                      {["Approved", "Pending", "Rejected"].map((status) => {
+                        const StatusIcon =
+                          statusConfig[status as StatusType].icon;
+                        const disabled = isStatusDisabled(status);
+                        return (
+                          <DropdownMenuItem
+                            key={status}
+                            onClick={() =>
+                              !disabled && updateApplicationData({ status })
+                            }
+                            disabled={disabled}
+                            className={disabled ? "opacity-50" : ""}
+                          >
+                            <StatusIcon
+                              className={`mr-2 h-4 w-4 ${statusConfig[status as StatusType].color}`}
+                            />
+                            {status}
+                            {disabled && " (Current)"}
+                          </DropdownMenuItem>
+                        );
+                      })}
+                    </DropdownMenuSubContent>
+                  </DropdownMenuPortal>
+                </DropdownMenuSub>
+                <DropdownMenuSub>
+                  <DropdownMenuSubTrigger>
+                    <CertificateIcon className="mr-2 h-4 w-4" />
+                    Update Certificate
+                  </DropdownMenuSubTrigger>
+                  <DropdownMenuPortal>
+                    <DropdownMenuSubContent>
+                      {[
+                        "At Office",
+                        "Pending",
+                        "Fail",
+                        "Received",
+                        "Course Incomplete",
+                      ].map((status) => {
+                        const StatusIcon =
+                          statusConfig[status as StatusType].icon;
+                        const disabled = isCertificateDisabled(status);
+                        return (
+                          <DropdownMenuItem
+                            key={status}
+                            onClick={() =>
+                              !disabled &&
+                              updateApplicationData({ certificate: status })
+                            }
+                            disabled={disabled}
+                            className={disabled ? "opacity-50" : ""}
+                          >
+                            <StatusIcon
+                              className={`mr-2 h-4 w-4 ${statusConfig[status as StatusType].color}`}
+                            />
+                            {status}
+                            {disabled && " (Current)"}
+                          </DropdownMenuItem>
+                        );
+                      })}
+                    </DropdownMenuSubContent>
+                  </DropdownMenuPortal>
+                </DropdownMenuSub>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem
+                  className="text-red-600 focus:bg-red-50 focus:text-red-600"
+                  onClick={() => setIsDeleteDialogOpen(true)}
+                >
+                  <TrashIcon className="mr-2 h-4 w-4" />
+                  Delete Application
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
 
-          <div className="mb-4 text-center">
-            <h3 className="text-lg font-semibold text-primary">
-              {app.studentName}
-            </h3>
-            <p className="text-sm text-muted-foreground">{app.course}</p>
-            <Badge>{app.duration}</Badge>
-            <div className="mt-4 flex items-center justify-center gap-6">
-              <Label>Editable:</Label>
+          {/* Status Information */}
+          <div className="mt-4 flex items-center gap-2">
+            <Badge variant="secondary" className="h-6">
+              {app.duration}
+            </Badge>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Badge
+                  variant="secondary"
+                  className={`flex items-center gap-1 ${statusConfig[app.status as StatusType]?.bgColor} border-0`}
+                >
+                  <StatusIcon
+                    className={`h-3 w-3 ${statusConfig[app.status as StatusType]?.color}`}
+                  />
+                  {app.status}
+                </Badge>
+              </TooltipTrigger>
+              <TooltipContent>Application Status</TooltipContent>
+            </Tooltip>
+          </div>
+
+          {/* Info Grid */}
+          <div className="mt-4 grid grid-cols-2 gap-2 text-sm">
+            <div className="text-muted-foreground">Mobile:</div>
+            <div>{app.mobileNumber}</div>
+            <div className="text-muted-foreground">Applied:</div>
+            <div>{format(new Date(app.createdAt), "PPP")}</div>
+            <div className="text-muted-foreground">Certificate:</div>
+            <div className="flex items-center gap-2">
+              <CertificateIcon
+                className={`h-4 w-4 ${statusConfig[app.certificate as StatusType]?.color}`}
+              />
+              <span>{app.certificate}</span>
+            </div>
+            <div className="text-muted-foreground">Course:</div>
+            <div>{app.course}</div>
+            <div className="text-muted-foreground">Editable:</div>
+            <div>
               <Switch
-                checked={checked}
-                onCheckedChange={(value) => {
-                  setChecked(value);
-                  updateApplicationData({ editable: value ? "true" : "false" });
-                }}
+                checked={app.editable || false}
+                onCheckedChange={(value) =>
+                  updateApplicationData({ editable: value.toString() })
+                }
+                disabled={isUpdating}
+                className="origin-left scale-75"
               />
             </div>
           </div>
-          <Separator className="my-4" />
-          <div className="grid grid-cols-2 gap-2 text-sm">
-            <div className="text-muted-foreground">Date:</div>
-            <div className="font-medium">{formatDate(app.createdAt)}</div>
-            <div className="text-muted-foreground">Number:</div>
-            <div className="font-medium">{app.mobileNumber}</div>
-            <div className="text-muted-foreground">Status:</div>
-            <StatusBadge value={app.status} />
-            <div className="text-muted-foreground">Certificate:</div>
-            <StatusBadge value={app.certificate} />
-          </div>
-
-          <div className="mt-4 space-y-2">
-            <div>
-              <Label>Update Status:</Label>
-              <Select
-                value={action}
-                onValueChange={(value) => {
-                  setAction(value);
-                  updateApplicationData({ status: value });
-                }}
-              >
-                <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Update Status" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectGroup>
-                    <SelectLabel>Update Status</SelectLabel>
-                    <SelectItem value="Approved">Approved</SelectItem>
-                    <SelectItem value="Pending">Pending</SelectItem>
-                    <SelectItem value="Rejected">Rejected</SelectItem>
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
-            </div>
-            <div>
-              <Label>Update Certificate:</Label>
-              <Select
-                value={certificate}
-                onValueChange={(value) => {
-                  setCertificate(value);
-                  updateApplicationData({ certificate: value });
-                }}
-              >
-                <SelectTrigger className="w-full">
-                  <SelectValue placeholder="Update Certificate" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectGroup>
-                    <SelectLabel>Update Certificate</SelectLabel>
-                    <SelectItem value="At Office">At Office</SelectItem>
-                    <SelectItem value="Pending">Pending</SelectItem>
-                    <SelectItem value="Fail">Fail</SelectItem>
-                    <SelectItem value="Received">Received</SelectItem>
-                    <SelectItem value="Course Incomplete">
-                      Course Incomplete
-                    </SelectItem>
-                  </SelectGroup>
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
-        </CardContent>
-        <CardFooter className="flex flex-wrap justify-between gap-2 bg-muted/50 p-2">
-          <Button size="sm" variant="outline" className="flex-1" asChild>
-            <a href={`/dashboard/application-list/payment-report?id=${app.id}`}>
-              <FaMoneyBillWave className="mr-2 h-3 w-3" />
-              Payment
-            </a>
-          </Button>
-          <Button size="sm" variant="outline" className="flex-1" asChild>
-            <a
-              href={`/dashboard/application-list/single-application?id=${app.id}`}
-            >
-              <FaFileAlt className="mr-2 h-3 w-3" />
-              Details
-            </a>
-          </Button>
-          <Button size="sm" variant="outline" className="flex-1" asChild>
-            <a
-              href={`/dashboard/application-list/edit-application?id=${app.id}`}
-            >
-              <FaRegEdit className="mr-2 h-3 w-3" />
-              Edit
-            </a>
-          </Button>
-          <AlertDialog>
-            <AlertDialogTrigger asChild>
-              <Button size="sm" variant="destructive" className="flex-1">
-                <FaTrash className="mr-2 h-3 w-3" />
-                Delete
-              </Button>
-            </AlertDialogTrigger>
-            <AlertDialogContent>
-              <AlertDialogHeader>
-                <AlertDialogTitle>Delete Application?</AlertDialogTitle>
-                <AlertDialogDescription>
-                  This action cannot be undone. The application data will be
-                  permanently deleted.
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogCancel>Cancel</AlertDialogCancel>
-                <AlertDialogAction onClick={() => handleDelete(app.id)}>
-                  Delete
-                </AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
-        </CardFooter>
+        </div>
       </Card>
-    </div>
-  );
-}
-function StatusBadge({ value }: { value: string }) {
-  const getStatusColor = (status: string) => {
-    switch (status.toLowerCase()) {
-      case "approved":
-        return "text-primary-100";
-      case "received":
-        return "text-primary-200";
-      case "pending":
-        return "text-yellow-600";
-      case "rejected":
-      case "fail":
-        return " text-destructive";
-      case "at office":
-        return " text-blue-700";
-      default:
-        return "text-primary";
-    }
-  };
 
-  return <p className={`${getStatusColor(value)} font-bold`}>{value}</p>;
+      <AlertDialog
+        open={isDeleteDialogOpen}
+        onOpenChange={setIsDeleteDialogOpen}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete Application</AlertDialogTitle>
+            <AlertDialogDescription>
+              This will permanently delete {app.studentName}&apos;s application.
+              This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={handleDelete}>Delete</AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </TooltipProvider>
+  );
 }

@@ -11,7 +11,6 @@ import { useRouter, useSearchParams } from "next/navigation";
 import * as React from "react";
 
 import PaginationUi from "@/components/common/pagination/PaginationUi";
-import { designCategories } from "@/components/data/ProductCategory";
 import { DesignType } from "@/components/interface/DesignType";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
@@ -33,6 +32,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import { designCategories } from "@/constant/DesignCategory";
 import { cn } from "@/lib/utils";
 import { useFetchUserDesign } from "@/services/design";
 import DesignCard from "./DesignCard";

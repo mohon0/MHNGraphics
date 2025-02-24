@@ -1,15 +1,17 @@
+import { QUERY_KEYS } from "@/constant/QueryKeys";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 
-export function FetchAdminData() {
+export function useFetchAdminData() {
   return useQuery({
-    queryKey: ["Admin data"],
+    queryKey: [QUERY_KEYS.ADMIN_DATA],
     queryFn: async () => {
       const response = await axios.get(`/api/admin/data`);
       return response.data;
     },
   });
 }
+
 export function FetchRecentApplication() {
   return useQuery({
     queryKey: ["Recent applications"],
