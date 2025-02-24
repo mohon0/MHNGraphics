@@ -1,8 +1,7 @@
 "use client";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useSession } from "next-auth/react";
-import { useSearchParams } from "next/navigation";
-import { useRouter } from "next/router";
+import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useEffect } from "react";
 import DeletePaymentSummary from "./DeletePaymentSummary";
 import PaymentForm from "./PaymentForm";
