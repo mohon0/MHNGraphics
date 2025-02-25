@@ -1,14 +1,11 @@
 "use client";
-import EditDesignSkeleton from "@/components/common/skeleton/EditDesignSkeleton";
+
 import { FetchSingleDesignById } from "@/components/fetch/design/FetchSingleDesign";
 import EditDesignImage from "@/components/form/formField/EditDesignFormField";
 import {
   NewDesignFormSchema,
   NewProductFormSchemaType,
 } from "@/components/form/formSchema/FormSchema";
-import BreadCrumb from "@/components/layout/admin/BreadCrumb";
-import { DashboardSidebar } from "@/components/layout/admin/DashboardSidebar";
-import Footer from "@/components/layout/footer/Footer";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -28,7 +25,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { SidebarProvider } from "@/components/ui/sidebar";
 import { Skeleton } from "@/components/ui/skeleton";
 import { designCategories } from "@/constant/DesignCategory";
 import TiptapEditor, { TiptapEditorRef } from "@/editor";
@@ -40,6 +36,7 @@ import { Suspense, useCallback, useEffect, useRef, useState } from "react";
 import { useForm, useWatch } from "react-hook-form";
 import { CgAsterisk } from "react-icons/cg";
 import { toast } from "sonner";
+import { DesignSkeleton } from "../new-design/skeleton";
 
 export default function EditDesign() {
   return (
@@ -198,17 +195,7 @@ function DesignPage() {
   }
 
   if (isLoading) {
-    return (
-      <SidebarProvider>
-        <DashboardSidebar />
-        <main className="w-full">
-          <BreadCrumb />
-          <div>
-            <EditDesignSkeleton />;
-          </div>
-        </main>
-      </SidebarProvider>
-    );
+    return <DesignSkeleton />;
   }
 
   if (isError) {
@@ -216,209 +203,191 @@ function DesignPage() {
   }
 
   return (
-    <SidebarProvider>
-      <DashboardSidebar />
-      <main className="w-full">
-        <BreadCrumb />
-        <div className="flex">
-          <main className="w-full">
-            <>
-              <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)}>
-                  <div className="flex min-h-screen w-full flex-col">
-                    <div className="flex flex-col sm:gap-4">
-                      <main className="grid flex-1 items-start gap-4 sm:py-0 md:gap-8">
-                        <div className="mx-auto grid max-w-[59rem] flex-1 auto-rows-max gap-4">
-                          <div className="flex items-center gap-4">
-                            <Button
-                              variant="outline"
-                              type="button"
-                              size="icon"
-                              className="h-7 w-7"
-                              onClick={() => router.back()}
-                            >
-                              <ChevronLeft className="h-4 w-4" />
-                              <span className="sr-only">Back</span>
-                            </Button>
-                            <h1 className="flex-1 shrink-0 whitespace-nowrap text-xl font-semibold tracking-tight sm:grow-0">
-                              Edit Design
-                            </h1>
-                            <div className="hidden items-center gap-2 md:ml-auto md:flex">
+    <>
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)}>
+          <div className="flex min-h-screen w-full flex-col">
+            <div className="flex flex-col sm:gap-4">
+              <main className="grid flex-1 items-start gap-4 sm:py-0 md:gap-8">
+                <div className="mx-auto grid flex-1 auto-rows-max gap-4">
+                  <div className="flex items-center gap-4">
+                    <Button
+                      variant="outline"
+                      type="button"
+                      size="icon"
+                      className="h-7 w-7"
+                      onClick={() => router.back()}
+                    >
+                      <ChevronLeft className="h-4 w-4" />
+                      <span className="sr-only">Back</span>
+                    </Button>
+                    <h1 className="flex-1 shrink-0 whitespace-nowrap text-xl font-semibold tracking-tight sm:grow-0">
+                      Edit Design
+                    </h1>
+                    <div className="hidden items-center gap-2 md:ml-auto md:flex">
+                      <Button
+                        variant="outline"
+                        type="button"
+                        onClick={() => {
+                          form.reset();
+                          setNewImage(null);
+
+                          setDeletedImage(null);
+                        }}
+                      >
+                        Discard
+                      </Button>
+                      <Button type="submit">Edit Design</Button>
+                    </div>
+                  </div>
+                  <div className="grid gap-4 md:grid-cols-[1fr_250px] lg:grid-cols-3 lg:gap-8">
+                    <div className="grid auto-rows-max items-start gap-4 lg:col-span-2 lg:gap-8">
+                      <FormField
+                        control={form.control}
+                        name="name"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Design Title</FormLabel>
+                            <FormControl>
+                              <Input
+                                placeholder="Title of the design"
+                                {...field}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={form.control}
+                        name="description"
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormLabel>Design Content</FormLabel>
+                            <FormControl>
+                              <TiptapEditor
+                                ref={editorRef}
+                                ssr
+                                output="html"
+                                placeholder={{
+                                  paragraph: "Type your content here...",
+                                }}
+                                onContentChange={field.onChange}
+                                initialContent={
+                                  field.value || data?.description || ""
+                                }
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+                    <div className="grid auto-rows-max items-start gap-4 lg:gap-8">
+                      <EditDesignImage
+                        image={initialImage}
+                        newImage={newImage}
+                        deletedImage={deletedImage}
+                        handleAddNewImage={handleAddNewImage}
+                        handleDeleteImage={handleDeleteImage}
+                      />
+                      <Card x-chunk="dashboard-07-chunk-2">
+                        <CardHeader>
+                          <CardTitle>Category</CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                          <div className="grid items-baseline gap-6">
+                            <div className="grid gap-3">
+                              <div>
+                                <FormField
+                                  name="category"
+                                  render={({ field }) => (
+                                    <FormItem>
+                                      <FormLabel className="flex">
+                                        <span>Category</span>
+                                        <CgAsterisk color="red" />
+                                      </FormLabel>
+                                      <Select
+                                        onValueChange={field.onChange}
+                                        defaultValue={data.category || ""}
+                                      >
+                                        <SelectTrigger>
+                                          <SelectValue placeholder="Select Category" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                          {designCategories.map((category) => (
+                                            <SelectItem
+                                              key={category.value}
+                                              value={category.value}
+                                            >
+                                              {category.label}
+                                            </SelectItem>
+                                          ))}
+                                        </SelectContent>
+                                      </Select>
+                                      <FormMessage />
+                                    </FormItem>
+                                  )}
+                                />
+                              </div>
+                            </div>
+                          </div>
+
+                          <div>
+                            <FormLabel>Tags</FormLabel>
+                            <div className="mb-2 flex flex-wrap gap-2">
+                              {tags
+                                .filter((tag) => tag.trim() !== "")
+                                .map((tag: string, index: number) => (
+                                  <Badge
+                                    key={index}
+                                    variant="secondary"
+                                    className="px-2 py-1 text-sm"
+                                  >
+                                    {tag}
+                                    <Button
+                                      variant="ghost"
+                                      size="sm"
+                                      type="button"
+                                      className="ml-1 h-auto p-0"
+                                      onClick={() => removeTag(index)}
+                                    >
+                                      <X className="h-3 w-3" />
+                                      <span className="sr-only">
+                                        Remove {tag} tag
+                                      </span>
+                                    </Button>
+                                  </Badge>
+                                ))}
+                            </div>
+                            <div className="flex gap-2">
+                              <Input
+                                type="text"
+                                value={input}
+                                onChange={(e) => setInput(e.target.value)}
+                                onKeyDown={handleKeyDown}
+                                placeholder="Add a tag..."
+                                className="flex-grow"
+                              />
                               <Button
                                 variant="outline"
                                 type="button"
-                                onClick={() => {
-                                  form.reset();
-                                  setNewImage(null);
-
-                                  setDeletedImage(null);
-                                }}
+                                onClick={() => input && addTag(input)}
                               >
-                                Discard
+                                Add
                               </Button>
-                              <Button type="submit">Edit Design</Button>
                             </div>
                           </div>
-                          <div className="grid gap-4 md:grid-cols-[1fr_250px] lg:grid-cols-3 lg:gap-8">
-                            <div className="grid auto-rows-max items-start gap-4 lg:col-span-2 lg:gap-8">
-                              <FormField
-                                control={form.control}
-                                name="name"
-                                render={({ field }) => (
-                                  <FormItem>
-                                    <FormLabel>Design Title</FormLabel>
-                                    <FormControl>
-                                      <Input
-                                        placeholder="Title of the design"
-                                        {...field}
-                                      />
-                                    </FormControl>
-                                    <FormMessage />
-                                  </FormItem>
-                                )}
-                              />
-                              <FormField
-                                control={form.control}
-                                name="description"
-                                render={({ field }) => (
-                                  <FormItem>
-                                    <FormLabel>Design Content</FormLabel>
-                                    <FormControl>
-                                      <TiptapEditor
-                                        ref={editorRef}
-                                        ssr
-                                        output="html"
-                                        placeholder={{
-                                          paragraph:
-                                            "Type your content here...",
-                                        }}
-                                        onContentChange={field.onChange}
-                                        initialContent={
-                                          field.value || data?.description || ""
-                                        }
-                                      />
-                                    </FormControl>
-                                    <FormMessage />
-                                  </FormItem>
-                                )}
-                              />
-                            </div>
-                            <div className="grid auto-rows-max items-start gap-4 lg:gap-8">
-                              <EditDesignImage
-                                image={initialImage}
-                                newImage={newImage}
-                                deletedImage={deletedImage}
-                                handleAddNewImage={handleAddNewImage}
-                                handleDeleteImage={handleDeleteImage}
-                              />
-                              <Card x-chunk="dashboard-07-chunk-2">
-                                <CardHeader>
-                                  <CardTitle>Category</CardTitle>
-                                </CardHeader>
-                                <CardContent>
-                                  <div className="grid items-baseline gap-6">
-                                    <div className="grid gap-3">
-                                      <div>
-                                        <FormField
-                                          name="category"
-                                          render={({ field }) => (
-                                            <FormItem>
-                                              <FormLabel className="flex">
-                                                <span>Category</span>
-                                                <CgAsterisk color="red" />
-                                              </FormLabel>
-                                              <Select
-                                                onValueChange={field.onChange}
-                                                defaultValue={
-                                                  data.category || ""
-                                                }
-                                              >
-                                                <SelectTrigger>
-                                                  <SelectValue placeholder="Select Category" />
-                                                </SelectTrigger>
-                                                <SelectContent>
-                                                  {designCategories.map(
-                                                    (category) => (
-                                                      <SelectItem
-                                                        key={category.value}
-                                                        value={category.value}
-                                                      >
-                                                        {category.label}
-                                                      </SelectItem>
-                                                    ),
-                                                  )}
-                                                </SelectContent>
-                                              </Select>
-                                              <FormMessage />
-                                            </FormItem>
-                                          )}
-                                        />
-                                      </div>
-                                    </div>
-                                  </div>
-
-                                  <div>
-                                    <FormLabel>Tags</FormLabel>
-                                    <div className="mb-2 flex flex-wrap gap-2">
-                                      {tags
-                                        .filter((tag) => tag.trim() !== "")
-                                        .map((tag: string, index: number) => (
-                                          <Badge
-                                            key={index}
-                                            variant="secondary"
-                                            className="px-2 py-1 text-sm"
-                                          >
-                                            {tag}
-                                            <Button
-                                              variant="ghost"
-                                              size="sm"
-                                              type="button"
-                                              className="ml-1 h-auto p-0"
-                                              onClick={() => removeTag(index)}
-                                            >
-                                              <X className="h-3 w-3" />
-                                              <span className="sr-only">
-                                                Remove {tag} tag
-                                              </span>
-                                            </Button>
-                                          </Badge>
-                                        ))}
-                                    </div>
-                                    <div className="flex gap-2">
-                                      <Input
-                                        type="text"
-                                        value={input}
-                                        onChange={(e) =>
-                                          setInput(e.target.value)
-                                        }
-                                        onKeyDown={handleKeyDown}
-                                        placeholder="Add a tag..."
-                                        className="flex-grow"
-                                      />
-                                      <Button
-                                        variant="outline"
-                                        type="button"
-                                        onClick={() => input && addTag(input)}
-                                      >
-                                        Add
-                                      </Button>
-                                    </div>
-                                  </div>
-                                </CardContent>
-                              </Card>
-                            </div>
-                          </div>
-                        </div>
-                      </main>
+                        </CardContent>
+                      </Card>
                     </div>
                   </div>
-                </form>
-              </Form>
-            </>
-          </main>
-        </div>
-        <Footer />
-      </main>
-    </SidebarProvider>
+                </div>
+              </main>
+            </div>
+          </div>
+        </form>
+      </Form>
+    </>
   );
 }

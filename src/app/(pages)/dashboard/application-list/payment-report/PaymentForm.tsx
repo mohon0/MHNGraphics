@@ -4,7 +4,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
 import { format } from "date-fns";
 import { CalendarIcon, Loader2 } from "lucide-react";
-import { useRouter } from "next/navigation";
 import * as React from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -28,6 +27,7 @@ import {
 } from "@/components/ui/popover";
 import { PaymentFormSchema, PaymentFormSchemaType } from "@/lib/Schemas";
 import { cn } from "@/lib/utils";
+import { useFetchPaymentReport } from "@/services/payment";
 
 interface PaymentFormProps {
   id: string; // applicationId is required
@@ -36,7 +36,7 @@ interface PaymentFormProps {
 
 export default function PaymentForm({ id, onSuccess }: PaymentFormProps) {
   const [isSubmitting, setIsSubmitting] = React.useState(false);
-  const router = useRouter();
+  const { refetch } = useFetchPaymentReport(id);
 
   const form = useForm<PaymentFormSchemaType>({
     resolver: zodResolver(PaymentFormSchema),
@@ -67,7 +67,7 @@ export default function PaymentForm({ id, onSuccess }: PaymentFormProps) {
         success: () => {
           form.reset();
           onSuccess?.();
-          router.refresh();
+          refetch();
           return "Payment added successfully!";
         },
         error: "Failed to add payment. Please try again.",
