@@ -8,7 +8,6 @@ import { useRouter } from "next/navigation";
 import * as React from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
-import { z } from "zod";
 
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
@@ -27,31 +26,8 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { PaymentFormSchema, PaymentFormSchemaType } from "@/lib/Schemas";
 import { cn } from "@/lib/utils";
-
-const formSchema = z.object({
-  receiveDate: z.date({
-    required_error: "Payment receive date is required",
-  }),
-  paymentMonth: z.date({
-    required_error: "Payment month is required",
-  }),
-  amount: z.string().refine(
-    (value) => {
-      const num = parseFloat(value);
-      return !isNaN(num) && num > 0 && num <= 100000;
-    },
-    {
-      message: "Amount must be between 0 and 100,000",
-    },
-  ),
-  comment: z
-    .string()
-    .min(2, "Comment is required")
-    .max(70, "Comment is too long"),
-});
-
-type FormValues = z.infer<typeof formSchema>;
 
 interface PaymentFormProps {
   id: string; // applicationId is required
@@ -62,15 +38,15 @@ export default function PaymentForm({ id, onSuccess }: PaymentFormProps) {
   const [isSubmitting, setIsSubmitting] = React.useState(false);
   const router = useRouter();
 
-  const form = useForm<FormValues>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<PaymentFormSchemaType>({
+    resolver: zodResolver(PaymentFormSchema),
     defaultValues: {
       comment: "",
       amount: "",
     },
   });
 
-  async function onSubmit(data: FormValues) {
+  async function onSubmit(data: PaymentFormSchemaType) {
     setIsSubmitting(true);
 
     const formattedData = {

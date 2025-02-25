@@ -51,3 +51,27 @@ export const NewDesignSchema = z.object({
 });
 
 export type NewDesignSchemaType = z.infer<typeof NewDesignSchema>;
+
+export const PaymentFormSchema = z.object({
+  receiveDate: z.date({
+    required_error: "Payment receive date is required",
+  }),
+  paymentMonth: z.date({
+    required_error: "Payment month is required",
+  }),
+  amount: z.string().refine(
+    (value) => {
+      const num = parseFloat(value);
+      return !isNaN(num) && num >= -100000 && num <= 100000;
+    },
+    {
+      message: "Amount must be between -100,000 and 100,000",
+    },
+  ),
+  comment: z
+    .string()
+    .min(2, "Comment is required")
+    .max(70, "Comment is too long"),
+});
+
+export type PaymentFormSchemaType = z.infer<typeof PaymentFormSchema>;
