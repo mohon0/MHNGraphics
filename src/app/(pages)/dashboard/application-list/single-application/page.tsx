@@ -99,7 +99,8 @@ function SingleApplication({ application }: SingleApplicationUserType) {
           </div>
           <Button
             variant="secondary"
-            className="mx-auto my-4 bg-cyan-700 text-lg font-bold text-white">
+            className="mx-auto my-4 bg-cyan-700 text-lg font-bold text-white"
+          >
             Admission Form
           </Button>
           <div className="mr-1 flex flex-col justify-end border print:text-black">
@@ -130,7 +131,7 @@ function SingleApplication({ application }: SingleApplicationUserType) {
           <table className="w-full">
             <tbody>
               <tr className="flex flex-col md:flex-row print:flex-row">
-                <td className="w-full border p-1 px-2 md:w-1/2 print:w-1/2">
+                <td className="w-full border-collapse border-2 p-1 px-2 md:w-1/2 print:w-1/2">
                   <span className="font-bold">Student Full Name: </span>
                   <span className="pl-3">
                     {capitalizeFirstLetter(application.studentName)}
@@ -154,11 +155,11 @@ function SingleApplication({ application }: SingleApplicationUserType) {
                 value2={application.maritalStatus}
               />
               <tr className="flex flex-col md:flex-row print:flex-row">
-                <td className="w-full border p-1 px-2 md:w-1/2 print:w-1/2">
+                <td className="w-full border-collapse border-2 p-1 px-2 md:w-1/2 print:w-1/2">
                   <span className="font-bold">BirthDay: </span>
                   <span className="pl-3">{application.birthDay}</span>
                 </td>
-                <td className="w-full border p-1 px-2 md:w-1/2 print:w-1/2">
+                <td className="w-full border-collapse border-2 p-1 px-2 md:w-1/2 print:w-1/2">
                   <span className="font-bold">Blood Group: </span>
                   <span className="pl-3">{application.bloodGroup}</span>
                 </td>
@@ -182,11 +183,11 @@ function SingleApplication({ application }: SingleApplicationUserType) {
                 value2={application.district}
               />
               <tr className="flex flex-col md:flex-row print:flex-row">
-                <td className="w-full border p-1 px-2 md:w-1/2 print:w-1/2">
+                <td className="w-full border-collapse border-2 p-1 px-2 md:w-1/2 print:w-1/2">
                   <span className="font-bold">Email Address: </span>
                   <span className="pl-3">{application.email}</span>
                 </td>
-                <td className="w-full border p-1 px-2 md:w-1/2 print:w-1/2">
+                <td className="w-full border-collapse border-2 p-1 px-2 md:w-1/2 print:w-1/2">
                   <span className="font-bold">Computer: </span>
                   <span className="pl-3">{application.pc}</span>
                 </td>
@@ -216,11 +217,11 @@ function SingleApplication({ application }: SingleApplicationUserType) {
                 value2={application.nationality}
               />
               <tr className="flex flex-col md:flex-row print:flex-row">
-                <td className="w-full border p-1 px-2 md:w-1/2 print:w-1/2">
+                <td className="w-full border-collapse border-2 p-1 px-2 md:w-1/2 print:w-1/2">
                   <span className="font-bold">Course Name: </span>
                   <span className="pl-3 uppercase">{application.course}</span>
                 </td>
-                <td className="w-full border p-1 px-2 md:w-1/2 print:w-1/2">
+                <td className="w-full border-collapse border-2 p-1 px-2 md:w-1/2 print:w-1/2">
                   <span className="font-bold">Duration: </span>
                   <span className="pl-3">{duration}</span>
                 </td>
@@ -289,9 +290,10 @@ function SingleApplication({ application }: SingleApplicationUserType) {
       <Button
         onClick={() => reactToPrintFn()}
         size="lg"
-        className="mx-auto mb-10 mt-10 flex items-center gap-3 print:hidden">
+        className="mx-auto mb-10 mt-10 flex items-center gap-3 print:hidden"
+      >
         <IoMdPrint />
-        Print
+        Print Application
       </Button>
     </div>
   );
@@ -316,11 +318,11 @@ function Model({ item1, value1, value2, item2 }: props) {
   return (
     <>
       <tr className="flex flex-col md:flex-row print:flex-row">
-        <td className="w-full border p-1 px-2 md:w-1/2 print:w-1/2">
+        <td className="w-full border-collapse border-2 p-1 px-2 md:w-1/2 print:w-1/2">
           <span className="font-bold">{item1}: </span>
           <span className="pl-3">{capitalizeFirstLetter(value1)}</span>
         </td>
-        <td className="w-full border p-1 px-2 md:w-1/2 print:w-1/2">
+        <td className="w-full border-collapse border-2 p-1 px-2 md:w-1/2 print:w-1/2">
           <span className="font-bold">{item2}: </span>
           <span className="pl-3">{capitalizeFirstLetter(value2)}</span>
         </td>
@@ -336,7 +338,8 @@ export default function SingleApplicationPageComponent() {
         <div className="text-center">
           <Skeleton className="h-10 w-full" />
         </div>
-      }>
+      }
+    >
       <SingleApplicationPage />
     </Suspense>
   );
