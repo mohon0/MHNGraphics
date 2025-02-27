@@ -22,11 +22,15 @@ export const BubbleMenu = ({
   children,
   ...props
 }: BubbleMenuProps) => {
-  const menuEl = useRef<HTMLDivElement>(document.createElement("div"));
+  const menuEl = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
-    if (editor?.isDestroyed) {
-      return;
+    if (!editor || editor.isDestroyed) return;
+
+    // Create menu element if not already created
+    if (!menuEl.current) {
+      menuEl.current = document.createElement("div");
+      document.body.appendChild(menuEl.current);
     }
 
     const {
@@ -36,41 +40,31 @@ export const BubbleMenu = ({
       shouldShow = null,
     } = props;
 
-    const menuEditor = editor;
-
-    if (!menuEditor) {
-      console.warn(
-        "BubbleMenu component is not rendered inside of an editor component or does not have editor prop.",
-      );
-      return;
-    }
-
     const plugin = BubbleMenuPlugin({
       updateDelay,
-      editor: menuEditor || editor,
+      editor,
       element: menuEl.current,
       pluginKey,
       shouldShow,
       tippyOptions,
     });
 
-    menuEditor.registerPlugin(plugin);
-    return () => {
-      menuEditor.unregisterPlugin(pluginKey);
-      window.requestAnimationFrame(() => {
-        if (menuEl.current.parentNode) {
-          menuEl.current.parentNode.removeChild(menuEl.current);
-        }
-      });
-    };
-  }, [editor]);
+    editor.registerPlugin(plugin);
 
-  const portal = createPortal(
+    return () => {
+      editor.unregisterPlugin(pluginKey);
+      if (menuEl.current?.parentNode) {
+        menuEl.current.parentNode.removeChild(menuEl.current);
+      }
+    };
+  }, [editor, props]);
+
+  if (!menuEl.current) return null; // Ensure menuEl exists before rendering
+
+  return createPortal(
     <div className={clsx("rounded bg-background shadow", className)}>
       {children}
     </div>,
     menuEl.current,
   );
-
-  return portal;
 };

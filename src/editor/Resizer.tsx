@@ -56,7 +56,7 @@ const Resizer = () => {
   const { maxWidth, minWidth } = useMemo(() => {
     const width = contentElement.current?.getBoundingClientRect().width || 0;
     return { maxWidth: width, minWidth: width * 0.25 };
-  }, [contentElement.current]);
+  }, [contentElement]);
 
   const startResizing = (
     event: React.PointerEvent<HTMLDivElement>,
@@ -140,7 +140,7 @@ const Resizer = () => {
     resizeInfo.ratio = width / height;
 
     updateControlPosition();
-  }, [nodeState]);
+  }, [nodeState, updateControlPosition]);
 
   if (!nodeState || !contentElement.current) return;
 
