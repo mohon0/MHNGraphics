@@ -28,7 +28,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import axios, { AxiosResponse } from "axios";
+import { useDeleteDesign, useUpdateDesignStatus } from "@/services/design";
 import { formatDistanceToNow } from "date-fns/formatDistanceToNow";
 import { Edit, MoreVertical, Trash2 } from "lucide-react";
 import { useSession } from "next-auth/react";
@@ -36,7 +36,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { toast } from "sonner";
 
 export default function DesignCard({
   design,
@@ -49,6 +48,8 @@ export default function DesignCard({
   const [selectedDesign, setSelectedDesign] = useState<string | null>(null);
   const router = useRouter();
   const { data: session } = useSession();
+  const deleteMutation = useDeleteDesign();
+  const updateStatusMutation = useUpdateDesignStatus();
 
   const handleEdit = (id: string) => {
     router.push(`/dashboard/edit-design?id=${id}`);
@@ -58,68 +59,19 @@ export default function DesignCard({
     setSelectedDesign(id);
     setDeleteDialogOpen(true);
   };
-  const confirmDelete = async () => {
-    try {
-      if (selectedDesign) {
-        const toastResult = toast.promise(
-          axios.delete<{ message: string }>(
-            `/api/design/single-design?id=${selectedDesign}`,
-          ),
-          {
-            loading: "Deleting design...",
-            success: (res: AxiosResponse<{ message: string }>) =>
-              res.data.message || "Design Deleted successfully",
-            error: (err: unknown) => {
-              if (axios.isAxiosError(err)) {
-                return (
-                  err.response?.data?.message || "Failed to Delete design ❌"
-                );
-              }
-              return "Something went wrong. Please try again.";
-            },
-          },
-        );
-
-        const response = await toastResult.unwrap();
-        if (response.status === 200) {
-          refetch();
+  const confirmDelete = () => {
+    if (selectedDesign) {
+      deleteMutation.mutate(selectedDesign, {
+        onSuccess: () => {
           setDeleteDialogOpen(false);
           setSelectedDesign(null);
-        }
-      }
-    } catch (error) {
-      console.error("Error updating design:", error);
+        },
+      });
     }
   };
 
-  const handleStatusChange = async (id: string, status: string) => {
-    try {
-      const toastResult = toast.promise(
-        axios.patch<{ message: string }>(`/api/design/single-design?id=${id}`, {
-          status,
-        }),
-        {
-          loading: "Updating design status...",
-          success: (res: AxiosResponse<{ message: string }>) =>
-            res.data.message || "Design updated successfully 🎉",
-          error: (err: unknown) => {
-            if (axios.isAxiosError(err)) {
-              return (
-                err.response?.data?.message || "Failed to update design ❌"
-              );
-            }
-            return "Something went wrong. Please try again.";
-          },
-        },
-      );
-
-      const response = await toastResult.unwrap();
-      if (response.status === 200) {
-        refetch();
-      }
-    } catch (error) {
-      console.error("Error updating design:", error);
-    }
+  const handleStatusChange = (id: string, status: string) => {
+    updateStatusMutation.mutate({ id, status });
   };
 
   return (

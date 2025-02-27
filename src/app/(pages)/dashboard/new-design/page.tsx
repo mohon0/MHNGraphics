@@ -11,16 +11,15 @@ import {
 import { Input } from "@/components/ui/input";
 import TiptapEditor, { TiptapEditorRef } from "@/editor";
 import { NewDesignSchema, NewDesignSchemaType } from "@/lib/Schemas";
+import { useCreateDesign } from "@/services/design";
 import { zodResolver } from "@hookform/resolvers/zod";
-import axios from "axios";
 import { ChevronLeft } from "lucide-react";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
-import { toast } from "sonner";
-import * as z from "zod";
+import { z } from "zod";
 import { CategoryAndTags } from "./CategoryAndTags";
 import { DesignImage } from "./DesignImage";
 import { DesignSkeleton } from "./skeleton";
@@ -37,11 +36,9 @@ export default function NewDesign() {
   }
 
   return (
-    <>
-      <div className="mx-2 md:mx-4">
-        <NewArticleForm />
-      </div>
-    </>
+    <div className="mx-2 md:mx-4">
+      <NewArticleForm />
+    </div>
   );
 }
 
@@ -60,6 +57,8 @@ function NewArticleForm() {
     },
   });
 
+  // Create the mutation hook instance and pass the reset function
+
   const resetForm = () => {
     form.reset({ name: "", description: "", category: "", tags: [] });
     setImage(null);
@@ -71,8 +70,9 @@ function NewArticleForm() {
       editor.commands.setContent("");
     }
   };
+  const createDesign = useCreateDesign(resetForm);
 
-  async function onSubmit(data: NewDesignSchemaType) {
+  function onSubmit(data: NewDesignSchemaType) {
     if (!image) {
       setWarning("Please upload an image.");
       return;
@@ -84,23 +84,8 @@ function NewArticleForm() {
     });
     formData.append("image", image);
 
-    const postPromise = axios
-      .post("/api/design/single-design", formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      })
-      .then((response) => {
-        if (response.status !== 200) {
-          throw new Error("Server error");
-        }
-        resetForm();
-        return response;
-      });
-
-    toast.promise(postPromise, {
-      loading: "Uploading, please wait...",
-      success: "Article successfully added",
-      error: (err) => err.message || "Failed to add article",
-    });
+    // Use the mutation hook's mutate method
+    createDesign.mutate(formData);
   }
 
   return (
@@ -153,9 +138,7 @@ function NewArticleForm() {
                       ref={editorRef}
                       ssr
                       output="html"
-                      placeholder={{
-                        paragraph: "Type your content here...",
-                      }}
+                      placeholder={{ paragraph: "Type your content here..." }}
                       onContentChange={field.onChange}
                       initialContent={field.value}
                     />
