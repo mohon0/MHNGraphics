@@ -11,8 +11,8 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { SignUpSchema } from "@/lib/Schemas";
+import { useRegisterMutation, useVerifyCodeMutation } from "@/services/auth";
 import { zodResolver } from "@hookform/resolvers/zod";
-import axios from "axios";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -20,14 +20,12 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { MdHome, MdVisibility, MdVisibilityOff } from "react-icons/md";
 import { SiPolkadot } from "react-icons/si";
-import { toast } from "sonner";
-import { z } from "zod";
+import type { z } from "zod";
 
 export default function Registration() {
   const [showPopUp, setShowPopUp] = useState(false);
   const [readOnly, setReadOnly] = useState(false);
   const [userId, setUserId] = useState("");
-  const [submitting, setSubmitting] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
   const { status } = useSession();
@@ -42,83 +40,53 @@ export default function Registration() {
     },
   });
 
+  const registerMutation = useRegisterMutation();
+  const verifyCodeMutation = useVerifyCodeMutation();
+
+  // Handle successful registration
+  const handleRegisterSuccess = (response: any) => {
+    const isEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.getValues().email);
+
+    if (isEmail) {
+      setUserId(response.data.userId);
+      setShowPopUp(true);
+      setReadOnly(true);
+    } else {
+      setTimeout(() => {
+        router.push("/sign-in");
+      }, 1000);
+    }
+  };
+
+  // Handle successful verification
+  const handleVerifySuccess = () => {
+    setTimeout(() => {
+      router.push("/sign-in");
+    }, 1000);
+  };
+
   async function onSubmit(values: z.infer<typeof SignUpSchema>) {
-    setSubmitting(true);
-
-    try {
-      if (showPopUp) {
-        // Verify code
-        const response = await toast
-          .promise(
-            axios.put("/api/signup", {
-              userId,
-              code: values.code,
-            }),
-            {
-              loading: "Verifying the code",
-              success: "Code verified successfully 👍",
-              error: "Invalid code. Please try again 🤯",
-            },
-          )
-          .unwrap(); // Use unwrap() to get the actual Axios response
-
-        if (response.status === 200) {
-          setTimeout(() => {
-            router.push("/sign-in");
-          }, 1000);
-        }
-      } else {
-        const isEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(values.email);
-
-        if (isEmail) {
-          // Email verification
-          const response = await toast
-            .promise(
-              axios.post("/api/signup", values).catch((error) => {
-                throw new Error(error.response?.data || "An error occurred");
-              }),
-              {
-                loading: "Sending the verification code",
-                success: "Email sent successfully 👌",
-                error: (err) => err.message,
-              },
-            )
-            .unwrap(); // Use unwrap() to get the actual Axios response
-
-          if (response.status === 200) {
-            setUserId(response.data.userId);
-            setShowPopUp(true);
-            setReadOnly(true);
-          }
-        } else {
-          // Normal registration
-          const response = await toast
-            .promise(
-              axios.post("/api/signup", values).catch((error) => {
-                throw new Error(error.response?.data || "An error occurred");
-              }),
-              {
-                loading: "Processing registration",
-                success: "Registration successful 👌",
-                error: (err) => err.message,
-              },
-            )
-            .unwrap(); // Use unwrap() to get the actual Axios response
-
-          if (response.status === 200) {
-            toast.success("User registered successfully! Redirecting...");
-            setTimeout(() => {
-              router.push("/sign-in");
-            }, 1000);
-          }
-        }
-      }
-    } catch (error) {
-      toast.error("An unexpected error occurred");
-    } finally {
-      setSubmitting(false);
+    if (showPopUp && values.code) {
+      // Verify code
+      verifyCodeMutation.mutate(
+        {
+          userId,
+          code: values.code,
+        },
+        {
+          onSuccess: handleVerifySuccess,
+        },
+      );
+    } else {
+      // Register user
+      registerMutation.mutate(values, {
+        onSuccess: handleRegisterSuccess,
+      });
     }
   }
+
+  const isSubmitting =
+    registerMutation.isPending || verifyCodeMutation.isPending;
 
   return (
     <>
@@ -237,7 +205,7 @@ export default function Registration() {
                     )}
 
                     {/* Submit Button */}
-                    <Button type="submit" disabled={submitting}>
+                    <Button type="submit" disabled={isSubmitting}>
                       {showPopUp ? "Verify Code" : "Sign Up"}
                     </Button>
                   </div>

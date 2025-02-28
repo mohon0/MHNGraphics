@@ -1,6 +1,4 @@
 "use client";
-
-import { FetchUserDashboard } from "@/components/fetch/admin/FetchUserDashboardData";
 import type { ApplicationListType } from "@/components/interface/ApplicationType";
 import type {
   CommentType,
@@ -25,6 +23,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { useFetchUserDashboard } from "@/services/admin";
 import { format } from "date-fns";
 import {
   CalendarDays,
@@ -52,6 +51,7 @@ export default function UserDashboard() {
     }
   }, [status, router]);
 
+  const { isLoading, isError, data: userData } = useFetchUserDashboard();
   if (status === "loading") return <DashboardSkeleton />;
   if (status === "unauthenticated") return null;
 
@@ -61,15 +61,13 @@ export default function UserDashboard() {
     return <ErrorMessage message="No user ID available" />;
   }
 
-  const { isLoading, isError, data: userData } = FetchUserDashboard();
-
   if (isLoading) return <DashboardSkeleton />;
   if (isError) return <ErrorMessage message="Error fetching user data" />;
 
   const userImage = userData?.image || userData?.applications?.[0]?.image;
 
   return (
-    <div className="container mx-auto space-y-6 p-4">
+    <div className="space-y-6">
       <Card className="bg-gradient-to-r from-blue-500 to-purple-600 text-white">
         <CardContent className="flex flex-col items-center gap-6 p-6 md:flex-row">
           <Avatar className="h-32 w-32 border-4 border-white">

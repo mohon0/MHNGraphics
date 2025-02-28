@@ -1,6 +1,4 @@
 "use client";
-
-import { FetchDuration } from "@/components/fetch/admin/FetchDuration";
 import { createSlug } from "@/components/helper/slug/CreateSlug";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
@@ -13,6 +11,7 @@ import {
   FetchRecentApplication,
   FetchRecentDesign,
   useFetchAdminData,
+  useFetchDuration,
 } from "@/services/admin";
 import axios from "axios";
 import { formatDistanceToNow } from "date-fns";
@@ -52,7 +51,7 @@ export default function AdminDashboard() {
 function DurationToggle() {
   const [visibility, setVisibility] = useState(false);
   const [loading, setLoading] = useState(true);
-  const { refetch } = FetchDuration();
+  const { refetch } = useFetchDuration();
 
   useEffect(() => {
     const apiUrl = `api/admin/duration`;

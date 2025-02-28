@@ -1,34 +1,22 @@
 "use client";
 
-import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
-import { useEffect } from "react";
+import { Skeleton } from "@/components/ui/skeleton";
+import { useAuth } from "@/hooks/useAuth";
 import AdminDashboard from "./Admin-Dashboard";
 import UserDashboard from "./User-Dashboard";
 
 export default function Dashboard() {
-  const { status, data: session } = useSession();
-  const router = useRouter();
+  // Use our custom hook with a redirect option for unauthenticated users.
+  const { isLoading, user } = useAuth({ redirectTo: "/sign-in" });
 
-  useEffect(() => {
-    if (status === "unauthenticated") {
-      router.push("/sign-in");
-    }
-  }, [status, router]);
-
-  if (status === "loading") {
+  if (isLoading) {
     return (
       <div className="flex h-screen items-center justify-center">
-        Loading...
+        <Skeleton />
       </div>
     );
   }
 
-  if (status === "unauthenticated") return null;
-
-  return session?.user?.role === "ADMIN" ? (
-    <AdminDashboard />
-  ) : (
-    <UserDashboard />
-  );
+  // At this point, the user is authenticated. Render based on user role.
+  return user?.role === "ADMIN" ? <AdminDashboard /> : <UserDashboard />;
 }

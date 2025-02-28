@@ -1,6 +1,5 @@
 "use client";
 
-import { FetchDuration } from "@/components/fetch/admin/FetchDuration";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -32,6 +31,7 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { bangladeshDistricts } from "@/constant/District";
 import bkash from "@/images/tools/bkash.svg";
+import { useFetchDuration } from "@/services/admin";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
 import { Upload } from "lucide-react";
@@ -190,7 +190,7 @@ const generateSessionOptions = (): string[] => {
 export function StudentApplicationForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
-  const { isLoading, data, isError } = FetchDuration();
+  const { isLoading, data, isError } = useFetchDuration();
   const router = useRouter();
 
   const form = useForm<z.infer<typeof formSchema>>({

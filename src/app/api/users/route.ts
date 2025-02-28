@@ -17,19 +17,19 @@ export async function GET(req: NextRequest) {
     const skip = (page - 1) * limit;
 
     // Define where clause for verified users
-    // const whereClause = {
-    //   emailVerified: { not: null }, // Only fetch users with a non-null emailVerified date
-    //   ...(searchQuery && {
-    //     name: {
-    //       contains: searchQuery,
-    //       mode: "insensitive" as const, // Using "insensitive" with TypeScript const assertion
-    //     },
-    //   }),
-    // };
+    const whereClause = {
+      emailVerified: { not: null }, // Only fetch users with a non-null emailVerified date
+      ...(searchQuery && {
+        name: {
+          contains: searchQuery,
+          mode: "insensitive" as const, // Using "insensitive" with TypeScript const assertion
+        },
+      }),
+    };
 
     // Fetch verified users with pagination and filtering
     const response = await Prisma.user.findMany({
-      // where: whereClause,
+      where: whereClause,
       skip,
       take: limit,
       orderBy: {

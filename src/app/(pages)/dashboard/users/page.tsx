@@ -1,13 +1,15 @@
 "use client";
 
+import type React from "react";
+
 import PaginationUi from "@/components/common/pagination/PaginationUi";
 import TableSkeleton from "@/components/common/skeleton/TableSkeleton";
-import { FetchAllUser } from "@/components/fetch/users/FetchAllUsers";
 import { convertDateString } from "@/components/helper/date/convertDateString";
-import { UserType } from "@/components/interface/UserType";
+import type { UserType } from "@/components/interface/UserType";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Dialog,
   DialogClose,
@@ -26,7 +28,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Separator } from "@/components/ui/separator";
 import {
   Table,
   TableBody,
@@ -35,21 +36,35 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { useAuth } from "@/hooks/useAuth";
+import { useUserList } from "@/services/admin";
 import axios from "axios";
+import { Eye, RefreshCw, Search, Trash2, UsersIcon } from "lucide-react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { Suspense, useCallback, useState } from "react";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { AccessDenied } from "./empty-state";
+import { UsersList } from "./users-list";
 
-function DesignMessage({ message }: { message: string }) {
+// Replace the DesignMessage component with a more modern empty state
+function EmptyState({ message }: { message: string }) {
   return (
-    <div className="flex h-full flex-col items-center justify-center p-8 text-center">
-      <p className="text-xl font-semibold text-red-500">{message}</p>
+    <div className="flex h-60 flex-col items-center justify-center rounded-lg border border-dashed p-8 text-center">
+      <UsersIcon className="mb-4 h-12 w-12 text-muted-foreground/50" />
+      <p className="text-xl font-medium text-muted-foreground">{message}</p>
     </div>
   );
 }
 
+// Update the UserCard component with a more modern design
 function UserCard({
   item,
   onDelete,
@@ -60,13 +75,13 @@ function UserCard({
   onStatusChange: (id: string, status: string) => void;
 }) {
   return (
-    <Card className="w-full">
-      <CardContent className="p-4">
-        <div className="flex gap-4">
+    <Card className="overflow-hidden transition-all hover:shadow-md">
+      <CardContent className="p-0">
+        <div className="flex items-start gap-4 p-4">
           <Link href={`/profile?id=${item.id}`}>
-            <Avatar className="h-12 w-12 border">
+            <Avatar className="h-14 w-14 border">
               <AvatarImage src={item.image} alt={item.name} />
-              <AvatarFallback className="text-xl font-medium">
+              <AvatarFallback className="bg-primary/10 text-xl font-medium text-primary">
                 {item.name
                   .split(" ")
                   .map((n: string) => n[0])
@@ -75,65 +90,100 @@ function UserCard({
             </Avatar>
           </Link>
           <div className="flex-1 space-y-2">
-            <Link href={`/profile?id=${item.id}`} className="font-medium">
-              {item.name}
-            </Link>
-            <div className="text-sm text-muted-foreground">{item.email}</div>
-            <div className="pt-2">
-              {item.status === "ADMIN" ? (
-                <span className="text-sm font-medium">ADMIN</span>
-              ) : (
-                <Select
-                  defaultValue={item.status}
-                  onValueChange={(value) => onStatusChange(item.id, value)}
-                >
-                  <SelectTrigger className="w-full">
-                    <SelectValue placeholder="Status" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="USER">User</SelectItem>
-                    <SelectItem value="AUTHOR">Author</SelectItem>
-                  </SelectContent>
-                </Select>
+            <div className="flex items-center justify-between">
+              <Link
+                href={`/profile?id=${item.id}`}
+                className="font-medium hover:text-primary"
+              >
+                {item.name}
+              </Link>
+              {item.status === "ADMIN" && (
+                <Badge variant="secondary" className="ml-2">
+                  Admin
+                </Badge>
               )}
             </div>
-            <div className="flex items-center justify-between pt-2 text-sm">
-              <span className="text-muted-foreground">
-                {convertDateString(item.createdAt.toString())}
-              </span>
-              <Dialog>
-                <DialogTrigger asChild>
-                  <Button variant="destructive" size="sm">
-                    Delete
-                  </Button>
-                </DialogTrigger>
-                <DialogContent className="sm:max-w-md">
-                  <DialogHeader>
-                    <DialogTitle>Delete User</DialogTitle>
-                    <DialogDescription>
-                      This action cannot be undone. It will delete everything
-                      related to this user.
-                    </DialogDescription>
-                  </DialogHeader>
-                  <DialogFooter>
-                    <DialogClose asChild>
-                      <Button type="button" variant="secondary">
-                        Cancel
-                      </Button>
-                    </DialogClose>
-                    <DialogClose asChild>
-                      <Button
-                        type="button"
-                        variant="destructive"
-                        onClick={() => onDelete(item.id)}
-                      >
-                        Delete
-                      </Button>
-                    </DialogClose>
-                  </DialogFooter>
-                </DialogContent>
-              </Dialog>
+            <div className="text-sm text-muted-foreground">{item.email}</div>
+            <div className="flex items-center gap-2 text-xs text-muted-foreground">
+              <span>Joined {convertDateString(item.createdAt.toString())}</span>
             </div>
+          </div>
+        </div>
+        <div className="flex items-center justify-between border-t bg-muted/30 p-3">
+          {item.status === "ADMIN" ? (
+            <Badge>Admin</Badge>
+          ) : (
+            <Select
+              defaultValue={item.status}
+              onValueChange={(value) => onStatusChange(item.id, value)}
+            >
+              <SelectTrigger className="h-8 w-32">
+                <SelectValue placeholder="Status" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="USER">User</SelectItem>
+                <SelectItem value="AUTHOR">Author</SelectItem>
+              </SelectContent>
+            </Select>
+          )}
+          <div className="flex items-center gap-2">
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Link
+                    href={`/profile?id=${item.id}`}
+                    className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-primary/10 text-primary hover:bg-primary/20"
+                  >
+                    <Eye className="h-4 w-4" />
+                  </Link>
+                </TooltipTrigger>
+                <TooltipContent>View Profile</TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Dialog>
+                    <DialogTrigger asChild>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-8 w-8 rounded-full text-destructive hover:bg-destructive/10 hover:text-destructive"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent className="sm:max-w-md">
+                      <DialogHeader>
+                        <DialogTitle>Delete User</DialogTitle>
+                        <DialogDescription>
+                          This action cannot be undone. It will delete
+                          everything related to this user.
+                        </DialogDescription>
+                      </DialogHeader>
+                      <DialogFooter>
+                        <DialogClose asChild>
+                          <Button type="button" variant="secondary">
+                            Cancel
+                          </Button>
+                        </DialogClose>
+                        <DialogClose asChild>
+                          <Button
+                            type="button"
+                            variant="destructive"
+                            onClick={() => onDelete(item.id)}
+                          >
+                            Delete
+                          </Button>
+                        </DialogClose>
+                      </DialogFooter>
+                    </DialogContent>
+                  </Dialog>
+                </TooltipTrigger>
+                <TooltipContent>Delete User</TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
           </div>
         </div>
       </CardContent>
@@ -141,12 +191,13 @@ function UserCard({
   );
 }
 
+// Update the Users component with a more modern design
 function Users() {
   const [searchQuery, setSearchQuery] = useState<string>("");
   const params = useSearchParams();
   const page = Number(params.get("page")) || 1;
 
-  const { isLoading, data, isError, refetch } = FetchAllUser({
+  const { isLoading, data, isError, refetch } = useUserList({
     page,
     searchQuery,
   });
@@ -198,34 +249,45 @@ function Users() {
 
   return (
     <div>
-      <h1 className="mb-6 text-center text-3xl font-bold">All Users</h1>
-
-      <div className="mb-6">
-        <div className="flex flex-col justify-between gap-4 sm:flex-row">
-          <div className="flex w-full flex-col gap-4 sm:w-auto sm:flex-row sm:items-center">
-            <Input
-              placeholder="Search by name"
-              value={searchQuery}
-              onChange={handleSearchChange}
-              className="w-full sm:w-auto"
-            />
-            <Button
-              onClick={() => refetch()}
-              disabled={searchQuery.length < 3 || isLoading}
-              className="w-full sm:w-auto"
-            >
-              {isLoading ? "Loading..." : "Search"}
-            </Button>
+      <Card className="mb-6 border-none bg-transparent shadow-none">
+        <CardHeader className="px-0 pt-0">
+          <div className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
+            <CardTitle className="text-3xl font-bold">
+              <div className="flex items-center gap-2">
+                <UsersIcon className="h-7 w-7" />
+                User Management
+              </div>
+            </CardTitle>
+            <div className="relative w-full sm:w-auto">
+              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+              <Input
+                placeholder="Search by name"
+                value={searchQuery}
+                onChange={handleSearchChange}
+                className="w-full pl-9 sm:w-[250px]"
+              />
+              <Button
+                onClick={() => refetch()}
+                disabled={searchQuery.length < 3 || isLoading}
+                variant="ghost"
+                size="icon"
+                className="absolute right-1 top-1/2 -translate-y-1/2"
+              >
+                <RefreshCw
+                  className={`h-4 w-4 ${isLoading ? "animate-spin" : ""}`}
+                />
+              </Button>
+            </div>
           </div>
-        </div>
-      </div>
+        </CardHeader>
+      </Card>
 
       {isLoading ? (
         <TableSkeleton rowCount={10} />
       ) : isError ? (
-        <DesignMessage message="Something went wrong while fetching the users." />
+        <EmptyState message="Something went wrong while fetching the users." />
       ) : !data?.data || data.data.length === 0 ? (
-        <DesignMessage message="No users available." />
+        <EmptyState message="No users available." />
       ) : (
         <>
           {/* Mobile View */}
@@ -242,161 +304,137 @@ function Users() {
 
           {/* Desktop View */}
           <div className="hidden md:block">
-            <Table className="mt-4 w-full table-auto">
-              <TableHeader className="w-full bg-secondary">
-                <TableRow className="w-full border-t">
-                  <TableHead className="hidden sm:table-cell">Design</TableHead>
-                  <TableHead className="min-w-[100px]">Name</TableHead>
-                  <TableHead className="hidden sm:table-cell">Email</TableHead>
-                  <TableHead className="hidden sm:table-cell">Status</TableHead>
-                  <TableHead className="hidden text-right sm:table-cell">
-                    Created At
-                  </TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {data.data.map((item: UserType) => (
-                  <TableRow key={item.id} className="group">
-                    <TableCell className="hidden sm:table-cell">
-                      <Link href={`/profile?id=${item.id}`}>
-                        <Avatar className="h-12 w-12 border">
-                          <AvatarImage src={item.image} alt={item.name} />
-                          <AvatarFallback className="text-xl font-medium">
-                            {item.name
-                              .split(" ")
-                              .map((n: string) => n[0])
-                              .join("")}
-                          </AvatarFallback>
-                        </Avatar>
-                      </Link>
-                    </TableCell>
-                    <TableCell>
-                      <div className="space-y-2">
-                        <div className="flex items-center gap-4 sm:hidden">
-                          <Link href={`/profile?id=${item.id}`}>
-                            <Avatar className="h-12 w-12 border">
-                              <AvatarImage src={item.image} alt={item.name} />
-                              <AvatarFallback className="text-xl font-medium">
-                                {item.name
-                                  .split(" ")
-                                  .map((n: string) => n[0])
-                                  .join("")}
-                              </AvatarFallback>
-                            </Avatar>
-                          </Link>
-                          <Link href={`/profile?id=${item.id}`}>
-                            {item.name}
-                          </Link>
-                        </div>
-                        <div className="hidden sm:block">
-                          <Link href={`/profile?id=${item.id}`}>
-                            {item.name}
-                          </Link>
-                        </div>
-                        <div className="sm:hidden">
-                          <div className="mt-2 text-sm text-muted-foreground">
-                            {item.email}
-                          </div>
-                          <div className="mt-2">
-                            {item.status === "ADMIN" ? (
-                              "ADMIN"
-                            ) : (
-                              <Select
-                                defaultValue={item.status}
-                                onValueChange={(value) =>
-                                  handleStatusChange(item.id, value)
-                                }
-                              >
-                                <SelectTrigger className="w-full">
-                                  <SelectValue placeholder="Status" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                  <SelectItem value="USER">User</SelectItem>
-                                  <SelectItem value="AUTHOR">Author</SelectItem>
-                                </SelectContent>
-                              </Select>
-                            )}
-                          </div>
-                          <div className="mt-2 text-sm text-muted-foreground">
-                            {convertDateString(item.createdAt.toString())}
-                          </div>
-                        </div>
-                        <div className="flex items-center gap-2 text-sm">
-                          <Link
-                            href={`/profile?id=${item.id}`}
-                            className="text-primary"
-                          >
-                            View
-                          </Link>
-                          <Separator
-                            orientation="vertical"
-                            className="h-3 bg-black"
-                          />
-                          <Dialog>
-                            <DialogTrigger asChild>
-                              <span className="cursor-pointer text-destructive">
-                                Delete
-                              </span>
-                            </DialogTrigger>
-                            <DialogContent className="sm:max-w-md">
-                              <DialogHeader>
-                                <DialogTitle>Delete User</DialogTitle>
-                                <DialogDescription>
-                                  This action cannot be undone. It will delete
-                                  everything related to this user.
-                                </DialogDescription>
-                              </DialogHeader>
-                              <DialogFooter>
-                                <DialogClose asChild>
-                                  <Button type="button" variant="secondary">
-                                    Cancel
-                                  </Button>
-                                </DialogClose>
-                                <DialogClose asChild>
-                                  <Button
-                                    type="button"
-                                    variant="destructive"
-                                    onClick={() => handleDelete(item.id)}
-                                  >
-                                    Delete
-                                  </Button>
-                                </DialogClose>
-                              </DialogFooter>
-                            </DialogContent>
-                          </Dialog>
-                        </div>
-                      </div>
-                    </TableCell>
-                    <TableCell className="hidden sm:table-cell">
-                      {item.email}
-                    </TableCell>
-                    <TableCell className="hidden sm:table-cell">
-                      {item.status === "ADMIN" ? (
-                        "ADMIN"
-                      ) : (
-                        <Select
-                          defaultValue={item.status}
-                          onValueChange={(value) =>
-                            handleStatusChange(item.id, value)
-                          }
-                        >
-                          <SelectTrigger>
-                            <SelectValue placeholder="Status" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="USER">User</SelectItem>
-                            <SelectItem value="AUTHOR">Author</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      )}
-                    </TableCell>
-                    <TableCell className="hidden text-right sm:table-cell">
-                      {convertDateString(item.createdAt.toString())}
-                    </TableCell>
+            <Card>
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead className="w-[80px]">Avatar</TableHead>
+                    <TableHead>Name</TableHead>
+                    <TableHead>Email</TableHead>
+                    <TableHead>Status</TableHead>
+                    <TableHead>Created At</TableHead>
+                    <TableHead className="text-right">Actions</TableHead>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+                </TableHeader>
+                <TableBody>
+                  {data.data.map((item: UserType) => (
+                    <TableRow key={item.id} className="group">
+                      <TableCell>
+                        <Link href={`/profile?id=${item.id}`}>
+                          <Avatar className="h-10 w-10 border">
+                            <AvatarImage src={item.image} alt={item.name} />
+                            <AvatarFallback className="bg-primary/10 text-sm font-medium text-primary">
+                              {item.name
+                                .split(" ")
+                                .map((n: string) => n[0])
+                                .join("")}
+                            </AvatarFallback>
+                          </Avatar>
+                        </Link>
+                      </TableCell>
+                      <TableCell>
+                        <Link
+                          href={`/profile?id=${item.id}`}
+                          className="font-medium hover:text-primary"
+                        >
+                          {item.name}
+                        </Link>
+                      </TableCell>
+                      <TableCell>{item.email}</TableCell>
+                      <TableCell>
+                        {item.status === "ADMIN" ? (
+                          <Badge>Admin</Badge>
+                        ) : (
+                          <Select
+                            defaultValue={item.status}
+                            onValueChange={(value) =>
+                              handleStatusChange(item.id, value)
+                            }
+                          >
+                            <SelectTrigger className="h-8 w-[110px]">
+                              <SelectValue placeholder="Status" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="USER">User</SelectItem>
+                              <SelectItem value="AUTHOR">Author</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        )}
+                      </TableCell>
+                      <TableCell>
+                        <span className="text-sm text-muted-foreground">
+                          {convertDateString(item.createdAt.toString())}
+                        </span>
+                      </TableCell>
+                      <TableCell className="text-right">
+                        <div className="flex items-center justify-end gap-2">
+                          <TooltipProvider>
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <Link
+                                  href={`/profile?id=${item.id}`}
+                                  className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-primary/10 text-primary hover:bg-primary/20"
+                                >
+                                  <Eye className="h-4 w-4" />
+                                </Link>
+                              </TooltipTrigger>
+                              <TooltipContent>View Profile</TooltipContent>
+                            </Tooltip>
+                          </TooltipProvider>
+
+                          <TooltipProvider>
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <Dialog>
+                                  <DialogTrigger asChild>
+                                    <Button
+                                      variant="ghost"
+                                      size="icon"
+                                      className="h-8 w-8 rounded-full text-destructive hover:bg-destructive/10 hover:text-destructive"
+                                    >
+                                      <Trash2 className="h-4 w-4" />
+                                    </Button>
+                                  </DialogTrigger>
+                                  <DialogContent className="sm:max-w-md">
+                                    <DialogHeader>
+                                      <DialogTitle>Delete User</DialogTitle>
+                                      <DialogDescription>
+                                        This action cannot be undone. It will
+                                        delete everything related to this user.
+                                      </DialogDescription>
+                                    </DialogHeader>
+                                    <DialogFooter>
+                                      <DialogClose asChild>
+                                        <Button
+                                          type="button"
+                                          variant="secondary"
+                                        >
+                                          Cancel
+                                        </Button>
+                                      </DialogClose>
+                                      <DialogClose asChild>
+                                        <Button
+                                          type="button"
+                                          variant="destructive"
+                                          onClick={() => handleDelete(item.id)}
+                                        >
+                                          Delete
+                                        </Button>
+                                      </DialogClose>
+                                    </DialogFooter>
+                                  </DialogContent>
+                                </Dialog>
+                              </TooltipTrigger>
+                              <TooltipContent>Delete User</TooltipContent>
+                            </Tooltip>
+                          </TooltipProvider>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </Card>
           </div>
         </>
       )}
@@ -414,10 +452,26 @@ function Users() {
   );
 }
 
+// Update the UsersPage component with a more modern design for the access denied state
 export default function UsersPage() {
+  const { isLoading, user, hasRequiredRole } = useAuth({
+    requiredRole: "ADMIN",
+  });
+
+  // Display a loading state while authentication is in progress
+  if (isLoading) {
+    return <TableSkeleton rowCount={20} />;
+  }
+
+  // Although the hook should redirect unauthorized users,
+  // include an extra safeguard fallback
+  if (!user || !hasRequiredRole) {
+    return <AccessDenied />;
+  }
+
   return (
     <Suspense fallback={<TableSkeleton rowCount={10} />}>
-      <Users />
+      <UsersList />
     </Suspense>
   );
 }

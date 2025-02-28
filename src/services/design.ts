@@ -1,28 +1,8 @@
 import { QUERY_KEYS } from "@/constant/QueryKeys";
+import { useDebounce } from "@/hooks/useDebounce";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
-import debounce from "lodash.debounce";
-import { useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
-
-// Custom Debounce Hook
-function useDebounce(value: string, delay: number) {
-  const [debouncedValue, setDebouncedValue] = useState(value);
-  const debounceRef = useRef(
-    debounce((nextValue: string) => setDebouncedValue(nextValue), delay),
-  );
-
-  useEffect(() => {
-    const currentDebounce = debounceRef.current;
-    currentDebounce(value);
-
-    return () => {
-      currentDebounce.cancel();
-    };
-  }, [value, delay]);
-
-  return debouncedValue;
-}
 
 // Common fetch function
 async function fetchDesignData(url: string, params: object) {
