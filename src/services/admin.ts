@@ -129,20 +129,55 @@ export function useDeleteUser() {
 
 interface Props {
   page: number;
-
+  pageSize?: number;
   searchQuery: string;
 }
 
-export function useUserList({ page, searchQuery }: Props) {
+export function useUserList({ page, searchQuery, pageSize }: Props) {
   const debouncedSearchQuery = useDebounce(searchQuery, 300);
 
   return useQuery({
-    queryKey: [QUERY_KEYS.USER_LIST, page, debouncedSearchQuery],
+    queryKey: [QUERY_KEYS.USER_LIST, page, debouncedSearchQuery, pageSize],
     queryFn: async () => {
       const response = await axios.get(`/api/users`, {
-        params: { page, searchQuery: debouncedSearchQuery },
+        params: { page, searchQuery: debouncedSearchQuery, pageSize },
       });
       return response.data;
     },
   });
 }
+
+export const useDurationToggle = (
+  visibility: boolean,
+  setVisibility: (value: boolean) => void,
+) => {
+  const queryClient = useQueryClient();
+
+  const mutation = useMutation({
+    mutationFn: async (newData: boolean) => {
+      return axios.patch(
+        "api/admin/duration",
+        { button: newData ? "On" : "Off" },
+        { withCredentials: true },
+      );
+    },
+    onSuccess: (_, newData) => {
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.APPLICATION_DURATION],
+      }); // Refetch data
+      setVisibility(newData); // Update state
+    },
+  });
+
+  const handleSwitchChange = async () => {
+    const newData = !visibility;
+
+    await toast.promise(mutation.mutateAsync(newData), {
+      loading: "Please wait...",
+      success: "Status updated successfully",
+      error: "Error updating status",
+    });
+  };
+
+  return { handleSwitchChange, isLoading: mutation.isPending };
+};

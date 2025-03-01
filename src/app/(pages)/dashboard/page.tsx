@@ -2,8 +2,8 @@
 
 import { Skeleton } from "@/components/ui/skeleton";
 import { useAuth } from "@/hooks/useAuth";
-import AdminDashboard from "./Admin-Dashboard";
 import UserDashboard from "./User-Dashboard";
+import AdminDashboard from "./(admin-dashboard)/Admin-Dashboard";
 
 export default function Dashboard() {
   // Use our custom hook with a redirect option for unauthenticated users.

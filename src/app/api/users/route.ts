@@ -6,14 +6,13 @@ export async function GET(req: NextRequest) {
   try {
     const url = new URL(req.url);
     const queryParams = new URLSearchParams(url.search);
-
     const page = queryParams.get("page")
       ? parseInt(queryParams.get("page")!, 10)
       : 1;
-
+    const limit = queryParams.get("pageSize")
+      ? parseInt(queryParams.get("pageSize")!, 10)
+      : 30;
     const searchQuery = queryParams.get("searchQuery") || "";
-
-    const limit = 30;
     const skip = (page - 1) * limit;
 
     // Define where clause for verified users
