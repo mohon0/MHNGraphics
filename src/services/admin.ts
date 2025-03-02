@@ -223,3 +223,13 @@ export function useDeleteComment() {
     },
   });
 }
+
+export function usePaymentAnalytics() {
+  return useQuery({
+    queryKey: [QUERY_KEYS.PAYMENT_ANALYTICS],
+    queryFn: async () => {
+      const response = await axios.get(`/api/admin/payment`);
+      return response.data;
+    },
+  });
+}

@@ -7,4 +7,5 @@ export const QUERY_KEYS = {
   APPLICATION_DURATION: "Application Duration",
   USER_LIST: "User List",
   COMMENT_LIST: "Comment List",
+  PAYMENT_ANALYTICS: "Payment Analytics",
 };

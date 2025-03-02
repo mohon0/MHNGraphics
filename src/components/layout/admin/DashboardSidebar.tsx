@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/sidebar";
 import {
   BadgeCheck,
+  ChartNoAxesCombined,
   FileUser,
   GalleryHorizontal,
   HeartPulse,
@@ -125,6 +126,11 @@ export function DashboardSidebar({
       name: "Comments",
       url: "/dashboard/comments?page=1",
       icon: MessageSquareMore,
+    },
+    {
+      name: "Payment Analytics",
+      url: "/dashboard/payment-analytics",
+      icon: ChartNoAxesCombined,
     },
   ];
 
