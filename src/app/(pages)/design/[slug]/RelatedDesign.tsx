@@ -1,6 +1,4 @@
 "use client";
-
-import { FetchRelatedDesign } from "@/components/fetch/design/FetchRelatedDesign";
 import { createSlug } from "@/components/helper/slug/CreateSlug";
 import {
   Carousel,
@@ -10,11 +8,12 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useRelatedDesign } from "@/services/design";
 import Image from "next/image";
 import Link from "next/link";
 
 export default function RelatedDesign({ postId }: { postId: string }) {
-  const { isLoading, data, isError } = FetchRelatedDesign(postId);
+  const { isLoading, data, isError } = useRelatedDesign(postId);
 
   if (isLoading) {
     return <LoadingSkeleton />;
@@ -33,7 +32,7 @@ export default function RelatedDesign({ postId }: { postId: string }) {
       <h2 className="text-2xl font-semibold tracking-tight">Related Designs</h2>
       <Carousel className="mx-auto w-full">
         <CarouselContent>
-          {data.map((design: any) => (
+          {data.data.map((design: any) => (
             <CarouselItem
               key={design.id}
               className="basis-10/12 transition-all duration-300 hover:brightness-75 md:basis-1/3 lg:basis-1/5"

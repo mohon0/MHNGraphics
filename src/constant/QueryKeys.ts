@@ -8,4 +8,6 @@ export const QUERY_KEYS = {
   USER_LIST: "User List",
   COMMENT_LIST: "Comment List",
   PAYMENT_ANALYTICS: "Payment Analytics",
+  SINGLE_DESIGN: "Single Design",
+  RELATED_DESIGN: "Related Design",
 };

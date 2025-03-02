@@ -75,3 +75,20 @@ export const PaymentFormSchema = z.object({
 });
 
 export type PaymentFormSchemaType = z.infer<typeof PaymentFormSchema>;
+
+export const NewDesignFormSchema = z.object({
+  name: z
+    .string()
+    .min(10, "Name must be at least 10 characters")
+    .max(200)
+    .trim()
+    .regex(
+      /^[^\s_]+(?:[\s^\s_][^\s_]+)*$/,
+      "Name must not include underscores (_).",
+    ),
+  description: z.string().trim(),
+  category: z.string().min(1, "Required"),
+  tags: z.array(z.string()),
+});
+
+export type NewProductFormSchemaType = z.infer<typeof NewDesignFormSchema>;

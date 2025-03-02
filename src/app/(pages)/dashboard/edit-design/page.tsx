@@ -1,11 +1,5 @@
 "use client";
-
-import { FetchSingleDesignById } from "@/components/fetch/design/FetchSingleDesign";
 import EditDesignImage from "@/components/form/formField/EditDesignFormField";
-import {
-  NewDesignFormSchema,
-  NewProductFormSchemaType,
-} from "@/components/form/formSchema/FormSchema";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -28,6 +22,8 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 import { designCategories } from "@/constant/DesignCategory";
 import TiptapEditor, { TiptapEditorRef } from "@/editor";
+import { NewDesignFormSchema, NewProductFormSchemaType } from "@/lib/Schemas";
+import { useSingleDesign } from "@/services/design";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
 import { ChevronLeft, X } from "lucide-react";
@@ -70,7 +66,7 @@ function DesignPage() {
 
   const searchParams = useSearchParams();
   const id = searchParams.get("id") || "";
-  const { isLoading, data, isError } = FetchSingleDesignById(id);
+  const { isLoading, data, isError } = useSingleDesign({ id });
   const router = useRouter();
 
   const form = useForm<NewProductFormSchemaType>({

@@ -1,11 +1,11 @@
 "use client";
 
-import { FetchSingleDesign } from "@/components/fetch/design/FetchSingleDesign";
 import { getImageDimensions } from "@/components/helper/image/GetImageDimensions";
 import { DesignType } from "@/components/interface/DesignType";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useSingleDesign } from "@/services/design";
 import { ImageDimensions } from "@/utils/imageDimensions";
 import { AlertCircle } from "lucide-react";
 import Image from "next/image";
@@ -27,7 +27,7 @@ export default function SingleDesign(props: { params: Params }) {
   const slug = params.slug;
   const id = slug.split("_")[1];
 
-  const { isLoading, data, isError, refetch } = FetchSingleDesign({
+  const { isLoading, data, isError, refetch } = useSingleDesign({
     id,
   });
 
@@ -130,7 +130,7 @@ export default function SingleDesign(props: { params: Params }) {
             <Card className="mt-6">
               <CardContent className="p-2 md:p-6">
                 <div
-                  className="prose dark:prose-invert max-w-none"
+                  className="prose max-w-none dark:prose-invert"
                   dangerouslySetInnerHTML={{ __html: description || "" }}
                 />
               </CardContent>
