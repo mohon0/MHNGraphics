@@ -6,4 +6,5 @@ export const QUERY_KEYS = {
   USER_DASHBOARD: "User Dashboard",
   APPLICATION_DURATION: "Application Duration",
   USER_LIST: "User List",
+  COMMENT_LIST: "Comment List",
 };

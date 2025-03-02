@@ -5,6 +5,7 @@ import QuickStats from "./QuickStats";
 import RecentActivity from "./RecentActivity";
 import TopPerformingDesigns from "./TopPerformingDesigns";
 import RecentUsers from "./RecentUsers";
+import RecentComments from "./RecentComments";
 
 /**
  * AdminDashboard Component
@@ -31,7 +32,7 @@ export default function AdminDashboard() {
       </div>
       <div className="mt-8 grid gap-6 md:grid-cols-2">
         <RecentUsers />
-        {/* <RecentComments /> */}
+        <RecentComments />
       </div>
     </div>
   );

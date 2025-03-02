@@ -133,7 +133,7 @@ interface Props {
   searchQuery: string;
 }
 
-export function useUserList({ page, searchQuery, pageSize }: Props) {
+export function useUserList({ page, searchQuery, pageSize = 30 }: Props) {
   const debouncedSearchQuery = useDebounce(searchQuery, 300);
 
   return useQuery({
@@ -181,3 +181,45 @@ export const useDurationToggle = (
 
   return { handleSwitchChange, isLoading: mutation.isPending };
 };
+
+export function useCommentList({ page, searchQuery, pageSize = 30 }: Props) {
+  const debouncedSearchQuery = useDebounce(searchQuery, 300);
+
+  return useQuery({
+    queryKey: [QUERY_KEYS.COMMENT_LIST, page, debouncedSearchQuery, pageSize],
+    queryFn: async () => {
+      const response = await axios.get(`/api/admin/recent-data/comments`, {
+        params: { page, searchQuery: debouncedSearchQuery, pageSize },
+      });
+      return response.data;
+    },
+  });
+}
+
+export function useDeleteComment() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({ id }: { id: string }) => {
+      const updatePromise = axios
+        .delete<{
+          message: string;
+        }>(`/api/design/single-design/comments?commentId=${id}`)
+        .then((res) => res.data);
+
+      return toast.promise(updatePromise, {
+        loading: "Deleting Comment...",
+        success: (data) => {
+          queryClient.invalidateQueries({
+            queryKey: [QUERY_KEYS.COMMENT_LIST],
+          });
+          return data.message || "Comment deleted successfully 🎉";
+        },
+        error: (error) =>
+          axios.isAxiosError(error)
+            ? error.response?.data?.message || "Failed to delete comment ❌"
+            : "Something went wrong. Please try again.",
+      });
+    },
+  });
+}

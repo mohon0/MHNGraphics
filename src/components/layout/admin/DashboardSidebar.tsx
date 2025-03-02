@@ -17,6 +17,7 @@ import {
   HeartPulse,
   Map,
   Megaphone,
+  MessageSquareMore,
   PieChart,
   UserRoundSearch,
 } from "lucide-react";
@@ -49,7 +50,6 @@ export function DashboardSidebar({
     {
       title: "Account",
       url: "#",
-      isActive: true,
       icon: BadgeCheck,
       items: [
         {
@@ -70,7 +70,6 @@ export function DashboardSidebar({
       title: "Application",
       url: "#",
       icon: FileUser,
-      isActive: true,
       items: [
         {
           title: "View All",
@@ -123,9 +122,9 @@ export function DashboardSidebar({
     },
 
     {
-      name: "Travel",
-      url: "#",
-      icon: Map,
+      name: "Comments",
+      url: "/dashboard/comments?page=1",
+      icon: MessageSquareMore,
     },
   ];
 

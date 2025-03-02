@@ -159,6 +159,7 @@ export function Comments({
             {data.comments.map((comment) => (
               <div
                 key={comment.id}
+                id={comment.id}
                 className="flex items-start space-x-4 rounded-lg bg-secondary/10 p-4 transition-all hover:bg-secondary/20"
               >
                 <Avatar className="h-10 w-10">
