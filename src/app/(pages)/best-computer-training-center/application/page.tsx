@@ -32,7 +32,7 @@ import {
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { Suspense } from "react";
-import { toast } from "react-toastify";
+import { toast } from "sonner";
 import ScrollNotice from "../ScrollNotice";
 import ApplicationHeader from "./ApplicationHeader";
 import { StudentApplicationForm } from "./StudentApplication";

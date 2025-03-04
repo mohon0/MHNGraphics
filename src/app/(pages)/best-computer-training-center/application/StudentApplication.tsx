@@ -31,16 +31,16 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { bangladeshDistricts } from "@/constant/District";
 import bkash from "@/images/tools/bkash.svg";
+import { ApplicationSchema } from "@/lib/Schemas";
 import { useFetchDuration } from "@/services/admin";
+import { useSubmitApplication } from "@/services/application";
 import { zodResolver } from "@hookform/resolvers/zod";
-import axios from "axios";
 import { Upload } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useCallback, useState } from "react";
 import { useForm } from "react-hook-form";
-import { toast } from "react-toastify";
+import { toast } from "sonner";
 import * as z from "zod";
 import Preview from "./ApplicationPreview";
 
@@ -53,131 +53,6 @@ const ACCEPTED_IMAGE_TYPES = [
   "image/webp",
 ];
 
-export const formSchema = z.object({
-  studentName: z
-    .string()
-    .trim()
-    .min(1, "Student name is required")
-    .max(40, "Must be 40 characters or less"),
-
-  fatherName: z
-    .string()
-    .trim()
-    .min(1, "Father's name is required")
-    .max(40, "Must be 40 characters or less"),
-
-  motherName: z
-    .string()
-    .trim()
-    .min(1, "Mother's name is required")
-    .max(40, "Must be 40 characters or less"),
-
-  fatherOccupation: z
-    .string()
-    .trim()
-    .min(1, "Father's occupation is required")
-    .max(40, "Must be 40 characters or less"),
-
-  birthDay: z
-    .string()
-    .trim()
-    .regex(
-      /^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[0-2])\/\d{4}$/,
-      "Date must be in the format dd/mm/yyyy",
-    ),
-
-  mobileNumber: z
-    .string()
-    .trim()
-    .regex(/^\d{10,15}$/, "Mobile number must be between 10-15 digits"),
-
-  guardianNumber: z
-    .string()
-    .trim()
-    .regex(/^\d{10,15}$/, "Guardian number must be between 10-15 digits"),
-
-  gender: z.enum(["male", "female", "other"], {
-    errorMap: () => ({ message: "Gender is required and must be valid" }),
-  }),
-
-  maritalStatus: z.enum(["Single", "Married", "Divorced", "Widowed"], {
-    errorMap: () => ({ message: "Marital status is required" }),
-  }),
-
-  bloodGroup: z
-    .string()
-    .trim()
-    .regex(/^(A|B|AB|O)[+-]$/, "Blood group must be valid (e.g., A+, B-, O+)"),
-
-  religion: z.string().trim().min(1, "Religion is required"),
-
-  nationality: z.string().trim().min(1, "Nationality is required"),
-
-  nidBirthReg: z.string().trim().min(1, "NID/Birth registration is required"),
-
-  email: z.string().trim().email("Invalid email address").optional(),
-
-  fullAddress: z.string().trim().min(5, "Full address is required"),
-
-  district: z.string().trim().min(1, "District is required"),
-
-  education: z.string().trim().min(1, "Education is required"),
-
-  trxId: z.string().trim().min(1, "Transaction ID is required"),
-
-  educationBoard: z.string().trim().min(1, "Education board is required"),
-
-  rollNumber: z.string().trim().min(1, "Roll number is required"),
-
-  regNumber: z.string().trim().min(1, "Registration number is required"),
-
-  passingYear: z
-    .number({
-      required_error: "Passing year is required",
-      invalid_type_error: "Passing year must be a number",
-    })
-    .min(1990, "Passing year must be 1990 or later")
-    .max(currentYear, `Passing year cannot be later than ${currentYear}`),
-
-  gpaCgpa: z
-    .string()
-    .trim()
-    .regex(/^\d+(\.\d{1,2})?$/, "GPA/CGPA must be a valid number (e.g., 4.00)")
-    .min(1, "GPA/CGPA is required"),
-
-  course: z.string().trim().min(1, "Course is required"),
-
-  session: z
-    .string()
-    .regex(/^\d{4}$/, "Session must be a valid year") // Ensures it's a 4-digit year
-    .refine(
-      (value) => {
-        const year = parseInt(value, 10);
-        const currentYear = new Date().getFullYear();
-        return year >= 2010 && year <= currentYear + 1;
-      },
-      { message: "Session must be between 2010 and next year" },
-    ),
-
-  duration: z.string().trim().min(1, "Duration is required"),
-
-  pc: z.enum(["laptop", "pc", "no"], {
-    errorMap: () => ({ message: "Specify if you have a computer" }),
-  }),
-
-  image: z
-    .any()
-    .refine((file) => file?.length == 1, "Image is required.")
-    .refine(
-      (file) => file?.[0]?.size <= MAX_FILE_SIZE,
-      `Image size must be less than 300KB`,
-    )
-    .refine(
-      (file) => ACCEPTED_IMAGE_TYPES.includes(file?.[0]?.type),
-      "Only .jpg, .jpeg, .png, and .webp files are allowed",
-    ),
-});
-
 const generateSessionOptions = (): string[] => {
   const currentYear = new Date().getFullYear();
 
@@ -188,13 +63,12 @@ const generateSessionOptions = (): string[] => {
 };
 
 export function StudentApplicationForm() {
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const { isLoading, data, isError } = useFetchDuration();
-  const router = useRouter();
+  const { submitApplication, isSubmitting } = useSubmitApplication();
 
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<z.infer<typeof ApplicationSchema>>({
+    resolver: zodResolver(ApplicationSchema),
     defaultValues: {
       studentName: "",
       fatherName: "",
@@ -227,66 +101,13 @@ export function StudentApplicationForm() {
     },
   });
 
-  async function onSubmit(values: z.infer<typeof formSchema>) {
-    setIsSubmitting(true);
-
-    // Toast ID for managing specific toast notifications
-    const toastId = toast.loading("Please wait...");
-
+  const onSubmit = async (values: z.infer<typeof ApplicationSchema>) => {
     try {
-      // Convert values to FormData
-      const formData = new FormData();
-      (Object.keys(values) as (keyof typeof values)[]).forEach((key) => {
-        if (key === "image" && values[key]) {
-          // Handle image upload separately
-          formData.append("image", values[key][0]); // Assuming `image` is a FileList
-        } else {
-          const value = values[key];
-          if (value !== undefined && value !== null) {
-            formData.append(key, value as string);
-          }
-        }
-      });
-
-      // Send POST request
-      const response = await axios.post(
-        "/api/best-computer/application",
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        },
-      );
-
-      if (response.status === 201) {
-        toast.update(toastId, {
-          render: "Application was successfully submitted",
-          type: "success",
-          isLoading: false,
-          autoClose: 3000,
-        });
-        router.push("/best-computer-training-center");
-        setImagePreview(null);
-      } else {
-        toast.update(toastId, {
-          render: "An error occurred",
-          type: "error",
-          isLoading: false,
-          autoClose: 3000,
-        });
-      }
+      await submitApplication(values);
     } catch (error) {
-      toast.update(toastId, {
-        render: "An error occurred",
-        type: "error",
-        isLoading: false,
-        autoClose: 3000,
-      });
-    } finally {
-      setIsSubmitting(false);
+      console.error("Error during submission:", error);
     }
-  }
+  };
 
   const onImageChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -358,7 +179,7 @@ export function StudentApplicationForm() {
                           <FormItem>
                             <FormLabel>Profile Picture</FormLabel>
                             <FormControl>
-                              <>
+                              <div>
                                 <Label htmlFor="image-upload">
                                   <div className="h-32 w-32 cursor-pointer overflow-hidden rounded-lg border-2 border-dashed border-gray-300 transition-colors duration-200 hover:border-gray-400">
                                     {imagePreview ? (
@@ -392,7 +213,7 @@ export function StudentApplicationForm() {
                                   }}
                                   {...rest}
                                 />
-                              </>
+                              </div>
                             </FormControl>
                             <FormDescription>
                               Upload your profile picture (max 300KB, .jpg,

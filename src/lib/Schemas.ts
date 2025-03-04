@@ -1,4 +1,12 @@
 import { z } from "zod";
+const currentYear = new Date().getFullYear();
+const MAX_FILE_SIZE = 300000;
+const ACCEPTED_IMAGE_TYPES = [
+  "image/jpeg",
+  "image/jpg",
+  "image/png",
+  "image/webp",
+];
 
 export const SingInSchema = z.object({
   email: z.string().refine(
@@ -92,3 +100,128 @@ export const NewDesignFormSchema = z.object({
 });
 
 export type NewProductFormSchemaType = z.infer<typeof NewDesignFormSchema>;
+
+export const ApplicationSchema = z.object({
+  studentName: z
+    .string()
+    .trim()
+    .min(1, "Student name is required")
+    .max(40, "Must be 40 characters or less"),
+
+  fatherName: z
+    .string()
+    .trim()
+    .min(1, "Father's name is required")
+    .max(40, "Must be 40 characters or less"),
+
+  motherName: z
+    .string()
+    .trim()
+    .min(1, "Mother's name is required")
+    .max(40, "Must be 40 characters or less"),
+
+  fatherOccupation: z
+    .string()
+    .trim()
+    .min(1, "Father's occupation is required")
+    .max(40, "Must be 40 characters or less"),
+
+  birthDay: z
+    .string()
+    .trim()
+    .regex(
+      /^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[0-2])\/\d{4}$/,
+      "Date must be in the format dd/mm/yyyy",
+    ),
+
+  mobileNumber: z
+    .string()
+    .trim()
+    .regex(/^\d{10,15}$/, "Mobile number must be between 10-15 digits"),
+
+  guardianNumber: z
+    .string()
+    .trim()
+    .regex(/^\d{10,15}$/, "Guardian number must be between 10-15 digits"),
+
+  gender: z.enum(["male", "female", "other"], {
+    errorMap: () => ({ message: "Gender is required and must be valid" }),
+  }),
+
+  maritalStatus: z.enum(["Single", "Married", "Divorced", "Widowed"], {
+    errorMap: () => ({ message: "Marital status is required" }),
+  }),
+
+  bloodGroup: z
+    .string()
+    .trim()
+    .regex(/^(A|B|AB|O)[+-]$/, "Blood group must be valid (e.g., A+, B-, O+)"),
+
+  religion: z.string().trim().min(1, "Religion is required"),
+
+  nationality: z.string().trim().min(1, "Nationality is required"),
+
+  nidBirthReg: z.string().trim().min(1, "NID/Birth registration is required"),
+
+  email: z.string().trim().email("Invalid email address").optional(),
+
+  fullAddress: z.string().trim().min(5, "Full address is required"),
+
+  district: z.string().trim().min(1, "District is required"),
+
+  education: z.string().trim().min(1, "Education is required"),
+
+  trxId: z.string().trim().min(1, "Transaction ID is required"),
+
+  educationBoard: z.string().trim().min(1, "Education board is required"),
+
+  rollNumber: z.string().trim().min(1, "Roll number is required"),
+
+  regNumber: z.string().trim().min(1, "Registration number is required"),
+
+  passingYear: z
+    .number({
+      required_error: "Passing year is required",
+      invalid_type_error: "Passing year must be a number",
+    })
+    .min(1990, "Passing year must be 1990 or later")
+    .max(currentYear, `Passing year cannot be later than ${currentYear}`),
+
+  gpaCgpa: z
+    .string()
+    .trim()
+    .regex(/^\d+(\.\d{1,2})?$/, "GPA/CGPA must be a valid number (e.g., 4.00)")
+    .min(1, "GPA/CGPA is required"),
+
+  course: z.string().trim().min(1, "Course is required"),
+
+  session: z
+    .string()
+    .regex(/^\d{4}$/, "Session must be a valid year") // Ensures it's a 4-digit year
+    .refine(
+      (value) => {
+        const year = parseInt(value, 10);
+        const currentYear = new Date().getFullYear();
+        return year >= 2010 && year <= currentYear + 1;
+      },
+      { message: "Session must be between 2010 and next year" },
+    ),
+
+  duration: z.string().trim().min(1, "Duration is required"),
+
+  pc: z.enum(["laptop", "pc", "no"], {
+    errorMap: () => ({ message: "Specify if you have a computer" }),
+  }),
+
+  image: z
+    .any()
+    .refine((file) => file?.length == 1, "Image is required.")
+    .refine(
+      (file) => file?.[0]?.size <= MAX_FILE_SIZE,
+      `Image size must be less than 300KB`,
+    )
+    .refine(
+      (file) => ACCEPTED_IMAGE_TYPES.includes(file?.[0]?.type),
+      "Only .jpg, .jpeg, .png, and .webp files are allowed",
+    ),
+});
