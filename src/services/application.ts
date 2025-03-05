@@ -55,3 +55,71 @@ export const useSubmitApplication = () => {
     isSubmitting: mutation.status === "pending",
   };
 };
+
+export const useUpdateApplication = (appId: string, refetch: () => void) => {
+  const mutation = useMutation<AxiosResponse, Error, Record<string, string>>({
+    mutationFn: async (updateFields) => {
+      const formData = new FormData();
+      formData.append("id", appId);
+      Object.entries(updateFields).forEach(([key, value]) => {
+        formData.append(key, value);
+      });
+      return axios.patch("/api/best-computer/application", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+    },
+    onSuccess: (data) => {
+      if (data.status === 200) {
+        refetch();
+      }
+    },
+    onError: (error) => {
+      console.error("Error updating application:", error);
+    },
+  });
+
+  const updateApplicationData = async (
+    updateFields: Record<string, string>,
+  ) => {
+    return toast.promise(mutation.mutateAsync(updateFields), {
+      loading: "Updating application...",
+      success: "Application updated successfully",
+      error: "Error updating application",
+    });
+  };
+
+  return {
+    updateApplicationData,
+    isUpdating: mutation.status === "pending",
+  };
+};
+
+export const useDeleteApplication = (appId: string, refetch: () => void) => {
+  const mutation = useMutation<AxiosResponse, Error, void>({
+    mutationFn: async () => {
+      return axios.delete(`/api/best-computer/application?id=${appId}`);
+    },
+    onSuccess: (data) => {
+      if (data.status === 200) {
+        refetch();
+      }
+    },
+    onError: (error) => {
+      console.error("Error deleting application:", error);
+    },
+  });
+
+  const deleteApplication = async () => {
+    // Wrap the mutation call with toast.promise to handle notifications
+    return toast.promise(mutation.mutateAsync(), {
+      loading: "Deleting application...",
+      success: "Application deleted successfully",
+      error: "Error deleting application",
+    });
+  };
+
+  return {
+    deleteApplication,
+    isDeleting: mutation.status === "pending", // Tanstack Query uses "pending" as the active state
+  };
+};

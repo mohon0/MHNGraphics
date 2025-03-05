@@ -1,6 +1,5 @@
 "use client";
 
-import axios from "axios";
 import { format } from "date-fns";
 import {
   CheckCircle2,
@@ -15,7 +14,6 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import * as React from "react";
-import { toast } from "react-toastify";
 
 import { ApplicationListType } from "@/components/interface/ApplicationType";
 import {
@@ -52,6 +50,10 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import {
+  useDeleteApplication,
+  useUpdateApplication,
+} from "@/services/application";
 
 interface ExtendedApplicationListType extends ApplicationListType {
   refetch: () => void;
@@ -86,59 +88,25 @@ const statusConfig = {
 type StatusType = keyof typeof statusConfig;
 
 export default function ApplicationDataCard(app: ExtendedApplicationListType) {
-  const [isUpdating, setIsUpdating] = React.useState(false);
+  const { deleteApplication, isDeleting } = useDeleteApplication(
+    app.id,
+    app.refetch,
+  );
+  const { updateApplicationData, isUpdating } = useUpdateApplication(
+    app.id,
+    app.refetch,
+  );
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState(false);
 
-  async function handleDelete() {
+  const handleDelete = async () => {
     try {
-      const toastId = toast.loading("Deleting application...");
-      const response = await axios.delete(
-        `/api/best-computer/application?id=${app.id}`,
-      );
-
-      if (response.status === 200) {
-        toast.update(toastId, {
-          render: "Application deleted successfully",
-          type: "success",
-          isLoading: false,
-          autoClose: 2000,
-        });
-        app.refetch();
-      }
+      await deleteApplication();
     } catch (error) {
-      toast.error("Error deleting application");
+      console.error("Delete failed:", error);
     } finally {
       setIsDeleteDialogOpen(false);
     }
-  }
-
-  async function updateApplicationData(updateFields: Record<string, string>) {
-    try {
-      setIsUpdating(true);
-      const formData = new FormData();
-      formData.append("id", app.id);
-      Object.entries(updateFields).forEach(([key, value]) => {
-        formData.append(key, value);
-      });
-
-      const response = await axios.patch(
-        "/api/best-computer/application",
-        formData,
-        {
-          headers: { "Content-Type": "multipart/form-data" },
-        },
-      );
-
-      if (response.status === 200) {
-        toast.success("Application updated successfully");
-        app.refetch();
-      }
-    } catch (error) {
-      toast.error("Error updating application");
-    } finally {
-      setIsUpdating(false);
-    }
-  }
+  };
 
   const StatusIcon = statusConfig[app.status as StatusType]?.icon || Clock;
   const CertificateIcon =
@@ -350,7 +318,9 @@ export default function ApplicationDataCard(app: ExtendedApplicationListType) {
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={handleDelete}>Delete</AlertDialogAction>
+            <AlertDialogAction onClick={handleDelete} disabled={isDeleting}>
+              Delete
+            </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
