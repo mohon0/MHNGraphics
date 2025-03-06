@@ -1,5 +1,7 @@
+import { QUERY_KEYS } from "@/constant/QueryKeys";
+import { useDebounce } from "@/hooks/useDebounce";
 import { ApplicationSchema } from "@/lib/Schemas";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import axios, { AxiosResponse } from "axios";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
@@ -123,3 +125,68 @@ export const useDeleteApplication = (appId: string, refetch: () => void) => {
     isDeleting: mutation.status === "pending", // Tanstack Query uses "pending" as the active state
   };
 };
+
+interface Props {
+  page: number;
+  filter: string;
+  searchQuery: string;
+  certificate: string;
+  sortBy: string;
+  type?: string;
+}
+export function useApplicationList({
+  page,
+  certificate,
+  filter,
+  searchQuery,
+  sortBy,
+  type,
+}: Props) {
+  const debouncedSearchQuery = useDebounce(searchQuery, 300);
+  return useQuery({
+    queryKey: [
+      QUERY_KEYS.ALL_APPLICATION,
+      page,
+      filter,
+      certificate,
+      sortBy,
+      debouncedSearchQuery,
+      type,
+    ],
+    queryFn: async () => {
+      const response = await axios.get(`/api/best-computer/all-application`, {
+        params: {
+          page,
+          filter,
+          certificate,
+          sortBy,
+          type,
+          searchQuery: debouncedSearchQuery,
+        },
+      });
+      return response.data;
+    },
+  });
+}
+
+export function useSingleApplication({ id }: { id: string }) {
+  return useQuery({
+    queryKey: ["Single Application", id],
+    queryFn: async () => {
+      const response = await axios.get(
+        `/api/best-computer/single-application?id=${id}`,
+      );
+      return response.data;
+    },
+  });
+}
+
+export function useUserApplication() {
+  return useQuery({
+    queryKey: ["User Application Data"],
+    queryFn: async () => {
+      const response = await axios.get(`/api/best-computer/application`);
+      return response.data;
+    },
+  });
+}

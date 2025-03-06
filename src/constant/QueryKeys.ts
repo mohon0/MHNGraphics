@@ -10,4 +10,5 @@ export const QUERY_KEYS = {
   PAYMENT_ANALYTICS: "Payment Analytics",
   SINGLE_DESIGN: "Single Design",
   RELATED_DESIGN: "Related Design",
+  ALL_APPLICATION: "All Applications",
 };

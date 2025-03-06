@@ -1,10 +1,5 @@
 "use client";
 
-import { useSession } from "next-auth/react";
-import { useRouter, useSearchParams } from "next/navigation";
-import { Suspense } from "react";
-
-import { FetchAllApplication } from "@/components/fetch/best-computer/FetchApplication";
 import { ApplicationListType } from "@/components/interface/ApplicationType";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Input } from "@/components/ui/input";
@@ -19,6 +14,9 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Loader2 } from "lucide-react";
+import { useSession } from "next-auth/react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { Suspense } from "react";
 import ApplicationDataCard from "./ApplicationDataCard";
 import ApplicationPagination from "./ApplicationPagination";
 
@@ -45,6 +43,7 @@ import {
 } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
 import { ApplicationListSkeleton } from "./ApplicationListSkeleton";
+import { useApplicationList } from "@/services/application";
 
 function ApplicationListContent() {
   const { data: session, status } = useSession();
@@ -69,7 +68,7 @@ function ApplicationListContent() {
   );
   const type = searchParams.get("type") || "all";
 
-  const { data, isError, refetch, isFetching } = FetchAllApplication({
+  const { data, isError, refetch, isPending } = useApplicationList({
     page,
     filter,
     searchQuery: searchInput,
@@ -166,7 +165,7 @@ function ApplicationListContent() {
                 onChange={handleSearchChange}
                 className="w-full pl-9 md:max-w-sm"
               />
-              {isFetching && (
+              {isPending && (
                 <div className="absolute right-3 top-1/2 -translate-y-1/2">
                   <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
                 </div>
@@ -267,7 +266,7 @@ function ApplicationListContent() {
       </div>
 
       <div>
-        {isFetching ? (
+        {isPending ? (
           <ApplicationListSkeleton />
         ) : isError ? (
           <div className="flex min-h-[400px] flex-col items-center justify-center gap-4">
@@ -287,7 +286,7 @@ function ApplicationListContent() {
             <div
               className={cn(
                 "grid gap-4 sm:grid-cols-2 md:gap-6 lg:grid-cols-3 xl:grid-cols-4",
-                isFetching && "opacity-60",
+                isPending && "opacity-60",
               )}
             >
               {data.application.map((app: ApplicationListType) => (

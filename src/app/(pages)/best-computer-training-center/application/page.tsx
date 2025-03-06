@@ -1,6 +1,5 @@
 "use client";
 
-import { FetchUserApplication } from "@/components/fetch/best-computer/FetchApplication";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
@@ -23,6 +22,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useUserApplication } from "@/services/application";
 import {
   CalendarIcon,
   ClockIcon,
@@ -133,7 +133,7 @@ function VisitorView() {
 }
 
 function Content() {
-  const { isLoading, data, isError } = FetchUserApplication();
+  const { isLoading, data, isError } = useUserApplication();
 
   if (isLoading) {
     return <LoadingSkeleton />;

@@ -1,6 +1,5 @@
 "use client";
 
-import { useFetchNotice } from "@/components/fetch/best-computer/FetchNotice";
 import Footer from "@/components/layout/footer/Footer";
 import Header from "@/components/layout/Header/Header";
 import { Button } from "@/components/ui/button";
@@ -37,6 +36,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { useNotice } from "@/services/notice";
 import axios from "axios";
 import { FileDown, Trash } from "lucide-react";
 import { useSession } from "next-auth/react";
@@ -76,7 +76,7 @@ export default function Notice() {
     }
   };
 
-  const { error, data, isLoading, refetch } = useFetchNotice(
+  const { error, data, isLoading, refetch } = useNotice(
     currentPage,
     Number(pageSize),
   );

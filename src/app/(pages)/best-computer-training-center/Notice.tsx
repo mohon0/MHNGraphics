@@ -3,13 +3,13 @@ import img1 from "@/images/best-computer/bg_notice_board.png";
 import Image from "next/image";
 import Link from "next/link";
 import AnimatedButton from "./AnimatedButton";
-import { useFetchNotice } from "@/components/fetch/best-computer/FetchNotice";
+
 import { CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useNotice } from "@/services/notice";
 
 export default function Notice() {
- 
-  const { data, isLoading, error } = useFetchNotice(1, 5);
+  const { data, isLoading, error } = useNotice(1, 5);
 
   return (
     <div className="mx-2 my-10 grid grid-cols-1 gap-10 md:mx-20 md:grid-cols-2">

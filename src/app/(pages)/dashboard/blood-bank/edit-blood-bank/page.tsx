@@ -4,7 +4,6 @@ import BloodDonateNotice from "@/app/(pages)/best-computer-training-center/blood
 import MemberModel, {
   MemberModelData,
 } from "@/app/(pages)/best-computer-training-center/blood-donate/MemberModel";
-import { FetchSingleDonar } from "@/components/fetch/best-computer/FetchBloodBank";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -28,6 +27,7 @@ import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
 import { bangladeshDistricts } from "@/constant/District";
 import img from "@/images/best-computer/logo.png";
+import { useSingleDonar } from "@/services/blood-bank";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
 import Image from "next/image";
@@ -76,7 +76,7 @@ function BloodDonation() {
   const MAX_IMAGE_SIZE_KB = 100;
   const [image, setImage] = useState<File | null>(null);
   const [imageError, setImageError] = useState(false);
-  const { isLoading, data, isError } = FetchSingleDonar(id);
+  const { isLoading, data, isError } = useSingleDonar(id);
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),

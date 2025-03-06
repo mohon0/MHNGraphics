@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 
-export function FetchProfile(id: string, take: number, skip: number) {
+export function useProfile(id: string, take: number, skip: number) {
   return useQuery({
     queryKey: ["profile", id, take],
     queryFn: async () => {
@@ -14,7 +14,7 @@ export function FetchProfile(id: string, take: number, skip: number) {
   });
 }
 
-export function EditProfileInfo() {
+export function useEditProfileInfo() {
   return useQuery({
     queryKey: ["Edit Profile"],
     queryFn: async () => {

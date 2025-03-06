@@ -1,9 +1,9 @@
 "use client";
 
 import ApplicationHeader from "@/app/(pages)/best-computer-training-center/application/ApplicationHeader";
-import { FetchSingleApplication } from "@/components/fetch/best-computer/FetchApplication";
 import { SingleApplicationUserType } from "@/components/interface/ApplicationType";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useSingleApplication } from "@/services/application";
 import { useSearchParams } from "next/navigation";
 import { Suspense } from "react";
 import { StudentApplicationForm } from "./StudentApplication";
@@ -12,7 +12,7 @@ function EditApplicationComponent() {
   const searchParams = useSearchParams();
   const id = searchParams.get("id") || "";
 
-  const { isLoading, data, isError, isRefetching } = FetchSingleApplication({
+  const { isLoading, data, isError, isRefetching } = useSingleApplication({
     id,
   });
   return (

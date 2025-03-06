@@ -1,6 +1,5 @@
 "use client";
 
-import { EditProfileInfo } from "@/components/fetch/profile/FetchProfile";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -17,6 +16,7 @@ import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Textarea } from "@/components/ui/textarea";
+import { useEditProfileInfo } from "@/services/profile";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
 import { CameraIcon, Eye, EyeOff } from "lucide-react";
@@ -65,7 +65,7 @@ export default function ProfileForm() {
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [activeTab, setActiveTab] = useState("profile");
   const [avatarFile, setAvatarFile] = useState<File | null>(null);
-  const { isLoading, data, refetch } = EditProfileInfo();
+  const { isLoading, data, refetch } = useEditProfileInfo();
   const profileForm = useForm<ProfileFormValues>({
     resolver: zodResolver(profileFormSchema),
     defaultValues: { name: "", email: "", bio: "" },

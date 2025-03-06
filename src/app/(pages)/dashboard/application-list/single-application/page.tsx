@@ -1,10 +1,10 @@
 "use client";
-import { FetchSingleApplication } from "@/components/fetch/best-computer/FetchApplication";
 import { SingleApplicationUserType } from "@/components/interface/ApplicationType";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import logo2 from "@/images/hero/logo2.png";
 import logo from "@/images/hero/logo3.png";
+import { useSingleApplication } from "@/services/application";
 import Image from "next/image";
 import { useSearchParams } from "next/navigation";
 import { Suspense, useRef } from "react";
@@ -29,7 +29,7 @@ function SingleApplicationPage() {
   const searchParams = useSearchParams();
   const id = searchParams.get("id") || "";
 
-  const { isLoading, data, isError, isRefetching } = FetchSingleApplication({
+  const { isLoading, data, isError, isRefetching } = useSingleApplication({
     id,
   });
   return (

@@ -1,5 +1,4 @@
 "use client";
-import { FetchAddress } from "@/components/fetch/best-computer/FetchBloodBank";
 import { AddressListType } from "@/components/interface/UserType";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -72,7 +71,7 @@ const AddressContent: React.FC = () => {
   const [searchInput, setSearchInput] = useState("");
   const [filterBy, setFilterBy] = useState("All");
 
-  const { isLoading, data, error } = FetchAddress({
+  const { isLoading, data, error } = useAddress({
     currentPage: page,
     filterBy,
     searchInput,
@@ -249,6 +248,7 @@ interface AddressCardProps {
 }
 
 import { Badge } from "@/components/ui/badge";
+import { useAddress } from "@/services/blood-bank";
 import { Mail, MapPin, Phone, User } from "lucide-react";
 
 interface AddressCardProps {
