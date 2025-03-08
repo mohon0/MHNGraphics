@@ -235,6 +235,8 @@ export async function DELETE(req: NextRequest) {
       },
     });
 
+    console.log(application);
+
     if (!application) {
       return new NextResponse("Application not found", { status: 404 });
     }
@@ -265,6 +267,7 @@ export async function DELETE(req: NextRequest) {
       });
     }
   } catch (error) {
+    console.log(error);
     return new NextResponse("Error deleting application", { status: 500 });
   }
 }

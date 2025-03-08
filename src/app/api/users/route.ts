@@ -128,6 +128,26 @@ export async function DELETE(req: NextRequest) {
         }
       }
     }
+    // Delete all design by the user
+    const deleteAllDesign = await Prisma.design.deleteMany({
+      where: {
+        authorId: user.id,
+      },
+    });
+
+    // Delete all comments by the user
+    const DeleteComment = await Prisma.comment.deleteMany({
+      where: {
+        userId: user.id,
+      },
+    });
+
+    // Delete user application
+    const deleteAppplication = await Prisma.application.deleteMany({
+      where: {
+        userId: user.id,
+      },
+    });
 
     // Delete the user (cascade deletes associated records)
     await Prisma.user.delete({
@@ -139,6 +159,7 @@ export async function DELETE(req: NextRequest) {
     });
   } catch (error) {
     console.error("Error deleting user:", error);
+    console.log(error);
     return new NextResponse("Internal Server Error", { status: 500 });
   }
 }
