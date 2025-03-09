@@ -1,5 +1,6 @@
 import { QUERY_KEYS } from "@/constant/QueryKeys";
 import { useDebounce } from "@/hooks/useDebounce";
+import { NewDesignSchemaType } from "@/lib/Schemas";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { toast } from "sonner";
@@ -176,4 +177,71 @@ export function useRelatedDesign(id: string) {
       return response.data;
     },
   });
+}
+
+interface UseUpdateDesignProps {
+  designId: string;
+  imageFile: File | null;
+}
+
+export function useUpdateDesign({ designId, imageFile }: UseUpdateDesignProps) {
+  const queryClient = useQueryClient();
+
+  const updateDesignMutation = useMutation({
+    mutationFn: async (formData: NewDesignSchemaType) => {
+      if (!designId) {
+        throw new Error("Design ID is missing");
+      }
+
+      const submissionData = new FormData();
+
+      // Add form fields to FormData
+      Object.entries(formData).forEach(([key, value]) => {
+        if (value !== undefined && value !== null) {
+          submissionData.append(key, value.toString());
+        }
+      });
+
+      submissionData.append("productId", designId);
+
+      if (imageFile) {
+        submissionData.append("image", imageFile);
+      }
+
+      const response = await axios.patch(
+        "/api/design/edit-design",
+        submissionData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        },
+      );
+
+      return response.data;
+    },
+    onSuccess: () => {
+      // Invalidate and refetch the design query to update the UI
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.SINGLE_DESIGN, designId],
+      });
+    },
+  });
+
+  const submitDesignUpdate = (formData: NewDesignSchemaType) => {
+    return toast.promise(updateDesignMutation.mutateAsync(formData), {
+      loading: "Updating design...",
+      success: "Design successfully updated",
+      error: (err) =>
+        `Error: ${err instanceof Error ? err.message : "Failed to update design"}`,
+    });
+  };
+
+  return {
+    updateDesignMutation,
+    submitDesignUpdate,
+    isPending: updateDesignMutation.isPending,
+    isError: updateDesignMutation.isError,
+    error: updateDesignMutation.error,
+  };
 }

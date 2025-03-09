@@ -3,6 +3,17 @@ export interface ImageDimensions {
   height: number;
 }
 
+/**
+ * The function `getDynamicDimensions` calculates the width and height of an image based on a target
+ * height while maintaining the original aspect ratio.
+ * @param {number} originalWidth - The `originalWidth` parameter represents the width of the original
+ * image in pixels.
+ * @param {number} originalHeight - The `originalHeight` parameter represents the original height of an
+ * image.
+ * @param {number} targetHeight - The `targetHeight` parameter represents the desired height that you
+ * want the image to be resized to while maintaining the original aspect ratio.
+ * @returns An object containing the calculated width and the target height is being returned.
+ */
 export function getDynamicDimensions(
   originalWidth: number,
   originalHeight: number,
@@ -13,6 +24,22 @@ export function getDynamicDimensions(
   return { width, height: targetHeight };
 }
 
+/**
+ * The function `getTransformedImageUrl` takes an original image URL, width, height, and target height,
+ * and returns a transformed image URL with specified dimensions and watermark.
+ * @param {string} originalUrl - The `originalUrl` parameter is the URL of the original image that you
+ * want to transform.
+ * @param {number} originalWidth - The `originalWidth` parameter represents the width of the original
+ * image before transformation.
+ * @param {number} originalHeight - The `originalHeight` parameter represents the height of the
+ * original image before any transformations are applied.
+ * @param {number} targetHeight - The `targetHeight` parameter in the `getTransformedImageUrl` function
+ * represents the desired height of the transformed image. This parameter is used to calculate the
+ * width and height of the image based on the original dimensions and the target height before
+ * generating the transformed image URL.
+ * @returns The function `getTransformedImageUrl` returns a modified URL for an image with specified
+ * dimensions and transformations applied.
+ */
 export function getTransformedImageUrl(
   originalUrl: string,
   originalWidth: number,
@@ -30,6 +57,14 @@ export function getTransformedImageUrl(
   );
 }
 
+/**
+ * This TypeScript function calculates the aspect ratio by dividing the width by the height.
+ * @param {number} width - The `width` parameter represents the width of an element, such as an image
+ * or a video.
+ * @param {number} height - The height parameter represents the vertical dimension of an element, such
+ * as an image or a video. It is typically measured in pixels or another unit of length.
+ * @returns The aspect ratio, which is calculated by dividing the width by the height.
+ */
 export function getAspectRatio(width: number, height: number): number {
   return width / height;
 }

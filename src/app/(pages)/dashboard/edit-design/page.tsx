@@ -1,6 +1,5 @@
 "use client";
-import EditDesignImage from "@/components/form/formField/EditDesignFormField";
-import { Badge } from "@/components/ui/badge";
+
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -12,56 +11,45 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
-import { designCategories } from "@/constant/DesignCategory";
-import TiptapEditor, { TiptapEditorRef } from "@/editor";
-import { NewDesignFormSchema, NewProductFormSchemaType } from "@/lib/Schemas";
-import { useSingleDesign } from "@/services/design";
+import TiptapEditor, { type TiptapEditorRef } from "@/editor";
+import { NewDesignSchema, type NewDesignSchemaType } from "@/lib/Schemas";
+import { useSingleDesign, useUpdateDesign } from "@/services/design";
 import { zodResolver } from "@hookform/resolvers/zod";
-import axios from "axios";
-import { ChevronLeft, X } from "lucide-react";
+import { ChevronLeft, Loader2 } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Suspense, useCallback, useEffect, useRef, useState } from "react";
-import { useForm, useWatch } from "react-hook-form";
-import { CgAsterisk } from "react-icons/cg";
+import { Suspense, useEffect, useRef, useState } from "react";
+import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { DesignSkeleton } from "../new-design/skeleton";
+import Category from "./Category";
+import { EditDesignImage } from "./EditDesignImage";
+import Tags from "./Tags";
 
 export default function EditDesign() {
   return (
-    <div>
-      <Suspense
-        fallback={
-          <div>
-            {" "}
-            <div className="space-y-4 p-4">
-              <Skeleton className="h-8 w-1/3" /> {/* Title placeholder */}
-              <Skeleton className="h-4 w-full" /> {/* First paragraph line */}
-              <Skeleton className="h-4 w-2/3" /> {/* Second paragraph line */}
-              <Skeleton className="h-64 w-full rounded-md" />{" "}
-              {/* Main content area placeholder */}
-            </div>
-          </div>
-        }
-      >
+    <div className="container">
+      <Suspense fallback={<LoadingSkeleton />}>
         <DesignPage />
       </Suspense>
     </div>
   );
 }
 
+function LoadingSkeleton() {
+  return (
+    <div className="space-y-4 p-4">
+      <Skeleton className="h-8 w-1/3" />
+      <Skeleton className="h-4 w-full" />
+      <Skeleton className="h-4 w-2/3" />
+      <Skeleton className="h-64 w-full rounded-md" />
+    </div>
+  );
+}
+
 function DesignPage() {
-  const [input, setInput] = useState("");
-  const [newImage, setNewImage] = useState<File | null>(null);
-  const [deletedImage, setDeletedImage] = useState<string | null>(null);
-  const [initialImage, setInitialImage] = useState<string | null>(null);
+  const [image, setImage] = useState<string | null>(null);
+  const [imageFile, setImageFile] = useState<File | null>(null);
   const editorRef = useRef<TiptapEditorRef>(null);
 
   const searchParams = useSearchParams();
@@ -69,8 +57,14 @@ function DesignPage() {
   const { isLoading, data, isError } = useSingleDesign({ id });
   const router = useRouter();
 
-  const form = useForm<NewProductFormSchemaType>({
-    resolver: zodResolver(NewDesignFormSchema),
+  // Use our custom hook for design updates
+  const { submitDesignUpdate, isPending } = useUpdateDesign({
+    designId: id,
+    imageFile,
+  });
+
+  const form = useForm<NewDesignSchemaType>({
+    resolver: zodResolver(NewDesignSchema),
     defaultValues: {
       name: "",
       description: "",
@@ -78,8 +72,6 @@ function DesignPage() {
       tags: [],
     },
   });
-
-  const { control, setValue } = form;
 
   useEffect(() => {
     if (data) {
@@ -89,104 +81,25 @@ function DesignPage() {
         category: data.category || "",
         tags: data.tags || [],
       });
-      setInitialImage(data.image || "");
+      setImage(data.image || "");
     }
   }, [data, form]);
 
-  const tags = useWatch({ control, name: "tags" });
+  // Simplified onSubmit function
+  async function onSubmit(formData: NewDesignSchemaType) {
+    await submitDesignUpdate(formData);
+  }
 
-  const handleAddNewImage = (file: File) => {
-    setNewImage(file);
-  };
-
-  const handleDeleteImage = () => {
-    setDeletedImage(initialImage);
-    setNewImage(null);
-  };
-
-  const addTag = useCallback(
-    (tag: string) => {
-      const trimmedTag = tag.trim();
-      if (trimmedTag && !tags.includes(trimmedTag)) {
-        setValue("tags", [...tags, trimmedTag]);
-        setInput("");
-      }
-    },
-    [tags, setValue],
-  );
-
-  const removeTag = useCallback(
-    (indexToRemove: number) => {
-      setValue(
-        "tags",
-        tags.filter((tag, index) => {
-          // Skip empty strings and keep the tag if it's not the one to be removed
-          return tag.trim() !== "" && index !== indexToRemove;
-        }),
-      );
-    },
-    [tags, setValue],
-  );
-
-  const handleKeyDown = useCallback(
-    (e: React.KeyboardEvent<HTMLInputElement>) => {
-      if (e.key === "Enter") {
-        e.preventDefault();
-        addTag(input);
-      } else if (e.key === "Backspace" && !input && tags.length > 0) {
-        removeTag(tags.length - 1);
-      }
-    },
-    [input, tags, addTag, removeTag],
-  );
-
-  async function onSubmit(formData: NewProductFormSchemaType) {
-    const totalImages = initialImage ? 1 : newImage ? 1 : 0;
-
-    if (totalImages === 0) {
-      toast.error("Please upload an image");
-      return;
-    }
-
-    const submissionData = new FormData();
-    Object.entries(formData).forEach(([key, value]) => {
-      if (value !== undefined && value !== null) {
-        submissionData.append(key, value.toString());
-      }
-    });
-
-    submissionData.append("productId", data.id);
-
-    if (newImage) {
-      submissionData.append("image", newImage);
-    }
-
-    if (deletedImage) {
-      submissionData.append("deletedImage", deletedImage);
-    }
-
-    toast.loading("Please wait...");
-    try {
-      const response = await axios.patch(
-        "/api/design/edit-design",
-        submissionData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        },
-      );
-
-      if (response.status !== 200) {
-        toast.dismiss();
-        toast.error("Failed to update design");
-      } else {
-        toast.dismiss();
-        toast.success("Design successfully updated");
-      }
-    } catch (error) {
-      toast.dismiss();
-      toast.error("Failed to update the form");
+  function handleDiscard() {
+    if (data) {
+      form.reset({
+        name: data.name || "",
+        description: data.description || "",
+        category: data.category || "",
+        tags: data.tags || [],
+      });
+      setImage(data.image || "");
+      toast.info("Changes discarded");
     }
   }
 
@@ -195,195 +108,175 @@ function DesignPage() {
   }
 
   if (isError) {
-    return <div>Error loading product data</div>;
+    return (
+      <div className="flex flex-col items-center justify-center p-8 text-center">
+        <h2 className="mb-2 text-xl font-semibold text-destructive">
+          Error Loading Design
+        </h2>
+        <p className="mb-4 text-muted-foreground">
+          We couldn&#39;t load the design data. Please try again later.
+        </p>
+        <Button onClick={() => router.back()} variant="outline">
+          Go Back
+        </Button>
+      </div>
+    );
   }
 
   return (
-    <>
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)}>
-          <div className="flex min-h-screen w-full flex-col">
-            <div className="flex flex-col sm:gap-4">
-              <main className="grid flex-1 items-start gap-4 sm:py-0 md:gap-8">
-                <div className="mx-auto grid flex-1 auto-rows-max gap-4">
-                  <div className="flex items-center gap-4">
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)}>
+        <div className="flex min-h-screen w-full flex-col">
+          <div className="flex flex-col sm:gap-4">
+            <main className="grid flex-1 items-start gap-4 sm:py-0 md:gap-8">
+              <div className="mx-auto grid w-full flex-1 auto-rows-max gap-4">
+                <div className="mb-6 flex items-center gap-4">
+                  <Button
+                    variant="outline"
+                    type="button"
+                    size="icon"
+                    className="h-9 w-9"
+                    onClick={() => router.back()}
+                  >
+                    <ChevronLeft className="h-4 w-4" />
+                    <span className="sr-only">Back</span>
+                  </Button>
+                  <h1 className="flex-1 shrink-0 whitespace-nowrap text-2xl font-semibold tracking-tight sm:grow-0">
+                    Edit Design
+                  </h1>
+                  <div className="hidden items-center gap-2 md:ml-auto md:flex">
                     <Button
                       variant="outline"
                       type="button"
-                      size="icon"
-                      className="h-7 w-7"
-                      onClick={() => router.back()}
+                      onClick={handleDiscard}
+                      disabled={isPending}
                     >
-                      <ChevronLeft className="h-4 w-4" />
-                      <span className="sr-only">Back</span>
+                      Discard
                     </Button>
-                    <h1 className="flex-1 shrink-0 whitespace-nowrap text-xl font-semibold tracking-tight sm:grow-0">
-                      Edit Design
-                    </h1>
-                    <div className="hidden items-center gap-2 md:ml-auto md:flex">
+                    <Button
+                      type="submit"
+                      disabled={isPending}
+                      className="min-w-[120px]"
+                    >
+                      {isPending ? (
+                        <>
+                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                          Saving...
+                        </>
+                      ) : (
+                        "Save Changes"
+                      )}
+                    </Button>
+                  </div>
+                </div>
+
+                <div className="grid gap-6 md:grid-cols-[1fr_300px] lg:grid-cols-3 lg:gap-8">
+                  <div className="grid auto-rows-max items-start gap-6 lg:col-span-2 lg:gap-8">
+                    <Card className="p-6">
+                      <CardHeader className="px-0 pt-0">
+                        <CardTitle>Design Information</CardTitle>
+                      </CardHeader>
+                      <CardContent className="space-y-6 px-0 pb-0">
+                        <FormField
+                          control={form.control}
+                          name="name"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Design Title</FormLabel>
+                              <FormControl>
+                                <Input
+                                  placeholder="Title of the design"
+                                  {...field}
+                                  className="max-w-xl"
+                                />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                        <FormField
+                          control={form.control}
+                          name="description"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel>Design Content</FormLabel>
+                              <FormControl>
+                                <div className="rounded-md border">
+                                  <TiptapEditor
+                                    ref={editorRef}
+                                    ssr
+                                    output="html"
+                                    placeholder={{
+                                      paragraph: "Type your content here...",
+                                    }}
+                                    onContentChange={field.onChange}
+                                    initialContent={
+                                      field.value || data?.description || ""
+                                    }
+                                  />
+                                </div>
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                      </CardContent>
+                    </Card>
+                  </div>
+
+                  <div className="grid auto-rows-max items-start gap-6">
+                    <EditDesignImage
+                      image={image}
+                      setImage={setImage}
+                      setImageFile={setImageFile}
+                    />
+                    <Card>
+                      <CardHeader>
+                        <CardTitle>Category and Tags</CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="grid gap-6">
+                          <div className="grid gap-4">
+                            <Category category={data?.category} />
+                          </div>
+                          <Tags />
+                        </div>
+                      </CardContent>
+                    </Card>
+
+                    {/* Mobile action buttons */}
+                    <div className="mt-4 flex items-center gap-2 md:hidden">
                       <Button
                         variant="outline"
                         type="button"
-                        onClick={() => {
-                          form.reset();
-                          setNewImage(null);
-
-                          setDeletedImage(null);
-                        }}
+                        onClick={handleDiscard}
+                        disabled={isPending}
+                        className="flex-1"
                       >
                         Discard
                       </Button>
-                      <Button type="submit">Edit Design</Button>
-                    </div>
-                  </div>
-                  <div className="grid gap-4 md:grid-cols-[1fr_250px] lg:grid-cols-3 lg:gap-8">
-                    <div className="grid auto-rows-max items-start gap-4 lg:col-span-2 lg:gap-8">
-                      <FormField
-                        control={form.control}
-                        name="name"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Design Title</FormLabel>
-                            <FormControl>
-                              <Input
-                                placeholder="Title of the design"
-                                {...field}
-                              />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
+                      <Button
+                        type="submit"
+                        disabled={isPending}
+                        className="flex-1"
+                      >
+                        {isPending ? (
+                          <>
+                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                            Saving...
+                          </>
+                        ) : (
+                          "Save Changes"
                         )}
-                      />
-                      <FormField
-                        control={form.control}
-                        name="description"
-                        render={({ field }) => (
-                          <FormItem>
-                            <FormLabel>Design Content</FormLabel>
-                            <FormControl>
-                              <TiptapEditor
-                                ref={editorRef}
-                                ssr
-                                output="html"
-                                placeholder={{
-                                  paragraph: "Type your content here...",
-                                }}
-                                onContentChange={field.onChange}
-                                initialContent={
-                                  field.value || data?.description || ""
-                                }
-                              />
-                            </FormControl>
-                            <FormMessage />
-                          </FormItem>
-                        )}
-                      />
-                    </div>
-                    <div className="grid auto-rows-max items-start gap-4 lg:gap-8">
-                      <EditDesignImage
-                        image={initialImage}
-                        newImage={newImage}
-                        deletedImage={deletedImage}
-                        handleAddNewImage={handleAddNewImage}
-                        handleDeleteImage={handleDeleteImage}
-                      />
-                      <Card x-chunk="dashboard-07-chunk-2">
-                        <CardHeader>
-                          <CardTitle>Category</CardTitle>
-                        </CardHeader>
-                        <CardContent>
-                          <div className="grid items-baseline gap-6">
-                            <div className="grid gap-3">
-                              <div>
-                                <FormField
-                                  name="category"
-                                  render={({ field }) => (
-                                    <FormItem>
-                                      <FormLabel className="flex">
-                                        <span>Category</span>
-                                        <CgAsterisk color="red" />
-                                      </FormLabel>
-                                      <Select
-                                        onValueChange={field.onChange}
-                                        defaultValue={data.category || ""}
-                                      >
-                                        <SelectTrigger>
-                                          <SelectValue placeholder="Select Category" />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                          {designCategories.map((category) => (
-                                            <SelectItem
-                                              key={category.value}
-                                              value={category.value}
-                                            >
-                                              {category.label}
-                                            </SelectItem>
-                                          ))}
-                                        </SelectContent>
-                                      </Select>
-                                      <FormMessage />
-                                    </FormItem>
-                                  )}
-                                />
-                              </div>
-                            </div>
-                          </div>
-
-                          <div>
-                            <FormLabel>Tags</FormLabel>
-                            <div className="mb-2 flex flex-wrap gap-2">
-                              {tags
-                                .filter((tag) => tag.trim() !== "")
-                                .map((tag: string, index: number) => (
-                                  <Badge
-                                    key={index}
-                                    variant="secondary"
-                                    className="px-2 py-1 text-sm"
-                                  >
-                                    {tag}
-                                    <Button
-                                      variant="ghost"
-                                      size="sm"
-                                      type="button"
-                                      className="ml-1 h-auto p-0"
-                                      onClick={() => removeTag(index)}
-                                    >
-                                      <X className="h-3 w-3" />
-                                      <span className="sr-only">
-                                        Remove {tag} tag
-                                      </span>
-                                    </Button>
-                                  </Badge>
-                                ))}
-                            </div>
-                            <div className="flex gap-2">
-                              <Input
-                                type="text"
-                                value={input}
-                                onChange={(e) => setInput(e.target.value)}
-                                onKeyDown={handleKeyDown}
-                                placeholder="Add a tag..."
-                                className="flex-grow"
-                              />
-                              <Button
-                                variant="outline"
-                                type="button"
-                                onClick={() => input && addTag(input)}
-                              >
-                                Add
-                              </Button>
-                            </div>
-                          </div>
-                        </CardContent>
-                      </Card>
+                      </Button>
                     </div>
                   </div>
                 </div>
-              </main>
-            </div>
+              </div>
+            </main>
           </div>
-        </form>
-      </Form>
-    </>
+        </div>
+      </form>
+    </Form>
   );
 }
