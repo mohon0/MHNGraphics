@@ -1,7 +1,6 @@
 "use client";
 
 import Preview from "@/app/(pages)/best-computer-training-center/application/ApplicationPreview";
-import EditApplicationImage from "@/components/form/formField/EditApplicationFormField";
 import { SingleApplicationUserType } from "@/components/interface/ApplicationType";
 import { Button } from "@/components/ui/button";
 import {
@@ -40,6 +39,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-toastify";
 import * as z from "zod";
+import EditApplicationImage from "./EditApplicationImage";
 
 const currentYear = new Date().getFullYear();
 
