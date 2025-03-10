@@ -33,7 +33,7 @@ import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { Suspense } from "react";
 import { toast } from "sonner";
-import ScrollNotice from "../ScrollNotice";
+import ScrollNotice from "../(home)/ScrollNotice";
 import ApplicationHeader from "./ApplicationHeader";
 import { StudentApplicationForm } from "./StudentApplication";
 

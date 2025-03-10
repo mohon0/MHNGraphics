@@ -208,3 +208,5 @@ export const ApplicationSchema = z.object({
       "Only .jpg, .jpeg, .png, and .webp files are allowed",
     ),
 });
+
+export type ApplicationSchemaType = z.infer<typeof ApplicationSchema>;
