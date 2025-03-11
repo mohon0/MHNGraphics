@@ -5,6 +5,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import logo2 from "@/images/hero/logo2.png";
 import logo from "@/images/hero/logo3.png";
 import { useSingleApplication } from "@/services/application";
+import { format } from "date-fns";
 import Image from "next/image";
 import { useSearchParams } from "next/navigation";
 import { Suspense, useRef } from "react";
@@ -157,7 +158,11 @@ function SingleApplication({ application }: SingleApplicationUserType) {
               <tr className="flex flex-col md:flex-row print:flex-row">
                 <td className="w-full border-collapse border-2 p-1 px-2 md:w-1/2 print:w-1/2">
                   <span className="font-bold">BirthDay: </span>
-                  <span className="pl-3">{application.birthDay}</span>
+                  <span className="pl-3">
+                    {application.birthDay
+                      ? format(new Date(application.birthDay), "do MMMM yyyy")
+                      : ""}
+                  </span>
                 </td>
                 <td className="w-full border-collapse border-2 p-1 px-2 md:w-1/2 print:w-1/2">
                   <span className="font-bold">Blood Group: </span>

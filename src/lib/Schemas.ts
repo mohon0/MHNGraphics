@@ -109,13 +109,7 @@ export const ApplicationSchema = z.object({
     .min(1, "Father's occupation is required")
     .max(40, "Must be 40 characters or less"),
 
-  birthDay: z
-    .string()
-    .trim()
-    .regex(
-      /^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[0-2])\/\d{4}$/,
-      "Date must be in the format dd/mm/yyyy",
-    ),
+  birthDay: z.date(),
 
   mobileNumber: z
     .string()

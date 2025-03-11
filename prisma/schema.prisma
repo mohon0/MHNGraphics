@@ -127,7 +127,7 @@ model Application {
   session          Int
   fatherName       String
   motherName       String
-  birthDay         String
+  birthDay         DateTime
   bloodGroup       String
   mobileNumber     String
   guardianNumber   String

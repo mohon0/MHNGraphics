@@ -84,6 +84,8 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    console.log(formData);
+
     // Handle file upload
     let imageUrl = { secure_url: "", public_id: "" };
     const imageFile = formData.get("image") as Blob;
@@ -111,6 +113,18 @@ export async function POST(req: NextRequest) {
       roll = lastApplication.roll + 1;
     }
 
+    // Use utility function for birthDay
+
+    // Validate date format
+    if (!birthDay || isNaN(Date.parse(birthDay))) {
+      return NextResponse.json(
+        { message: "Invalid birth date format. Use ISO format (YYYY-MM-DD)" },
+        { status: 400 },
+      );
+    }
+
+    // Convert to Date object if needed
+    const birthDate = new Date(birthDay);
     // Create a new application
     try {
       const newApplication = await Prisma.application.create({
@@ -118,7 +132,7 @@ export async function POST(req: NextRequest) {
           studentName,
           fatherName,
           motherName,
-          birthDay,
+          birthDay: birthDate,
           bloodGroup,
           mobileNumber,
           guardianNumber,

@@ -39,6 +39,8 @@ import { Upload } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useCallback, useState } from "react";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import * as z from "zod";
@@ -74,7 +76,7 @@ export function StudentApplicationForm() {
       fatherName: "",
       motherName: "",
       fatherOccupation: "",
-      birthDay: "",
+      birthDay: undefined,
       mobileNumber: "",
       guardianNumber: "",
       gender: undefined,
@@ -181,7 +183,7 @@ export function StudentApplicationForm() {
                             <FormControl>
                               <div>
                                 <Label htmlFor="image-upload">
-                                  <div className="h-32 w-32 cursor-pointer overflow-hidden rounded-lg border-2 border-dashed border-gray-300 transition-colors duration-200 hover:border-gray-400">
+                                  <div className="h-40 w-40 cursor-pointer overflow-hidden rounded-lg border-2 border-dashed border-gray-300 transition-colors duration-200 hover:border-gray-400">
                                     {imagePreview ? (
                                       <Image
                                         src={imagePreview}
@@ -273,7 +275,19 @@ export function StudentApplicationForm() {
                         <FormItem>
                           <FormLabel>Birth Date</FormLabel>
                           <FormControl>
-                            <Input placeholder="13/01/2000" {...field} />
+                            <DatePicker
+                              selected={
+                                field.value ? new Date(field.value) : null
+                              }
+                              onChange={(date) => field.onChange(date)}
+                              dateFormat="dd/MM/yyyy"
+                              placeholderText="DD/MM/YYYY"
+                              className="w-full rounded-md border p-2"
+                              showYearDropdown
+                              showMonthDropdown
+                              dropdownMode="select"
+                              maxDate={new Date()} // Prevent selecting future dates
+                            />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
