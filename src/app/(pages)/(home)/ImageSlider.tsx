@@ -1,13 +1,33 @@
 "use client";
+
 import { createSlug } from "@/components/helper/slug/CreateSlug";
 import { DesignType } from "@/components/interface/DesignType";
+import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
+import { cn } from "@/lib/utils";
 import { useFetchAllDesign } from "@/services/design";
+import { ArrowRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import Marquee from "react-fast-marquee";
 
-export default function ImageMarquee() {
+interface ImageMarqueeProps {
+  title?: string;
+  viewAllLink?: string;
+}
+
+export default function ImageMarquee({
+  title = "View Design & Sell Content",
+  viewAllLink = "/designs",
+}: ImageMarqueeProps) {
+  const [isClient, setIsClient] = useState(false);
+
+  // Set isClient to true on component mount
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
   const { isLoading, data, isError } = useFetchAllDesign({
     page: 1,
     category: "all",
@@ -17,13 +37,26 @@ export default function ImageMarquee() {
 
   if (isLoading) {
     return (
-      <section className="space-y-6 md:my-20">
-        <h2 className="mb-6 text-center text-2xl font-bold md:mb-10 md:text-4xl">
-          View Design & Sell Content
-        </h2>
-        <div className="space-y-4">
-          <Skeleton className="h-40 w-full rounded-lg" />
-          <Skeleton className="h-40 w-full rounded-lg" />
+      <section className="py-12 md:py-20">
+        <div className="container">
+          <div className="mb-8 flex items-center justify-between">
+            <h2 className="text-2xl font-bold md:text-3xl lg:text-4xl">
+              {title}
+            </h2>
+            <Skeleton className="h-10 w-32" />
+          </div>
+          <div className="space-y-8">
+            <div className="grid grid-cols-2 gap-4 md:grid-cols-4 lg:grid-cols-6">
+              {Array.from({ length: 6 }).map((_, i) => (
+                <Skeleton key={i} className="aspect-square rounded-lg" />
+              ))}
+            </div>
+            <div className="grid grid-cols-2 gap-4 md:grid-cols-4 lg:grid-cols-6">
+              {Array.from({ length: 6 }).map((_, i) => (
+                <Skeleton key={i} className="aspect-square rounded-lg" />
+              ))}
+            </div>
+          </div>
         </div>
       </section>
     );
@@ -31,11 +64,17 @@ export default function ImageMarquee() {
 
   if (isError) {
     return (
-      <section className="space-y-6 md:my-20">
-        <h2 className="mb-6 text-center text-2xl font-bold md:mb-10 md:text-4xl">
-          View Design & Sell Content
-        </h2>
-        <p>There was an error loading the designs. Please try again later.</p>
+      <section className="py-12 md:py-20">
+        <div className="container">
+          <h2 className="mb-6 text-2xl font-bold md:text-3xl lg:text-4xl">
+            {title}
+          </h2>
+          <div className="rounded-lg border border-destructive/20 bg-destructive/5 p-6 text-center">
+            <p className="text-destructive">
+              There was an error loading the designs. Please try again later.
+            </p>
+          </div>
+        </div>
       </section>
     );
   }
@@ -43,75 +82,120 @@ export default function ImageMarquee() {
   const designs = data?.data || [];
   const totalItems = data?.meta?.totalItems || 0;
 
+  // Only split the data if we have enough items
   const firstSliderData =
-    totalItems > 20 ? designs.slice(0, Math.ceil(designs.length / 2)) : designs;
+    totalItems > 10 ? designs.slice(0, Math.ceil(designs.length / 2)) : designs;
+
   const secondSliderData =
-    totalItems > 20 ? designs.slice(Math.ceil(designs.length / 2)) : designs;
+    totalItems > 10
+      ? designs.slice(Math.ceil(designs.length / 2))
+      : designs.slice().reverse(); // Reverse the array for visual variety if not enough items
+
+  // Don't render marquees on server to prevent hydration issues
+  if (!isClient) {
+    return (
+      <section className="py-12 md:py-20">
+        <div className="container">
+          <h2 className="mb-6 text-2xl font-bold md:text-3xl lg:text-4xl">
+            {title}
+          </h2>
+          <div className="h-[200px] md:h-[300px]"></div>
+        </div>
+      </section>
+    );
+  }
 
   return (
-    <section className="overflow-hidden md:my-20 md:space-y-6">
-      <h2 className="mb-2 text-center text-2xl font-bold md:mb-10 md:text-4xl">
-        View Design & Sell Content
-      </h2>
+    <section className="py-4">
+      <div className="container mx-auto mb-8">
+        <div className="flex flex-col items-center justify-between gap-4 sm:flex-row">
+          <h2 className="text-2xl font-bold md:text-3xl lg:text-4xl">
+            {title}
+          </h2>
+          <Button asChild variant="outline" className="group">
+            <Link href={viewAllLink}>
+              View all designs
+              <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+            </Link>
+          </Button>
+        </div>
+      </div>
 
-      {/* First Marquee */}
-      <Marquee pauseOnHover={true} speed={40} className="py-4">
-        {firstSliderData.map((design: DesignType) => (
-          <Link
-            href={createSlug({ name: design.name, id: design.id })}
-            key={design.id}
+      <div className="space-y-8 overflow-hidden">
+        {/* First Marquee */}
+        <div className="relative before:absolute before:left-0 before:top-0 before:z-10 before:h-full before:w-12 before:bg-gradient-to-r before:from-background before:to-transparent after:absolute after:right-0 after:top-0 after:z-10 after:h-full after:w-12 after:bg-gradient-to-l after:from-background after:to-transparent">
+          <Marquee
+            pauseOnHover={true}
+            speed={30}
+            className="py-4"
+            gradient={false}
           >
-            <div className="group relative mx-2 h-40 w-full flex-shrink-0 overflow-hidden md:h-52">
-              <Image
-                src={design.image}
-                alt={design.name || "Design Image"}
-                width={160}
-                height={160}
-                className="h-full w-full object-contain transition-transform group-hover:scale-110"
-                loading="lazy"
+            {firstSliderData.map((design: DesignType) => (
+              <DesignCard
+                key={design.id}
+                design={design}
+                className="mx-3 w-[200px] md:w-[240px]"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
-              <div className="absolute bottom-2 left-2 right-2 text-white opacity-0 transition-opacity group-hover:opacity-100">
-                <h3 className="line-clamp-1 text-sm font-semibold">
-                  {design.name}
-                </h3>
-              </div>
-            </div>
-          </Link>
-        ))}
-      </Marquee>
+            ))}
+          </Marquee>
+        </div>
 
-      {/* Second Marquee */}
-      <Marquee
-        pauseOnHover={true}
-        direction="right"
-        speed={50}
-        className="py-4"
-      >
-        {secondSliderData.map((design: DesignType) => (
-          <Link
-            href={createSlug({ name: design.name, id: design.id })}
-            key={design.id}
+        {/* Second Marquee */}
+        <div className="relative before:absolute before:left-0 before:top-0 before:z-10 before:h-full before:w-12 before:bg-gradient-to-r before:from-background before:to-transparent after:absolute after:right-0 after:top-0 after:z-10 after:h-full after:w-12 after:bg-gradient-to-l after:from-background after:to-transparent">
+          <Marquee
+            pauseOnHover={true}
+            direction="right"
+            speed={40}
+            className="py-4"
+            gradient={false}
           >
-            <div className="group relative mx-2 h-40 w-full flex-shrink-0 overflow-hidden md:h-52">
-              <Image
-                src={design.image}
-                alt={"Design Image"}
-                width={160}
-                height={160}
-                className="h-full w-full object-contain transition-transform group-hover:scale-110"
-                loading="lazy"
+            {secondSliderData.map((design: DesignType) => (
+              <DesignCard
+                key={design.id}
+                design={design}
+                className="mx-3 w-[200px] md:w-[240px]"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 transition-opacity group-hover:opacity-100" />
-              <div className="absolute bottom-2 left-2 right-2 text-white opacity-0 transition-opacity group-hover:opacity-100">
-                <h3 className="line-clamp-1 text-sm font-semibold">
-                  {design.name}
-                </h3>
-              </div>
-            </div>
-          </Link>
-        ))}
-      </Marquee>
+            ))}
+          </Marquee>
+        </div>
+      </div>
     </section>
+  );
+}
+
+interface DesignCardProps {
+  design: DesignType;
+  className?: string;
+}
+
+function DesignCard({ design, className }: DesignCardProps) {
+  return (
+    <Link
+      href={createSlug({ name: design.name, id: design.id })}
+      className={cn("block", className)}
+    >
+      <div className="group relative overflow-hidden rounded-lg border bg-background transition-all hover:border-primary/50 hover:shadow-md">
+        <div className="aspect-square overflow-hidden">
+          <Image
+            src={design.image || "/placeholder.svg"}
+            alt={design.name || "Design"}
+            width={300}
+            height={300}
+            className="h-full w-full object-cover object-center transition-all duration-300 group-hover:scale-105"
+            loading="lazy"
+          />
+        </div>
+
+        {/* Overlay with gradient */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+
+        {/* Content overlay */}
+        <div className="absolute bottom-0 left-0 right-0 p-4 text-white opacity-0 transition-all duration-300 group-hover:bottom-0 group-hover:opacity-100">
+          <h3 className="line-clamp-1 text-sm font-medium md:text-base">
+            {design.name}
+          </h3>
+        </div>
+      </div>
+    </Link>
   );
 }
