@@ -3,7 +3,6 @@
 import ProfileSkeleton from "@/components/common/skeleton/ProfileSkelton";
 import { RemoveHtmlTags } from "@/components/helper/html/PerseHtml";
 import { createSlug } from "@/components/helper/slug/CreateSlug";
-import { DesignType } from "@/components/interface/DesignType";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -15,6 +14,7 @@ import {
 } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useProfile } from "@/services/profile";
+import { DesignType } from "@/utils/Interface";
 import { motion } from "framer-motion";
 import { CalendarIcon, ImageIcon } from "lucide-react";
 import Image from "next/image";

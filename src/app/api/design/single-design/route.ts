@@ -117,6 +117,7 @@ export async function GET(req: NextRequest) {
           select: {
             name: true,
             image: true,
+            status: true,
           },
         },
         likes: {

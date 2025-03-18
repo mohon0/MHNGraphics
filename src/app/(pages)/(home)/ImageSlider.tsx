@@ -1,11 +1,11 @@
 "use client";
 
 import { createSlug } from "@/components/helper/slug/CreateSlug";
-import { DesignType } from "@/components/interface/DesignType";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 import { useFetchAllDesign } from "@/services/design";
+import { DesignType } from "@/utils/Interface";
 import { ArrowRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";

@@ -11,7 +11,6 @@ import { useRouter, useSearchParams } from "next/navigation";
 import * as React from "react";
 
 import PaginationUi from "@/components/common/pagination/PaginationUi";
-import { DesignType } from "@/components/interface/DesignType";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -35,6 +34,7 @@ import {
 import { designCategories } from "@/constant/DesignCategory";
 import { cn } from "@/lib/utils";
 import { useFetchUserDesign } from "@/services/design";
+import { DesignType } from "@/utils/Interface";
 import DesignCard from "./DesignCard";
 
 export function DesignList() {

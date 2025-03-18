@@ -1,7 +1,6 @@
 "use client";
 
 import { timeAgo } from "@/components/helper/date/dateago";
-import { DesignType } from "@/components/interface/DesignType";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
@@ -29,14 +28,16 @@ import {
 } from "@/components/ui/form";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Textarea } from "@/components/ui/textarea";
+import type { DesignType } from "@/utils/Interface";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
+import { motion } from "framer-motion";
 import { MessageCircle, Send, Trash } from "lucide-react";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { toast } from "react-toastify";
+import { toast } from "sonner";
 import { z } from "zod";
 
 const FormSchema = z.object({
@@ -78,172 +79,144 @@ export function Comments({
       designId: data.id,
     };
 
-    const loadingToast = toast.loading("Submitting your comment...");
-
-    axios
-      .post("/api/design/single-design/comments", payload)
-      .then(() => {
+    toast.promise(axios.post("/api/design/single-design/comments", payload), {
+      loading: "Submitting your comment...",
+      success: () => {
         refetch();
-        toast.update(loadingToast, {
-          render: "Comment submitted successfully!",
-          type: "success",
-          isLoading: false,
-          autoClose: 3000,
-        });
         form.reset();
-      })
-      .catch((error) => {
-        toast.update(loadingToast, {
-          render:
-            error.response?.data?.message ||
-            "Failed to submit your comment. Please try again.",
-          type: "error",
-          isLoading: false,
-          autoClose: 3000,
-        });
-        console.error(
-          "Failed to submit comment:",
-          error.response?.data || error.message,
-        );
-      });
+        return "Comment submitted successfully!";
+      },
+      error: "Failed to submit your comment. Please try again.",
+    });
   }
 
   function handleDelete(commentId: string) {
-    const loadingToast = toast.loading("Deleting comment...");
-
-    axios
-      .delete(`/api/design/single-design/comments?commentId=${commentId}`)
-      .then(() => {
-        refetch(); // Refresh the data
-        toast.update(loadingToast, {
-          render: "Comment deleted successfully!",
-          type: "success",
-          isLoading: false,
-          autoClose: 3000, // Dismiss the toast automatically
-        });
-      })
-      .catch((error) => {
-        const errorMessage =
-          error.response?.data?.message ||
-          "Failed to delete comment. Please try again.";
-        toast.update(loadingToast, {
-          render: errorMessage,
-          type: "error",
-          isLoading: false,
-          autoClose: 3000,
-        });
-        console.error(
-          "Error deleting comment:",
-          error.response?.data || error.message,
-        );
-      })
-      .finally(() => {
-        setCommentToDelete(null); // Ensure cleanup
-      });
+    toast.promise(
+      axios.delete(`/api/design/single-design/comments?commentId=${commentId}`),
+      {
+        loading: "Deleting comment...",
+        success: () => {
+          refetch();
+          return "Comment deleted successfully!";
+        },
+        error: "Failed to delete comment. Please try again.",
+      },
+    );
   }
 
   return (
-    <Card className="mx-auto w-full" id="comment">
-      <CardHeader className="flex flex-row items-center justify-between rounded-t-lg bg-primary/5">
-        <CardTitle className="text-2xl font-bold text-primary">
-          Comments
-        </CardTitle>
-        <div className="flex items-center space-x-2 rounded-full bg-background px-3 py-1 text-muted-foreground">
+    <Card id="comment">
+      <CardHeader className="flex flex-row items-center justify-between border-b">
+        <CardTitle>Comments</CardTitle>
+        <div className="flex items-center space-x-2 rounded-full bg-zinc-100/80 px-3 py-1">
           <MessageCircle size={18} />
           <span className="font-medium">{data.commentsCount}</span>
         </div>
       </CardHeader>
       <CardContent className="p-0">
-        <ScrollArea className="max-h-[400px]">
-          <div className="space-y-6 md:p-6">
-            {data.comments.map((comment) => (
-              <div
-                key={comment.id}
-                id={comment.id}
-                className="flex items-start space-x-4 rounded-lg bg-secondary/10 p-4 transition-all hover:bg-secondary/20"
-              >
-                <Avatar className="h-10 w-10">
-                  <AvatarImage
-                    src={comment.user.image}
-                    alt={comment.user.name}
-                  />
-                  <AvatarFallback className="bg-primary text-primary-foreground">
-                    {comment.user.name.slice(0, 2).toUpperCase()}
-                  </AvatarFallback>
-                </Avatar>
-                <div className="flex-1">
-                  <div className="flex items-center justify-between">
-                    <Link
-                      href={`/profile?id=${comment.userId}`}
-                      className="text-sm font-medium text-primary"
-                    >
-                      {comment.user.name}
-                    </Link>
-                    <p className="rounded-full bg-secondary/20 px-2 py-1 text-xs text-muted-foreground">
-                      {timeAgo(comment.createdAt)}
+        <ScrollArea className="max-h-[500px]">
+          <div className="space-y-0 divide-y divide-zinc-200/40 dark:divide-zinc-800/40">
+            {data.comments.length === 0 ? (
+              <div className="flex flex-col items-center justify-center py-12 text-center">
+                <MessageCircle className="mb-2 h-12 w-12 text-zinc-300 dark:text-zinc-700" />
+                <p className="text-lg font-medium text-zinc-900 dark:text-white">
+                  No comments yet
+                </p>
+                <p className="text-sm text-zinc-500 dark:text-zinc-400">
+                  Be the first to share your thoughts!
+                </p>
+              </div>
+            ) : (
+              data.comments.map((comment, index) => (
+                <motion.div
+                  key={comment.id}
+                  id={comment.id}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3, delay: index * 0.05 }}
+                  className="group flex items-start space-x-4 p-6 transition-colors hover:bg-zinc-50 dark:hover:bg-zinc-800/50"
+                >
+                  <Avatar className="h-10 w-10 border-2 border-zinc-200 dark:border-zinc-700">
+                    <AvatarImage
+                      src={comment.user.image}
+                      alt={comment.user.name}
+                    />
+                    <AvatarFallback className="bg-zinc-100 text-zinc-800 dark:bg-zinc-800 dark:text-zinc-200">
+                      {comment.user.name.slice(0, 2).toUpperCase()}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div className="flex-1">
+                    <div className="flex items-center justify-between">
+                      <Link href={`/profile?id=${comment.userId}`}>
+                        <Button variant="link" className="px-0">
+                          {comment.user.name}
+                        </Button>
+                      </Link>
+                      <p className="rounded-full bg-zinc-100 px-2 py-1 text-xs text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400">
+                        {timeAgo(comment.createdAt)}
+                      </p>
+                    </div>
+                    <p className="mt-2 text-sm leading-relaxed text-zinc-700 dark:text-zinc-300">
+                      {comment.content}
                     </p>
                   </div>
-                  <p className="mt-2 text-sm leading-relaxed text-foreground/90">
-                    {comment.content}
-                  </p>
-                </div>
-                {(session?.user?.role === "ADMIN" ||
-                  comment.userId === session?.user?.id) && (
-                  <Dialog>
-                    <DialogTrigger asChild>
-                      <Button
-                        variant="ghost"
-                        size="icon"
-                        className="text-red-600 hover:text-red-800"
-                        onClick={() => setCommentToDelete(comment.id)}
-                        aria-label="Delete comment"
-                      >
-                        <Trash size={18} />
-                      </Button>
-                    </DialogTrigger>
-                    <DialogContent>
-                      <DialogHeader>
-                        <DialogTitle>Confirm Deletion</DialogTitle>
-                        <DialogDescription>
-                          Are you sure you want to delete this comment? This
-                          action cannot be undone.
-                        </DialogDescription>
-                      </DialogHeader>
-                      <DialogFooter>
+                  {(session?.user?.role === "ADMIN" ||
+                    comment.userId === session?.user?.id) && (
+                    <Dialog>
+                      <DialogTrigger asChild>
                         <Button
-                          variant="outline"
-                          onClick={() => setCommentToDelete(null)}
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => setCommentToDelete(comment.id)}
+                          aria-label="Delete comment"
                         >
-                          Cancel
+                          <Trash size={18} />
                         </Button>
-                        <Button
-                          variant="destructive"
-                          onClick={() => handleDelete(comment.id)}
-                        >
-                          Delete
-                        </Button>
-                      </DialogFooter>
-                    </DialogContent>
-                  </Dialog>
-                )}
-              </div>
-            ))}
+                      </DialogTrigger>
+                      <DialogContent>
+                        <DialogHeader>
+                          <DialogTitle>Confirm Deletion</DialogTitle>
+                          <DialogDescription>
+                            Are you sure you want to delete this comment? This
+                            action cannot be undone.
+                          </DialogDescription>
+                        </DialogHeader>
+                        <DialogFooter>
+                          <Button
+                            variant="outline"
+                            onClick={() => setCommentToDelete(null)}
+                          >
+                            Cancel
+                          </Button>
+                          <Button
+                            variant="destructive"
+                            onClick={() => handleDelete(comment.id)}
+                          >
+                            Delete
+                          </Button>
+                        </DialogFooter>
+                      </DialogContent>
+                    </Dialog>
+                  )}
+                </motion.div>
+              ))
+            )}
           </div>
         </ScrollArea>
       </CardContent>
-      <CardFooter className="rounded-b-lg bg-secondary/5">
+      <CardFooter className="border-t p-4 md:p-6">
         {status === "authenticated" ? (
           <Form {...form}>
             <form
               onSubmit={form.handleSubmit(onSubmit)}
-              className="flex w-full items-start space-x-2 pt-4"
+              className="flex w-full items-start space-x-4"
             >
-              <Avatar className="h-10 w-10 border-2 border-primary">
+              <Avatar className="h-10 w-10 border-2 border-zinc-200 dark:border-zinc-700">
                 <AvatarImage
                   src={session?.user?.image || undefined}
                   alt={session?.user?.name || "User Avatar"}
                 />
-                <AvatarFallback className="bg-primary text-primary-foreground">
+                <AvatarFallback className="bg-zinc-100 text-zinc-800 dark:bg-zinc-800 dark:text-zinc-200">
                   {session?.user?.name?.[0]?.toUpperCase() || "U"}
                 </AvatarFallback>
               </Avatar>
@@ -254,13 +227,9 @@ export function Comments({
                 render={({ field }) => (
                   <FormItem className="flex-1">
                     <FormControl>
-                      <Textarea
-                        placeholder="Add a comment..."
-                        className="min-h-[80px] resize-none bg-background focus-visible:ring-primary"
-                        {...field}
-                      />
+                      <Textarea placeholder="Add a comment..." {...field} />
                     </FormControl>
-                    <FormMessage />
+                    <FormMessage className="text-rose-500" />
                   </FormItem>
                 )}
               />
@@ -268,20 +237,16 @@ export function Comments({
               <Button
                 type="submit"
                 size="icon"
-                className="h-10 w-10 rounded-full bg-primary hover:bg-primary/90"
+                className="h-10 w-10 rounded-full"
                 aria-label="Post comment"
               >
-                <Send size={18} className="text-primary-foreground" />
+                <Send size={18} />
               </Button>
             </form>
           </Form>
         ) : (
-          <Link href="/signin" className="flex w-full justify-center pt-4">
-            <Button
-              variant="default"
-              className="bg-primary px-6 text-primary-foreground hover:bg-primary/90"
-              aria-label="Login to comment"
-            >
+          <Link href="/signin" className="flex w-full justify-center">
+            <Button variant="default" aria-label="Login to comment">
               Login to Comment
             </Button>
           </Link>

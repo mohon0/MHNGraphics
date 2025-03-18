@@ -1,9 +1,6 @@
 "use client";
 import type { ApplicationListType } from "@/components/interface/ApplicationType";
-import type {
-  CommentType,
-  DesignType,
-} from "@/components/interface/DesignType";
+import type { CommentType } from "@/components/interface/DesignType";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -24,6 +21,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { useFetchUserDashboard } from "@/services/admin";
+import { DesignType } from "@/utils/Interface";
 import { format } from "date-fns";
 import {
   CalendarDays,

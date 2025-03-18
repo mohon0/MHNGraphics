@@ -1,5 +1,4 @@
 import { createSlug } from "@/components/helper/slug/CreateSlug";
-import { DesignType } from "@/components/interface/DesignType";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
@@ -29,6 +28,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { useDeleteDesign, useUpdateDesignStatus } from "@/services/design";
+import { DesignType } from "@/utils/Interface";
 import { formatDistanceToNow } from "date-fns/formatDistanceToNow";
 import { Edit, MoreVertical, Trash2 } from "lucide-react";
 import { useSession } from "next-auth/react";
