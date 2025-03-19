@@ -8,17 +8,10 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Skeleton } from "@/components/ui/skeleton";
-import { cn } from "@/lib/utils";
 import type { ImageDimensions } from "@/utils/imageDimensions";
-import type { DesignType } from "@/utils/Interface";
+import { DesignType } from "@/utils/Interface";
 import axios from "axios";
-import {
-  CircleCheckBig,
-  Download,
-  Heart,
-  Maximize2,
-  MessageSquare,
-} from "lucide-react";
+import { CircleCheckBig, Download, MessageSquare } from "lucide-react";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { HiHeart, HiOutlineHeart } from "react-icons/hi";
@@ -33,32 +26,21 @@ interface DesignDetailsProps {
   imageDimensions: ImageDimensions | null;
   params: { slug: string };
   refetch: () => void;
-  isLiked?: boolean;
-  onLikeToggle?: () => void;
-  toggleFullScreen?: () => void;
 }
 
 interface LikeButtonProps {
   likes: { userId: string }[];
   session: any;
-  isLiked?: boolean;
 }
 
-const LikeButton = ({ likes, session, isLiked }: LikeButtonProps) => {
+const LikeButton = ({ likes, session }: LikeButtonProps) => {
   const userId = session?.user?.id;
-
-  // If isLiked is provided, use it, otherwise check the likes array
-  const hasLiked =
-    isLiked !== undefined
-      ? isLiked
-      : userId
-        ? likes.some((like) => like.userId === userId)
-        : false;
+  const isLiked = userId ? likes.some((like) => like.userId === userId) : false;
 
   return (
     <>
-      {hasLiked ? (
-        <HiHeart size={24} className="text-rose-500" />
+      {isLiked ? (
+        <HiHeart size={24} className="text-red-500" />
       ) : (
         <HiOutlineHeart size={24} />
       )}
@@ -71,9 +53,6 @@ export function DesignDetails({
   imageDimensions,
   params,
   refetch,
-  isLiked,
-  onLikeToggle,
-  toggleFullScreen,
 }: DesignDetailsProps) {
   const { status, data: session } = useSession();
 
@@ -86,12 +65,6 @@ export function DesignDetails({
   }) {
     if (status === "unauthenticated") {
       toast.error("You must be logged in to like this design");
-      return;
-    }
-
-    // If we have an external handler, use it
-    if (onLikeToggle) {
-      onLikeToggle();
       return;
     }
 
@@ -142,38 +115,30 @@ export function DesignDetails({
 
   return (
     <>
-      <div className="mb-6 rounded-lg border border-emerald-200/50 bg-emerald-50/50 p-4 backdrop-blur-sm dark:border-emerald-900/30 dark:bg-emerald-900/10">
-        <div className="flex flex-wrap items-center gap-2 text-wrap text-sm text-emerald-800 dark:text-emerald-300">
-          <CircleCheckBig className="h-5 w-5 text-emerald-500" />
-          <span>Free for use under the MHN </span>
-          <Link
-            className="font-medium text-emerald-700 underline hover:text-emerald-800 dark:text-emerald-400 dark:hover:text-emerald-300"
-            href="/content-license"
-          >
+      <div className="rounded-lg bg-primary/5 p-4">
+        <p className="inline-flex items-center gap-2 text-wrap text-sm">
+          <CircleCheckBig className="h-4 w-4 text-primary" />
+          Free for use under the MHN{" "}
+          <Link className="text-primary underline" href="/content-license">
             Content License
           </Link>
-        </div>
+        </p>
       </div>
 
       <div className="space-y-6">
-        <div className="flex flex-col gap-4 sm:flex-row sm:justify-between">
-          <Button className="w-full bg-zinc-900 text-white shadow-md transition-transform hover:scale-105 hover:bg-zinc-800 dark:bg-zinc-700 dark:hover:bg-zinc-600 sm:w-auto">
+        <div className="flex flex-col gap-3 sm:flex-row sm:justify-between">
+          <Button className="w-full bg-primary text-primary-foreground hover:bg-primary/90 sm:w-auto">
             <SiCanva className="mr-2" />
-            <span>Edit in Canva</span>
+            <span>Edit Image</span>
           </Button>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button
-                variant="outline"
-                className="w-full border-zinc-300 bg-white text-zinc-800 shadow-md transition-transform hover:scale-105 hover:border-zinc-400 hover:bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-200 dark:hover:border-zinc-600 dark:hover:bg-zinc-700 sm:w-auto"
-              >
+              <Button className="w-full bg-primary text-primary-foreground hover:bg-primary/90 sm:w-auto">
                 <Download className="mr-2 h-5 w-5" /> Download
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-56 border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900">
-              <p className="p-2 text-sm font-medium text-zinc-500 dark:text-zinc-400">
-                Select Size
-              </p>
+            <DropdownMenuContent>
+              <p className="p-2 text-sm text-muted-foreground">File Size</p>
               {imageDimensions && (
                 <>
                   <DownloadMenuItem
@@ -205,67 +170,65 @@ export function DesignDetails({
             </DropdownMenuContent>
           </DropdownMenu>
         </div>
-        <div className="grid grid-cols-2 gap-4">
+
+        <div className="grid grid-cols-3 gap-3">
           <Button
             variant="outline"
-            className="flex h-16 items-center justify-center gap-2 border-zinc-300/80 bg-white/50 transition-all hover:border-zinc-400 hover:bg-white dark:border-zinc-700/80 dark:bg-zinc-800/50 dark:hover:border-zinc-600 dark:hover:bg-zinc-800"
-            onClick={toggleFullScreen}
+            className="flex items-center justify-center gap-2 rounded-lg border-muted bg-background hover:bg-muted/20"
+            onClick={() => {
+              if (session?.user) {
+                handleLike({ postId: data.id, userId: session.user.id });
+              } else {
+                toast.error("You must be logged in to like this design");
+              }
+            }}
           >
-            <Maximize2 className="h-5 w-5 text-zinc-700 dark:text-zinc-300" />
-            <span>View Full</span>
+            <LikeButton likes={data.likes} session={session} />
+            <span>{data.likeCount}</span>
           </Button>
-          <Share params={params} />
-          <Button
-            variant="outline"
-            className={cn(
-              "flex h-16 items-center justify-center gap-2 border-zinc-300/80 bg-white/50 transition-all hover:border-zinc-400 hover:bg-white dark:border-zinc-700/80 dark:bg-zinc-800/50 dark:hover:border-zinc-600 dark:hover:bg-zinc-800",
-              isLiked &&
-                "border-rose-200 bg-rose-50 text-rose-500 hover:bg-rose-100 dark:border-rose-800/50 dark:bg-rose-900/20 dark:text-rose-400 dark:hover:bg-rose-900/30",
-            )}
-          >
-            <Heart className={cn("h-5 w-5", isLiked && "fill-current")} />
-            <span>{isLiked ? "Liked" : "Like"}</span>
-          </Button>
-          <Link href="#comments">
+
+          <Link href="#comment" className="w-full">
             <Button
               variant="outline"
-              className="flex h-16 w-full items-center justify-center gap-2 border-zinc-300/80 bg-white/50 transition-all hover:border-zinc-400 hover:bg-white dark:border-zinc-700/80 dark:bg-zinc-800/50 dark:hover:border-zinc-600 dark:hover:bg-zinc-800"
+              className="flex w-full items-center justify-center gap-2 rounded-lg border-muted bg-background hover:bg-muted/20"
             >
-              <MessageSquare className="h-5 w-5 text-zinc-700 dark:text-zinc-300" />
-              <span>Comments</span>
+              <MessageSquare className="h-5 w-5" />
+              <span>{data.commentsCount}</span>
             </Button>
           </Link>
+
+          <Share params={params} />
         </div>
       </div>
 
-      <div className="mt-8 space-y-4 rounded-lg border border-zinc-200/60 bg-zinc-50/50 p-6 backdrop-blur-sm dark:border-zinc-800/60 dark:bg-zinc-900/50">
-        <h3 className="text-xl font-semibold text-zinc-900 dark:text-white">
-          Design Information
-        </h3>
-        <div className="grid grid-cols-2 gap-y-4 text-sm">
-          <div className="text-zinc-500 dark:text-zinc-400">Resolution</div>
-          <div className="font-medium text-zinc-900 dark:text-white">
-            {imageDimensions
-              ? `${imageDimensions.width} × ${imageDimensions.height}`
-              : "Loading..."}
+      <div className="space-y-4 rounded-lg bg-muted/30 p-4">
+        <h3 className="font-medium">Design Information</h3>
+        <div className="space-y-2 text-sm">
+          <div className="flex items-center justify-between border-b border-border/40 py-2">
+            <span className="text-muted-foreground">Likes:</span>{" "}
+            <span className="font-medium">{data.likeCount}</span>
           </div>
-
-          <div className="text-zinc-500 dark:text-zinc-400">Media type</div>
-          <div className="font-medium text-zinc-900 dark:text-white">JPG</div>
-
-          <div className="text-zinc-500 dark:text-zinc-400">Published</div>
-          <div className="font-medium text-zinc-900 dark:text-white">
-            {convertToReadableDate(data.createdAt)}
+          <div className="flex items-center justify-between border-b border-border/40 py-2">
+            <span className="text-muted-foreground">Comments:</span>{" "}
+            <span className="font-medium">{data.commentsCount}</span>
           </div>
-
-          <div className="text-zinc-500 dark:text-zinc-400">Likes</div>
-          <div className="font-medium text-zinc-900 dark:text-white">
-            {data.likeCount}
+          <div className="flex items-center justify-between border-b border-border/40 py-2">
+            <span className="text-muted-foreground">Resolution:</span>{" "}
+            <span className="font-medium">
+              {imageDimensions
+                ? `${imageDimensions.width} × ${imageDimensions.height}`
+                : "Loading..."}
+            </span>
           </div>
-
-          <div className="text-zinc-500 dark:text-zinc-400">Comments</div>
-          <div className="font-medium text-zinc-900 dark:text-white">
-            {data.commentsCount}
+          <div className="flex items-center justify-between border-b border-border/40 py-2">
+            <span className="text-muted-foreground">Media type:</span>{" "}
+            <span className="font-medium">JPG</span>
+          </div>
+          <div className="flex items-center justify-between py-2">
+            <span className="text-muted-foreground">Published:</span>
+            <span className="font-medium">
+              {convertToReadableDate(data.createdAt)}
+            </span>
           </div>
         </div>
       </div>
@@ -276,22 +239,22 @@ export function DesignDetails({
 export function DesignDetailsSkeleton() {
   return (
     <>
-      <Skeleton className="mb-6 h-20 w-full rounded-lg" />
+      <Skeleton className="h-16 w-full rounded-lg" />
 
       <div className="space-y-6">
-        <div className="flex flex-col gap-4 sm:flex-row sm:justify-between">
-          <Skeleton className="h-10 w-full sm:w-40" />
-          <Skeleton className="h-10 w-full sm:w-40" />
+        <div className="flex justify-between gap-3">
+          <Skeleton className="h-10 w-full flex-grow" />
+          <Skeleton className="h-10 w-full flex-grow" />
         </div>
 
-        <div className="grid grid-cols-3 gap-4">
-          <Skeleton className="h-20 w-full rounded-lg" />
-          <Skeleton className="h-20 w-full rounded-lg" />
-          <Skeleton className="h-20 w-full rounded-lg" />
+        <div className="grid grid-cols-3 gap-3">
+          <Skeleton className="h-10 w-full" />
+          <Skeleton className="h-10 w-full" />
+          <Skeleton className="h-10 w-full" />
         </div>
       </div>
 
-      <Skeleton className="mt-8 h-48 w-full rounded-lg" />
+      <Skeleton className="h-48 w-full rounded-lg" />
     </>
   );
 }

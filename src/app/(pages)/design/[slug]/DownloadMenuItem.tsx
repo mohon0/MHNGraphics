@@ -37,15 +37,8 @@ export default function DownloadMenuItem({
 
   return (
     <DropdownMenuItem asChild>
-      <a
-        href={downloadUrl}
-        download
-        className="flex cursor-pointer items-center justify-between text-zinc-800 hover:text-zinc-900 dark:text-zinc-200 dark:hover:text-white"
-      >
-        <span>{label}</span>
-        <span className="ml-4 text-xs text-zinc-500 dark:text-zinc-400">
-          {width} × {height}
-        </span>
+      <a href={downloadUrl} download className="cursor-pointer">
+        {label} ({width} × {height})
       </a>
     </DropdownMenuItem>
   );
