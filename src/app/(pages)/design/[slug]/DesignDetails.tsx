@@ -115,11 +115,14 @@ export function DesignDetails({
 
   return (
     <>
-      <div className="rounded-lg bg-primary/5 p-4">
-        <p className="inline-flex items-center gap-2 text-wrap text-sm">
-          <CircleCheckBig className="h-4 w-4 text-primary" />
-          Free for use under the MHN{" "}
-          <Link className="text-primary underline" href="/content-license">
+      <div className="mb-6 rounded-lg border border-emerald-200/50 bg-emerald-50/50 p-4 backdrop-blur-sm">
+        <p className="flex flex-wrap items-center gap-2 text-sm text-emerald-800 dark:text-emerald-300">
+          <CircleCheckBig className="h-5 w-5 text-emerald-500" />
+          <span>Free for use under the MHN </span>
+          <Link
+            className="font-medium text-emerald-700 underline hover:text-emerald-800"
+            href="/content-license"
+          >
             Content License
           </Link>
         </p>
