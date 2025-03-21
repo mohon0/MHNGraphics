@@ -8,16 +8,16 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useUpdateDesignLike } from "@/services/design";
 import type { ImageDimensions } from "@/utils/imageDimensions";
 import { DesignType } from "@/utils/Interface";
-import axios from "axios";
 import { CircleCheckBig, Download, MessageSquare } from "lucide-react";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
+import React from "react";
 import { HiHeart, HiOutlineHeart } from "react-icons/hi";
 import { SiCanva } from "react-icons/si";
-import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { toast } from "sonner";
 import DownloadMenuItem from "./DownloadMenuItem";
 import Share from "./Share";
 
@@ -25,7 +25,6 @@ interface DesignDetailsProps {
   data: DesignType;
   imageDimensions: ImageDimensions | null;
   params: { slug: string };
-  refetch: () => void;
 }
 
 interface LikeButtonProps {
@@ -33,9 +32,18 @@ interface LikeButtonProps {
   session: any;
 }
 
+const useIsLiked = (
+  likes: { userId: string }[],
+  userId: string | undefined,
+) => {
+  return React.useMemo(() => {
+    return likes.some((like) => like.userId === userId);
+  }, [likes, userId]);
+};
+
 const LikeButton = ({ likes, session }: LikeButtonProps) => {
   const userId = session?.user?.id;
-  const isLiked = userId ? likes.some((like) => like.userId === userId) : false;
+  const isLiked = useIsLiked(likes, userId);
 
   return (
     <>
@@ -52,66 +60,22 @@ export function DesignDetails({
   data,
   imageDimensions,
   params,
-  refetch,
 }: DesignDetailsProps) {
   const { status, data: session } = useSession();
+  const { mutateAsync } = useUpdateDesignLike();
 
-  async function handleLike({
-    postId,
-    userId,
-  }: {
-    postId: string;
-    userId: string;
-  }) {
-    if (status === "unauthenticated") {
+  const handleLike = async () => {
+    if (!session?.user) {
       toast.error("You must be logged in to like this design");
       return;
     }
-
-    const toastId = toast.loading("Processing...");
-
     try {
-      const response = await axios.post("/api/design/single-design/like", {
-        postId,
-        userId,
-      });
-
-      if (response.status === 200 || response.status === 201) {
-        const { message, status: likeStatus } = response.data;
-
-        if (likeStatus === "success") {
-          refetch();
-          toast.update(toastId, {
-            render: message,
-            type: "success",
-            isLoading: false,
-            autoClose: 3000,
-          });
-        } else {
-          toast.update(toastId, {
-            render: "Error updating like",
-            type: "error",
-            isLoading: false,
-            autoClose: 3000,
-          });
-        }
-      } else {
-        toast.update(toastId, {
-          render: "Error updating like",
-          type: "error",
-          isLoading: false,
-          autoClose: 3000,
-        });
-      }
-    } catch (error: any) {
-      toast.update(toastId, {
-        render: "Error updating like",
-        type: "error",
-        isLoading: false,
-        autoClose: 3000,
-      });
+      await mutateAsync({ postId: data.id, userId: session.user.id });
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to update like.");
     }
-  }
+  };
 
   return (
     <>
@@ -178,13 +142,7 @@ export function DesignDetails({
           <Button
             variant="outline"
             className="flex items-center justify-center gap-2 rounded-lg border-muted bg-background hover:bg-muted/20"
-            onClick={() => {
-              if (session?.user) {
-                handleLike({ postId: data.id, userId: session.user.id });
-              } else {
-                toast.error("You must be logged in to like this design");
-              }
-            }}
+            onClick={handleLike}
           >
             <LikeButton likes={data.likes} session={session} />
             <span>{data.likeCount}</span>

@@ -245,3 +245,45 @@ export function useUpdateDesign({ designId, imageFile }: UseUpdateDesignProps) {
     error: updateDesignMutation.error,
   };
 }
+
+interface UseUpdateDesignLikeProps {
+  postId: string;
+  userId: string;
+}
+
+// Define the function that handles updating the like status
+export function useUpdateDesignLike() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async ({
+      postId,
+      userId,
+    }: {
+      postId: string;
+      userId: string;
+    }) => {
+      const updatePromise = axios
+        .post<{ message: string }>(`/api/design/single-design/like`, {
+          postId,
+          userId,
+        })
+        .then((res) => res.data);
+
+      return toast.promise(updatePromise, {
+        loading: "Updating like status...",
+        success: (data) => {
+          // Invalidate the queries related to design so it will refetch and update the UI
+          queryClient.invalidateQueries({
+            queryKey: [QUERY_KEYS.SINGLE_DESIGN, postId],
+          });
+          return data.message || "Like status updated successfully 🎉";
+        },
+        error: (error) =>
+          axios.isAxiosError(error)
+            ? error.response?.data?.message || "Failed to update like status ❌"
+            : "Something went wrong. Please try again.",
+      });
+    },
+  });
+}

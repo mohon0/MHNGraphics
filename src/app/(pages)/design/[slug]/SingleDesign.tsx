@@ -365,7 +365,6 @@ export default function SingleDesign(props: { params: Params }) {
                         data={data}
                         imageDimensions={imageDimensions}
                         params={params}
-                        refetch={refetch}
                       />
                     )}
                   </CardContent>
