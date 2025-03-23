@@ -1,6 +1,5 @@
 "use client";
 
-import BloodDonateNotice from "@/app/(pages)/best-computer-training-center/blood-donate/BloodDonateNotice";
 import MemberModel, {
   MemberModelData,
 } from "@/app/(pages)/best-computer-training-center/blood-donate/MemberModel";
@@ -172,9 +171,6 @@ function BloodDonation() {
         "Error fetching data"
       ) : data ? (
         <div className="my-10">
-          <div className="mx-2 md:mx-10">
-            <BloodDonateNotice />
-          </div>
           <div className="mt-6 flex flex-col items-center justify-center gap-6">
             <Image src={img} alt="" width="100" height="100" />
             <p className="mx-2 text-center text-xl font-bold text-primary md:text-3xl">
