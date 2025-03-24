@@ -167,7 +167,7 @@ export default function BloodDonation() {
             </CardDescription>
           </CardHeader>
 
-          <CardContent className="p-6">
+          <CardContent>
             <Form {...form}>
               <form
                 onSubmit={form.handleSubmit(onSubmit)}

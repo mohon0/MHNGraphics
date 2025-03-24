@@ -1,9 +1,16 @@
 "use client";
-
+import Header from "@/app/(pages)/best-computer-training-center/blood-donate/Header";
 import MemberModel, {
   MemberModelData,
 } from "@/app/(pages)/best-computer-training-center/blood-donate/MemberModel";
 import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import {
   Form,
   FormControl,
@@ -25,16 +32,15 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
 import { bangladeshDistricts } from "@/constant/District";
-import img from "@/images/best-computer/logo.png";
 import { useSingleDonar } from "@/services/blood-bank";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
-import Image from "next/image";
+import { Calendar, Droplets, MapPin, Phone, Upload, User } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
+import type React from "react";
 import { Suspense, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { toast } from "sonner";
 import { z } from "zod";
 
 const fileSizeValidator = (maxSizeInKB: number) => (file: File) => {
@@ -68,14 +74,15 @@ const FormSchema = z.object({
   number2: z.string().optional(),
   id: z.string().optional(),
 });
+
 function BloodDonation() {
-  const route = useRouter();
+  const router = useRouter();
   const searchParams = useSearchParams();
   const id = searchParams.get("id") || "";
   const MAX_IMAGE_SIZE_KB = 100;
   const [image, setImage] = useState<File | null>(null);
   const [imageError, setImageError] = useState(false);
-  const { isLoading, data, isError } = useSingleDonar(id);
+  const { isLoading, data, isError, refetch } = useSingleDonar(id);
 
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
@@ -127,385 +134,537 @@ function BloodDonation() {
 
   async function onSubmit(data: z.infer<typeof FormSchema>) {
     const formData = new FormData();
-    if (image) {
-      formData.append("image", image);
-    }
+
     if (imageError) {
       toast.error("Image size must be less than 100KB");
       return;
+    }
+
+    if (image) {
+      formData.append("image", image);
     }
 
     Object.entries(data).forEach(([key, value]) => {
       formData.append(key, value);
     });
 
-    try {
-      toast.loading("Please wait...");
-      const response = await axios.put(
-        "/api/best-computer/blood-bank",
-        formData,
-      );
-
-      if (response.status === 200) {
-        toast.dismiss();
-        toast.success("Form has been successfully submitted");
+    // Use toast.promise to handle async request states
+    await toast.promise(axios.put("/api/best-computer/blood-bank", formData), {
+      loading: "Please wait...",
+      success: () => {
         setImage(null);
+        refetch();
         setTimeout(() => {
-          route.back();
+          router.back(); // Redirects back after success
         }, 2000);
-      } else {
-        toast.dismiss();
-        toast.error("Form failed to be submitted");
-      }
-    } catch (error) {
-      toast.dismiss();
-      toast.error("Failed to submit form");
-    }
+        return "Form has been successfully submitted";
+      },
+      error: "Failed to submit form",
+    });
   }
 
   return (
     <>
       {isLoading ? (
-        "Loading..."
-      ) : isError ? (
-        "Error fetching data"
-      ) : data ? (
-        <div className="my-10">
-          <div className="mt-6 flex flex-col items-center justify-center gap-6">
-            <Image src={img} alt="" width="100" height="100" />
-            <p className="mx-2 text-center text-xl font-bold text-primary md:text-3xl">
-              আমরা পেরেছি, আমরাই পারবো, <br /> রক্ত দিয়ে অসহায় মানুষের পাশে
-              দাড়াবো
-            </p>
-            <Button
-              variant="outline"
-              size="lg"
-              className="border border-primary px-8 py-3 font-bold md:text-xl"
-            >
-              Blood Donation Form
-            </Button>
-            <p className="mx-2 text-xl">রক্তযোদ্ধা পরিবার, ঝিনাইদহ।</p>
-            <p className="mx-2 text-center">
-              অফিসঃ রফি টাওয়ার (১০ তলা ভবনের ৪র্থ তলা), পায়রা চত্ত্বর, ঝিনাইদহ।
-            </p>
+        <div className="container mx-auto p-8">
+          <div className="space-y-6">
+            <Skeleton className="mx-auto h-64 w-full max-w-4xl rounded-lg" />
           </div>
-          <div className="mt-10 flex items-center justify-center">
-            <Form {...form}>
-              <form
-                onSubmit={form.handleSubmit(onSubmit)}
-                className="flex w-2/3 flex-col"
-              >
-                <div className="grid gap-x-10 gap-y-2 md:grid-cols-2">
-                  <div className="space-y-4 md:order-2">
-                    <div className="flex items-center justify-center md:justify-end">
-                      <Label
-                        htmlFor="picture"
-                        className="flex flex-col items-center justify-center rounded border border-primary px-6 py-10"
-                      >
-                        <p>Upload Image</p>
-                        <p>Optional</p>
-                      </Label>
-                      <input
-                        type="file"
-                        id="picture"
-                        className="hidden p-2"
-                        onChange={handleFileChange}
-                      />
-                    </div>
-                    <FormField
-                      control={form.control}
-                      name="fullName"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>
-                            Donar Full Name (রক্ত দাতার সম্পূর্ণ নাম)
-                          </FormLabel>
-                          <FormControl>
-                            <Input placeholder="Full Name" {...field} />
-                          </FormControl>
+        </div>
+      ) : isError ? (
+        <div className="container mx-auto p-8 text-center">
+          <div className="rounded-lg bg-red-50 p-6 text-red-600">
+            <h3 className="text-xl font-semibold">Error fetching data</h3>
+            <p className="mt-2">Please try again later or contact support</p>
+          </div>
+        </div>
+      ) : data ? (
+        <div className="min-h-screen bg-gradient-to-b from-red-50 to-white py-8">
+          <div className="container mx-auto px-4">
+            {/* Header Section */}
+            <Header />
 
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
+            {/* Main Form Section */}
+            <Card className="mx-auto max-w-4xl border-red-100 shadow-md">
+              <CardHeader className="bg-gradient-to-r from-red-500 to-red-600 text-white">
+                <CardTitle className="text-2xl">
+                  Update Donor Information
+                </CardTitle>
+                <CardDescription className="text-red-100">
+                  Edit your information below
+                </CardDescription>
+              </CardHeader>
 
-                    <FormField
-                      control={form.control}
-                      name="birthDay"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Date of Birth (জন্ম তারিখ)</FormLabel>
-                          <FormControl>
-                            <Input placeholder="04/03/1998" {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={form.control}
-                      name="bloodGroup"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Blood Group (রক্তের গ্রুপ)</FormLabel>
-                          <Select
-                            onValueChange={field.onChange}
-                            defaultValue={data.bloodGroup}
-                          >
-                            <FormControl>
-                              <SelectTrigger>
-                                <SelectValue placeholder="Select your blood group" />
-                              </SelectTrigger>
-                            </FormControl>
-                            <SelectContent>
-                              <SelectItem value="A+">A+</SelectItem>
-                              <SelectItem value="A-">A-</SelectItem>
-                              <SelectItem value="B+">B+</SelectItem>
-                              <SelectItem value="B-">B-</SelectItem>
-                              <SelectItem value="AB+">AB+</SelectItem>
-                              <SelectItem value="AB-">AB-</SelectItem>
-                              <SelectItem value="O+">O+</SelectItem>
-                              <SelectItem value="O-">O-</SelectItem>
-                            </SelectContent>
-                          </Select>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={form.control}
-                      name="Occupation"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Occupation (পেশা)</FormLabel>
-                          <FormControl>
-                            <Input placeholder="Occupation" {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={form.control}
-                      name="number"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Mobile Number (মোবাইল নং)</FormLabel>
-                          <FormControl>
-                            <Input placeholder="01700000023" {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={form.control}
-                      name="number2"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Mobile Number 2 (মোবাইল নং ২ )</FormLabel>
-                          <FormControl>
-                            <Input placeholder="Optional" {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={form.control}
-                      name="address"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Full Address (সম্পূর্ণ ঠিকানা)</FormLabel>
-                          <FormControl>
-                            <Input placeholder="Full Address" {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={form.control}
-                      name="district"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>District (জেলা)</FormLabel>
-                          <Select
-                            onValueChange={field.onChange}
-                            defaultValue={data.district}
-                          >
-                            <FormControl>
-                              <SelectTrigger>
-                                <SelectValue placeholder="Select your district" />
-                              </SelectTrigger>
-                            </FormControl>
-                            <SelectContent>
-                              {bangladeshDistricts.map((district) => (
-                                <SelectItem key={district} value={district}>
-                                  {district}
-                                </SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={form.control}
-                      name="donatedBefore"
-                      render={({ field }) => (
-                        <FormItem className="space-y-3">
-                          <FormLabel>
-                            Do you ever donated blood before? (আপনি কি আগে কখনো
-                            রক্ত দিয়েছেন?)
-                          </FormLabel>
-                          <FormControl>
-                            <RadioGroup
-                              onValueChange={field.onChange}
-                              defaultValue={data.donatedBefore}
-                              className="flex flex-col space-y-1"
-                            >
-                              <FormItem className="flex items-center space-x-3 space-y-0">
-                                <FormControl>
-                                  <RadioGroupItem value="Yes" />
-                                </FormControl>
-                                <FormLabel className="font-normal">
-                                  Yes (হ্যাঁ)
-                                </FormLabel>
-                              </FormItem>
-                              <FormItem className="flex items-center space-x-3 space-y-0">
-                                <FormControl>
-                                  <RadioGroupItem value="No" />
-                                </FormControl>
-                                <FormLabel className="font-normal">
-                                  No (না)
-                                </FormLabel>
-                              </FormItem>
-                            </RadioGroup>
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={form.control}
-                      name="diseases"
-                      render={({ field }) => (
-                        <FormItem className="space-y-3">
-                          <FormLabel>
-                            Do you suffer from any diseases? (আপনি কি কোন রোগে
-                            ভুগছেন?)
-                          </FormLabel>
-                          <FormControl>
-                            <RadioGroup
-                              onValueChange={field.onChange}
-                              defaultValue={data.diseases}
-                              className="flex flex-col space-y-1"
-                            >
-                              <FormItem className="flex items-center space-x-3 space-y-0">
-                                <FormControl>
-                                  <RadioGroupItem value="Yes" />
-                                </FormControl>
-                                <FormLabel className="font-normal">
-                                  Yes (হ্যাঁ)
-                                </FormLabel>
-                              </FormItem>
-                              <FormItem className="flex items-center space-x-3 space-y-0">
-                                <FormControl>
-                                  <RadioGroupItem value="No" />
-                                </FormControl>
-                                <FormLabel className="font-normal">
-                                  No (না)
-                                </FormLabel>
-                              </FormItem>
-                            </RadioGroup>
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                    <FormField
-                      control={form.control}
-                      name="allergies"
-                      render={({ field }) => (
-                        <FormItem className="space-y-3">
-                          <FormLabel>
-                            Do you have allergies? (আপনার কি এলার্জি আছে?)
-                          </FormLabel>
-                          <FormControl>
-                            <RadioGroup
-                              onValueChange={field.onChange}
-                              defaultValue={data.allergies}
-                              className="flex flex-col space-y-1"
-                            >
-                              <FormItem className="flex items-center space-x-3 space-y-0">
-                                <FormControl>
-                                  <RadioGroupItem value="Yes" />
-                                </FormControl>
-                                <FormLabel className="font-normal">
-                                  Yes (হ্যাঁ)
-                                </FormLabel>
-                              </FormItem>
-                              <FormItem className="flex items-center space-x-3 space-y-0">
-                                <FormControl>
-                                  <RadioGroupItem value="No" />
-                                </FormControl>
-                                <FormLabel className="font-normal">
-                                  No (না)
-                                </FormLabel>
-                              </FormItem>
-                            </RadioGroup>
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </div>
-
-                  <Button
-                    type="submit"
-                    size="lg"
-                    className="mx-auto mt-12 flex items-center justify-center px-20 md:hidden"
+              <CardContent className="p-6">
+                <Form {...form}>
+                  <form
+                    onSubmit={form.handleSubmit(onSubmit)}
+                    className="space-y-6"
                   >
-                    Submit
-                  </Button>
-                  <div className="flex justify-between md:order-1">
-                    <div className="mt-16 space-y-10">
-                      <p className="text-xl font-bold">
-                        জরুরী প্রয়োজনে যোগাযোগ করুন
-                      </p>
-                      {MemberModelData.map((member) => (
-                        <MemberModel
-                          key={member.id}
-                          name={member.name}
-                          title={member.title}
-                          img={member.img}
-                          number={member.number}
-                          number2={member.number2}
-                        />
-                      ))}
-                    </div>
-                    <Separator
-                      orientation="vertical"
-                      className="hidden md:block"
-                    />
-                  </div>
-                </div>
+                    <div className="grid gap-6 md:grid-cols-2">
+                      {/* Personal Information Section */}
+                      <div className="space-y-4">
+                        <div className="mb-4">
+                          <h3 className="flex items-center text-lg font-medium text-gray-900">
+                            <User className="mr-2 h-5 w-5 text-red-500" />
+                            Personal Information
+                          </h3>
+                          <Separator className="mt-2 bg-red-100" />
+                        </div>
 
-                <Button
-                  type="submit"
-                  size="lg"
-                  className="mx-auto mt-12 hidden items-center justify-center px-20 md:flex"
-                >
-                  Submit
-                </Button>
-              </form>
-            </Form>
+                        <FormField
+                          control={form.control}
+                          name="fullName"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel className="text-gray-700">
+                                Full Name{" "}
+                                <span className="text-xs text-gray-500">
+                                  (রক্ত দাতার সম্পূর্ণ নাম)
+                                </span>
+                              </FormLabel>
+                              <FormControl>
+                                <Input
+                                  placeholder="Full Name"
+                                  {...field}
+                                  className="border-gray-300 focus:border-red-500 focus:ring-red-500"
+                                />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+
+                        <FormField
+                          control={form.control}
+                          name="birthDay"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel className="text-gray-700">
+                                <span className="flex items-center">
+                                  <Calendar className="mr-2 h-4 w-4 text-red-500" />
+                                  Date of Birth{" "}
+                                  <span className="text-xs text-gray-500">
+                                    (জন্ম তারিখ)
+                                  </span>
+                                </span>
+                              </FormLabel>
+                              <FormControl>
+                                <Input
+                                  placeholder="DD/MM/YYYY"
+                                  {...field}
+                                  className="border-gray-300 focus:border-red-500 focus:ring-red-500"
+                                />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+
+                        <FormField
+                          control={form.control}
+                          name="bloodGroup"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel className="text-gray-700">
+                                <span className="flex items-center">
+                                  <Droplets className="mr-2 h-4 w-4 text-red-500" />
+                                  Blood Group{" "}
+                                  <span className="text-xs text-gray-500">
+                                    (রক্তের গ্রুপ)
+                                  </span>
+                                </span>
+                              </FormLabel>
+                              <Select
+                                onValueChange={field.onChange}
+                                defaultValue={data.bloodGroup}
+                              >
+                                <FormControl>
+                                  <SelectTrigger className="border-gray-300 focus:border-red-500 focus:ring-red-500">
+                                    <SelectValue placeholder="Select your blood group" />
+                                  </SelectTrigger>
+                                </FormControl>
+                                <SelectContent>
+                                  <SelectItem value="A+">A+</SelectItem>
+                                  <SelectItem value="A-">A-</SelectItem>
+                                  <SelectItem value="B+">B+</SelectItem>
+                                  <SelectItem value="B-">B-</SelectItem>
+                                  <SelectItem value="AB+">AB+</SelectItem>
+                                  <SelectItem value="AB-">AB-</SelectItem>
+                                  <SelectItem value="O+">O+</SelectItem>
+                                  <SelectItem value="O-">O-</SelectItem>
+                                </SelectContent>
+                              </Select>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+
+                        <FormField
+                          control={form.control}
+                          name="Occupation"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel className="text-gray-700">
+                                Occupation{" "}
+                                <span className="text-xs text-gray-500">
+                                  (পেশা)
+                                </span>
+                              </FormLabel>
+                              <FormControl>
+                                <Input
+                                  placeholder="Occupation"
+                                  {...field}
+                                  className="border-gray-300 focus:border-red-500 focus:ring-red-500"
+                                />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+
+                        {/* Image Upload */}
+                        <div className="mt-6">
+                          <Label
+                            htmlFor="picture"
+                            className="mb-2 block text-sm font-medium text-gray-700"
+                          >
+                            Profile Picture{" "}
+                            <span className="text-xs text-gray-500">
+                              (Optional)
+                            </span>
+                          </Label>
+                          <Label
+                            htmlFor="picture"
+                            className="flex cursor-pointer flex-col items-center justify-center rounded-lg border-2 border-dashed border-gray-300 bg-gray-50 px-6 py-4 transition-all hover:border-red-300 hover:bg-gray-100"
+                          >
+                            {image ? (
+                              <div className="text-center">
+                                <Upload className="mx-auto mb-2 h-8 w-8 text-red-500" />
+                                <p className="text-sm text-gray-600">
+                                  Image selected
+                                </p>
+                                <p className="text-xs text-gray-500">
+                                  {image.name}
+                                </p>
+                              </div>
+                            ) : (
+                              <>
+                                <Upload className="mb-2 h-8 w-8 text-red-400" />
+                                <p className="text-sm text-gray-600">
+                                  Upload Image
+                                </p>
+                                <p className="text-xs text-gray-500">
+                                  Optional (Max 100KB)
+                                </p>
+                              </>
+                            )}
+                          </Label>
+                          <input
+                            type="file"
+                            id="picture"
+                            className="hidden"
+                            onChange={handleFileChange}
+                            accept="image/*"
+                          />
+                        </div>
+                      </div>
+
+                      {/* Contact Information Section */}
+                      <div className="space-y-4">
+                        <div className="mb-4">
+                          <h3 className="flex items-center text-lg font-medium text-gray-900">
+                            <MapPin className="mr-2 h-5 w-5 text-red-500" />
+                            Contact Information
+                          </h3>
+                          <Separator className="mt-2 bg-red-100" />
+                        </div>
+
+                        <FormField
+                          control={form.control}
+                          name="number"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel className="text-gray-700">
+                                <span className="flex items-center">
+                                  <Phone className="mr-2 h-4 w-4 text-red-500" />
+                                  Mobile Number{" "}
+                                  <span className="text-xs text-gray-500">
+                                    (মোবাইল নং)
+                                  </span>
+                                </span>
+                              </FormLabel>
+                              <FormControl>
+                                <Input
+                                  placeholder="01700000023"
+                                  {...field}
+                                  className="border-gray-300 focus:border-red-500 focus:ring-red-500"
+                                />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+
+                        <FormField
+                          control={form.control}
+                          name="number2"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel className="text-gray-700">
+                                Mobile Number 2{" "}
+                                <span className="text-xs text-gray-500">
+                                  (মোবাইল নং ২)
+                                </span>
+                              </FormLabel>
+                              <FormControl>
+                                <Input
+                                  placeholder="Optional"
+                                  {...field}
+                                  className="border-gray-300 focus:border-red-500 focus:ring-red-500"
+                                />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+
+                        <FormField
+                          control={form.control}
+                          name="address"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel className="text-gray-700">
+                                Full Address{" "}
+                                <span className="text-xs text-gray-500">
+                                  (সম্পূর্ণ ঠিকানা)
+                                </span>
+                              </FormLabel>
+                              <FormControl>
+                                <Input
+                                  placeholder="Full Address"
+                                  {...field}
+                                  className="border-gray-300 focus:border-red-500 focus:ring-red-500"
+                                />
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+
+                        <FormField
+                          control={form.control}
+                          name="district"
+                          render={({ field }) => (
+                            <FormItem>
+                              <FormLabel className="text-gray-700">
+                                District{" "}
+                                <span className="text-xs text-gray-500">
+                                  (জেলা)
+                                </span>
+                              </FormLabel>
+                              <Select
+                                onValueChange={field.onChange}
+                                defaultValue={data.district}
+                              >
+                                <FormControl>
+                                  <SelectTrigger className="border-gray-300 focus:border-red-500 focus:ring-red-500">
+                                    <SelectValue placeholder="Select your district" />
+                                  </SelectTrigger>
+                                </FormControl>
+                                <SelectContent className="max-h-[200px]">
+                                  {bangladeshDistricts.map((district) => (
+                                    <SelectItem key={district} value={district}>
+                                      {district}
+                                    </SelectItem>
+                                  ))}
+                                </SelectContent>
+                              </Select>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                      </div>
+                    </div>
+
+                    {/* Medical Information Section */}
+                    <div className="mt-8">
+                      <div className="mb-4">
+                        <h3 className="flex items-center text-lg font-medium text-gray-900">
+                          <Droplets className="mr-2 h-5 w-5 text-red-500" />
+                          Medical Information
+                        </h3>
+                        <Separator className="mt-2 bg-red-100" />
+                      </div>
+
+                      <div className="grid gap-6 md:grid-cols-3">
+                        <FormField
+                          control={form.control}
+                          name="donatedBefore"
+                          render={({ field }) => (
+                            <FormItem className="space-y-3">
+                              <FormLabel className="text-gray-700">
+                                Ever donated blood before?{" "}
+                                <span className="text-xs text-gray-500">
+                                  (আগে রক্ত দিয়েছেন?)
+                                </span>
+                              </FormLabel>
+                              <FormControl>
+                                <RadioGroup
+                                  onValueChange={field.onChange}
+                                  defaultValue={data.donatedBefore}
+                                  className="flex flex-col space-y-1"
+                                >
+                                  <FormItem className="flex items-center space-x-3 space-y-0">
+                                    <FormControl>
+                                      <RadioGroupItem value="Yes" />
+                                    </FormControl>
+                                    <FormLabel className="font-normal">
+                                      Yes (হ্যাঁ)
+                                    </FormLabel>
+                                  </FormItem>
+                                  <FormItem className="flex items-center space-x-3 space-y-0">
+                                    <FormControl>
+                                      <RadioGroupItem value="No" />
+                                    </FormControl>
+                                    <FormLabel className="font-normal">
+                                      No (না)
+                                    </FormLabel>
+                                  </FormItem>
+                                </RadioGroup>
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+
+                        <FormField
+                          control={form.control}
+                          name="diseases"
+                          render={({ field }) => (
+                            <FormItem className="space-y-3">
+                              <FormLabel className="text-gray-700">
+                                Suffer from any diseases?{" "}
+                                <span className="text-xs text-gray-500">
+                                  (কোন রোগে ভুগছেন?)
+                                </span>
+                              </FormLabel>
+                              <FormControl>
+                                <RadioGroup
+                                  onValueChange={field.onChange}
+                                  defaultValue={data.diseases}
+                                  className="flex flex-col space-y-1"
+                                >
+                                  <FormItem className="flex items-center space-x-3 space-y-0">
+                                    <FormControl>
+                                      <RadioGroupItem value="Yes" />
+                                    </FormControl>
+                                    <FormLabel className="font-normal">
+                                      Yes (হ্যাঁ)
+                                    </FormLabel>
+                                  </FormItem>
+                                  <FormItem className="flex items-center space-x-3 space-y-0">
+                                    <FormControl>
+                                      <RadioGroupItem value="No" />
+                                    </FormControl>
+                                    <FormLabel className="font-normal">
+                                      No (না)
+                                    </FormLabel>
+                                  </FormItem>
+                                </RadioGroup>
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+
+                        <FormField
+                          control={form.control}
+                          name="allergies"
+                          render={({ field }) => (
+                            <FormItem className="space-y-3">
+                              <FormLabel className="text-gray-700">
+                                Have allergies?{" "}
+                                <span className="text-xs text-gray-500">
+                                  (এলার্জি আছে?)
+                                </span>
+                              </FormLabel>
+                              <FormControl>
+                                <RadioGroup
+                                  onValueChange={field.onChange}
+                                  defaultValue={data.allergies}
+                                  className="flex flex-col space-y-1"
+                                >
+                                  <FormItem className="flex items-center space-x-3 space-y-0">
+                                    <FormControl>
+                                      <RadioGroupItem value="Yes" />
+                                    </FormControl>
+                                    <FormLabel className="font-normal">
+                                      Yes (হ্যাঁ)
+                                    </FormLabel>
+                                  </FormItem>
+                                  <FormItem className="flex items-center space-x-3 space-y-0">
+                                    <FormControl>
+                                      <RadioGroupItem value="No" />
+                                    </FormControl>
+                                    <FormLabel className="font-normal">
+                                      No (না)
+                                    </FormLabel>
+                                  </FormItem>
+                                </RadioGroup>
+                              </FormControl>
+                              <FormMessage />
+                            </FormItem>
+                          )}
+                        />
+                      </div>
+                    </div>
+
+                    <div className="mt-8 flex justify-center">
+                      <Button
+                        type="submit"
+                        size="lg"
+                        className="bg-gradient-to-r from-red-500 to-red-600 px-10 py-6 text-lg font-semibold text-white transition-all hover:from-red-600 hover:to-red-700"
+                      >
+                        Update Information
+                      </Button>
+                    </div>
+                  </form>
+                </Form>
+              </CardContent>
+            </Card>
+
+            {/* Emergency Contacts Section */}
+            <div className="container mx-auto mt-16 space-y-10 px-4 pb-16">
+              <div className="text-center">
+                <h2 className="text-2xl font-bold text-red-600">
+                  জরুরী প্রয়োজনে যোগাযোগ করুন
+                </h2>
+                <Separator className="mx-auto mt-4 w-24 bg-red-200" />
+              </div>
+
+              <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                {MemberModelData.map((member) => (
+                  <MemberModel
+                    key={member.id}
+                    name={member.name}
+                    title={member.title}
+                    img={member.img}
+                    number={member.number}
+                    number2={member.number2}
+                  />
+                ))}
+              </div>
+            </div>
           </div>
         </div>
       ) : (
-        "No content available"
+        <div className="container mx-auto p-8 text-center">
+          <div className="rounded-lg bg-gray-50 p-6 text-gray-600">
+            <h3 className="text-xl font-semibold">No content available</h3>
+            <p className="mt-2">Please try again with a valid donor ID</p>
+          </div>
+        </div>
       )}
     </>
   );
@@ -516,15 +675,12 @@ export default function EditDesign() {
     <div>
       <Suspense
         fallback={
-          <div>
-            {" "}
-            <div className="space-y-4 p-4">
-              <Skeleton className="h-8 w-1/3" /> {/* Title placeholder */}
-              <Skeleton className="h-4 w-full" /> {/* First paragraph line */}
-              <Skeleton className="h-4 w-2/3" /> {/* Second paragraph line */}
-              <Skeleton className="h-64 w-full rounded-md" />{" "}
-              {/* Main content area placeholder */}
-            </div>
+          <div className="space-y-4 p-4">
+            <Skeleton className="h-8 w-1/3" /> {/* Title placeholder */}
+            <Skeleton className="h-4 w-full" /> {/* First paragraph line */}
+            <Skeleton className="h-4 w-2/3" /> {/* Second paragraph line */}
+            <Skeleton className="h-64 w-full rounded-md" />{" "}
+            {/* Main content area placeholder */}
           </div>
         }
       >
