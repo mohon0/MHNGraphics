@@ -145,11 +145,15 @@ export async function GET(req: NextRequest) {
     if (!design) {
       return new NextResponse("Design not found", { status: 404 });
     }
-
+    const updatedDesign = await Prisma.design.update({
+      where: { id },
+      data: { viewCount: { increment: 1 } },
+    });
     // Add like and comments count to the response object
     const enhancedResponse = {
       ...design,
-      likeCount: design.likes.length, // Count the number of likes
+      viewCount: updatedDesign.viewCount,
+      likeCount: design.likes.length,
       commentsCount: design.comments.length,
     };
 

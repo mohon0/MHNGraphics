@@ -166,6 +166,10 @@ export function DesignDetails({
         <h3 className="font-medium">Design Information</h3>
         <div className="space-y-2 text-sm">
           <div className="flex items-center justify-between border-b border-border/40 py-2">
+            <span className="text-muted-foreground">Views:</span>{" "}
+            <span className="font-medium">{data.viewCount}</span>
+          </div>
+          <div className="flex items-center justify-between border-b border-border/40 py-2">
             <span className="text-muted-foreground">Likes:</span>{" "}
             <span className="font-medium">{data.likeCount}</span>
           </div>

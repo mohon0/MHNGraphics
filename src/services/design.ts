@@ -246,11 +246,6 @@ export function useUpdateDesign({ designId, imageFile }: UseUpdateDesignProps) {
   };
 }
 
-interface UseUpdateDesignLikeProps {
-  postId: string;
-  userId: string;
-}
-
 // Define the function that handles updating the like status
 export function useUpdateDesignLike() {
   const queryClient = useQueryClient();
