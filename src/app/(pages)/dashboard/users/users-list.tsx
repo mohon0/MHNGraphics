@@ -1,5 +1,4 @@
 "use client";
-import PaginationUi from "@/components/common/pagination/PaginationUi";
 import TableSkeleton from "@/components/common/skeleton/TableSkeleton";
 import type { UserType } from "@/components/interface/UserType";
 import {
@@ -11,6 +10,7 @@ import { useSearchParams } from "next/navigation";
 import type React from "react";
 import { useCallback, useState } from "react";
 import { EmptyState } from "./empty-state";
+import Pagination from "./Pagination";
 import { SearchHeader } from "./search-header";
 import { UserCard } from "./user-card";
 import { UserTable } from "./user-table";
@@ -85,7 +85,7 @@ export function UsersList() {
 
       {data?.meta && data.meta.totalPages > 1 && (
         <div className="mt-8 flex justify-center">
-          <PaginationUi
+          <Pagination
             totalPages={data.meta.totalPages}
             currentPage={page}
             query={searchQuery}

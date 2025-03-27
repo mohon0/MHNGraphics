@@ -1,22 +1,28 @@
 "use client";
 
+import { Button } from "@/components/ui/button";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationItem,
+} from "@/components/ui/pagination";
 import { motion } from "framer-motion";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 
-interface PaginationUiProps {
+interface PaginationProps {
   totalPages: number;
   category?: string;
   query: string;
   initialPage: number;
-  sort: string;
+  sort?: string;
   certificate?: string;
   searchQuery?: string;
-  setPage: React.Dispatch<React.SetStateAction<number>>; // Passed from parent
+  setPage: React.Dispatch<React.SetStateAction<number>>;
 }
 
-export default function ApplicationPagination({
+export default function PaginationComponent({
   totalPages,
   category,
   query,
@@ -25,7 +31,7 @@ export default function ApplicationPagination({
   certificate,
   searchQuery,
   setPage,
-}: PaginationUiProps) {
+}: PaginationProps) {
   const pathname = usePathname();
   const [currentPage, setCurrentPage] = useState(initialPage);
   const [mounted, setMounted] = useState(false);
@@ -52,65 +58,74 @@ export default function ApplicationPagination({
   }
 
   const handlePageChange = (page: number) => {
+    if (page < 1 || page > totalPages) return;
     setCurrentPage(page);
     setPage(page); // Update page in the parent component
     window.history.pushState(null, "", createPageURL(page)); // Update the URL
   };
 
   return (
-    <nav
-      className="mt-8 flex items-center justify-center space-x-2"
-      aria-label="Pagination"
-    >
-      <button
-        onClick={() => handlePageChange(currentPage - 1)}
-        className={`relative inline-flex items-center rounded-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0 ${
-          currentPage <= 1 ? "pointer-events-none opacity-50" : ""
-        }`}
-        disabled={currentPage <= 1}
-      >
-        <span className="sr-only">Previous</span>
-        <ChevronLeft className="h-5 w-5" aria-hidden="true" />
-      </button>
-      <span className="relative z-10 inline-flex items-center rounded-md bg-gray-100 px-4 py-2 text-sm font-semibold text-gray-500 focus:outline-offset-0">
-        Page {currentPage} of {totalPages}
-      </span>
-      {pages.map((page, index) => (
-        <motion.span
-          key={index}
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-        >
-          {page === "ellipsis" ? (
-            <span className="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-700 ring-1 ring-inset ring-gray-300 focus:outline-offset-0">
-              ...
-            </span>
-          ) : (
-            <button
-              onClick={() => handlePageChange(page as number)}
-              className={`relative inline-flex items-center rounded-md px-4 py-2 text-sm font-semibold focus:z-20 focus:outline-offset-0 ${
-                currentPage === page
-                  ? "z-10 bg-primary text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                  : "text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
-              }`}
-              aria-current={currentPage === page ? "page" : undefined}
-            >
-              {page}
-            </button>
-          )}
-        </motion.span>
-      ))}
-      <button
-        onClick={() => handlePageChange(currentPage + 1)}
-        className={`relative inline-flex items-center rounded-md px-2 py-2 text-gray-400 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0 ${
-          currentPage >= totalPages ? "pointer-events-none opacity-50" : ""
-        }`}
-        disabled={currentPage >= totalPages}
-      >
-        <span className="sr-only">Next</span>
-        <ChevronRight className="h-5 w-5" aria-hidden="true" />
-      </button>
-    </nav>
+    <Pagination className="select-none">
+      <PaginationContent className="flex flex-wrap items-center gap-2">
+        <PaginationItem>
+          <Button
+            variant="outline"
+            size="icon"
+            className="h-10 w-10 rounded-md border ring-1 ring-inset ring-gray-300"
+            onClick={() => handlePageChange(currentPage - 1)}
+            disabled={currentPage <= 1}
+          >
+            <ChevronLeft className="h-5 w-5" />
+            <span className="sr-only">Previous</span>
+          </Button>
+        </PaginationItem>
+
+        <span className="relative z-10 inline-flex items-center rounded-md bg-gray-100 px-4 py-2 text-sm font-semibold text-gray-500 focus:outline-offset-0">
+          Page {currentPage} of {totalPages}
+        </span>
+
+        {pages.map((page, index) => (
+          <PaginationItem key={index}>
+            {page === "ellipsis" ? (
+              <span className="relative inline-flex items-center rounded-md px-4 py-2 text-sm font-semibold text-gray-700 ring-1 ring-inset ring-gray-300 focus:outline-offset-0">
+                ...
+              </span>
+            ) : (
+              <motion.div
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <Button
+                  variant={currentPage === page ? "default" : "outline"}
+                  onClick={() => handlePageChange(page as number)}
+                  className={`h-10 w-10 rounded-md text-sm font-semibold ${
+                    currentPage === page
+                      ? "bg-primary text-primary-foreground"
+                      : "ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+                  }`}
+                  aria-current={currentPage === page ? "page" : undefined}
+                >
+                  {page}
+                </Button>
+              </motion.div>
+            )}
+          </PaginationItem>
+        ))}
+
+        <PaginationItem>
+          <Button
+            variant="outline"
+            size="icon"
+            className="h-10 w-10 rounded-md border ring-1 ring-inset ring-gray-300"
+            onClick={() => handlePageChange(currentPage + 1)}
+            disabled={currentPage >= totalPages}
+          >
+            <ChevronRight className="h-5 w-5" />
+            <span className="sr-only">Next</span>
+          </Button>
+        </PaginationItem>
+      </PaginationContent>
+    </Pagination>
   );
 }
 

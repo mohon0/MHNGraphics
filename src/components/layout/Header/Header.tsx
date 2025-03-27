@@ -34,8 +34,7 @@ export default function Header({
               fixed ? "text-white" : "text-black"
             }`}
           >
-            {/* <span className="text-xl md:text-2xl">MHN</span>
-            <span className="md:text-xl">Graphics</span> */}
+           
             <Image src={fixed ? logo : logo2} alt="logo" width={200} className="w-40" />
           </Link>
 

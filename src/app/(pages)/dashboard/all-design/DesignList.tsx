@@ -1,16 +1,5 @@
 "use client";
 
-import {
-  AlertCircle,
-  Command,
-  Loader2,
-  Search,
-  SlidersHorizontal,
-} from "lucide-react";
-import { useRouter, useSearchParams } from "next/navigation";
-import * as React from "react";
-
-import PaginationUi from "@/components/common/pagination/PaginationUi";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -35,7 +24,17 @@ import { designCategories } from "@/constant/DesignCategory";
 import { cn } from "@/lib/utils";
 import { useFetchUserDesign } from "@/services/design";
 import { DesignType } from "@/utils/Interface";
+import {
+  AlertCircle,
+  Command,
+  Loader2,
+  Search,
+  SlidersHorizontal,
+} from "lucide-react";
+import { useRouter, useSearchParams } from "next/navigation";
+import * as React from "react";
 import DesignCard from "./DesignCard";
+import Pagination from "./Pagination";
 
 export function DesignList() {
   const router = useRouter();
@@ -202,8 +201,8 @@ export function DesignList() {
 
       {data?.meta && data.meta.totalPages > 1 && (
         <div className="mt-8">
-          <PaginationUi
-            totalPages={data.meta.totalPages}
+          <Pagination
+            totalPages={20}
             category={category}
             currentPage={page}
             query={searchQuery}

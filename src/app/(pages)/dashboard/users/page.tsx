@@ -1,6 +1,4 @@
 "use client";
-import type React from "react";
-import PaginationUi from "@/components/common/pagination/PaginationUi";
 import TableSkeleton from "@/components/common/skeleton/TableSkeleton";
 import { convertDateString } from "@/components/helper/date/convertDateString";
 import type { UserType } from "@/components/interface/UserType";
@@ -46,10 +44,12 @@ import axios from "axios";
 import { Eye, RefreshCw, Search, Trash2, UsersIcon } from "lucide-react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
+import type React from "react";
 import { Suspense, useCallback, useState } from "react";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { AccessDenied } from "./empty-state";
+import Pagination from "./Pagination";
 import { UsersList } from "./users-list";
 
 // Replace the DesignMessage component with a more modern empty state
@@ -439,7 +439,7 @@ function Users() {
 
       {data?.meta && data.meta.totalPages > 1 && (
         <div className="mt-8 flex justify-center">
-          <PaginationUi
+          <Pagination
             totalPages={data.meta.totalPages}
             currentPage={page}
             query={searchQuery}
