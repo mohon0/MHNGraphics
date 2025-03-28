@@ -2,7 +2,7 @@ import { generateSlug } from "@/components/helper/slug/CreateSlug";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { DesignType } from "@/utils/Interface";
+import { Design } from "@/utils/Interface";
 import Link from "next/link";
 
 export function Author({
@@ -10,7 +10,7 @@ export function Author({
   title,
   authorId,
 }: {
-  author: DesignType["author"];
+  author: Design["author"];
   authorId: string;
   title: string;
 }) {

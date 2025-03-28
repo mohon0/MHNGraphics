@@ -1,13 +1,15 @@
-export interface PaymentReportType {
-  comment: string;
+import { StaticImageData } from "next/image";
+
+export interface PaymentReport {
   id: string;
-  PaymentMonth: string;
-  PaymentReceiveDate: string;
+  comment: string;
+  paymentMonth: string;
+  paymentReceiveDate: string;
   amount: number;
   year: string;
 }
 
-export interface CommentListType {
+export interface Comment {
   id: string;
   user: {
     name: string;
@@ -16,8 +18,8 @@ export interface CommentListType {
   createdAt: Date;
   content: string;
   design: {
-    name: string;
     id: string;
+    name: string;
   };
 }
 
@@ -27,8 +29,8 @@ export interface Donor {
   image: string;
   bloodGroup: string;
   district: string;
-  number: string;
-  number2?: string;
+  phone: string;
+  altPhone?: string;
   birthDate?: string;
   donatedBefore: string;
   diseases: string;
@@ -46,9 +48,9 @@ export interface BloodBankData {
   };
 }
 
-export interface BloodBankQueryParams {
+export interface BloodBankQuery {
   currentPage: number;
-  searchInput: string;
+  search: string;
   bloodGroup: string;
 }
 
@@ -58,7 +60,8 @@ export interface PaginationProps {
   query: string;
   setPage: (page: number) => void;
 }
-export interface DesignType {
+
+export interface Design {
   id: string;
   image: string;
   imageId: string;
@@ -80,7 +83,7 @@ export interface DesignType {
   likes: { userId: string }[];
   likeCount: number;
   commentsCount: number;
-  comments: {
+  comments: Array<{
     id: string;
     userId: string;
     designId: string;
@@ -91,5 +94,154 @@ export interface DesignType {
       image: string;
       status: string;
     };
+  }>;
+}
+
+export interface Application {
+  id: string;
+  firstName: string;
+  lastName: string;
+  duration: string;
+  image: string;
+  course: string;
+  status: string;
+  createdAt: string;
+}
+
+export interface ApplicationDetail {
+  studentName: string;
+  fatherName: string;
+  motherName: string;
+  birthDay: string;
+  bloodGroup: string;
+  mobileNumber: string;
+  guardianNumber: string;
+  gender: string;
+  gpa: string;
+  nationality: string;
+  nid: string;
+  passingYear: string;
+  regNumber: string;
+  religion: string;
+  rollNumber: string;
+  image: string;
+  fullAddress: string;
+  district: string;
+  courseName: string;
+  duration: string;
+  education: string;
+  board: string;
+  course: string;
+  pc: string;
+  email: string;
+  transactionId: string;
+  fatherOccupation: string;
+  maritalStatus: string;
+  session: string;
+  trxId: string;
+}
+
+export interface UserApplication {
+  id?: string;
+  studentName: string;
+  fatherName: string;
+  motherName: string;
+  birthDay: string;
+  bloodGroup: string;
+  mobileNumber: string;
+  guardianNumber: string;
+  gender: "male" | "female" | "other";
+  gpa: string;
+  nationality: string;
+  nid: string;
+  passingYear: number;
+  regNumber: string;
+  religion: string;
+  rollNumber: string;
+  image: string;
+  fullAddress: string;
+  district: string;
+  courseName: string;
+  duration: string;
+  education: string;
+  board: string;
+  course: string;
+  pc: "laptop" | "pc" | "no" | undefined;
+  email: string;
+  transactionId: string;
+  fatherOccupation: string;
+  maritalStatus: "Single" | "Married" | "Divorced" | "Widowed";
+  roll: number;
+  user: {
+    phoneNumber: string;
+    email: string;
+  };
+  session: string;
+}
+
+export interface ApplicationSummary {
+  id: string;
+  duration: string;
+  studentName: string;
+  course: string;
+  image: string;
+  status: string;
+  createdAt: string;
+  certificate: string;
+  mobileNumber: string;
+  editable: boolean | null;
+}
+
+export interface DesignList {
+  data: {
+    id: string;
+    image: string;
+    name: string;
+    category: string;
+    subcategory: string;
+    createdAt: Date;
   }[];
+  meta: {
+    totalItems: number;
+    totalPages: number;
+    currentPage: number;
+    itemsPerPage: number;
+  };
+}
+
+export interface SimpleComment {
+  id: string;
+  content: string;
+  createdAt: string;
+}
+
+export interface Testimonial {
+  id: number;
+  name: string;
+  image: StaticImageData;
+  company: string;
+  position: string;
+  title: string;
+  duration: string;
+  description: string;
+}
+
+export interface UserProfile {
+  id: string;
+  image: string;
+  name: string;
+  email: string;
+  bio: string;
+  createdAt: Date;
+  status: string;
+}
+
+export interface Address {
+  id: string;
+  studentName: string;
+  email: string;
+  image: string;
+  mobileNumber: string;
+  bloodGroup: string;
+  fullAddress: string;
 }

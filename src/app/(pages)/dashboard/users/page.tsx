@@ -1,7 +1,6 @@
 "use client";
 import TableSkeleton from "@/components/common/skeleton/TableSkeleton";
 import { convertDateString } from "@/components/helper/date/convertDateString";
-import type { UserType } from "@/components/interface/UserType";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -40,6 +39,7 @@ import {
 } from "@/components/ui/tooltip";
 import { useAuth } from "@/hooks/useAuth";
 import { useUserList } from "@/services/admin";
+import type { UserProfile } from "@/utils/Interface";
 import axios from "axios";
 import { Eye, RefreshCw, Search, Trash2, UsersIcon } from "lucide-react";
 import Link from "next/link";
@@ -68,7 +68,7 @@ function UserCard({
   onDelete,
   onStatusChange,
 }: {
-  item: UserType;
+  item: UserProfile;
   onDelete: (id: string) => void;
   onStatusChange: (id: string, status: string) => void;
 }) {
@@ -290,7 +290,7 @@ function Users() {
         <>
           {/* Mobile View */}
           <div className="grid gap-4 md:hidden">
-            {data.data.map((item: UserType) => (
+            {data.data.map((item: UserProfile) => (
               <UserCard
                 key={item.id}
                 item={item}
@@ -315,7 +315,7 @@ function Users() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {data.data.map((item: UserType) => (
+                  {data.data.map((item: UserProfile) => (
                     <TableRow key={item.id} className="group">
                       <TableCell>
                         <Link href={`/profile?id=${item.id}`}>

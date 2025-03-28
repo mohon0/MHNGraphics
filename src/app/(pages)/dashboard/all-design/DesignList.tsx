@@ -23,7 +23,7 @@ import {
 import { designCategories } from "@/constant/DesignCategory";
 import { cn } from "@/lib/utils";
 import { useFetchUserDesign } from "@/services/design";
-import { DesignType } from "@/utils/Interface";
+import { Design } from "@/utils/Interface";
 import {
   AlertCircle,
   Command,
@@ -193,7 +193,7 @@ export function DesignList() {
             </Button>
           </div>
         ) : (
-          data?.data.map((design: DesignType) => (
+          data?.data.map((design: Design) => (
             <DesignCard key={design.id} design={design} refetch={refetch} />
           ))
         )}

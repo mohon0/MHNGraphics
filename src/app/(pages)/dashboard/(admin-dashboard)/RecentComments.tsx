@@ -1,8 +1,11 @@
 "use client";
-
+import { createSlug } from "@/components/helper/slug/CreateSlug";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
+import { useCommentList } from "@/services/admin";
+import { Comment } from "@/utils/Interface";
 import { formatDistanceToNow } from "date-fns";
 import { ChevronRight, Clock, User } from "lucide-react";
 import Link from "next/link";
@@ -43,7 +46,7 @@ export default function RecentComments() {
           </div>
         ) : data.data.length > 0 ? (
           <ul className="divide-y divide-gray-100">
-            {data.data.map((comment: CommentListType) => (
+            {data.data.map((comment: Comment) => (
               <li key={comment.id} className="group relative overflow-hidden">
                 <Link
                   href={createSlug({
@@ -104,11 +107,6 @@ export default function RecentComments() {
     </Card>
   );
 }
-
-import { createSlug } from "@/components/helper/slug/CreateSlug";
-import { Skeleton } from "@/components/ui/skeleton";
-import { useCommentList } from "@/services/admin";
-import { CommentListType } from "@/utils/Interface";
 
 /**
  * RecentCommentsSkeleton Component

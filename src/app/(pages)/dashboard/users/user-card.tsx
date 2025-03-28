@@ -1,5 +1,4 @@
 import { convertDateString } from "@/components/helper/date/convertDateString";
-import type { UserType } from "@/components/interface/UserType";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -27,11 +26,12 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { UserProfile } from "@/utils/Interface";
 import { Eye, Trash2 } from "lucide-react";
 import Link from "next/link";
 
 type UserCardProps = {
-  item: UserType;
+  item: UserProfile;
   onDelete: (id: string) => void;
   onStatusChange: (id: string, status: string) => void;
 };

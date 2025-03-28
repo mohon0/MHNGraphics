@@ -58,7 +58,7 @@ export function ListView({
             <BloodGroupBadge group={donor.bloodGroup} />
           </div>
           <div className="col-span-2 flex items-center">{donor.district}</div>
-          <div className="col-span-2 flex items-center">{donor.number}</div>
+          <div className="col-span-2 flex items-center">{donor.phone}</div>
           <div className="col-span-2 flex items-center justify-end gap-2">
             <Link href={`/dashboard/blood-bank/edit-blood-bank?id=${donor.id}`}>
               <Button size="sm" variant="ghost" className="h-8 w-8 p-0">

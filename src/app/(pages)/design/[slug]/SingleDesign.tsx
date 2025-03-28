@@ -6,7 +6,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useSingleDesign } from "@/services/design";
 import type { ImageDimensions } from "@/utils/imageDimensions";
-import type { DesignType } from "@/utils/Interface";
+import type { Design } from "@/utils/Interface";
 import { AlertCircle, Info, Maximize2, X, ZoomIn, ZoomOut } from "lucide-react";
 import Image from "next/image";
 import type React from "react";
@@ -162,7 +162,7 @@ export default function SingleDesign(props: { params: Params }) {
     );
   }
 
-  const { image, name: designName, description }: DesignType = data || {};
+  const { image, name: designName, description }: Design = data || {};
 
   return (
     <>

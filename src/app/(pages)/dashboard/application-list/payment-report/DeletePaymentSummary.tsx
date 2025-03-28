@@ -54,7 +54,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 import { useFetchPaymentReport } from "@/services/payment";
-import { PaymentReportType } from "@/utils/Interface";
+import { PaymentReport } from "@/utils/Interface";
 
 const FormSchema = z.object({
   paymentId: z.string().min(4, "Please select a payment to delete"),
@@ -69,7 +69,7 @@ export default function DeletePaymentSummary({ id }: { id: string }) {
   } = useFetchPaymentReport(id);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = React.useState(false);
   const [selectedPayment, setSelectedPayment] =
-    React.useState<PaymentReportType | null>(null);
+    React.useState<PaymentReport | null>(null);
   const [open, setOpen] = React.useState(false);
   const [searchQuery, setSearchQuery] = React.useState("");
 
@@ -127,7 +127,7 @@ export default function DeletePaymentSummary({ id }: { id: string }) {
     );
   }
 
-  const data = paymentData?.payments as PaymentReportType[];
+  const data = paymentData?.payments as PaymentReport[];
 
   if (!data?.length) {
     return (
@@ -144,7 +144,7 @@ export default function DeletePaymentSummary({ id }: { id: string }) {
   const filteredPayments = data.filter(
     (payment) =>
       payment.comment?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      payment.PaymentMonth?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      payment.paymentMonth?.toLowerCase().includes(searchQuery.toLowerCase()) ||
       payment.amount.toString().includes(searchQuery),
   );
 
@@ -231,7 +231,7 @@ export default function DeletePaymentSummary({ id }: { id: string }) {
                                       </Badge>
                                       <span className="text-xs text-muted-foreground">
                                         {format(
-                                          new Date(payment.PaymentReceiveDate),
+                                          new Date(payment.paymentReceiveDate),
                                           "PP",
                                         )}
                                       </span>
@@ -244,7 +244,7 @@ export default function DeletePaymentSummary({ id }: { id: string }) {
                                         Payment Month:
                                         <Calendar className="h-3 w-3" />
                                         {format(
-                                          new Date(payment.PaymentMonth),
+                                          new Date(payment.paymentMonth),
                                           "MMMM yyy",
                                         )}
                                       </div>
@@ -298,7 +298,7 @@ export default function DeletePaymentSummary({ id }: { id: string }) {
                       </Badge>
                       <span className="text-sm text-muted-foreground">
                         {format(
-                          new Date(selectedPayment.PaymentReceiveDate),
+                          new Date(selectedPayment.paymentReceiveDate),
                           "PPP",
                         )}
                       </span>
@@ -308,7 +308,7 @@ export default function DeletePaymentSummary({ id }: { id: string }) {
                     </div>
                     <div className="mt-2 flex items-center gap-2 text-sm text-muted-foreground">
                       <Calendar className="h-4 w-4" />
-                      Payment Month: {selectedPayment.PaymentMonth}
+                      Payment Month: {selectedPayment.paymentMonth}
                     </div>
                   </div>
                   <Alert variant="destructive">

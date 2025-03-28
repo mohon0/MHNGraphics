@@ -1,7 +1,7 @@
-import { TestimonialType } from "@/components/interface/TestimonialType";
+import { Testimonial } from "@/utils/Interface";
 import Image from "next/image";
 
-export const TestimonialCard = ({ review }: { review: TestimonialType }) => (
+export const TestimonialCard = ({ review }: { review: Testimonial }) => (
   <div className="mb-10 w-full rounded-lg p-2 py-4 md:px-8 md:py-10">
     <div className="mb-6">
       <Image

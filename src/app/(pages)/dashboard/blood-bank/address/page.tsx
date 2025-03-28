@@ -1,5 +1,4 @@
 "use client";
-import { AddressListType } from "@/components/interface/UserType";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -220,7 +219,7 @@ function AddressFilter({
 
 interface AddressGridProps {
   isLoading: boolean;
-  users: AddressListType[];
+  users: Address[];
 }
 
 function AddressGrid({ isLoading, users }: AddressGridProps) {
@@ -244,15 +243,16 @@ function AddressGrid({ isLoading, users }: AddressGridProps) {
 }
 
 interface AddressCardProps {
-  user: AddressListType;
+  user: Address;
 }
 
 import { Badge } from "@/components/ui/badge";
 import { useAddress } from "@/services/blood-bank";
+import { Address } from "@/utils/Interface";
 import { Mail, MapPin, Phone, User } from "lucide-react";
 
 interface AddressCardProps {
-  user: AddressListType;
+  user: Address;
 }
 
 function AddressCard({ user }: AddressCardProps) {

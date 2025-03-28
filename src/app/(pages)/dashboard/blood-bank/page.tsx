@@ -42,7 +42,7 @@ function BloodBankContent() {
   const { data, isLoading, isError, deleteDonor, isDeleting } =
     useBloodBankData({
       currentPage: page,
-      searchInput,
+      search: searchInput,
       bloodGroup,
     });
 

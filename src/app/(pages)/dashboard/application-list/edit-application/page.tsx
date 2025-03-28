@@ -1,9 +1,9 @@
 "use client";
 
 import ApplicationHeader from "@/app/(pages)/best-computer-training-center/application/ApplicationHeader";
-import { SingleApplicationUserType } from "@/components/interface/ApplicationType";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useSingleApplication } from "@/services/application";
+import { UserApplication } from "@/utils/Interface";
 import { useSearchParams } from "next/navigation";
 import { Suspense } from "react";
 import { StudentApplicationForm } from "./StudentApplication";
@@ -30,7 +30,7 @@ function EditApplicationComponent() {
   );
 }
 
-function EditApplication({ application }: SingleApplicationUserType) {
+function EditApplication({ application }: { application: UserApplication }) {
   return (
     <div className="mt-10">
       <ApplicationHeader />

@@ -1,11 +1,11 @@
 "use client";
 import TableSkeleton from "@/components/common/skeleton/TableSkeleton";
-import type { UserType } from "@/components/interface/UserType";
 import {
   useDeleteUser,
   useUserList,
   useUserStatusUpdate,
 } from "@/services/admin";
+import { UserProfile } from "@/utils/Interface";
 import { useSearchParams } from "next/navigation";
 import type React from "react";
 import { useCallback, useState } from "react";
@@ -62,7 +62,7 @@ export function UsersList() {
         <>
           {/* Mobile View */}
           <div className="grid gap-4 md:hidden">
-            {data.data.map((item: UserType) => (
+            {data.data.map((item: UserProfile) => (
               <UserCard
                 key={item.id}
                 item={item}

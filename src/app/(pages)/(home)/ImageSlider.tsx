@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 import { useFetchAllDesign } from "@/services/design";
-import { DesignType } from "@/utils/Interface";
+import { Design } from "@/utils/Interface";
 import { ArrowRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -130,7 +130,7 @@ export default function ImageMarquee({
             className="py-4"
             gradient={false}
           >
-            {firstSliderData.map((design: DesignType) => (
+            {firstSliderData.map((design: Design) => (
               <DesignCard
                 key={design.id}
                 design={design}
@@ -149,7 +149,7 @@ export default function ImageMarquee({
             className="py-4"
             gradient={false}
           >
-            {secondSliderData.map((design: DesignType) => (
+            {secondSliderData.map((design: Design) => (
               <DesignCard
                 key={design.id}
                 design={design}
@@ -164,7 +164,7 @@ export default function ImageMarquee({
 }
 
 interface DesignCardProps {
-  design: DesignType;
+  design: Design;
   className?: string;
 }
 

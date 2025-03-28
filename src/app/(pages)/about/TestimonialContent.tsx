@@ -1,7 +1,7 @@
-import { TestimonialType } from "@/components/interface/TestimonialType";
+import { Testimonial } from "@/utils/Interface";
 import { FaStar } from "react-icons/fa6";
 
-export const TestimonialContent = ({ review }: { review: TestimonialType }) => (
+export const TestimonialContent = ({ review }: { review: Testimonial }) => (
   <div className="white-bg dark:dark-bg mx-10 my-10 rounded-lg px-2 py-3 md:mt-20 md:px-10 md:py-12">
     <div className="flex flex-col items-center justify-between gap-3 md:flex-row">
       <div>

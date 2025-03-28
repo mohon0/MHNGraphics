@@ -1,6 +1,4 @@
 "use client";
-import type { ApplicationListType } from "@/components/interface/ApplicationType";
-import type { CommentType } from "@/components/interface/DesignType";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -21,7 +19,8 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { useFetchUserDashboard } from "@/services/admin";
-import { DesignType } from "@/utils/Interface";
+import type { ApplicationSummary, Comment } from "@/utils/Interface";
+import { Design } from "@/utils/Interface";
 import { format } from "date-fns";
 import {
   CalendarDays,
@@ -119,7 +118,7 @@ export default function UserDashboard() {
               </CardHeader>
               <CardContent>
                 <ScrollArea className="h-[400px] pr-4">
-                  {userData.applications.map((app: ApplicationListType) => (
+                  {userData.applications.map((app: ApplicationSummary) => (
                     <Card
                       key={app.id}
                       className="mb-4 transition-shadow last:mb-0 hover:shadow-lg"
@@ -252,7 +251,7 @@ export default function UserDashboard() {
               <CardContent>
                 <ScrollArea className="h-[400px] pr-4">
                   <div className="grid gap-4">
-                    {userData.design.map((design: DesignType) => (
+                    {userData.design.map((design: Design) => (
                       <Card
                         key={design.id}
                         className="transition-shadow hover:shadow-md"
@@ -294,7 +293,7 @@ export default function UserDashboard() {
               <CardContent>
                 <ScrollArea className="h-[400px] pr-4">
                   <div className="space-y-4">
-                    {userData.comments.map((comment: CommentType) => (
+                    {userData.comments.map((comment: Comment) => (
                       <Card
                         key={comment.id}
                         className="transition-shadow hover:shadow-md"

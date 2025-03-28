@@ -1,4 +1,3 @@
-import type { SingleApplicationType } from "@/components/interface/ApplicationType";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -8,13 +7,14 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import logo from "@/images/hero/logo3.png";
+import type { ApplicationDetail } from "@/utils/Interface";
 import { format } from "date-fns";
 import Image from "next/image";
 import { useFormContext } from "react-hook-form";
 import { InfoRow } from "./Model";
 
 export default function Preview() {
-  const { watch } = useFormContext<SingleApplicationType>();
+  const { watch } = useFormContext<ApplicationDetail>();
   const values = watch();
 
   return (

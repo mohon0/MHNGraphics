@@ -1,6 +1,6 @@
 "use client";
 
-import { BloodBankData, BloodBankQueryParams, Donor } from "@/utils/Interface";
+import { BloodBankData, BloodBankQuery, Donor } from "@/utils/Interface";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { useState } from "react";
@@ -11,14 +11,14 @@ const API_ENDPOINT = "/api/best-computer/blood-bank";
 export const BloodBankService = {
   fetchDonors: async ({
     currentPage,
-    searchInput,
+    search,
     bloodGroup,
-  }: BloodBankQueryParams): Promise<BloodBankData> => {
+  }: BloodBankQuery): Promise<BloodBankData> => {
     try {
       const response = await axios.get(API_ENDPOINT, {
         params: {
           page: currentPage,
-          search: searchInput,
+          search: search,
           bloodGroup: bloodGroup !== "All" ? bloodGroup : undefined,
         },
       });
@@ -61,7 +61,7 @@ export const BloodBankService = {
   },
 };
 
-export function useBloodBankData(params: BloodBankQueryParams) {
+export function useBloodBankData(params: BloodBankQuery) {
   const queryClient = useQueryClient();
   const [isDeleting, setIsDeleting] = useState(false);
 

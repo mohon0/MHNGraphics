@@ -1,10 +1,10 @@
 "use client";
-import { SingleApplicationUserType } from "@/components/interface/ApplicationType";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import logo2 from "@/images/hero/logo2.png";
 import logo from "@/images/hero/logo3.png";
 import { useSingleApplication } from "@/services/application";
+import { UserApplication } from "@/utils/Interface";
 import { format } from "date-fns";
 import Image from "next/image";
 import { useSearchParams } from "next/navigation";
@@ -48,7 +48,7 @@ function SingleApplicationPage() {
   );
 }
 
-function SingleApplication({ application }: SingleApplicationUserType) {
+function SingleApplication({ application }: { application: UserApplication }) {
   const duration =
     application && application.duration === "free"
       ? "Free (conditions applied)"

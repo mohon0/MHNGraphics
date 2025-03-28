@@ -1,11 +1,11 @@
 "use client";
 
-import { UserType } from "@/components/interface/UserType";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useUserList } from "@/services/admin";
+import { UserProfile } from "@/utils/Interface";
 import { formatDistanceToNow } from "date-fns";
 import { ChevronRight, Clock, User } from "lucide-react";
 import Link from "next/link";
@@ -58,7 +58,7 @@ export default function RecentUsers() {
           </div>
         ) : data.data.length > 0 ? (
           <ul className="divide-y divide-gray-100">
-            {data.data.map((user: UserType) => (
+            {data.data.map((user: UserProfile) => (
               <li key={user.id} className="group relative overflow-hidden">
                 <Link
                   href={`/dashboard/users/${user.id}`}

@@ -1,6 +1,5 @@
 "use client";
 
-import { ApplicationListType } from "@/components/interface/ApplicationType";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -42,8 +41,9 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { cn } from "@/lib/utils";
-import { ApplicationListSkeleton } from "./ApplicationListSkeleton";
 import { useApplicationList } from "@/services/application";
+import { ApplicationSummary } from "@/utils/Interface";
+import { ApplicationListSkeleton } from "./ApplicationListSkeleton";
 
 function ApplicationListContent() {
   const { data: session, status } = useSession();
@@ -289,7 +289,7 @@ function ApplicationListContent() {
                 isPending && "opacity-60",
               )}
             >
-              {data.application.map((app: ApplicationListType) => (
+              {data.application.map((app: ApplicationSummary) => (
                 <ApplicationDataCard key={app.id} {...app} refetch={refetch} />
               ))}
             </div>

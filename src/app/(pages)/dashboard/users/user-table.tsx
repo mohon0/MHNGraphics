@@ -1,4 +1,3 @@
-import type { UserType } from "@/components/interface/UserType";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -34,12 +33,13 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { UserProfile } from "@/utils/Interface";
 import { formatDistanceToNow } from "date-fns";
 import { Eye, Trash2 } from "lucide-react";
 import Link from "next/link";
 
 type UserTableProps = {
-  users: UserType[];
+  users: UserProfile[];
   onDelete: (id: string) => void;
   onStatusChange: (id: string, status: string) => void;
 };
@@ -59,7 +59,7 @@ export function UserTable({ users, onDelete, onStatusChange }: UserTableProps) {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {users.map((item: UserType) => (
+          {users.map((item: UserProfile) => (
             <TableRow key={item.id} className="group">
               <TableCell>
                 <Link href={`/profile?id=${item.id}`}>

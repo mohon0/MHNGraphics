@@ -15,7 +15,6 @@ import {
 import Link from "next/link";
 import * as React from "react";
 
-import { ApplicationListType } from "@/components/interface/ApplicationType";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -54,8 +53,9 @@ import {
   useDeleteApplication,
   useUpdateApplication,
 } from "@/services/application";
+import { ApplicationSummary } from "@/utils/Interface";
 
-interface ExtendedApplicationListType extends ApplicationListType {
+interface ExtendedApplicationListType extends ApplicationSummary {
   refetch: () => void;
 }
 

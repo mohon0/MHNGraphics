@@ -24,14 +24,14 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { useDeleteComment } from "@/services/admin";
-import { CommentListType } from "@/utils/Interface";
+import { Comment } from "@/utils/Interface";
 import { formatDistanceToNow } from "date-fns";
 import { AlertCircle, ExternalLink, Trash, User } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
 
 interface CommentListProps {
-  comments: CommentListType[];
+  comments: Comment[];
   isLoading: boolean;
   isError: boolean;
 }
@@ -48,13 +48,12 @@ export function CommentList({
   isError,
 }: CommentListProps) {
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
-  const [commentToDelete, setCommentToDelete] =
-    useState<CommentListType | null>(null);
+  const [commentToDelete, setCommentToDelete] = useState<Comment | null>(null);
 
   const deleteMutation = useDeleteComment();
 
   // Handle delete button click
-  const handleDeleteClick = (comment: CommentListType) => {
+  const handleDeleteClick = (comment: Comment) => {
     setCommentToDelete(comment);
     setIsDeleteDialogOpen(true);
   };

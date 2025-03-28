@@ -28,7 +28,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { useDeleteDesign, useUpdateDesignStatus } from "@/services/design";
-import { DesignType } from "@/utils/Interface";
+import { Design } from "@/utils/Interface";
 import { formatDistanceToNow } from "date-fns/formatDistanceToNow";
 import { Edit, MoreVertical, Trash2 } from "lucide-react";
 import { useSession } from "next-auth/react";
@@ -39,9 +39,8 @@ import { useState } from "react";
 
 export default function DesignCard({
   design,
-  refetch,
 }: {
-  design: DesignType;
+  design: Design;
   refetch: () => void;
 }) {
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);

@@ -30,7 +30,7 @@ import {
 } from "@/components/ui/table";
 import { cn } from "@/lib/utils";
 import { useFetchPaymentReport } from "@/services/payment";
-import { PaymentReportType } from "@/utils/Interface";
+import { PaymentReport } from "@/utils/Interface";
 
 export function PaymentSummaryTable({ id }: { id: string }) {
   const {
@@ -59,7 +59,7 @@ export function PaymentSummaryTable({ id }: { id: string }) {
     );
   }
 
-  const data = paymentData.payments as PaymentReportType[];
+  const data = paymentData.payments as PaymentReport[];
 
   if (!data?.length) {
     return (
@@ -80,8 +80,8 @@ export function PaymentSummaryTable({ id }: { id: string }) {
   // Sort payments by date
   const sortedPayments = [...data].sort(
     (a, b) =>
-      new Date(b.PaymentReceiveDate).getTime() -
-      new Date(a.PaymentReceiveDate).getTime(),
+      new Date(b.paymentReceiveDate).getTime() -
+      new Date(a.paymentReceiveDate).getTime(),
   );
 
   // Calculate statistics
@@ -163,10 +163,10 @@ export function PaymentSummaryTable({ id }: { id: string }) {
           {sortedPayments.map((payment) => (
             <TableRow key={payment.id}>
               <TableCell className="font-medium">
-                {format(new Date(payment.PaymentReceiveDate), "dd MMM yyyy")}
+                {format(new Date(payment.paymentReceiveDate), "dd MMM yyyy")}
               </TableCell>
               <TableCell>
-                {format(new Date(payment.PaymentMonth), "MMMM yyyy")}
+                {format(new Date(payment.paymentMonth), "MMMM yyyy")}
               </TableCell>
               <TableCell className="max-w-[200px] truncate">
                 {payment.comment}

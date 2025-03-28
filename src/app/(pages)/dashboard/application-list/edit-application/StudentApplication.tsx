@@ -1,7 +1,6 @@
 "use client";
 
 import Preview from "@/app/(pages)/best-computer-training-center/application/ApplicationPreview";
-import { SingleApplicationUserType } from "@/components/interface/ApplicationType";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -31,6 +30,7 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { bangladeshDistricts } from "@/constant/District";
 import bkash from "@/images/tools/bkash.svg";
+import { UserApplication } from "@/utils/Interface";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
 import Image from "next/image";
@@ -180,7 +180,9 @@ const generateSessionOptions = (): string[] => {
 
 export function StudentApplicationForm({
   application,
-}: SingleApplicationUserType) {
+}: {
+  application: UserApplication;
+}) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [newImage, setNewImage] = useState<File | null>(null);
   const [deletedImage, setDeletedImage] = useState<string | null>(null);

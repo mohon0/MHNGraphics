@@ -28,7 +28,7 @@ import {
 } from "@/components/ui/form";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Textarea } from "@/components/ui/textarea";
-import type { DesignType } from "@/utils/Interface";
+import type { Design } from "@/utils/Interface";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
 import { motion } from "framer-motion";
@@ -55,7 +55,7 @@ export function Comments({
   data,
   refetch,
 }: {
-  data: DesignType;
+  data: Design;
   refetch: () => void;
 }) {
   const { status, data: session } = useSession();

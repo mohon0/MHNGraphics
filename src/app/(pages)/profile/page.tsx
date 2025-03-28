@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useProfile } from "@/services/profile";
-import { DesignType } from "@/utils/Interface";
+import { Design } from "@/utils/Interface";
 import { motion } from "framer-motion";
 import { CalendarIcon, ImageIcon } from "lucide-react";
 import Image from "next/image";
@@ -34,7 +34,7 @@ function ProfileContent() {
   const searchParams = useSearchParams();
   const id = searchParams.get("id");
   const [take, setTake] = useState(30);
-  const [designs, setDesigns] = useState<DesignType[]>([]); // Use appropriate type for designs
+  const [designs, setDesigns] = useState<Design[]>([]); // Use appropriate type for designs
 
   const { isLoading, data, isError } = useProfile(
     id ?? "",

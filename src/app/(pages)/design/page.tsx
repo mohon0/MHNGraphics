@@ -6,7 +6,7 @@ import { SlugToText } from "@/components/helper/slug/SlugToText";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useFetchAllDesign } from "@/services/design";
-import type { DesignType } from "@/utils/Interface";
+import type { Design } from "@/utils/Interface";
 import { X } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -80,7 +80,7 @@ function SearchPageContent() {
 
       {/* Column-based masonry layout to preserve original image dimensions */}
       <div className="columns-1 gap-4 space-y-4 sm:columns-2 md:columns-3">
-        {data.data.map((item: DesignType) => (
+        {data.data.map((item: Design) => (
           <div key={item.id} className="mb-4 break-inside-avoid">
             <Link
               href={createSlug({ name: item.name, id: item.id })}

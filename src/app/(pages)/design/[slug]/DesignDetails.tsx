@@ -10,7 +10,7 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 import { useUpdateDesignLike } from "@/services/design";
 import type { ImageDimensions } from "@/utils/imageDimensions";
-import { DesignType } from "@/utils/Interface";
+import { Design } from "@/utils/Interface";
 import { CircleCheckBig, Download, MessageSquare } from "lucide-react";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
@@ -22,7 +22,7 @@ import DownloadMenuItem from "./DownloadMenuItem";
 import Share from "./Share";
 
 interface DesignDetailsProps {
-  data: DesignType;
+  data: Design;
   imageDimensions: ImageDimensions | null;
   params: { slug: string };
 }
