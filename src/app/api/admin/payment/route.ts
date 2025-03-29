@@ -22,7 +22,7 @@ export async function GET(request: Request) {
       select: {
         amount: true,
         createdAt: true,
-        PaymentMonth: true,
+        paymentMonth: true,
       },
     });
 
@@ -36,7 +36,7 @@ export async function GET(request: Request) {
     // Aggregate data by month
     const monthlyData = transactions.reduce(
       (acc, tx) => {
-        const month = new Date(tx.PaymentMonth).toLocaleString("en-US", {
+        const month = new Date(tx.paymentMonth).toLocaleString("en-US", {
           month: "short",
           year: "numeric",
         });

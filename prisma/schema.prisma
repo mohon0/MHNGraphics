@@ -159,7 +159,7 @@ model Application {
   updatedAt        DateTime @updatedAt
   userId           String   @unique @db.ObjectId
   user             User     @relation(fields: [userId], references: [id])
-  payments               Transaction[]
+  payments         Transaction[]
   editable         Boolean? @default(false)
 }
 
@@ -168,8 +168,8 @@ model Transaction {
   id          String  @id @default(auto()) @map("_id") @db.ObjectId
   comment     String
   createdAt   DateTime @default(now())
-  PaymentMonth DateTime
-  PaymentReceiveDate DateTime
+  paymentMonth DateTime
+  paymentReceiveDate DateTime
   amount      Float
   application Application @relation(fields: [applicationId], references: [id])
   applicationId String @db.ObjectId

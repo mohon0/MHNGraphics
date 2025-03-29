@@ -84,8 +84,6 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    console.log(formData);
-
     // Handle file upload
     let imageUrl = { secure_url: "", public_id: "" };
     const imageFile = formData.get("image") as Blob;
@@ -167,14 +165,12 @@ export async function POST(req: NextRequest) {
 
       return NextResponse.json(newApplication, { status: 201 });
     } catch (createError) {
-      console.error("Application creation failed:", createError);
       return NextResponse.json(
         { message: "Application creation failed" },
         { status: 500 },
       );
     }
   } catch (error) {
-    console.error("Form processing failed:", error);
     return NextResponse.json(
       { message: "An unexpected error occurred" },
       { status: 500 },
@@ -205,6 +201,7 @@ export async function GET(req: NextRequest) {
         createdAt: true,
         certificate: true,
         roll: true,
+        editable: true,
       },
     });
 
@@ -248,8 +245,6 @@ export async function DELETE(req: NextRequest) {
         imageId: true,
       },
     });
-
-    console.log(application);
 
     if (!application) {
       return new NextResponse("Application not found", { status: 404 });

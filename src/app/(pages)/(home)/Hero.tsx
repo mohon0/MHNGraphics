@@ -1,7 +1,6 @@
 "use client";
 
 import type React from "react";
-
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import img1 from "@/images/hero/1.jpg";

@@ -15,6 +15,7 @@ export async function GET(req: NextRequest) {
       where: {
         id: id,
       },
+
       select: {
         studentName: true,
         image: true,
@@ -46,9 +47,9 @@ export async function POST(req: NextRequest) {
     const response = await Prisma.transaction.create({
       data: {
         comment: body.comment,
-        PaymentMonth: body.PaymentMonth,
+        paymentMonth: body.PaymentMonth,
         amount: body.amount,
-        PaymentReceiveDate: body.PaymentReceiveDate,
+        paymentReceiveDate: body.PaymentReceiveDate,
         applicationId: body.applicationId,
       },
     });
