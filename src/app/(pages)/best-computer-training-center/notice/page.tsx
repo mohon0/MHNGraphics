@@ -36,12 +36,11 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { useNotice } from "@/services/notice";
-import axios from "axios";
+import { useDeleteNotice, useNotice } from "@/services/notice";
 import { FileDown, Trash } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { useState } from "react";
-import { toast } from "react-toastify";
+import { toast } from "sonner";
 
 interface Notice {
   id: string;
@@ -59,27 +58,25 @@ export default function Notice() {
   // Get current session
   const { data: session } = useSession();
 
+  // Use the custom delete hook
+  const { mutateAsync: deleteNoticeAsync } = useDeleteNotice();
+
   const handleDelete = async (id: string) => {
     try {
-      await toast.promise(axios.delete("/api/notice", { params: { id } }), {
-        pending: "Please wait...",
+      await toast.promise(deleteNoticeAsync(id), {
+        loading: "Please wait...",
         success: "Notice deleted successfully!",
         error: "Failed to delete notice. Please try again.",
       });
-      refetch();
-    } catch (error) {
-      console.error("Error deleting notice:", error);
-      toast.error("An unexpected error occurred.");
-    } finally {
       setIsDeleteDialogOpen(false);
       setNoticeToDelete(null);
+    } catch (error) {
+      // Error is already handled by toast.promise
+      console.error("Delete error:", error);
     }
   };
 
-  const { error, data, isLoading, refetch } = useNotice(
-    currentPage,
-    Number(pageSize),
-  );
+  const { error, data, isLoading } = useNotice(currentPage, Number(pageSize));
 
   const NoticeSkeleton = () => (
     <TableRow>
