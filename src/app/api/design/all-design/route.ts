@@ -1,7 +1,7 @@
 import { Prisma } from "@/components/helper/prisma/Prisma";
 import { SlugToText } from "@/components/helper/slug/SlugToText";
-import { NextRequest, NextResponse } from "next/server";
 import { DesignStatus } from "@prisma/client";
+import { NextRequest, NextResponse } from "next/server";
 
 // Helper function to normalize text to lowercase
 const normalizeText = (text: string) => text.trim().toLowerCase();
@@ -88,7 +88,6 @@ export async function GET(req: NextRequest) {
 
     return NextResponse.json(result, { status: 200 });
   } catch (error) {
-    console.error("Error fetching designs:", error);
     return new NextResponse("Internal Server Error", { status: 500 });
   }
 }

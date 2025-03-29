@@ -158,8 +158,6 @@ export async function DELETE(req: NextRequest) {
       status: 200,
     });
   } catch (error) {
-    console.error("Error deleting user:", error);
-    console.log(error);
     return new NextResponse("Internal Server Error", { status: 500 });
   }
 }

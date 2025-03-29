@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from "react";
 
 export default function useCopyToClipboard() {
   const [isCopied, setIsCopied] = useState(false);
@@ -12,7 +12,6 @@ export default function useCopyToClipboard() {
       setIsCopied(true);
       timeoutId.current = setTimeout(() => setIsCopied(false), 2500);
     } catch (error) {
-      console.log(error);
       setIsCopied(false);
       if (timeoutId.current) {
         clearTimeout(timeoutId.current);

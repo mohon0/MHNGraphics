@@ -138,10 +138,6 @@ export default function BloodDonation() {
         form.reset();
         setImage(null);
         location.reload();
-      })
-      .catch(() => {
-        // No need to handle errors explicitly since Sonner will handle it
-        console.log("Error");
       });
   }
 

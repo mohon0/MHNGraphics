@@ -99,7 +99,6 @@ export async function PUT(req: NextRequest) {
 
     return NextResponse.json(updatedUser);
   } catch (error) {
-    console.log(error);
     return NextResponse.json(
       { message: "Error updating user" },
       { status: 500 },

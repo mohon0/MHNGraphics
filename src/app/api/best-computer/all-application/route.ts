@@ -21,8 +21,6 @@ export async function GET(req: NextRequest) {
     const pageSize = 20; // Number of items per page
     const skipCount = (page - 1) * pageSize;
 
-    console.log(type);
-
     // Build the `where` condition for Prisma query
     const where: Prisma.ApplicationWhereInput = {
       ...(status && status !== "All" ? { status } : {}),

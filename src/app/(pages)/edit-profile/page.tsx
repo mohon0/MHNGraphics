@@ -105,7 +105,6 @@ export default function ProfileForm() {
       if (response.status === 200) {
         toast.dismiss();
         toast.success("Profile updated successfully");
-        console.log(response.data);
 
         update({
           user: {

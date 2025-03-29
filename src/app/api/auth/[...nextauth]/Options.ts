@@ -24,8 +24,6 @@ export const authOptions = {
         email: { label: "email", type: "email" },
       },
       async authorize(credentials) {
-        console.log("Authorizing user with credentials:", credentials);
-
         if (!credentials?.email || !credentials.password) {
           console.error("Email and password are required.");
           throw new Error("Email and password are required.");
@@ -76,7 +74,6 @@ export const authOptions = {
           }
         }
 
-        console.log("User authenticated successfully:", user);
         return user;
       },
     }),

@@ -108,7 +108,7 @@ export function DashboardSidebar({
         },
         {
           title: "View all",
-          url: "/best-computer-training-center/notice-list",
+          url: "/best-computer-training-center/notice",
         },
       ],
     },

@@ -14,8 +14,6 @@ function UnSubscribe() {
   const mail = searchParams.get("mail");
   const router = useRouter();
 
-  console.log(mail);
-
   async function handleUnsubscribe() {
     try {
       toast.loading("Please wait...");
