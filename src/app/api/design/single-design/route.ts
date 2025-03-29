@@ -97,46 +97,27 @@ export async function POST(req: NextRequest) {
   }
 }
 
+// Separate the view counting logic from data fetching
+
+// 1. First modify your GET endpoint (remove viewCount increment)
 export async function GET(req: NextRequest) {
   try {
     const url = new URL(req.url);
-    const queryParams = new URLSearchParams(url.search);
-    const id = queryParams.get("id");
+    const id = url.searchParams.get("id");
 
     if (!id) {
       return new NextResponse("Missing field", { status: 400 });
     }
 
-    // Fetch the design
     const design = await Prisma.design.findUnique({
-      where: {
-        id: id,
-      },
+      where: { id },
       include: {
-        author: {
-          select: {
-            name: true,
-            image: true,
-            status: true,
-          },
-        },
-        likes: {
-          select: {
-            userId: true,
-          },
-        },
+        author: { select: { name: true, image: true, status: true } },
+        likes: { select: { userId: true } },
         comments: {
-          orderBy: {
-            createdAt: "desc",
-          },
+          orderBy: { createdAt: "desc" },
           include: {
-            user: {
-              select: {
-                name: true,
-                image: true,
-                status: true,
-              },
-            },
+            user: { select: { name: true, image: true, status: true } },
           },
         },
       },
@@ -145,21 +126,13 @@ export async function GET(req: NextRequest) {
     if (!design) {
       return new NextResponse("Design not found", { status: 404 });
     }
-    const updatedDesign = await Prisma.design.update({
-      where: { id },
-      data: { viewCount: { increment: 1 } },
-    });
-    // Add like and comments count to the response object
-    const enhancedResponse = {
+
+    return NextResponse.json({
       ...design,
-      viewCount: updatedDesign.viewCount,
       likeCount: design.likes.length,
       commentsCount: design.comments.length,
-    };
-
-    return new NextResponse(JSON.stringify(enhancedResponse), { status: 200 });
+    });
   } catch (error) {
-    console.error(error);
     return new NextResponse("Internal Server Error", { status: 500 });
   }
 }

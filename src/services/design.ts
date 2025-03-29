@@ -1,6 +1,7 @@
 import { QUERY_KEYS } from "@/constant/QueryKeys";
 import { useDebounce } from "@/hooks/useDebounce";
 import { NewDesignSchemaType } from "@/lib/Schemas";
+import { Design } from "@/utils/Interface";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { toast } from "sonner";
@@ -165,6 +166,24 @@ export function useSingleDesign({ id }: { id: string }) {
     queryFn: async () => {
       const response = await axios.get(`/api/design/single-design?id=${id}`);
       return response.data;
+    },
+  });
+}
+
+export function useIncrementViews() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (id: string) => {
+      const response = await axios.post(
+        `/api/design/single-design/view?id=${id}`,
+      );
+      return response.data;
+    },
+    onSuccess: (data, id) => {
+      queryClient.setQueryData<Design>([QUERY_KEYS.SINGLE_DESIGN, id], (old) =>
+        old ? { ...old, viewCount: data.viewCount } : undefined,
+      );
     },
   });
 }

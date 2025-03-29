@@ -4,7 +4,7 @@ import { getImageDimensions } from "@/components/helper/image/GetImageDimensions
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useSingleDesign } from "@/services/design";
+import { useIncrementViews, useSingleDesign } from "@/services/design";
 import type { ImageDimensions } from "@/utils/imageDimensions";
 import type { Design } from "@/utils/Interface";
 import { AlertCircle, Info, Maximize2, X, ZoomIn, ZoomOut } from "lucide-react";
@@ -40,6 +40,7 @@ export default function SingleDesign(props: { params: Params }) {
   const { isLoading, data, isError, refetch } = useSingleDesign({
     id,
   });
+  const { mutate: incrementViews } = useIncrementViews();
 
   useEffect(() => {
     if (data?.image) {
@@ -138,6 +139,11 @@ export default function SingleDesign(props: { params: Params }) {
     e.stopPropagation();
     setIsFullscreen(false);
   };
+  useEffect(() => {
+    if (id && data?.id) {
+      incrementViews(id);
+    }
+  }, [id, data?.id, incrementViews]);
 
   if (isError) {
     return (
