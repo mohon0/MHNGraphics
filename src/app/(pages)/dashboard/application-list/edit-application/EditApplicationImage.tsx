@@ -12,7 +12,7 @@ import { cn } from "@/lib/utils";
 import { Loader2, Upload, X } from "lucide-react";
 import Image from "next/image";
 import { useCallback, useState } from "react";
-import { toast } from "react-toastify";
+import { toast } from "sonner";
 
 interface ProductImageProps {
   image: string | null;

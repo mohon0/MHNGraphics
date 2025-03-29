@@ -23,8 +23,7 @@ import { CameraIcon, Eye, EyeOff } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { toast } from "sonner";
 import * as z from "zod";
 
 // Validation schemas

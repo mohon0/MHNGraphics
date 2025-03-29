@@ -10,7 +10,7 @@ import { X } from "lucide-react";
 import Image from "next/image";
 import { Dispatch, SetStateAction } from "react";
 import { CgAsterisk } from "react-icons/cg";
-import { toast } from "react-toastify";
+import { toast } from "sonner";
 
 interface PostImageProps {
   image: string | null;

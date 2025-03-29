@@ -3,10 +3,8 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { ReactNode } from "react";
-import "react-toastify/dist/ReactToastify.css";
 import SessionWrapper from "../../context/SessionProvider";
 import ReactQueryProvider from "../../context/TanstackQueryProvider";
-import ClientSideToastContainer from "../../context/ToastProvider";
 import "./globals.css";
 
 const inter = Inter({
@@ -58,7 +56,6 @@ export default function RootLayout({ children }: RootLayoutProps) {
         <body className={inter.className}>
           <SessionWrapper>{children}</SessionWrapper>
           <ReactQueryDevtools initialIsOpen={false} />
-          <ClientSideToastContainer />
           <Toaster position="top-right" richColors />
         </body>
       </html>

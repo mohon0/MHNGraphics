@@ -24,8 +24,6 @@ import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import React, { Suspense, useEffect, useState } from "react";
-import { ToastContainer } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 import AddressPagination from "./AddressPagination";
 
 export default function AddressPage() {
@@ -141,7 +139,6 @@ const AddressContent: React.FC = () => {
           </>
         )}
       </CardContent>
-      <ToastContainer position="top-center" autoClose={3000} />
     </Card>
   );
 };

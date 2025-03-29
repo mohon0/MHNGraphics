@@ -6,8 +6,7 @@ import { Card } from "@/components/ui/card";
 import axios from "axios";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense } from "react";
-import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import { toast } from "sonner";
 
 function UnSubscribe() {
   const searchParams = useSearchParams();
