@@ -1,7 +1,17 @@
 "use client";
-
-import Logout from "@/components/common/Logout";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -18,13 +28,16 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 import { BadgeCheck, ChevronsUpDown } from "lucide-react";
-import { useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import Link from "next/link";
+import { FaPowerOff } from "react-icons/fa";
 
 export function NavUser() {
   const { isMobile } = useSidebar();
   const { data: session } = useSession();
-
+  const handleLogout = () => {
+    signOut({ redirect: true, callbackUrl: "/" });
+  };
   return (
     <SidebarMenu>
       <SidebarMenuItem>
@@ -93,7 +106,29 @@ export function NavUser() {
             </DropdownMenuGroup>
             <DropdownMenuSeparator />
 
-            <Logout />
+            <AlertDialog>
+              <AlertDialogTrigger asChild>
+                <Button variant="destructive">
+                  <span className="flex items-center gap-4">
+                    <FaPowerOff size={14} /> Log Out
+                  </span>
+                </Button>
+              </AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    This action will log you out of this browser.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                  <AlertDialogAction onClick={handleLogout}>
+                    Log Out
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
           </DropdownMenuContent>
         </DropdownMenu>
       </SidebarMenuItem>

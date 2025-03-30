@@ -1,7 +1,17 @@
 "use client";
 
-import Logout from "@/components/common/Logout";
 import LoadingSpinner from "@/components/common/skeleton/LoadingSpinner";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
@@ -12,8 +22,9 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { useSession } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import Link from "next/link";
+import { FaPowerOff } from "react-icons/fa";
 
 export default function User({ fixed = false }: { fixed?: boolean }) {
   const { status, data: session } = useSession();
@@ -34,6 +45,10 @@ export default function User({ fixed = false }: { fixed?: boolean }) {
 
   if (status === "authenticated" && session?.user) {
     const initials = getInitials(session.user.name);
+
+    const handleLogout = () => {
+      signOut({ redirect: true, callbackUrl: "/" });
+    };
 
     return (
       <DropdownMenu>
@@ -70,7 +85,30 @@ export default function User({ fixed = false }: { fixed?: boolean }) {
             <Link href={`/profile?id=${session.user.id}`}>Account Details</Link>
           </DropdownMenuItem>
           <DropdownMenuSeparator />
-          <Logout />
+
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <Button variant="destructive">
+                <span className="flex items-center gap-4">
+                  <FaPowerOff size={14} /> Log Out
+                </span>
+              </Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                <AlertDialogDescription>
+                  This action will log you out of this browser.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogAction onClick={handleLogout}>
+                  Log Out
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
         </DropdownMenuContent>
       </DropdownMenu>
     );
