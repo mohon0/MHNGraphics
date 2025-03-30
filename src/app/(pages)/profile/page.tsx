@@ -1,6 +1,5 @@
 "use client";
 
-import ProfileSkeleton from "@/components/common/skeleton/ProfileSkelton";
 import { RemoveHtmlTags } from "@/components/helper/html/PerseHtml";
 import { createSlug } from "@/components/helper/slug/CreateSlug";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -21,6 +20,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useState } from "react"; // Import Suspense
+import ProfileSkeleton from "./ProfileSkeleton";
 
 export default function Page() {
   return (

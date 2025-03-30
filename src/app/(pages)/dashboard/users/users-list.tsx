@@ -1,5 +1,4 @@
 "use client";
-import TableSkeleton from "@/components/common/skeleton/TableSkeleton";
 import {
   useDeleteUser,
   useUserList,
@@ -12,6 +11,7 @@ import { useCallback, useState } from "react";
 import { EmptyState } from "./empty-state";
 import Pagination from "./Pagination";
 import { SearchHeader } from "./search-header";
+import TableSkeleton from "./TableSkeleton";
 import { UserCard } from "./user-card";
 import { UserTable } from "./user-table";
 

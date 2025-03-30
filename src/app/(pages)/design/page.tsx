@@ -1,6 +1,5 @@
 "use client";
 
-import DesignSkeleton from "@/components/common/skeleton/DesignSkeleton";
 import { createSlug } from "@/components/helper/slug/CreateSlug";
 import { SlugToText } from "@/components/helper/slug/SlugToText";
 import { Badge } from "@/components/ui/badge";
@@ -13,6 +12,7 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense } from "react";
 import DesignPagination from "./DesignPagination";
+import DesignSkeleton from "./DesignSkeleton";
 
 function DesignMessage({ message }: { message: string }) {
   return (

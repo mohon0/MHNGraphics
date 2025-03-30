@@ -1,12 +1,12 @@
 "use client";
 
-import DesignSkeleton from "@/components/common/skeleton/DesignSkeleton";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import axios from "axios";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense } from "react";
 import { toast } from "sonner";
+import DesignSkeleton from "./DesignSkeleton";
 
 function UnSubscribe() {
   const searchParams = useSearchParams();

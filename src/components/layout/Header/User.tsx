@@ -1,6 +1,5 @@
 "use client";
 
-import LoadingSpinner from "@/components/common/skeleton/LoadingSpinner";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -22,48 +21,82 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Skeleton } from "@/components/ui/skeleton";
+import { cn } from "@/lib/utils";
+import { LayoutDashboard, LogOut, Settings, UserIcon } from "lucide-react";
 import { signOut, useSession } from "next-auth/react";
 import Link from "next/link";
-import { FaPowerOff } from "react-icons/fa";
 
-export default function User({ fixed = false }: { fixed?: boolean }) {
+interface UserDropdownProps {
+  fixed?: boolean;
+  align?: "start" | "center" | "end";
+}
+
+export default function UserDropdown({
+  fixed = false,
+  align = "end",
+}: UserDropdownProps) {
   const { status, data: session } = useSession();
 
   const getInitials = (name: string | null | undefined) => {
-    if (!name) return "US";
-    return name
-      .split(" ")
-      .map((n) => n[0])
-      .join("")
-      .toUpperCase()
-      .slice(0, 2);
+    if (!name) return "U";
+
+    const nameParts = name.trim().split(/\s+/);
+    if (nameParts.length === 1) return nameParts[0].charAt(0).toUpperCase();
+
+    return (
+      nameParts[0].charAt(0) + nameParts[nameParts.length - 1].charAt(0)
+    ).toUpperCase();
   };
 
+  // Loading state
   if (status === "loading") {
-    return <LoadingSpinner />;
+    return (
+      <div className="flex items-center gap-2">
+        <Skeleton className="h-10 w-10 rounded-full" />
+        {fixed && <Skeleton className="h-4 w-20" />}
+      </div>
+    );
   }
 
+  // Authenticated state
   if (status === "authenticated" && session?.user) {
     const initials = getInitials(session.user.name);
-
-    const handleLogout = () => {
-      signOut({ redirect: true, callbackUrl: "/" });
-    };
+    const userRole = session.user.role as string | undefined;
 
     return (
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
-          <Button variant="ghost" className="relative h-10 w-10 rounded-full">
-            <Avatar className="h-10 w-10">
+          <Button
+            variant="ghost"
+            size="icon"
+            className={cn(
+              "relative h-10 w-10 rounded-full border border-transparent transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring",
+              fixed && "border-border",
+            )}
+          >
+            <Avatar className="h-9 w-9">
               <AvatarImage
                 src={session.user.image || undefined}
-                alt={session.user.name || ""}
+                alt={session.user.name || "User avatar"}
               />
-              <AvatarFallback>{initials}</AvatarFallback>
+              <AvatarFallback className="text-xs font-medium">
+                {initials}
+              </AvatarFallback>
             </Avatar>
+            {userRole === "ADMIN" && (
+              <span className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[10px] text-primary-foreground">
+                A
+              </span>
+            )}
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent className="w-56" align="end" forceMount>
+        <DropdownMenuContent
+          className="w-56"
+          align={align}
+          forceMount
+          sideOffset={8}
+        >
           <DropdownMenuLabel className="font-normal">
             <div className="flex flex-col space-y-1">
               <p className="text-sm font-medium leading-none">
@@ -72,38 +105,68 @@ export default function User({ fixed = false }: { fixed?: boolean }) {
               <p className="text-xs leading-none text-muted-foreground">
                 {session.user.email}
               </p>
+              {userRole && (
+                <p className="mt-1 text-xs font-medium text-primary">
+                  {userRole.charAt(0).toUpperCase() +
+                    userRole.slice(1).toLowerCase()}
+                </p>
+              )}
             </div>
           </DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuItem asChild>
-            <Link href="/dashboard">Dashboard</Link>
+            <Link
+              href="/dashboard"
+              className="flex w-full cursor-pointer items-center"
+            >
+              <LayoutDashboard className="mr-2 h-4 w-4" />
+              Dashboard
+            </Link>
           </DropdownMenuItem>
           <DropdownMenuItem asChild>
-            <Link href="/edit-profile">Edit Account</Link>
+            <Link
+              href="/edit-profile"
+              className="flex w-full cursor-pointer items-center"
+            >
+              <Settings className="mr-2 h-4 w-4" />
+              Edit Account
+            </Link>
           </DropdownMenuItem>
           <DropdownMenuItem asChild>
-            <Link href={`/profile?id=${session.user.id}`}>Account Details</Link>
+            <Link
+              href={`/profile?id=${session.user.id}`}
+              className="flex w-full cursor-pointer items-center"
+            >
+              <UserIcon className="mr-2 h-4 w-4" />
+              Account Details
+            </Link>
           </DropdownMenuItem>
           <DropdownMenuSeparator />
-
           <AlertDialog>
             <AlertDialogTrigger asChild>
-              <Button variant="destructive">
-                <span className="flex items-center gap-4">
-                  <FaPowerOff size={14} /> Log Out
-                </span>
-              </Button>
+              <DropdownMenuItem
+                className="cursor-pointer text-destructive focus:bg-destructive/10 focus:text-destructive"
+                onSelect={(e) => e.preventDefault()}
+              >
+                <LogOut className="mr-2 h-4 w-4" />
+                Log Out
+              </DropdownMenuItem>
             </AlertDialogTrigger>
             <AlertDialogContent>
               <AlertDialogHeader>
-                <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                <AlertDialogTitle>
+                  Are you sure you want to log out?
+                </AlertDialogTitle>
                 <AlertDialogDescription>
-                  This action will log you out of this browser.
+                  You will be signed out of your account on this device.
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
                 <AlertDialogCancel>Cancel</AlertDialogCancel>
-                <AlertDialogAction onClick={handleLogout}>
+                <AlertDialogAction
+                  onClick={() => signOut({ redirect: true, callbackUrl: "/" })}
+                  className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+                >
                   Log Out
                 </AlertDialogAction>
               </AlertDialogFooter>
@@ -114,9 +177,13 @@ export default function User({ fixed = false }: { fixed?: boolean }) {
     );
   }
 
+  // Unauthenticated state
   return (
     <Link href="/sign-in">
-      <Button variant={fixed ? "secondary" : "default"}>Sign In</Button>
+      <Button variant={fixed ? "secondary" : "default"} className="gap-2">
+        <UserIcon className="h-4 w-4" />
+        Sign In
+      </Button>
     </Link>
   );
 }

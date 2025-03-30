@@ -1,5 +1,5 @@
 "use client";
-import TableSkeleton from "@/components/common/skeleton/TableSkeleton";
+import TableSkeleton from "./TableSkeleton";
 import { convertDateString } from "@/components/helper/date/convertDateString";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
