@@ -17,30 +17,25 @@ export default function Insights() {
 
       <div className="grid grid-cols-2 gap-10 md:grid-cols-4 md:gap-20">
         <InsightsModel
-          number={2230}
+          end={2230}
           label="মোট শিক্ষার্থী"
           icon={FaUsers}
-          number2={2000}
+          start={2000}
         />
         <InsightsModel
-          number={120}
+          end={120}
           label="বর্তমান শিক্ষার্থী"
           icon={FaUserCheck}
-          number2={100}
+          start={100}
         />
 
         <InsightsModel
-          number={8}
+          end={8}
           label="মোট কোর্স"
           icon={FaSheetPlastic}
-          number2={0}
+          start={0}
         />
-        <InsightsModel
-          number={10}
-          label="সফলতার বছর"
-          icon={FaCrown}
-          number2={0}
-        />
+        <InsightsModel end={10} label="সফলতার বছর" icon={FaCrown} start={0} />
       </div>
     </div>
   );

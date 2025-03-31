@@ -1,6 +1,5 @@
 "use client";
 
-import { timeAgo } from "@/components/helper/date/dateago";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
@@ -31,6 +30,7 @@ import { Textarea } from "@/components/ui/textarea";
 import type { Design } from "@/utils/Interface";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
+import { formatDistanceToNow } from "date-fns";
 import { motion } from "framer-motion";
 import { MessageCircle, Send, Trash } from "lucide-react";
 import { useSession } from "next-auth/react";
@@ -152,8 +152,10 @@ export function Comments({
                           {comment.user.name}
                         </Button>
                       </Link>
-                      <p className="rounded-full bg-zinc-100 px-2 py-1 text-xs text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400">
-                        {timeAgo(comment.createdAt)}
+                      <p className="rounded-full bg-zinc-100 px-2 py-1 text-xs text-zinc-600">
+                        {formatDistanceToNow(new Date(comment.createdAt), {
+                          addSuffix: true,
+                        })}
                       </p>
                     </div>
                     <p className="mt-2 text-sm leading-relaxed text-zinc-700 dark:text-zinc-300">
