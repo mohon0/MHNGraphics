@@ -59,6 +59,52 @@ function SearchPageContent() {
 
   return (
     <div className="container mx-auto px-4 py-10">
+      {/* Header with statistics */}
+      <div className="mb-8 border-b pb-6">
+        <h1 className="mb-2 text-3xl font-bold tracking-tight">
+          {tag ? (
+            <>
+              {data.meta?.totalItems.toLocaleString()} Free {SlugToText(tag)}{" "}
+              Images
+            </>
+          ) : query ? (
+            <>
+              {data.meta?.totalItems.toLocaleString()} Free {query} Images
+            </>
+          ) : categoryName && categoryName !== "all" ? (
+            <>
+              {data.meta?.totalItems.toLocaleString()} Free{" "}
+              {SlugToText(categoryName)}
+            </>
+          ) : (
+            <>{data.meta?.totalItems.toLocaleString()} Free Stock Images</>
+          )}
+        </h1>
+        <p className="text-muted-foreground">
+          {categoryName && categoryName !== "All" ? (
+            <>
+              Browse our collection of {SlugToText(categoryName).toLowerCase()}{" "}
+              images. Select any {SlugToText(categoryName).toLowerCase()} image
+              to download for free in high resolution.
+            </>
+          ) : tag ? (
+            <>
+              Browse our collection of {SlugToText(tag).toLowerCase()} images.
+              Select any image to download for free in high resolution.
+            </>
+          ) : query ? (
+            <>
+              Browse our collection of {query.toLowerCase()} images. Select any
+              image to download for free in high resolution.
+            </>
+          ) : (
+            <>
+              Select an image to download for free. High resolution pictures
+              available for your next project.
+            </>
+          )}
+        </p>
+      </div>
       {/* Display tag filter and clear button if a tag is selected */}
       {tag && (
         <div className="mb-6 flex items-center">
