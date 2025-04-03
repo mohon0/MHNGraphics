@@ -10,10 +10,8 @@ import {
   CalendarIcon,
   Globe,
   GraduationCap,
-  ImageIcon,
   Mail,
   MapPin,
-  Users,
 } from "lucide-react";
 
 interface ProfileInfoProps {
@@ -38,59 +36,6 @@ export default function ProfileInfo({ user }: ProfileInfoProps) {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
     >
-      <Card className="mb-6 overflow-hidden">
-        <CardContent className="p-0">
-          <div className="grid grid-cols-3 divide-x divide-border">
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.1 }}
-              className="flex flex-col items-center justify-center p-4 text-center"
-            >
-              <div className="mb-1 flex items-center justify-center gap-1.5">
-                <ImageIcon className="h-5 w-5 text-primary" />
-                <span className="text-xs font-medium text-muted-foreground">
-                  Designs
-                </span>
-              </div>
-              <div className="text-lg font-bold">
-                {user._count?.design || 0}
-              </div>
-            </motion.div>
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.2 }}
-              className="flex flex-col items-center justify-center p-4 text-center"
-            >
-              <div className="mb-1 flex items-center justify-center gap-1.5">
-                <Users className="h-5 w-5 text-primary" />
-                <span className="text-xs font-medium text-muted-foreground">
-                  Followers
-                </span>
-              </div>
-              <div className="text-lg font-bold">
-                {Math.floor(Math.random() * 1000)}
-              </div>
-            </motion.div>
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.3 }}
-              className="flex flex-col items-center justify-center p-4 text-center"
-            >
-              <div className="mb-1 flex items-center justify-center gap-1.5">
-                <Award className="h-5 w-5 text-primary" />
-                <span className="text-xs font-medium text-muted-foreground">
-                  Status
-                </span>
-              </div>
-              <div className="text-lg font-bold">{user.status}</div>
-            </motion.div>
-          </div>
-        </CardContent>
-      </Card>
-
       <Card className="shadow-md">
         <CardContent className="p-6">
           <h3 className="mb-4 text-xl font-semibold">About</h3>

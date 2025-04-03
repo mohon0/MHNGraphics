@@ -18,7 +18,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { motion } from "framer-motion";
 import { MessageSquare, UserCheck, UserPlus } from "lucide-react";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { toast } from "sonner";
 import ProfileStats from "./profile-stats";
 import ShareDialog from "./share-dialog";
@@ -34,17 +34,21 @@ export default function ProfileHeader({ user, isLoading }: ProfileHeaderProps) {
   const [messageText, setMessageText] = useState("");
   const [messageSubject, setMessageSubject] = useState("");
 
-  const handleFollow = () => {
-    setIsFollowing(!isFollowing);
+  const handleFollow = useCallback(() => {
+    setIsFollowing((prev) => {
+      const newState = !prev;
 
-    if (isFollowing) {
-      toast.info(`Unfollowed ${user.name}`);
-    } else {
-      toast.success(`Following ${user.name}`);
-    }
-  };
+      if (prev) {
+        toast.info(`Unfollowed ${user.name}`);
+      } else {
+        toast.success(`Following ${user.name}`);
+      }
 
-  const handleSendMessage = () => {
+      return newState;
+    });
+  }, [user.name]);
+
+  const handleSendMessage = useCallback(() => {
     if (!messageText.trim()) {
       toast.error("Please enter a message");
       return;
@@ -57,7 +61,7 @@ export default function ProfileHeader({ user, isLoading }: ProfileHeaderProps) {
     setMessageText("");
     setMessageSubject("");
     setMessageOpen(false);
-  };
+  }, [messageText, user.name]);
 
   return (
     <div className="space-y-6">

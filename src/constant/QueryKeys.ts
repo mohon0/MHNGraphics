@@ -11,4 +11,5 @@ export const QUERY_KEYS = {
   SINGLE_DESIGN: "Single Design",
   RELATED_DESIGN: "Related Design",
   ALL_APPLICATION: "All Applications",
+  PROFILE_DESIGN: "Profile Design",
 };

@@ -1,24 +1,8 @@
 "use client";
+
 import { createSlug } from "@/components/helper/slug/CreateSlug";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import {
-  DropdownMenu,
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
-import {
-  Pagination,
-  PaginationContent,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from "@/components/ui/pagination";
 import {
   Select,
   SelectContent,
@@ -26,52 +10,191 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import type { Design } from "@/utils/Interface";
-import { Loader2, Search, SlidersHorizontal } from "lucide-react";
+import { designCategories } from "@/constant/DesignCategory";
+import { useProfileDesign } from "@/services/profile";
+import { Search } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+  useTransition,
+} from "react";
+import DesignGridSkeleton from "./design-grid-skeleton";
+import DesignPagination from "./pagination";
 
 interface DesignGridProps {
-  designs: Design[];
-  isLoading: boolean;
-  sortOption: string;
-  onSort: (option: string) => void;
-  searchTerm?: string;
-  onSearch?: (term: string) => void;
-  currentPage?: number;
-  totalPages?: number;
-  onPageChange?: (page: number) => void;
+  id: string;
 }
 
-export default function DesignGrid({
-  designs,
-  isLoading,
-  sortOption,
-  onSort,
-  searchTerm = "",
-  onSearch,
-  currentPage = 1,
-  totalPages = 1,
-  onPageChange,
-}: DesignGridProps) {
-  const [filters, setFilters] = useState({
-    showFeatured: false,
-    showRecent: true,
-    showPopular: false,
-  });
+export default function DesignGrid({ id }: DesignGridProps) {
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const [isPending, startTransition] = useTransition();
 
-  const [localSearchTerm, setLocalSearchTerm] = useState(searchTerm);
+  // Extract search parameters from URL
+  const page = Number(searchParams.get("page") || "1");
+  const searchQuery = searchParams.get("query") || "";
+  const categoryParam = searchParams.get("category") || "all";
+  const sortParam = searchParams.get("sort") || "newest";
 
+  // Local state for form inputs
+  const [localSearchTerm, setLocalSearchTerm] = useState(searchQuery);
+  const take = 10;
+
+  // Update URL with new search parameters
+  const createQueryString = useCallback(
+    (params: Record<string, string | number | null>) => {
+      const newSearchParams = new URLSearchParams(searchParams.toString());
+
+      // Always include the ID
+      newSearchParams.set("id", id);
+
+      // Update or delete each parameter
+      Object.entries(params).forEach(([key, value]) => {
+        if (value === null || value === "" || (key === "page" && value === 1)) {
+          newSearchParams.delete(key);
+        } else {
+          newSearchParams.set(key, String(value));
+        }
+      });
+
+      return newSearchParams.toString();
+    },
+    [searchParams, id],
+  );
+
+  // Update URL when filters change
+  const updateFilters = useCallback(
+    (params: Record<string, string | number | null>) => {
+      // Reset page to 1 when filters change
+      if (!params.hasOwnProperty("page")) {
+        params.page = 1;
+      }
+
+      startTransition(() => {
+        router.push(`${pathname}?${createQueryString(params)}`, {
+          scroll: false,
+        });
+      });
+    },
+    [pathname, router, createQueryString],
+  );
+
+  // Sync local search term with URL on initial load
   useEffect(() => {
-    const debounceTimer = setTimeout(() => {
-      if (onSearch && localSearchTerm !== searchTerm) {
-        onSearch(localSearchTerm);
+    setLocalSearchTerm(searchQuery);
+  }, [searchQuery]);
+
+  // Handle search input with debounce
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (localSearchTerm !== searchQuery) {
+        updateFilters({ query: localSearchTerm || null });
       }
     }, 500);
 
-    return () => clearTimeout(debounceTimer);
-  }, [localSearchTerm, onSearch, searchTerm]);
+    return () => clearTimeout(timer);
+  }, [localSearchTerm, searchQuery, updateFilters]);
+
+  // Fetch data based on URL parameters
+  const {
+    isPending: isDataLoading,
+    data,
+    isError,
+  } = useProfileDesign({
+    id,
+    page,
+    take,
+    sort: sortParam,
+    category: categoryParam !== "all" ? categoryParam : "",
+    search: searchQuery || "",
+  });
+
+  const isLoading = isPending || isDataLoading;
+
+  const totalPages = useMemo(() => {
+    return data?.pagination?.totalPages || 1;
+  }, [data?.pagination?.totalPages]);
+
+  // Handle category change
+  const handleCategoryChange = useCallback(
+    (value: string) => {
+      updateFilters({ category: value === "all" ? null : value });
+    },
+    [updateFilters],
+  );
+
+  // Handle sort change
+  const handleSortChange = useCallback(
+    (value: string) => {
+      updateFilters({ sort: value === "newest" ? null : value });
+    },
+    [updateFilters],
+  );
+
+  // Handle page change
+  const handlePageChange = useCallback(
+    (newPage: number) => {
+      updateFilters({ page: newPage });
+    },
+    [updateFilters],
+  );
+
+  // Render design grid content
+  const renderDesignGrid = useMemo(() => {
+    if (isLoading) {
+      return <DesignGridSkeleton />;
+    }
+
+    if (!data?.data?.length) {
+      return (
+        <div className="flex h-60 items-center justify-center">
+          <div className="text-center">
+            <h3 className="text-lg font-medium">No designs found</h3>
+            <p className="text-muted-foreground">
+              {searchQuery
+                ? "Try adjusting your search or filters"
+                : "This user hasn't created any designs yet"}
+            </p>
+          </div>
+        </div>
+      );
+    }
+
+    return (
+      <div className="columns-1 gap-4 space-y-4 sm:columns-2 md:columns-3">
+        {data.data.map((design: any) => (
+          <Link
+            key={design.id}
+            href={createSlug({ name: design.name, id: design.id })}
+            className="mb-4 block break-inside-avoid"
+          >
+            <div className="group relative overflow-hidden rounded-lg">
+              <Image
+                src={design.image || "/placeholder.svg"}
+                alt={design.name}
+                className="w-full object-cover transition-all duration-300 group-hover:brightness-90"
+                width={500}
+                height={500}
+                sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 33vw"
+                loading="lazy"
+              />
+              <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 to-transparent p-3 text-white opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                <h3 className="line-clamp-1 text-sm font-medium">
+                  {design.name}
+                </h3>
+              </div>
+            </div>
+          </Link>
+        ))}
+      </div>
+    );
+  }, [data, isLoading, searchQuery]);
 
   return (
     <Card className="shadow-md">
@@ -84,48 +207,37 @@ export default function DesignGrid({
               className="pl-9"
               value={localSearchTerm}
               onChange={(e) => setLocalSearchTerm(e.target.value)}
+              aria-label="Search designs"
             />
           </div>
 
           <div className="flex items-center gap-2">
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="outline" size="sm" className="gap-1.5">
-                  <SlidersHorizontal className="h-4 w-4" />
-                  <span>Filter</span>
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-56">
-                <DropdownMenuLabel>Filter Designs</DropdownMenuLabel>
-                <DropdownMenuSeparator />
-                <DropdownMenuCheckboxItem
-                  checked={filters.showFeatured}
-                  onCheckedChange={(checked) =>
-                    setFilters((prev) => ({ ...prev, showFeatured: checked }))
-                  }
-                >
-                  Featured Designs
-                </DropdownMenuCheckboxItem>
-                <DropdownMenuCheckboxItem
-                  checked={filters.showRecent}
-                  onCheckedChange={(checked) =>
-                    setFilters((prev) => ({ ...prev, showRecent: checked }))
-                  }
-                >
-                  Recent Designs
-                </DropdownMenuCheckboxItem>
-                <DropdownMenuCheckboxItem
-                  checked={filters.showPopular}
-                  onCheckedChange={(checked) =>
-                    setFilters((prev) => ({ ...prev, showPopular: checked }))
-                  }
-                >
-                  Popular Designs
-                </DropdownMenuCheckboxItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
+            <Select
+              value={categoryParam}
+              onValueChange={handleCategoryChange}
+              disabled={isLoading}
+            >
+              <SelectTrigger className="w-[180px]">
+                <SelectValue placeholder="Select category" />
+              </SelectTrigger>
+              <SelectContent align="end" className="w-56">
+                <SelectItem value="all">All</SelectItem>
+                {designCategories.map((category) => (
+                  <SelectItem
+                    key={category.value}
+                    value={category.value.toLowerCase().replace(/\s+/g, "_")}
+                  >
+                    {category.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
 
-            <Select value={sortOption} onValueChange={onSort}>
+            <Select
+              value={sortParam}
+              onValueChange={handleSortChange}
+              disabled={isLoading}
+            >
               <SelectTrigger className="w-[140px]">
                 <SelectValue placeholder="Sort by" />
               </SelectTrigger>
@@ -139,101 +251,18 @@ export default function DesignGrid({
           </div>
         </div>
 
-        {isLoading ? (
-          <div className="flex h-60 items-center justify-center">
-            <Loader2 className="h-8 w-8 animate-spin text-primary" />
-          </div>
-        ) : designs.length === 0 ? (
-          <div className="flex h-60 items-center justify-center">
-            <div className="text-center">
-              <h3 className="text-lg font-medium">No designs found</h3>
-              <p className="text-muted-foreground">
-                {localSearchTerm
-                  ? "Try adjusting your search or filters"
-                  : "This user hasn't created any designs yet"}
-              </p>
-            </div>
-          </div>
-        ) : (
-          <div className="columns-1 gap-4 space-y-4 sm:columns-2 md:columns-3">
-            {designs.map((design) => (
-              <Link
-                key={design.id}
-                href={createSlug({ name: design.name, id: design.id })}
-                className="block"
-              >
-                <div className="group relative overflow-hidden rounded-lg">
-                  <Image
-                    src={design.image || "/placeholder.svg"}
-                    alt={design.name}
-                    className="w-full object-cover transition-all duration-300 group-hover:brightness-90"
-                    width={500}
-                    height={500}
-                    sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 33vw"
-                    loading="lazy"
-                  />
-                  <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 to-transparent p-3 text-white opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-                    <h3 className="line-clamp-1 text-sm font-medium">
-                      {design.name}
-                    </h3>
-                  </div>
-                </div>
-              </Link>
-            ))}
-          </div>
-        )}
+        {renderDesignGrid}
 
-        {totalPages > 1 && onPageChange && (
+        {totalPages > 1 && (
           <div className="mt-8">
-            <Pagination>
-              <PaginationContent>
-                <PaginationItem>
-                  <PaginationPrevious
-                    href="#"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      if (currentPage > 1) onPageChange(currentPage - 1);
-                    }}
-                    className={
-                      currentPage <= 1 ? "pointer-events-none opacity-50" : ""
-                    }
-                  />
-                </PaginationItem>
-
-                {Array.from({ length: totalPages }, (_, i) => i + 1).map(
-                  (page) => (
-                    <PaginationItem key={page}>
-                      <PaginationLink
-                        href="#"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          onPageChange(page);
-                        }}
-                        isActive={page === currentPage}
-                      >
-                        {page}
-                      </PaginationLink>
-                    </PaginationItem>
-                  ),
-                )}
-
-                <PaginationItem>
-                  <PaginationNext
-                    href="#"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      if (currentPage < totalPages)
-                        onPageChange(currentPage + 1);
-                    }}
-                    className={
-                      currentPage >= totalPages
-                        ? "pointer-events-none opacity-50"
-                        : ""
-                    }
-                  />
-                </PaginationItem>
-              </PaginationContent>
-            </Pagination>
+            <DesignPagination
+              totalPages={totalPages}
+              currentPage={page}
+              id={id}
+              onPageChange={handlePageChange}
+              category={categoryParam !== "all" ? categoryParam : undefined}
+              query={searchQuery || undefined}
+            />
           </div>
         )}
       </CardContent>
