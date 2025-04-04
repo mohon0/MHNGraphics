@@ -13,9 +13,9 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { useStartConversation } from "@/hooks/use-start-conversation";
 import { motion } from "framer-motion";
 import { MessageSquare, UserCheck, UserPlus } from "lucide-react";
 import { useCallback, useState } from "react";
@@ -32,7 +32,8 @@ export default function ProfileHeader({ user, isLoading }: ProfileHeaderProps) {
   const [isFollowing, setIsFollowing] = useState(false);
   const [messageOpen, setMessageOpen] = useState(false);
   const [messageText, setMessageText] = useState("");
-  const [messageSubject, setMessageSubject] = useState("");
+  const { startConversation, isLoading: conversationLoading } =
+    useStartConversation();
 
   const handleFollow = useCallback(() => {
     setIsFollowing((prev) => {
@@ -48,20 +49,9 @@ export default function ProfileHeader({ user, isLoading }: ProfileHeaderProps) {
     });
   }, [user.name]);
 
-  const handleSendMessage = useCallback(() => {
-    if (!messageText.trim()) {
-      toast.error("Please enter a message");
-      return;
-    }
-
-    toast.success("Message sent successfully", {
-      description: `Your message has been sent to ${user.name}`,
-    });
-
-    setMessageText("");
-    setMessageSubject("");
-    setMessageOpen(false);
-  }, [messageText, user.name]);
+  const handleStartConversation = useCallback(() => {
+    startConversation(user.id);
+  }, [startConversation, user.id]);
 
   return (
     <div className="space-y-6">
@@ -149,18 +139,6 @@ export default function ProfileHeader({ user, isLoading }: ProfileHeaderProps) {
                   </DialogHeader>
                   <div className="grid gap-4 py-4">
                     <div className="grid grid-cols-4 items-center gap-4">
-                      <Label htmlFor="subject" className="text-right">
-                        Subject
-                      </Label>
-                      <Input
-                        id="subject"
-                        value={messageSubject}
-                        onChange={(e) => setMessageSubject(e.target.value)}
-                        className="col-span-3"
-                        placeholder="Project inquiry"
-                      />
-                    </div>
-                    <div className="grid grid-cols-4 items-center gap-4">
                       <Label htmlFor="message" className="text-right">
                         Message
                       </Label>
@@ -175,8 +153,16 @@ export default function ProfileHeader({ user, isLoading }: ProfileHeaderProps) {
                     </div>
                   </div>
                   <DialogFooter>
-                    <Button type="submit" onClick={handleSendMessage}>
-                      Send Message
+                    <Button
+                      variant="default"
+                      className="gap-1.5 transition-all duration-300 hover:scale-105"
+                      onClick={handleStartConversation}
+                      disabled={conversationLoading}
+                    >
+                      <MessageSquare className="h-4 w-4" />
+                      <span>
+                        {conversationLoading ? "Starting..." : "Message"}
+                      </span>
                     </Button>
                   </DialogFooter>
                 </DialogContent>
