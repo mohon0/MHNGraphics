@@ -1,22 +1,20 @@
-import type React from "react";
-import ChatSidebar from "./chat-sidebar";
-import { conversations } from "./data";
+import { authOptions } from "@/app/api/auth/[...nextauth]/Options";
+import { getServerSession } from "next-auth/next";
+import { redirect } from "next/navigation";
+import type { ReactNode } from "react";
 
-export default function MessagesLayout({
+interface MessagesLayoutProps {
+  children: ReactNode;
+}
+
+export default async function MessagesLayout({
   children,
-}: {
-  children: React.ReactNode;
-}) {
-  return (
-    <div className="flex h-screen w-full bg-background">
-      {/* Chat sidebar - always visible in the layout */}
-      <ChatSidebar
-        conversations={conversations}
-        className="w-full border-r md:w-80"
-      />
+}: MessagesLayoutProps) {
+  const session = await getServerSession(authOptions);
 
-      {/* Main content area - will be filled by page components */}
-      <div className="h-full flex-1">{children}</div>
-    </div>
-  );
+  if (!session) {
+    redirect("/login");
+  }
+
+  return <div className="h-full">{children}</div>;
 }

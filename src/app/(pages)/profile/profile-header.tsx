@@ -15,8 +15,11 @@ import {
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import axios from "axios";
 import { motion } from "framer-motion";
 import { MessageSquare, UserCheck, UserPlus } from "lucide-react";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import { useCallback, useState } from "react";
 import { toast } from "sonner";
 import ProfileStats from "./profile-stats";
@@ -31,6 +34,9 @@ export default function ProfileHeader({ user, isLoading }: ProfileHeaderProps) {
   const [isFollowing, setIsFollowing] = useState(false);
   const [messageOpen, setMessageOpen] = useState(false);
   const [messageText, setMessageText] = useState("");
+  const router = useRouter();
+  const [isSending, setIsSending] = useState(false);
+  const { data: session } = useSession();
 
   const handleFollow = useCallback(() => {
     setIsFollowing((prev) => {
@@ -45,6 +51,40 @@ export default function ProfileHeader({ user, isLoading }: ProfileHeaderProps) {
       return newState;
     });
   }, [user.name]);
+
+  const handleSendMessage = async () => {
+    if (!messageText.trim() || !user.id || !session?.user) {
+      return;
+    }
+
+    setIsSending(true);
+    try {
+      // First create or get existing conversation
+      const conversationResponse = await axios.post("/api/chat/conversations", {
+        userId: user.id,
+      });
+      const conversationId = conversationResponse.data.id;
+
+      // Then send the message
+      await axios.post(`/api/conversations/${conversationId}/messages`, {
+        content: messageText,
+      });
+
+      // Close dialog and reset form
+      setMessageOpen(false);
+      setMessageText("");
+
+      // Navigate to the conversation
+      router.push(`/messages/${conversationId}`);
+
+      toast.success(`Message sent to ${user.name}`);
+    } catch (error) {
+      console.error("Error sending message:", error);
+      toast.error("Failed to send message. Please try again.");
+    } finally {
+      setIsSending(false);
+    }
+  };
 
   return (
     <div className="space-y-6">
@@ -149,9 +189,17 @@ export default function ProfileHeader({ user, isLoading }: ProfileHeaderProps) {
                     <Button
                       variant="default"
                       className="gap-1.5 transition-all duration-300 hover:scale-105"
+                      onClick={handleSendMessage}
+                      disabled={isSending || !messageText.trim()}
                     >
-                      <MessageSquare className="h-4 w-4" />
-                      <span>Message</span>
+                      {isSending ? (
+                        <span>Sending...</span>
+                      ) : (
+                        <>
+                          <MessageSquare className="h-4 w-4" />
+                          <span>Send Message</span>
+                        </>
+                      )}
                     </Button>
                   </DialogFooter>
                 </DialogContent>
