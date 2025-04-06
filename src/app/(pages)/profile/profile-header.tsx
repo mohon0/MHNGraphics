@@ -15,7 +15,6 @@ import {
 } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { useStartConversation } from "@/hooks/use-start-conversation";
 import { motion } from "framer-motion";
 import { MessageSquare, UserCheck, UserPlus } from "lucide-react";
 import { useCallback, useState } from "react";
@@ -32,8 +31,6 @@ export default function ProfileHeader({ user, isLoading }: ProfileHeaderProps) {
   const [isFollowing, setIsFollowing] = useState(false);
   const [messageOpen, setMessageOpen] = useState(false);
   const [messageText, setMessageText] = useState("");
-  const { startConversation, isLoading: conversationLoading } =
-    useStartConversation();
 
   const handleFollow = useCallback(() => {
     setIsFollowing((prev) => {
@@ -48,10 +45,6 @@ export default function ProfileHeader({ user, isLoading }: ProfileHeaderProps) {
       return newState;
     });
   }, [user.name]);
-
-  const handleStartConversation = useCallback(() => {
-    startConversation(user.id);
-  }, [startConversation, user.id]);
 
   return (
     <div className="space-y-6">
@@ -156,13 +149,9 @@ export default function ProfileHeader({ user, isLoading }: ProfileHeaderProps) {
                     <Button
                       variant="default"
                       className="gap-1.5 transition-all duration-300 hover:scale-105"
-                      onClick={handleStartConversation}
-                      disabled={conversationLoading}
                     >
                       <MessageSquare className="h-4 w-4" />
-                      <span>
-                        {conversationLoading ? "Starting..." : "Message"}
-                      </span>
+                      <span>Message</span>
                     </Button>
                   </DialogFooter>
                 </DialogContent>

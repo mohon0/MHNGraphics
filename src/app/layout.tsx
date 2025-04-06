@@ -1,5 +1,4 @@
 import { Toaster } from "@/components/ui/sonner";
-import AblyProviderWrapper from "@/lib/ably-provider";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { Metadata } from "next";
 import { Inter } from "next/font/google";
@@ -55,9 +54,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
     <ReactQueryProvider>
       <html lang="en">
         <body className={inter.className}>
-          <SessionWrapper>
-            <AblyProviderWrapper>{children}</AblyProviderWrapper>
-          </SessionWrapper>
+          <SessionWrapper>{children}</SessionWrapper>
           <ReactQueryDevtools initialIsOpen={false} />
           <Toaster position="top-right" richColors />
         </body>

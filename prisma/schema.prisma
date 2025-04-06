@@ -59,7 +59,7 @@ model User {
   createdAt        DateTime?      @default(now())
   bio              String?
   imageId          String?
-  status           String?        @default("USER")
+  status           UserStatus? @default(USER)  
   accounts         Account[]
   sessions         Session[]
   design           Design[]
@@ -214,11 +214,7 @@ model Conversation {
   createdAt     DateTime @default(now())
   lastMessageAt DateTime @default(now())
   name          String?
-  isGroup       Boolean?
-
-  messagesIds String[]  @db.ObjectId
   messages    Message[]
-
   userIds String[] @db.ObjectId
   users   User[]   @relation(fields: [userIds], references: [id])
 }
