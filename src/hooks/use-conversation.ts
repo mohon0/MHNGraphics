@@ -20,7 +20,6 @@ export function useConversations() {
     queryKey: ["conversations"],
     queryFn: getConversations,
     enabled: !!session?.user,
-    refetchInterval: 10000, // Refetch every 10 seconds to keep conversations updated
   });
 
   const createConversationMutation = useMutation({

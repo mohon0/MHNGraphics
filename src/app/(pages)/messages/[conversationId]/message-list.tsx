@@ -42,10 +42,18 @@ export default function MessageList({ conversationId }: MessageListProps) {
         if (response.ok) {
           const data = await response.json();
 
-          // Assuming the first item in the array is the relevant conversation
-          const conversation = data[0]; // If there's more than one conversation, adjust accordingly
-          const other = conversation?.otherUser; // Extract the other user
-          setOtherUser(other || null); // If no other user, set it to null
+          // Find the specific conversation that matches the conversationId
+          const conversation = data.find(
+            (conv: any) => conv.id === conversationId,
+          );
+
+          if (conversation) {
+            const other = conversation.otherUser; // Extract the other user
+            setOtherUser(other || null); // If no other user, set it to null
+          } else {
+            setOtherUser(null);
+            console.error("Conversation not found:", conversationId);
+          }
         }
       } catch (error) {
         console.error("Failed to fetch conversation:", error);
