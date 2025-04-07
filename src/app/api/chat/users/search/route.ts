@@ -5,7 +5,7 @@ import { NextResponse } from "next/server";
 export async function GET(req: Request) {
   try {
     const session = await getServerSession();
-    if (!session?.user?.email) {
+    if (!session?.user?.id) {
       return new NextResponse("Unauthorized", { status: 401 });
     }
 
@@ -17,7 +17,7 @@ export async function GET(req: Request) {
     }
 
     const currentUser = await Prisma.user.findUnique({
-      where: { email: session.user.email },
+      where: { id: session.user.id },
     });
 
     if (!currentUser) {
@@ -42,7 +42,7 @@ export async function GET(req: Request) {
           },
         ],
         NOT: {
-          id: currentUser.id, // Exclude current user
+          id: currentUser.id,
         },
       },
       select: {

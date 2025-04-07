@@ -80,40 +80,38 @@ export async function POST(req: Request) {
   }
 }
 
-export async function GET(req: Request) {
+export async function GET() {
   try {
-    const session = await getServerSession();
-    if (!session?.user?.email) {
+    const session = (await getServerSession(authOptions)) as CustomSession;
+    const userId = session?.user?.id;
+
+    if (!userId) {
       return new NextResponse("Unauthorized", { status: 401 });
     }
 
-    const currentUser = await Prisma.user.findUnique({
-      where: { email: session.user.email },
-    });
-
-    if (!currentUser) {
-      return new NextResponse("Unauthorized", { status: 401 });
-    }
-
-    // Get all conversations for the current user
     const conversations = await Prisma.conversation.findMany({
       where: {
         participants: {
           some: {
-            userId: currentUser.id,
+            userId,
           },
         },
       },
       include: {
         participants: {
-          include: {
-            user: true,
+          select: {
+            user: {
+              select: {
+                id: true,
+                name: true,
+                image: true,
+                email: true,
+              },
+            },
           },
         },
         messages: {
-          orderBy: {
-            createdAt: "desc",
-          },
+          orderBy: { createdAt: "desc" },
           take: 1,
         },
       },
@@ -122,7 +120,21 @@ export async function GET(req: Request) {
       },
     });
 
-    return NextResponse.json(conversations);
+    // Shape response to include "otherUser" and "lastMessage"
+    const formatted = conversations.map((conv) => {
+      const otherParticipant = conv.participants.find(
+        (p) => p.user.id !== userId,
+      );
+
+      return {
+        id: conv.id,
+        otherUser: otherParticipant?.user ?? null,
+        lastMessage: conv.messages[0] ?? null,
+        updatedAt: conv.updatedAt,
+      };
+    });
+
+    return NextResponse.json(formatted);
   } catch (error) {
     console.error("CONVERSATIONS_GET", error);
     return new NextResponse("Internal Error", { status: 500 });

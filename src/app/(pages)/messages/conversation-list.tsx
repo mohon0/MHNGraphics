@@ -1,4 +1,5 @@
 "use client";
+
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -33,38 +34,33 @@ export function ConversationList() {
   return (
     <div className="space-y-2">
       {conversations.map((conversation: any) => {
-        // Find the other participant (not the current user)
-        const otherParticipant = conversation.participants.find(
-          (p: any) => p.user.email !== session?.user?.email,
-        )?.user;
-
-        if (!otherParticipant) return null;
-
-        // Get the last message if available
-        const lastMessage = conversation.messages[0];
+        const { id, otherUser, lastMessage } = conversation;
 
         return (
           <Button
-            key={conversation.id}
+            key={id}
             variant="ghost"
             className="h-auto w-full justify-start px-2 py-6"
-            onClick={() => router.push(`/messages/${conversation.id}`)}
+            onClick={() => router.push(`/messages/${id}`)}
           >
             <div className="flex w-full items-center">
               <Avatar className="mr-4 h-10 w-10">
                 <AvatarImage
-                  src={otherParticipant.image || ""}
-                  alt={otherParticipant.name || ""}
+                  src={otherUser.image || ""}
+                  alt={otherUser.name || ""}
                 />
                 <AvatarFallback>
-                  {otherParticipant.name?.charAt(0) || "U"}
+                  {otherUser.name?.charAt(0).toUpperCase() || "U"}
                 </AvatarFallback>
               </Avatar>
               <div className="flex-1 text-left">
-                <p className="font-medium">{otherParticipant.name}</p>
+                <p className="font-medium">{otherUser.name}</p>
                 {lastMessage && (
                   <div className="flex w-full items-center justify-between">
                     <p className="max-w-[150px] truncate text-sm text-muted-foreground">
+                      {session?.user?.id === lastMessage.senderId
+                        ? "You: "
+                        : ""}
                       {lastMessage.content}
                     </p>
                     <p className="text-xs text-muted-foreground">

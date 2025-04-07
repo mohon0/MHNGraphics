@@ -5,12 +5,12 @@ import { NextResponse } from "next/server";
 export async function GET() {
   try {
     const session = await getServerSession();
-    if (!session?.user?.email) {
+    if (!session?.user?.id) {
       return new NextResponse("Unauthorized", { status: 401 });
     }
 
     const client = new Ably.Rest(process.env.ABLY_API_KEY!);
-    const tokenParams = { clientId: session.user.email };
+    const tokenParams = { clientId: session.user.id };
     const tokenRequest = await client.auth.createTokenRequest(tokenParams);
 
     return NextResponse.json(tokenRequest);

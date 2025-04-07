@@ -20,25 +20,30 @@ export async function GET(req: NextRequest) {
     if (!session?.user?.id) {
       return new NextResponse("Unauthorized", { status: 401 });
     }
-    console.log("heelo");
+
     const { searchParams } = new URL(req.url);
     const conversationId = searchParams.get("conversationId");
     const cursor = searchParams.get("cursor");
-    const limit = Number.parseInt(searchParams.get("limit") || "20");
+    const limit = Number.parseInt(searchParams.get("limit") || "20", 10);
+
     if (!conversationId) {
-      return new NextResponse("Conversation id missing", { status: 400 });
+      return new NextResponse("Conversation ID is required", { status: 400 });
+    }
+
+    if (isNaN(limit) || limit <= 0) {
+      return new NextResponse("Invalid limit", { status: 400 });
     }
 
     const currentUser = await Prisma.user.findUnique({
       where: { id: session.user.id },
+      select: { id: true },
     });
 
     if (!currentUser) {
       return new NextResponse("Unauthorized", { status: 401 });
     }
 
-    // Check if user is a participant in the conversation
-    const isParticipant = await Prisma.conversationParticipant.findFirst({
+    const isParticipant = await Prisma.conversationParticipant.count({
       where: {
         conversationId,
         userId: currentUser.id,
@@ -49,8 +54,7 @@ export async function GET(req: NextRequest) {
       return new NextResponse("Forbidden", { status: 403 });
     }
 
-    // Build query for pagination
-    const queryOptions: any = {
+    const messages = await Prisma.message.findMany({
       where: {
         conversationId,
         isDeleted: false,
@@ -68,38 +72,32 @@ export async function GET(req: NextRequest) {
         createdAt: "desc",
       },
       take: limit,
-    };
-
-    if (cursor) {
-      queryOptions.cursor = {
-        id: cursor,
-      };
-      queryOptions.skip = 1; // Skip the cursor
-    }
-
-    const messages = await Prisma.message.findMany(queryOptions);
-
-    // Mark messages as read
-    await Prisma.message.updateMany({
-      where: {
-        conversationId,
-        receiverId: currentUser.id,
-        isRead: false,
-      },
-      data: {
-        isRead: true,
-        readAt: new Date(),
-      },
+      ...(cursor && {
+        cursor: { id: cursor },
+        skip: 1,
+      }),
     });
 
-    // Get the next cursor
-    let nextCursor = null;
-    if (messages.length === limit) {
-      nextCursor = messages[messages.length - 1].id;
-    }
+    // Non-blocking update
+    Prisma.message
+      .updateMany({
+        where: {
+          conversationId,
+          receiverId: currentUser.id,
+          isRead: false,
+        },
+        data: {
+          isRead: true,
+          readAt: new Date(),
+        },
+      })
+      .catch(console.error);
+
+    const nextCursor =
+      messages.length === limit ? messages[messages.length - 1].id : null;
 
     return NextResponse.json({
-      items: messages.reverse(), // Reverse to get chronological order
+      items: messages.reverse(),
       nextCursor,
     });
   } catch (error) {

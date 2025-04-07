@@ -7,12 +7,12 @@ export function useConversations() {
   const queryClient = useQueryClient();
 
   const getConversations = async () => {
-    const response = await axios.get("/api/chat/conversations");
+    const response = await axios.get("/api/chat/conversation");
     return response.data;
   };
 
   const createConversation = async (userId: string) => {
-    const response = await axios.post("/api/chat/conversations", { userId });
+    const response = await axios.post("/api/chat/conversation", { userId });
     return response.data;
   };
 
