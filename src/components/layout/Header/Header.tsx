@@ -34,10 +34,13 @@ export default function Header({
               fixed ? "text-white" : "text-black"
             }`}
           >
-           
-            <Image src={fixed ? logo : logo2} alt="logo" width={200} className="w-40" />
+            <Image
+              src={fixed ? logo : logo2}
+              alt="logo"
+              width={200}
+              className="w-40"
+            />
           </Link>
-
         </div>
 
         {/* Call to Action & Social Media for Desktop */}

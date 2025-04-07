@@ -12,6 +12,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -22,8 +23,15 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useConversations } from "@/hooks/use-conversation";
 import { cn } from "@/lib/utils";
-import { LayoutDashboard, LogOut, Settings, UserIcon } from "lucide-react";
+import {
+  LayoutDashboard,
+  LogOut,
+  MessageSquare,
+  Settings,
+  UserIcon,
+} from "lucide-react";
 import { signOut, useSession } from "next-auth/react";
 import Link from "next/link";
 
@@ -37,6 +45,26 @@ export default function UserDropdown({
   align = "end",
 }: UserDropdownProps) {
   const { status, data: session } = useSession();
+  const { conversations, isLoading } = useConversations();
+
+  // Calculate unread messages count
+  const unreadMessagesCount =
+    conversations?.reduce(
+      (
+        count: number,
+        conversation: {
+          lastMessage: { isRead: any; senderId: string | undefined };
+        },
+      ) => {
+        const hasUnreadMessages =
+          conversation.lastMessage &&
+          !conversation.lastMessage.isRead &&
+          conversation.lastMessage.senderId !== session?.user?.id;
+
+        return hasUnreadMessages ? count + 1 : count;
+      },
+      0,
+    ) || 0;
 
   const getInitials = (name: string | null | undefined) => {
     if (!name) return "U";
@@ -89,6 +117,13 @@ export default function UserDropdown({
                 A
               </span>
             )}
+
+            {/* Unread messages notification dot */}
+            {unreadMessagesCount > 0 && (
+              <span className="absolute -bottom-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-red-500 text-[10px] text-white">
+                {unreadMessagesCount > 9 ? "9+" : unreadMessagesCount}
+              </span>
+            )}
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent
@@ -121,6 +156,25 @@ export default function UserDropdown({
             >
               <LayoutDashboard className="mr-2 h-4 w-4" />
               Dashboard
+            </Link>
+          </DropdownMenuItem>
+          <DropdownMenuItem asChild>
+            <Link
+              href="/messages"
+              className="flex w-full cursor-pointer items-center justify-between"
+            >
+              <div className="flex items-center">
+                <MessageSquare className="mr-2 h-4 w-4" />
+                Messages
+              </div>
+              {unreadMessagesCount > 0 && (
+                <Badge
+                  variant="destructive"
+                  className="ml-2 h-5 min-w-[20px] rounded-full px-1"
+                >
+                  {unreadMessagesCount}
+                </Badge>
+              )}
             </Link>
           </DropdownMenuItem>
           <DropdownMenuItem asChild>

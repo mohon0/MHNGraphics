@@ -1,6 +1,7 @@
 "use client";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
 import { usePresence } from "@/hooks/use-presence";
 import { cn } from "@/lib/utils";
 import { formatDistanceToNow } from "date-fns";
@@ -76,9 +77,9 @@ export function ConversationItem({
       onClick={onClick}
     >
       <div className="relative">
-        <Avatar>
+        <Avatar className="h-12 w-12 border shadow-sm">
           <AvatarImage src={otherUser.image || ""} alt={otherUser.name || ""} />
-          <AvatarFallback>
+          <AvatarFallback className="bg-primary/10 text-primary">
             {otherUser.name?.charAt(0).toUpperCase() || "U"}
           </AvatarFallback>
         </Avatar>
@@ -108,8 +109,9 @@ export function ConversationItem({
         <div className="flex items-center justify-between">
           <p
             className={cn(
-              "max-w-[140px] truncate text-sm",
+              "truncate text-sm",
               isUnread ? "text-foreground" : "text-muted-foreground",
+              "max-w-[180px] sm:max-w-[140px]", // Wider on mobile
             )}
           >
             {lastMessage
@@ -119,9 +121,12 @@ export function ConversationItem({
                 : "No messages yet"}
           </p>
           {isUnread && (
-            <span className="flex h-5 min-w-[20px] items-center justify-center rounded-full bg-primary text-xs text-primary-foreground">
+            <Badge
+              variant="default"
+              className="h-5 min-w-[20px] rounded-full px-1.5"
+            >
               1
-            </span>
+            </Badge>
           )}
         </div>
       </div>

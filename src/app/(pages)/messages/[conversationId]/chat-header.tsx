@@ -10,6 +10,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useIsMobile } from "@/hooks/use-mobile";
 import { usePresence } from "@/hooks/use-presence";
 import { ArrowLeft, MoreHorizontal, Phone, Search, Video } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -31,6 +32,7 @@ export function ChatHeader({ user, isLoading = false }: ChatHeaderProps) {
   const { getUserStatus } = usePresence();
   const [isOnline, setIsOnline] = useState(false);
   const [lastSeen, setLastSeen] = useState<Date | null>(null);
+  const isMobile = useIsMobile();
 
   // Fetch and subscribe to user's online status
   useEffect(() => {
@@ -55,7 +57,7 @@ export function ChatHeader({ user, isLoading = false }: ChatHeaderProps) {
 
   if (isLoading) {
     return (
-      <div className="flex h-16 items-center justify-between border-b px-4">
+      <div className="flex h-16 items-center justify-between border-b px-4 shadow-sm">
         <div className="flex items-center gap-3">
           <Skeleton className="h-10 w-10 rounded-full" />
           <div>
@@ -69,8 +71,12 @@ export function ChatHeader({ user, isLoading = false }: ChatHeaderProps) {
 
   if (!user) {
     return (
-      <div className="flex h-16 items-center justify-between border-b px-4">
-        <Button variant="ghost" size="icon" onClick={() => router.back()}>
+      <div className="flex h-16 items-center justify-between border-b px-4 shadow-sm">
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={() => router.push("/messages")}
+        >
           <ArrowLeft className="h-5 w-5" />
         </Button>
         <div className="text-sm text-muted-foreground">No user selected</div>
@@ -84,10 +90,11 @@ export function ChatHeader({ user, isLoading = false }: ChatHeaderProps) {
         <Button
           variant="ghost"
           size="icon"
+          onClick={() => router.push("/messages")}
           className="md:hidden"
-          onClick={() => router.back()}
         >
           <ArrowLeft className="h-5 w-5" />
+          <span className="sr-only">Back to messages</span>
         </Button>
         <Avatar className="h-10 w-10">
           <AvatarImage src={user.image || ""} alt={user.name || ""} />
@@ -101,11 +108,19 @@ export function ChatHeader({ user, isLoading = false }: ChatHeaderProps) {
         </div>
       </div>
       <div className="flex items-center gap-1">
-        <Button variant="ghost" size="icon" className="rounded-full">
+        <Button
+          variant="ghost"
+          size="icon"
+          className="hidden rounded-full sm:flex"
+        >
           <Phone className="h-5 w-5" />
           <span className="sr-only">Call</span>
         </Button>
-        <Button variant="ghost" size="icon" className="rounded-full">
+        <Button
+          variant="ghost"
+          size="icon"
+          className="hidden rounded-full sm:flex"
+        >
           <Video className="h-5 w-5" />
           <span className="sr-only">Video</span>
         </Button>
@@ -123,6 +138,18 @@ export function ChatHeader({ user, isLoading = false }: ChatHeaderProps) {
           <DropdownMenuContent align="end">
             <DropdownMenuItem>View profile</DropdownMenuItem>
             <DropdownMenuItem>Mute notifications</DropdownMenuItem>
+            {isMobile && (
+              <>
+                <DropdownMenuItem>
+                  <Phone className="mr-2 h-4 w-4" />
+                  Call
+                </DropdownMenuItem>
+                <DropdownMenuItem>
+                  <Video className="mr-2 h-4 w-4" />
+                  Video call
+                </DropdownMenuItem>
+              </>
+            )}
             <DropdownMenuSeparator />
             <DropdownMenuItem className="text-destructive">
               Block user

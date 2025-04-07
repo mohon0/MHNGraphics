@@ -6,7 +6,7 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useConversations } from "@/hooks/use-conversation";
 import { cn } from "@/lib/utils";
-import { MessageSquarePlus, Search } from "lucide-react";
+import { ArrowLeft, MessageSquarePlus, Search } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
 import { ConversationItem } from "./conversation-item";
@@ -16,6 +16,7 @@ export default function Sidebar({ className }: { className?: string }) {
   const [searchQuery, setSearchQuery] = useState("");
   const router = useRouter();
   const params = useParams();
+
   const currentConversationId = params?.conversationId as string;
   const { conversations, isLoading } = useConversations();
 
@@ -41,7 +42,13 @@ export default function Sidebar({ className }: { className?: string }) {
   return (
     <div className={cn("flex h-full flex-col", className)}>
       <div className="border-b p-4">
-        <h2 className="mb-4 text-xl font-bold">Messages</h2>
+        <div className="mb-4 flex items-center gap-4">
+          <Button variant="ghost" size="icon" onClick={() => router.push("/")}>
+            <ArrowLeft className="h-5 w-5" />
+            <span className="sr-only">Back to home</span>
+          </Button>
+          <h2 className="text-xl font-bold">Messages</h2>
+        </div>
         <div className="relative">
           <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
           <Input

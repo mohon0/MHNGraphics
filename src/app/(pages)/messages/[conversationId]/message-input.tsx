@@ -9,6 +9,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Textarea } from "@/components/ui/textarea";
+import { useIsMobile } from "@/hooks/use-mobile";
 import { cn } from "@/lib/utils";
 import data from "@emoji-mart/data";
 import Picker from "@emoji-mart/react";
@@ -33,6 +34,7 @@ export function MessageInput({
   const [message, setMessage] = useState("");
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const typingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const isMobile = useIsMobile();
 
   const handleSend = () => {
     if (!message.trim() || isSending || disabled) return;
@@ -56,7 +58,7 @@ export function MessageInput({
     // Auto-resize textarea
     if (textareaRef.current) {
       textareaRef.current.style.height = "auto";
-      textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
+      textareaRef.current.style.height = `${Math.min(textareaRef.current.scrollHeight, 150)}px`;
     }
 
     // Handle typing indicator
@@ -78,20 +80,21 @@ export function MessageInput({
   };
 
   useEffect(() => {
+    const timeout = typingTimeoutRef.current;
     return () => {
-      if (typingTimeoutRef.current) {
-        clearTimeout(typingTimeoutRef.current);
+      if (timeout) {
+        clearTimeout(timeout);
       }
     };
   }, []);
 
   return (
-    <div className="flex items-end gap-2 border-t bg-background p-4">
+    <div className="flex items-end gap-2 border-t bg-background p-3 sm:p-4">
       <Button
         type="button"
         variant="ghost"
         size="icon"
-        className="shrink-0 rounded-full"
+        className="hidden shrink-0 rounded-full sm:flex"
       >
         <Paperclip className="h-5 w-5" />
         <span className="sr-only">Attach</span>
@@ -105,7 +108,7 @@ export function MessageInput({
           onKeyDown={handleKeyDown}
           placeholder={placeholder}
           className={cn(
-            "max-h-32 min-h-10 w-full resize-none rounded-2xl py-3 pr-12 text-base",
+            "max-h-32 min-h-10 w-full resize-none rounded-2xl py-3 pr-12 text-sm sm:text-base",
             disabled && "opacity-50",
           )}
           disabled={disabled}
@@ -124,7 +127,7 @@ export function MessageInput({
               </Button>
             </PopoverTrigger>
             <PopoverContent
-              side="top"
+              side={isMobile ? "top" : "top"}
               align="end"
               className="w-auto border-none p-0"
             >
@@ -133,6 +136,9 @@ export function MessageInput({
                 onEmojiSelect={addEmoji}
                 theme="light"
                 previewPosition="none"
+                skinTonePosition="none"
+                emojiSize={isMobile ? 20 : 24}
+                emojiButtonSize={isMobile ? 30 : 36}
               />
             </PopoverContent>
           </Popover>

@@ -7,7 +7,7 @@ import { useAbly } from "@/hooks/useAbly";
 import { useQueryClient } from "@tanstack/react-query";
 import { AnimatePresence, motion } from "framer-motion";
 import { useSession } from "next-auth/react";
-import { JSX, useEffect, useRef, useState } from "react";
+import { type JSX, useEffect, useRef, useState } from "react";
 import { EmptyState } from "../empty-state";
 import { ChatHeader } from "./chat-header";
 import { MessageBubble } from "./message-bubble";
@@ -26,8 +26,11 @@ export default function MessageList({ conversationId }: MessageListProps) {
   const { ably, publishTypingIndicator, subscribeToTyping } = useAbly();
   const queryClient = useQueryClient();
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const scrollAreaRef = useRef<HTMLDivElement>(null);
   const [isOtherUserTyping, setIsOtherUserTyping] = useState(false);
   const [otherUser, setOtherUser] = useState<any>(null);
+  const [shouldAutoScroll, setShouldAutoScroll] = useState(true);
+  const prevMessagesLengthRef = useRef(0);
 
   // Get conversation details to show in header
   useEffect(() => {
@@ -38,12 +41,10 @@ export default function MessageList({ conversationId }: MessageListProps) {
         );
         if (response.ok) {
           const data = await response.json();
-          console.log(data);
 
           // Assuming the first item in the array is the relevant conversation
           const conversation = data[0]; // If there's more than one conversation, adjust accordingly
           const other = conversation?.otherUser; // Extract the other user
-          console.log("Other User:", other);
           setOtherUser(other || null); // If no other user, set it to null
         }
       } catch (error) {
@@ -56,14 +57,66 @@ export default function MessageList({ conversationId }: MessageListProps) {
     }
   }, [conversationId, session?.user?.id]);
 
+  // Detect scroll position to determine if auto-scroll should happen
+  useEffect(() => {
+    const handleScroll = () => {
+      if (!scrollAreaRef.current) return;
+
+      const { scrollTop, scrollHeight, clientHeight } = scrollAreaRef.current;
+      const scrollPosition = scrollTop + clientHeight;
+
+      // If user is scrolled near the bottom (within 100px), enable auto-scroll
+      const isNearBottom = scrollHeight - scrollPosition < 100;
+      setShouldAutoScroll(isNearBottom);
+    };
+
+    const scrollAreaElement = scrollAreaRef.current;
+    if (scrollAreaElement) {
+      scrollAreaElement.addEventListener("scroll", handleScroll);
+      return () =>
+        scrollAreaElement.removeEventListener("scroll", handleScroll);
+    }
+  }, []);
+
+  // Improved scroll to bottom function
+  const scrollToBottom = (behavior: ScrollBehavior = "smooth") => {
+    if (messagesEndRef.current) {
+      messagesEndRef.current.scrollIntoView({
+        behavior,
+        block: "end",
+      });
+    }
+  };
+
   // Scroll to bottom when messages change
   useEffect(() => {
-    if (messages.length) {
+    if (!messages.length) return;
+
+    const currentLength = messages.length;
+    const prevLength = prevMessagesLengthRef.current;
+
+    // Check if new messages were added
+    if (currentLength > prevLength) {
+      // Check if the new message is from the current user
+      const lastMessage = messages[messages.length - 1];
+      const isOwnMessage = lastMessage?.sender?.id === userId;
+
+      // Always scroll for own messages, or if auto-scroll is enabled
+      if (isOwnMessage || shouldAutoScroll) {
+        // Use a short timeout to ensure DOM is updated
+        setTimeout(() => {
+          scrollToBottom(isOwnMessage ? "auto" : "smooth");
+        }, 100);
+      }
+    } else if (prevLength === 0 && currentLength > 0) {
+      // Initial load - scroll immediately without animation
       setTimeout(() => {
-        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+        scrollToBottom("auto");
       }, 100);
     }
-  }, [messages]);
+
+    prevMessagesLengthRef.current = currentLength;
+  }, [messages, userId, shouldAutoScroll]);
 
   // Mark messages as read when they appear in the view
   useEffect(() => {
@@ -76,7 +129,7 @@ export default function MessageList({ conversationId }: MessageListProps) {
     if (unreadMessages.length > 0) {
       markAsRead(unreadMessages);
     }
-  }, [messages, session?.user?.id, markAsRead]);
+  }, [messages, session?.user?.id, markAsRead, userId]);
 
   // Subscribe to real-time updates
   useEffect(() => {
@@ -136,6 +189,9 @@ export default function MessageList({ conversationId }: MessageListProps) {
 
     // Indicate that user stopped typing
     publishTypingIndicator(conversationId, false);
+
+    // Force scroll to bottom when sending a message
+    setShouldAutoScroll(true);
   };
 
   const handleTyping = () => {
@@ -170,7 +226,6 @@ export default function MessageList({ conversationId }: MessageListProps) {
 
     messagesGroup.forEach((message, index) => {
       const isSelf = message.sender.id === session?.user?.id;
-      const prevMessage = index > 0 ? messagesGroup[index - 1] : null;
       const nextMessage =
         index < messagesGroup.length - 1 ? messagesGroup[index + 1] : null;
 
@@ -219,7 +274,11 @@ export default function MessageList({ conversationId }: MessageListProps) {
     <div className="flex h-full flex-col">
       <ChatHeader user={otherUser} />
 
-      <ScrollArea className="flex-1 p-4">
+      <ScrollArea
+        className="flex-1 px-2 py-4 sm:px-4"
+        scrollHideDelay={100}
+        ref={scrollAreaRef}
+      >
         {messages.length === 0 ? (
           <EmptyState
             title="No messages yet"
@@ -227,7 +286,7 @@ export default function MessageList({ conversationId }: MessageListProps) {
             showNewChatButton={false}
           />
         ) : (
-          <div className="flex flex-col gap-6">
+          <div className="flex flex-col gap-4 sm:gap-6">
             {Object.entries(messageGroups).map(([date, messagesGroup]) => (
               <div key={date} className="space-y-2">
                 <div className="relative flex items-center py-2">
@@ -260,7 +319,7 @@ export default function MessageList({ conversationId }: MessageListProps) {
           )}
         </AnimatePresence>
 
-        <div ref={messagesEndRef} />
+        <div ref={messagesEndRef} className="h-1" />
       </ScrollArea>
 
       <MessageInput

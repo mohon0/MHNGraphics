@@ -34,8 +34,9 @@ export function MessageBubble({
   return (
     <div
       className={cn(
-        "group flex w-full max-w-[85%] gap-2",
+        "group flex w-full gap-2",
         isSelf ? "ml-auto flex-row-reverse" : "",
+        isSelf ? "max-w-[90%] sm:max-w-[75%]" : "max-w-[90%] sm:max-w-[75%]",
       )}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
@@ -55,18 +56,20 @@ export function MessageBubble({
       )}
       <div
         className={cn(
-          "relative rounded-2xl px-4 py-2",
+          "relative rounded-2xl px-4 py-2.5 shadow-sm",
           isSelf
             ? "rounded-br-sm bg-primary text-primary-foreground"
             : "rounded-bl-sm bg-muted",
         )}
       >
-        <p className="whitespace-pre-wrap break-words">{message.content}</p>
+        <p className="whitespace-pre-wrap break-words text-sm sm:text-base">
+          {message.content}
+        </p>
         <div
           className={cn(
-            "mt-1 flex items-center gap-1 text-xs opacity-0 transition-opacity duration-200",
+            "mt-1 flex items-center gap-1 text-xs opacity-100 md:opacity-0 transition-opacity duration-200",
             isSelf ? "text-primary-foreground/70" : "text-muted-foreground",
-            (isHovered || isLast) && "opacity-100",
+            (isHovered || isLast) && "md:opacity-100",
           )}
         >
           <span>{format(new Date(message.createdAt), "h:mm a")}</span>
