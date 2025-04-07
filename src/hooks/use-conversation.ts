@@ -20,12 +20,14 @@ export function useConversations() {
     queryKey: ["conversations"],
     queryFn: getConversations,
     enabled: !!session?.user,
+    refetchInterval: 10000, // Refetch every 10 seconds to keep conversations updated
   });
 
   const createConversationMutation = useMutation({
     mutationFn: createConversation,
-    onSuccess: () => {
+    onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ["conversations"] });
+      return data;
     },
   });
 
@@ -45,10 +47,10 @@ export function useConversationMessages(conversationId: string) {
   const getMessages = async ({ pageParam = null }) => {
     const params = new URLSearchParams();
     if (pageParam) params.append("cursor", pageParam);
-    params.append("limit", "20");
+    params.append("limit", "30");
 
     const response = await axios.get(
-      `/api/chat/message?conversationId=${conversationId}`,
+      `/api/chat/message?conversationId=${conversationId}&${params.toString()}`,
     );
     return response.data;
   };
@@ -57,6 +59,16 @@ export function useConversationMessages(conversationId: string) {
     const response = await axios.post(
       `/api/chat/message?conversationId=${conversationId}`,
       { content },
+    );
+    return response.data;
+  };
+
+  const markAsRead = async (messageIds: string[]) => {
+    if (!messageIds.length) return;
+
+    const response = await axios.post(
+      `/api/chat/message/read?conversationId=${conversationId}`,
+      { messageIds },
     );
     return response.data;
   };
@@ -77,6 +89,30 @@ export function useConversationMessages(conversationId: string) {
           items: [...oldData.items, newMessage],
         };
       });
+
+      // Also update the conversation list to show the latest message
+      queryClient.invalidateQueries({ queryKey: ["conversations"] });
+    },
+  });
+
+  const markAsReadMutation = useMutation({
+    mutationFn: markAsRead,
+    onSuccess: () => {
+      // Update the messages to show as read
+      queryClient.setQueryData(["messages", conversationId], (oldData: any) => {
+        if (!oldData) return oldData;
+
+        return {
+          ...oldData,
+          items: oldData.items.map((message: any) => ({
+            ...message,
+            isRead: true,
+          })),
+        };
+      });
+
+      // Also update the conversation list to remove unread indicators
+      queryClient.invalidateQueries({ queryKey: ["conversations"] });
     },
   });
 
@@ -87,5 +123,6 @@ export function useConversationMessages(conversationId: string) {
     error: messagesQuery.error,
     sendMessage: sendMessageMutation.mutate,
     isSending: sendMessageMutation.isPending,
+    markAsRead: markAsReadMutation.mutate,
   };
 }

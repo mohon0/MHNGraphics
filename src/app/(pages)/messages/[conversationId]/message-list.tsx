@@ -1,40 +1,88 @@
 "use client";
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useConversationMessages } from "@/hooks/use-conversation";
 import { useAbly } from "@/hooks/useAbly";
-import { cn } from "@/lib/utils";
 import { useQueryClient } from "@tanstack/react-query";
-import { format } from "date-fns";
-import { MoreVertical, Paperclip, Search, Send, Smile } from "lucide-react";
+import { AnimatePresence, motion } from "framer-motion";
 import { useSession } from "next-auth/react";
-import { useEffect, useRef, useState } from "react";
+import { JSX, useEffect, useRef, useState } from "react";
+import { EmptyState } from "../empty-state";
+import { ChatHeader } from "./chat-header";
+import { MessageBubble } from "./message-bubble";
+import { MessageInput } from "./message-input";
+import { TypingIndicator } from "./typing-indicator";
 
 interface MessageListProps {
   conversationId: string;
 }
 
-export default function ConversationPage({ conversationId }: MessageListProps) {
+export default function MessageList({ conversationId }: MessageListProps) {
   const { data: session } = useSession();
-  const { messages, isLoading } = useConversationMessages(conversationId);
-  const { ably } = useAbly();
+  const userId = session?.user?.id;
+  const { messages, isLoading, sendMessage, isSending, markAsRead } =
+    useConversationMessages(conversationId);
+  const { ably, publishTypingIndicator, subscribeToTyping } = useAbly();
   const queryClient = useQueryClient();
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const { sendMessage, isSending } = useConversationMessages(conversationId);
+  const [isOtherUserTyping, setIsOtherUserTyping] = useState(false);
+  const [otherUser, setOtherUser] = useState<any>(null);
 
-  const [message, setMessage] = useState("");
-
+  // Get conversation details to show in header
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    const fetchConversation = async () => {
+      try {
+        const response = await fetch(
+          `/api/chat/conversation?conversationId=${conversationId}`,
+        );
+        if (response.ok) {
+          const data = await response.json();
+          console.log(data);
+
+          // Assuming the first item in the array is the relevant conversation
+          const conversation = data[0]; // If there's more than one conversation, adjust accordingly
+          const other = conversation?.otherUser; // Extract the other user
+          console.log("Other User:", other);
+          setOtherUser(other || null); // If no other user, set it to null
+        }
+      } catch (error) {
+        console.error("Failed to fetch conversation:", error);
+      }
+    };
+
+    if (conversationId && session?.user?.id) {
+      fetchConversation();
+    }
+  }, [conversationId, session?.user?.id]);
+
+  // Scroll to bottom when messages change
+  useEffect(() => {
+    if (messages.length) {
+      setTimeout(() => {
+        messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+      }, 100);
+    }
   }, [messages]);
 
+  // Mark messages as read when they appear in the view
+  useEffect(() => {
+    if (!session?.user?.id || !messages.length) return;
+
+    const unreadMessages = messages
+      .filter((msg: any) => !msg.isRead && msg.sender.id !== userId)
+      .map((msg: any) => msg.id);
+
+    if (unreadMessages.length > 0) {
+      markAsRead(unreadMessages);
+    }
+  }, [messages, session?.user?.id, markAsRead]);
+
+  // Subscribe to real-time updates
   useEffect(() => {
     if (!ably || !conversationId) return;
 
+    // Subscribe to new messages
     const channel = ably.channels.get(`conversation:${conversationId}`);
 
     const onMessage = (message: any) => {
@@ -51,158 +99,175 @@ export default function ConversationPage({ conversationId }: MessageListProps) {
             };
           },
         );
+
+        // Mark the message as read immediately if the chat is open
+        markAsRead([newMessage.id]);
       }
     };
 
     channel.subscribe("new-message", onMessage);
+
+    // Subscribe to typing indicators
+    const unsubscribeTyping = subscribeToTyping(
+      conversationId,
+      (isTyping, userId) => {
+        if (userId !== session?.user?.id) {
+          setIsOtherUserTyping(isTyping);
+        }
+      },
+    );
+
     return () => {
       channel.unsubscribe("new-message", onMessage);
+      unsubscribeTyping();
     };
-  }, [ably, conversationId, session?.user?.id, queryClient]);
+  }, [
+    ably,
+    conversationId,
+    session?.user?.id,
+    queryClient,
+    markAsRead,
+    subscribeToTyping,
+  ]);
 
-  const handleSendMessage = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!message.trim()) return;
+  const handleSendMessage = (content: string) => {
+    if (!content.trim()) return;
+    sendMessage(content);
 
-    sendMessage(message);
-    setMessage("");
+    // Indicate that user stopped typing
+    publishTypingIndicator(conversationId, false);
   };
+
+  const handleTyping = () => {
+    publishTypingIndicator(conversationId, true);
+
+    // Automatically set typing to false after 3 seconds of inactivity
+    setTimeout(() => {
+      publishTypingIndicator(conversationId, false);
+    }, 3000);
+  };
+
+  // Group messages by date
+  const groupMessagesByDate = () => {
+    const groups: Record<string, any[]> = {};
+
+    messages.forEach((message: any) => {
+      const date = new Date(message.createdAt).toLocaleDateString();
+      if (!groups[date]) {
+        groups[date] = [];
+      }
+      groups[date].push(message);
+    });
+
+    return groups;
+  };
+
+  const messageGroups = groupMessagesByDate();
+
+  // Group consecutive messages from the same sender
+  const renderMessages = (messagesGroup: any[]) => {
+    const result: JSX.Element[] = [];
+
+    messagesGroup.forEach((message, index) => {
+      const isSelf = message.sender.id === session?.user?.id;
+      const prevMessage = index > 0 ? messagesGroup[index - 1] : null;
+      const nextMessage =
+        index < messagesGroup.length - 1 ? messagesGroup[index + 1] : null;
+
+      // Show avatar only for the last message in a sequence from the same sender
+      const showAvatar =
+        !nextMessage || nextMessage.sender.id !== message.sender.id;
+      const isLast = index === messagesGroup.length - 1;
+
+      result.push(
+        <motion.div
+          key={message.id}
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.2 }}
+          className="mb-2"
+        >
+          <MessageBubble
+            message={message}
+            isSelf={isSelf}
+            showAvatar={showAvatar}
+            isLast={isLast}
+          />
+        </motion.div>,
+      );
+    });
+
+    return result;
+  };
+
+  if (isLoading) {
+    return (
+      <div className="flex h-full flex-col">
+        <ChatHeader isLoading />
+        <div className="flex-1 p-4">
+          <div className="space-y-4">
+            <Skeleton className="h-16 w-3/4" />
+            <Skeleton className="ml-auto h-16 w-3/4" />
+            <Skeleton className="h-16 w-3/4" />
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex h-full flex-col">
-      <div className="flex items-center justify-between border-b p-4">
-        {/* <div className="flex items-center gap-3">
-          <Avatar>
-            <AvatarImage src={conversation.avatar} alt={conversation.name} />
-            <AvatarFallback>
-              {conversation.name
-                .split(" ")
-                .map((n) => n[0])
-                .join("")}
-            </AvatarFallback>
-          </Avatar>
-          <div>
-            <div className="font-medium">{conversation.name}</div>
-            <div className="flex items-center gap-1 text-xs text-muted-foreground">
-              {conversation.online ? (
-                <>
-                  <span className="h-2 w-2 rounded-full bg-green-500"></span>
-                  Online
-                </>
-              ) : (
-                "Offline"
-              )}
-            </div>
-          </div>
-        </div> */}
-        <div className="flex items-center gap-1">
-          <Button variant="ghost" size="icon">
-            <Search className="h-4 w-4" />
-            <span className="sr-only">Search</span>
-          </Button>
-          <Button variant="ghost" size="icon">
-            <MoreVertical className="h-4 w-4" />
-            <span className="sr-only">More</span>
-          </Button>
-        </div>
-      </div>
-      {/* Messages */}
+      <ChatHeader user={otherUser} />
+
       <ScrollArea className="flex-1 p-4">
-        <div className="flex flex-col gap-4">
-          {isLoading ? (
-            <>
-              <Skeleton className="h-16 w-3/4" />
-              <Skeleton className="ml-auto h-16 w-3/4" />
-              <Skeleton className="h-16 w-3/4" />
-            </>
-          ) : messages.length === 0 ? (
-            <p className="text-center text-muted-foreground">
-              No messages yet. Start the conversation!
-            </p>
-          ) : (
-            messages.map((msg: any) => {
-              const isSelf = msg.sender.id === session?.user?.id;
-              return (
-                <div
-                  key={msg.id}
-                  className={cn(
-                    "flex max-w-[80%] gap-2",
-                    isSelf ? "flex-row-reverse self-end" : "self-start",
-                  )}
-                >
-                  {!isSelf && (
-                    <Avatar className="h-8 w-8">
-                      <AvatarImage
-                        src={msg.sender.image || ""}
-                        alt={msg.sender.name || ""}
-                      />
-                      <AvatarFallback>
-                        {msg.sender.name?.charAt(0).toUpperCase() || "U"}
-                      </AvatarFallback>
-                    </Avatar>
-                  )}
-                  <div
-                    className={cn(
-                      "rounded-lg p-3",
-                      isSelf
-                        ? "bg-primary text-primary-foreground"
-                        : "bg-muted",
-                    )}
-                  >
-                    <p>{msg.content}</p>
-                    <div
-                      className={cn(
-                        "mt-1 text-xs",
-                        isSelf
-                          ? "text-primary-foreground/70"
-                          : "text-muted-foreground",
-                      )}
-                    >
-                      {format(new Date(msg.createdAt), "p")}
-                    </div>
-                  </div>
+        {messages.length === 0 ? (
+          <EmptyState
+            title="No messages yet"
+            description="Start the conversation by sending a message."
+            showNewChatButton={false}
+          />
+        ) : (
+          <div className="flex flex-col gap-6">
+            {Object.entries(messageGroups).map(([date, messagesGroup]) => (
+              <div key={date} className="space-y-2">
+                <div className="relative flex items-center py-2">
+                  <div className="flex-grow border-t border-border"></div>
+                  <span className="mx-4 flex-shrink-0 text-xs text-muted-foreground">
+                    {new Date(date).toLocaleDateString(undefined, {
+                      weekday: "long",
+                      month: "short",
+                      day: "numeric",
+                    })}
+                  </span>
+                  <div className="flex-grow border-t border-border"></div>
                 </div>
-              );
-            })
+                {renderMessages(messagesGroup)}
+              </div>
+            ))}
+          </div>
+        )}
+
+        <AnimatePresence>
+          {isOtherUserTyping && (
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 10 }}
+              className="mt-2"
+            >
+              <TypingIndicator isTyping={isOtherUserTyping} />
+            </motion.div>
           )}
-          <div ref={messagesEndRef} />
-        </div>
+        </AnimatePresence>
+
+        <div ref={messagesEndRef} />
       </ScrollArea>
 
-      {/* Message Input */}
-      <div className="border-t p-4">
-        <form onSubmit={handleSendMessage} className="flex gap-2">
-          <Button
-            type="button"
-            variant="ghost"
-            size="icon"
-            className="shrink-0"
-            disabled={isSending || !message.trim()}
-          >
-            <Paperclip className="h-5 w-5" />
-            <span className="sr-only">Attach</span>
-          </Button>
-          <Input
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
-            placeholder="Type a message..."
-            className="flex-1"
-          />
-          <Button
-            type="button"
-            variant="ghost"
-            size="icon"
-            className="shrink-0"
-          >
-            <Smile className="h-5 w-5" />
-            <span className="sr-only">Emoji</span>
-          </Button>
-          <Button type="submit" size="icon" className="shrink-0">
-            <Send className="h-4 w-4" />
-            <span className="sr-only">Send</span>
-          </Button>
-        </form>
-      </div>
+      <MessageInput
+        onSend={handleSendMessage}
+        isSending={isSending}
+        onTyping={handleTyping}
+      />
     </div>
   );
 }

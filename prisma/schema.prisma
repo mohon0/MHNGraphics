@@ -47,28 +47,30 @@ model Session {
 }
 
 model User {
-  id               String                    @id @default(auto()) @map("_id") @db.ObjectId
-  name             String?
-  email            String?                   @unique
-  phoneNumber      String?                   @unique
-  googleId         String?
-  password         String?
-  emailVerified    DateTime?
-  image            String?
-  verificationCode String?
-  createdAt        DateTime?                 @default(now())
-  bio              String?
-  imageId          String?
-  status           UserStatus?               @default(USER)
-  accounts         Account[]
-  sessions         Session[]
-  design           Design[]
-  likes            Like[]
-  comments         Comment[]
-  applications     Application[]
-  sentMessages     Message[]                 @relation("SentMessages")
-  receivedMessages Message[]                 @relation("ReceivedMessages")
-  conversations    ConversationParticipant[]
+  id                       String                    @id @default(auto()) @map("_id") @db.ObjectId
+  name                     String?
+  email                    String?                   @unique
+  phoneNumber              String?                   @unique
+  googleId                 String?
+  password                 String?
+  emailVerified            DateTime?
+  image                    String?
+  verificationCode         String?
+  createdAt                DateTime?                 @default(now())
+  bio                      String?
+  imageId                  String?
+  status                   UserStatus?               @default(USER)
+  accounts                 Account[]
+  sessions                 Session[]
+  design                   Design[]
+  likes                    Like[]
+  comments                 Comment[]
+  applications             Application[]
+  conversationParticipants ConversationParticipant[]
+  sentMessages             Message[]                 @relation("SentMessages")
+  receivedMessages         Message[]                 @relation("ReceivedMessages")
+  isOnline                 Boolean                   @default(false)
+  lastSeen                 DateTime?
 
   @@index([email, phoneNumber], name: "unique_email_phone_number")
 }
@@ -208,53 +210,36 @@ model Notice {
 }
 
 model Conversation {
-  id        String    @id @default(auto()) @map("_id") @db.ObjectId
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  messages  Message[]
-
-  // Remove the direct User[] relation and use participants instead
+  id           String                    @id @default(auto()) @map("_id") @db.ObjectId
+  createdAt    DateTime                  @default(now())
+  updatedAt    DateTime                  @updatedAt
   participants ConversationParticipant[]
-
-  @@index([id])
+  messages     Message[]
 }
 
 model ConversationParticipant {
-  id             String   @id @default(auto()) @map("_id") @db.ObjectId
-  userId         String   @db.ObjectId
-  conversationId String   @db.ObjectId
-  joinedAt       DateTime @default(now())
-
-  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
-  conversation Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  id             String       @id @default(auto()) @map("_id") @db.ObjectId
+  userId         String       @db.ObjectId // Add this annotation
+  conversationId String       @db.ObjectId // Add this annotation
+  joinedAt       DateTime     @default(now())
+  user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
 
   @@unique([userId, conversationId])
-  @@index([userId])
-  @@index([conversationId])
 }
 
 model Message {
-  id             String    @id @default(auto()) @map("_id") @db.ObjectId
+  id             String       @id @default(auto()) @map("_id") @db.ObjectId
   content        String
-  senderId       String    @db.ObjectId
-  receiverId     String    @db.ObjectId
-  conversationId String    @db.ObjectId
-  createdAt      DateTime  @default(now())
-  updatedAt      DateTime  @updatedAt
-  isRead         Boolean   @default(false)
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  senderId       String       @db.ObjectId // Add this annotation
+  receiverId     String       @db.ObjectId // Add this annotation
+  conversationId String       @db.ObjectId // You should add this too for consistency
+  isRead         Boolean      @default(false)
   readAt         DateTime?
-  isDeleted      Boolean   @default(false)
-  deletedAt      DateTime?
-  ablyId         String? // For tracking Ably message IDs
-
-  sender       User         @relation("SentMessages", fields: [senderId], references: [id])
-  receiver     User         @relation("ReceivedMessages", fields: [receiverId], references: [id])
-  conversation Conversation @relation(fields: [conversationId], references: [id])
-
-  // Indexes for query optimization
-  @@index([senderId])
-  @@index([receiverId])
-  @@index([conversationId])
-  @@index([createdAt])
-  @@index([isRead])
+  isDeleted      Boolean      @default(false)
+  sender         User         @relation("SentMessages", fields: [senderId], references: [id], onDelete: Cascade)
+  receiver       User         @relation("ReceivedMessages", fields: [receiverId], references: [id], onDelete: Cascade)
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
 }

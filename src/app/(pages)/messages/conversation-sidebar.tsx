@@ -1,14 +1,16 @@
 "use client";
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useConversations } from "@/hooks/use-conversation";
 import { cn } from "@/lib/utils";
-import { formatDistanceToNow } from "date-fns";
-import { useSession } from "next-auth/react";
+import { MessageSquarePlus, Search } from "lucide-react";
 import { useParams, useRouter } from "next/navigation";
 import { useState } from "react";
+import { ConversationItem } from "./conversation-item";
+import { EmptyState } from "./empty-state";
 
 export default function Sidebar({ className }: { className?: string }) {
   const [searchQuery, setSearchQuery] = useState("");
@@ -16,99 +18,79 @@ export default function Sidebar({ className }: { className?: string }) {
   const params = useParams();
   const currentConversationId = params?.conversationId as string;
   const { conversations, isLoading } = useConversations();
-  const { data: session } = useSession();
 
   const handleConversationClick = (conversationId: string) => {
     router.push(`/messages/${conversationId}`);
   };
 
-  if (isLoading) {
-    return (
-      <div className="space-y-3">
-        <Skeleton className="h-12 w-full" />
-        <Skeleton className="h-12 w-full" />
-        <Skeleton className="h-12 w-full" />
-      </div>
-    );
-  }
-
-  if (!conversations || conversations.length === 0) {
-    return (
-      <div className="py-10 text-center">
-        <p className="text-muted-foreground">No conversations yet</p>
-      </div>
-    );
-  }
+  const filteredConversations = searchQuery
+    ? conversations.filter(
+        (conversation: any) =>
+          conversation.otherUser.name
+            ?.toLowerCase()
+            .includes(searchQuery.toLowerCase()) ||
+          conversation.otherUser.email
+            ?.toLowerCase()
+            .includes(searchQuery.toLowerCase()) ||
+          conversation.lastMessage?.content
+            .toLowerCase()
+            .includes(searchQuery.toLowerCase()),
+      )
+    : conversations;
 
   return (
     <div className={cn("flex h-full flex-col", className)}>
       <div className="border-b p-4">
         <h2 className="mb-4 text-xl font-bold">Messages</h2>
+        <div className="relative">
+          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+          <Input
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder="Search conversations"
+            className="pl-9"
+          />
+        </div>
+        <Button
+          variant="outline"
+          className="mt-4 w-full"
+          onClick={() => router.push("/messages/new")}
+        >
+          <MessageSquarePlus className="mr-2 h-4 w-4" />
+          New Conversation
+        </Button>
       </div>
 
       <ScrollArea className="flex-1">
-        <div className="space-y-1 p-2">
-          {conversations.map((conversation: any) => {
-            const { id, otherUser, lastMessage } = conversation;
-            const isActive = currentConversationId === id;
-
-            return (
-              <button
-                key={id}
-                className={cn(
-                  "flex w-full items-center gap-3 rounded-lg p-3 transition-colors",
-                  isActive ? "bg-accent" : "hover:bg-accent/50",
-                )}
-                onClick={() => handleConversationClick(id)}
-              >
-                <div className="relative">
-                  <Avatar>
-                    <AvatarImage
-                      src={otherUser.image || ""}
-                      alt={otherUser.name || ""}
-                    />
-                    <AvatarFallback>
-                      {otherUser.name
-                        ?.split(" ")
-                        .map((n: string) => n[0])
-                        .join("")}
-                    </AvatarFallback>
-                  </Avatar>
-                  {otherUser.online && (
-                    <span className="absolute bottom-0 right-0 h-3 w-3 rounded-full border-2 border-background bg-green-500"></span>
-                  )}
-                </div>
-
-                <div className="flex-1 text-left">
-                  <div className="flex justify-between">
-                    <span className="font-medium">{otherUser.name}</span>
-                    <span className="text-xs text-muted-foreground">
-                      {lastMessage?.createdAt
-                        ? formatDistanceToNow(new Date(lastMessage.createdAt), {
-                            addSuffix: true,
-                          })
-                        : ""}
-                    </span>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <p className="max-w-[140px] truncate text-sm text-muted-foreground">
-                      {lastMessage
-                        ? `${session?.user?.id === lastMessage.senderId ? "You: " : ""}${lastMessage.content}`
-                        : "No message yet"}
-                    </p>
-                    {lastMessage &&
-                      lastMessage.senderId !== session?.user?.id &&
-                      !lastMessage.isRead && (
-                        <span className="flex h-5 min-w-[20px] items-center justify-center rounded-full bg-primary text-xs text-primary-foreground">
-                          1
-                        </span>
-                      )}
-                  </div>
-                </div>
-              </button>
-            );
-          })}
-        </div>
+        {isLoading ? (
+          <div className="space-y-2 p-4">
+            <Skeleton className="h-16 w-full" />
+            <Skeleton className="h-16 w-full" />
+            <Skeleton className="h-16 w-full" />
+          </div>
+        ) : filteredConversations.length === 0 ? (
+          searchQuery ? (
+            <div className="p-4 text-center text-muted-foreground">
+              No conversations match your search
+            </div>
+          ) : (
+            <EmptyState
+              title="No conversations yet"
+              description="Start a new conversation to chat with someone."
+            />
+          )
+        ) : (
+          <div className="space-y-1 p-2">
+            {filteredConversations.map((conversation: any) => (
+              <ConversationItem
+                key={conversation.id}
+                conversation={conversation}
+                isActive={currentConversationId === conversation.id}
+                onClick={() => handleConversationClick(conversation.id)}
+              />
+            ))}
+          </div>
+        )}
       </ScrollArea>
     </div>
   );

@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import MessageList from "./message-list";
 
 interface MessagePageProps {
-  params: Promise<{
+  params: {
     conversationId: string;
-  }>;
+  };
 }
 
 export const metadata: Metadata = {
@@ -12,8 +12,8 @@ export const metadata: Metadata = {
   description: "Chat with a user",
 };
 
-export default async function MessagePage({ params }: MessagePageProps) {
-  const { conversationId } = await params;
+export default function MessagePage({ params }: MessagePageProps) {
+  const { conversationId } = params;
 
   return (
     <div className="flex h-[calc(100vh-4rem)] flex-col">

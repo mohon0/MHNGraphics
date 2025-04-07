@@ -1,10 +1,12 @@
 import * as Ably from "ably";
 import { getServerSession } from "next-auth/next";
 import { NextResponse } from "next/server";
+import { authOptions } from "../../auth/[...nextauth]/Options";
+import { CustomSession } from "../../profile/route";
 
 export async function GET() {
   try {
-    const session = await getServerSession();
+    const session = (await getServerSession(authOptions)) as CustomSession;
     if (!session?.user?.id) {
       return new NextResponse("Unauthorized", { status: 401 });
     }
