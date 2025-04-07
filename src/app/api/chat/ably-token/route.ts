@@ -4,6 +4,8 @@ import { NextResponse } from "next/server";
 import { authOptions } from "../../auth/[...nextauth]/Options";
 import { CustomSession } from "../../profile/route";
 
+export const revalidate = 0;
+
 export async function GET() {
   try {
     const session = (await getServerSession(authOptions)) as CustomSession;

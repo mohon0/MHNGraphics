@@ -89,7 +89,7 @@ export default function MessageList({ conversationId }: MessageListProps) {
   // Improved scroll to bottom function
   const scrollToBottom = (behavior: ScrollBehavior = "smooth") => {
     if (messagesEndRef.current) {
-      messagesEndRef.current.scrollIntoView({
+        messagesEndRef.current.scrollIntoView({
         behavior,
         block: "end",
       });

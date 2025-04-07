@@ -69,6 +69,7 @@ export function useConversationMessages(conversationId: string) {
       `/api/chat/message/read?conversationId=${conversationId}`,
       { messageIds },
     );
+    console.log(response.data);
     return response.data;
   };
 

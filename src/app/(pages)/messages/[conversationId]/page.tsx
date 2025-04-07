@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import MessageList from "./message-list";
+import Chat from "./chat";
 
 interface MessagePageProps {
   params: Promise<{
@@ -17,7 +17,7 @@ export default async function MessagePage({ params }: MessagePageProps) {
 
   return (
     <div className="flex h-[calc(100vh-4rem)] flex-col">
-      <MessageList conversationId={conversationId} />
+      <Chat conversationId={conversationId} />
     </div>
   );
 }
