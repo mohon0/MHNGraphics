@@ -28,7 +28,7 @@ export async function POST(req: NextRequest) {
 
     await PresenceService.updateUserStatus(session.user.id, isOnline);
 
-    return NextResponse.json({ success: true });
+    return new NextResponse("Success", { status: 200 });
   } catch (error) {
     console.error("PRESENCE_UPDATE_ERROR", error);
     return new NextResponse("Internal Error", { status: 500 });
@@ -56,7 +56,7 @@ export async function GET(req: NextRequest) {
       return new NextResponse("User not found", { status: 404 });
     }
 
-    return NextResponse.json(status);
+    return new NextResponse(JSON.stringify(status), { status: 200 });
   } catch (error) {
     console.error("PRESENCE_GET_ERROR", error);
     return new NextResponse("Internal Error", { status: 500 });

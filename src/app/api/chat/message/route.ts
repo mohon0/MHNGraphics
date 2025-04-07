@@ -13,25 +13,35 @@ interface CustomSession extends Session {
     role: string; // Add any other roles you may have
   };
 }
+
 export async function GET(req: NextRequest) {
   try {
     const session = (await getServerSession(authOptions)) as CustomSession;
 
     if (!session?.user?.id) {
-      return new NextResponse("Unauthorized", { status: 401 });
+      return new NextResponse(JSON.stringify({ message: "Unauthorized" }), {
+        status: 401,
+      });
     }
 
-    const { searchParams } = new URL(req.url);
-    const conversationId = searchParams.get("conversationId");
-    const cursor = searchParams.get("cursor");
-    const limit = Number.parseInt(searchParams.get("limit") || "20", 10);
+    const url = new URL(req.url);
+    const conversationId = url.searchParams.get("conversationId");
+    const cursor = url.searchParams.get("cursor");
+    const limit = parseInt(url.searchParams.get("limit") || "20", 10);
 
     if (!conversationId) {
-      return new NextResponse("Conversation ID is required", { status: 400 });
+      return new NextResponse(
+        JSON.stringify({ message: "Conversation ID is required" }),
+        {
+          status: 400,
+        },
+      );
     }
 
     if (isNaN(limit) || limit <= 0) {
-      return new NextResponse("Invalid limit", { status: 400 });
+      return new NextResponse(JSON.stringify({ message: "Invalid limit" }), {
+        status: 400,
+      });
     }
 
     const currentUser = await Prisma.user.findUnique({
@@ -40,7 +50,9 @@ export async function GET(req: NextRequest) {
     });
 
     if (!currentUser) {
-      return new NextResponse("Unauthorized", { status: 401 });
+      return new NextResponse(JSON.stringify({ message: "Unauthorized" }), {
+        status: 401,
+      });
     }
 
     const isParticipant = await Prisma.conversationParticipant.count({
@@ -51,7 +63,9 @@ export async function GET(req: NextRequest) {
     });
 
     if (!isParticipant) {
-      return new NextResponse("Forbidden", { status: 403 });
+      return new NextResponse(JSON.stringify({ message: "Forbidden" }), {
+        status: 403,
+      });
     }
 
     const messages = await Prisma.message.findMany({
@@ -78,7 +92,7 @@ export async function GET(req: NextRequest) {
       }),
     });
 
-    // Non-blocking update
+    // Fire-and-forget mark-as-read
     Prisma.message
       .updateMany({
         where: {
@@ -91,18 +105,26 @@ export async function GET(req: NextRequest) {
           readAt: new Date(),
         },
       })
-      .catch(console.error);
+      .catch((err) => console.error("Failed to mark messages as read:", err));
 
     const nextCursor =
       messages.length === limit ? messages[messages.length - 1].id : null;
 
-    return NextResponse.json({
-      items: messages.reverse(),
-      nextCursor,
-    });
+    return new NextResponse(
+      JSON.stringify({
+        items: messages.reverse(),
+        nextCursor,
+      }),
+      { status: 200, headers: { "Content-Type": "application/json" } },
+    );
   } catch (error) {
-    console.error("MESSAGES_GET", error);
-    return new NextResponse("Internal Error", { status: 500 });
+    console.error("MESSAGES_GET_ERROR", error);
+    return new NextResponse(
+      JSON.stringify({ message: "Internal server error" }),
+      {
+        status: 500,
+      },
+    );
   }
 }
 

@@ -134,7 +134,7 @@ export async function GET() {
       };
     });
 
-    return NextResponse.json(formatted);
+    return new NextResponse(JSON.stringify(formatted), { status: 200 });
   } catch (error) {
     console.error("CONVERSATIONS_GET", error);
     return new NextResponse("Internal Error", { status: 500 });
