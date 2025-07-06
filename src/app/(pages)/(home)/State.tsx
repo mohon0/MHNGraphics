@@ -1,161 +1,203 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
 
 export default function Component() {
-  const [isVisible, setIsVisible] = useState(false);
+  // Function to split text into animated letters
+  const AnimatedWord = ({
+    children,
+    className,
+    delay = 0,
+  }: {
+    children: string;
+    className: string;
+    delay?: number;
+  }) => {
+    const letters = children.split("");
 
-  useEffect(() => {
-    setIsVisible(true);
-  }, []);
+    return (
+      <motion.div
+        initial={{ opacity: 0, y: 100, rotateX: -90 }}
+        animate={{ opacity: 1, y: 0, rotateX: 0 }}
+        transition={{ duration: 0.8, ease: "easeOut", delay }}
+        whileHover={{ scale: 1.1 }}
+        className={className}
+      >
+        {letters.map((letter, index) => (
+          <motion.span
+            key={index}
+            initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{
+              delay: delay + index * 0.1,
+              duration: 0.6,
+              ease: "easeOut",
+            }}
+            whileHover={{
+              y: -10,
+              color: "#f59e0b",
+              transition: { duration: 0.2 },
+            }}
+            className="inline-block cursor-pointer"
+          >
+            {letter === " " ? "\u00A0" : letter}
+          </motion.span>
+        ))}
+      </motion.div>
+    );
+  };
 
   return (
-    <div className="relative px-2 sm:px-4 md:px-6">
-      {/* Main heading - clickable */}
-      <a
-        href="/best-computer-training-center" // Replace with your external URL
-        className="group block cursor-pointer"
+    <div className="relative overflow-hidden bg-gradient-to-br from-slate-50 to-blue-50 px-4 py-20 text-center">
+      <motion.a
+        href="/training-center"
+        className="block cursor-pointer"
+        whileHover={{ scale: 1.02 }}
+        transition={{ duration: 0.3, ease: "easeInOut" }}
       >
-        <div className="relative pt-6 text-center sm:pt-8 md:pt-10">
-          {/* First line with slide-in from left - responsive sizing */}
-          <h1
-            className={`mb-4 mt-4 bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 bg-clip-text py-4 text-3xl font-black leading-tight tracking-tight text-transparent transition-all duration-1000 group-hover:from-orange-500 group-hover:via-red-500 group-hover:to-pink-500 sm:mb-6 sm:mt-6 sm:py-6 sm:text-4xl sm:leading-relaxed md:mb-8 md:mt-8 md:py-8 md:text-5xl lg:py-10 lg:text-6xl xl:text-7xl 2xl:text-8xl ${
-              isVisible
-                ? "translate-x-0 opacity-100"
-                : "-translate-x-full opacity-0"
-            }`}
-          >
-            <span className="inline-block animate-bounce [animation-delay:0ms]">
-              B
-            </span>
-            <span className="inline-block animate-bounce [animation-delay:100ms]">
-              E
-            </span>
-            <span className="inline-block animate-bounce [animation-delay:200ms]">
-              S
-            </span>
-            <span className="inline-block animate-bounce [animation-delay:300ms]">
-              T
-            </span>
-            <span className="inline-block w-2 sm:w-4 md:w-6 lg:w-8"></span>
-            <span className="inline-block animate-bounce [animation-delay:400ms]">
-              C
-            </span>
-            <span className="inline-block animate-bounce [animation-delay:500ms]">
-              O
-            </span>
-            <span className="inline-block animate-bounce [animation-delay:600ms]">
-              M
-            </span>
-            <span className="inline-block animate-bounce [animation-delay:700ms]">
-              P
-            </span>
-            <span className="inline-block animate-bounce [animation-delay:800ms]">
-              U
-            </span>
-            <span className="inline-block animate-bounce [animation-delay:900ms]">
-              T
-            </span>
-            <span className="inline-block animate-bounce [animation-delay:1000ms]">
-              E
-            </span>
-            <span className="inline-block animate-bounce [animation-delay:1100ms]">
-              R
-            </span>
-          </h1>
-
-          {/* Second line with slide-in from right - responsive sizing */}
-          <h1
-            className={`mb-6 bg-gradient-to-r from-purple-500 via-pink-500 to-rose-500 bg-clip-text text-4xl font-black leading-tight tracking-tight text-transparent transition-all delay-300 duration-1000 group-hover:from-cyan-500 group-hover:via-blue-500 group-hover:to-indigo-500 sm:mb-8 sm:text-5xl sm:leading-relaxed md:mb-10 md:text-6xl lg:mb-12 lg:text-7xl xl:text-8xl 2xl:text-9xl ${
-              isVisible
-                ? "translate-x-0 opacity-100"
-                : "translate-x-full opacity-0"
-            }`}
-          >
-            <span className="inline-block animate-pulse [animation-delay:200ms]">
-              T
-            </span>
-            <span className="inline-block animate-pulse [animation-delay:300ms]">
-              R
-            </span>
-            <span className="inline-block animate-pulse [animation-delay:400ms]">
-              A
-            </span>
-            <span className="inline-block animate-pulse [animation-delay:500ms]">
-              I
-            </span>
-            <span className="inline-block animate-pulse [animation-delay:600ms]">
-              N
-            </span>
-            <span className="inline-block animate-pulse [animation-delay:700ms]">
-              I
-            </span>
-            <span className="inline-block animate-pulse [animation-delay:800ms]">
-              N
-            </span>
-            <span className="inline-block animate-pulse [animation-delay:900ms]">
-              G
-            </span>
-            <span className="inline-block w-2 sm:w-4 md:w-6 lg:w-8"></span>
-            <span className="inline-block animate-pulse [animation-delay:1000ms]">
-              C
-            </span>
-            <span className="inline-block animate-pulse [animation-delay:1100ms]">
-              E
-            </span>
-            <span className="inline-block animate-pulse [animation-delay:1200ms]">
-              N
-            </span>
-            <span className="inline-block animate-pulse [animation-delay:1300ms]">
-              T
-            </span>
-            <span className="inline-block animate-pulse [animation-delay:1400ms]">
-              E
-            </span>
-            <span className="inline-block animate-pulse [animation-delay:1500ms]">
-              R
-            </span>
-          </h1>
-
-          {/* Animated decorative elements - responsive */}
-          <div
-            className={`delay-600 mb-4 flex items-center justify-center gap-2 transition-all duration-1000 sm:mb-6 sm:gap-3 md:mb-8 md:gap-4 ${
-              isVisible ? "scale-100 opacity-100" : "scale-0 opacity-0"
-            }`}
-          >
-            <div className="flex gap-0.5 sm:gap-1">
-              <div className="h-1.5 w-1.5 animate-ping rounded-full bg-emerald-500 sm:h-2 sm:w-2"></div>
-              <div className="h-1.5 w-1.5 animate-ping rounded-full bg-teal-500 [animation-delay:200ms] sm:h-2 sm:w-2"></div>
-              <div className="h-1.5 w-1.5 animate-ping rounded-full bg-cyan-500 [animation-delay:400ms] sm:h-2 sm:w-2"></div>
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ staggerChildren: 0.3, delayChildren: 0.2 }}
+        >
+          {/* Main heading with responsive layout */}
+          <div className="mb-8">
+            {/* First line: BEST COMPUTER */}
+            <div className="mb-4 flex flex-col lg:flex-row lg:items-center lg:justify-center lg:gap-8">
+              <AnimatedWord
+                className="text-4xl font-black text-blue-900 md:text-6xl lg:text-7xl xl:text-8xl"
+                delay={0}
+              >
+                BEST
+              </AnimatedWord>
+              <AnimatedWord
+                className="text-3xl font-bold text-purple-700 md:text-5xl lg:text-6xl xl:text-7xl"
+                delay={0.4}
+              >
+                COMPUTER
+              </AnimatedWord>
             </div>
-            <div className="h-0.5 w-16 animate-pulse rounded-full bg-gradient-to-r from-emerald-500 via-teal-500 to-cyan-500 transition-all duration-500 group-hover:w-20 group-hover:from-orange-500 group-hover:via-red-500 group-hover:to-pink-500 sm:h-1 sm:w-24 sm:group-hover:w-32 md:w-32 md:group-hover:w-48"></div>
-            <div className="flex gap-0.5 sm:gap-1">
-              <div className="h-1.5 w-1.5 animate-ping rounded-full bg-purple-500 [animation-delay:600ms] sm:h-2 sm:w-2"></div>
-              <div className="h-1.5 w-1.5 animate-ping rounded-full bg-pink-500 [animation-delay:800ms] sm:h-2 sm:w-2"></div>
-              <div className="h-1.5 w-1.5 animate-ping rounded-full bg-rose-500 [animation-delay:1000ms] sm:h-2 sm:w-2"></div>
+
+            {/* Second line: TRAINING CENTER */}
+            <div className="flex flex-col lg:flex-row lg:items-center lg:justify-center lg:gap-8">
+              <AnimatedWord
+                className="text-4xl font-black text-pink-600 md:text-6xl lg:text-7xl xl:text-8xl"
+                delay={0.8}
+              >
+                TRAINING
+              </AnimatedWord>
+              <AnimatedWord
+                className="text-3xl font-bold text-indigo-800 md:text-5xl lg:text-6xl xl:text-7xl"
+                delay={1.2}
+              >
+                CENTER
+              </AnimatedWord>
             </div>
           </div>
 
-          {/* Hover indicator - responsive text */}
-          <div
-            className={`opacity-0 transition-all duration-500 group-hover:opacity-100 ${
-              isVisible ? "translate-y-0" : "translate-y-4"
-            }`}
+          {/* Animated decorative line with pulse */}
+          <motion.div
+            initial={{ width: 0, opacity: 0 }}
+            animate={{ width: "200px", opacity: 1 }}
+            transition={{ delay: 2, duration: 1, ease: "easeOut" }}
+            className="relative mx-auto mb-6 h-2 rounded-full bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500"
           >
-            <p className="animate-bounce bg-gradient-to-r from-gray-700 to-gray-900 bg-clip-text px-2 text-sm font-semibold text-transparent sm:text-base md:text-lg">
-              ✨ Click to explore our courses ✨
-            </p>
-          </div>
+            <motion.div
+              animate={{
+                scale: [1, 1.2, 1],
+                opacity: [0.5, 1, 0.5],
+              }}
+              transition={{
+                duration: 2,
+                repeat: Number.POSITIVE_INFINITY,
+                ease: "easeInOut",
+              }}
+              className="absolute inset-0 rounded-full bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 blur-sm"
+            />
+          </motion.div>
 
-          {/* Floating elements on hover - responsive positioning */}
-          <div className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-100">
-            <div className="absolute left-[15%] top-[20%] h-2 w-2 animate-spin rounded-full bg-emerald-400 [animation-duration:3s] sm:left-1/4 sm:top-1/4 sm:h-3 sm:w-3"></div>
-            <div className="absolute right-[15%] top-[25%] h-1.5 w-1.5 animate-spin rounded-full bg-pink-400 [animation-delay:300ms] [animation-duration:2s] sm:right-1/4 sm:top-1/3 sm:h-2 sm:w-2"></div>
-            <div className="absolute bottom-[35%] left-[25%] h-3 w-3 animate-spin rounded-full bg-cyan-400 [animation-delay:600ms] [animation-duration:4s] sm:bottom-1/3 sm:left-1/3 sm:h-4 sm:w-4"></div>
-            <div className="absolute bottom-[20%] right-[25%] h-1.5 w-1.5 animate-spin rounded-full bg-purple-400 [animation-delay:900ms] [animation-duration:2.5s] sm:bottom-1/4 sm:right-1/3 sm:h-2 sm:w-2"></div>
-          </div>
-        </div>
-      </a>
+          {/* Info text with breathing animation */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 2.5, duration: 0.5 }}
+          >
+            <motion.p
+              className="text-xl font-medium text-gray-700"
+              animate={{
+                scale: [1, 1.05, 1],
+              }}
+              transition={{
+                duration: 2,
+                repeat: Number.POSITIVE_INFINITY,
+                ease: "easeInOut",
+              }}
+            >
+              ✨ Click to view details ✨
+            </motion.p>
+          </motion.div>
+
+          {/* Enhanced floating elements */}
+          <motion.div
+            animate={{
+              y: [0, -20, 0],
+              rotate: [0, 360],
+              scale: [1, 1.2, 1],
+            }}
+            transition={{
+              duration: 4,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+            }}
+            className="absolute left-10 top-10 h-4 w-4 rounded-full bg-blue-400 opacity-60"
+          />
+
+          <motion.div
+            animate={{
+              y: [0, 25, 0],
+              rotate: [0, -360],
+              scale: [1, 0.8, 1],
+            }}
+            transition={{
+              duration: 5,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+              delay: 1,
+            }}
+            className="absolute right-20 top-20 h-6 w-6 rounded-full bg-purple-400 opacity-60"
+          />
+
+          <motion.div
+            animate={{
+              y: [0, -30, 0],
+              x: [0, 20, 0],
+              rotate: [0, 180, 360],
+            }}
+            transition={{
+              duration: 6,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+              delay: 2,
+            }}
+            className="absolute bottom-10 left-1/4 h-3 w-3 rounded-full bg-pink-400 opacity-60"
+          />
+
+          <motion.div
+            animate={{
+              y: [0, 15, 0],
+              x: [0, -15, 0],
+              scale: [1, 1.5, 1],
+            }}
+            transition={{
+              duration: 3,
+              repeat: Number.POSITIVE_INFINITY,
+              ease: "easeInOut",
+              delay: 0.5,
+            }}
+            className="absolute bottom-20 right-1/3 h-5 w-5 rounded-full bg-yellow-400 opacity-50"
+          />
+        </motion.div>
+      </motion.a>
     </div>
   );
 }
