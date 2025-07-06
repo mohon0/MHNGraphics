@@ -148,7 +148,7 @@ export function Slider() {
             {sliderData.map((item) => (
               <CarouselItem
                 key={item.id}
-                className="pl-4 md:basis-1/2 lg:basis-1/3"
+                className="md:basic-1/3 basis-2/3 pl-4 lg:basis-1/4"
               >
                 <Link href={item.link} className="group block h-full">
                   <div className="overflow-hidden rounded-xl">
