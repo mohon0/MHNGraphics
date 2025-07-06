@@ -50,7 +50,7 @@ export default function Component() {
   return (
     <div className="relative overflow-hidden bg-gradient-to-br from-slate-50 to-blue-50 px-4 py-20 text-center">
       <motion.a
-        href="/bes-computer-training-center"
+        href="/best-computer-training-center"
         className="block cursor-pointer"
         whileHover={{ scale: 1.02 }}
         transition={{ duration: 0.3, ease: "easeInOut" }}
