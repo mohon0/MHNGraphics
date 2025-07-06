@@ -34,6 +34,7 @@ export async function GET(req: NextRequest) {
             createdAt: true,
             certificate: true,
             roll: true,
+            editable: true,
           },
         },
         design: {
