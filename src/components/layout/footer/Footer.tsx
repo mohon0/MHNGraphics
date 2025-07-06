@@ -26,6 +26,7 @@ import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
 import { z } from "zod";
+import Logo from "../Header/logo";
 
 const FormSchema = z.object({
   email: z.string().email("Please enter a valid email address"),
@@ -107,9 +108,7 @@ export default function Footer() {
           {/* Brand Column */}
           <div className="space-y-6">
             <div>
-              <h2 className="text-xl font-bold tracking-tight text-primary">
-                MHN Graphics
-              </h2>
+              <Logo />
               <p className="mt-4 text-sm text-muted-foreground">
                 Transforming ideas into visual masterpieces. Your vision, our
                 expertise.
@@ -236,7 +235,7 @@ export default function Footer() {
         {/* Footer Bottom */}
         <div className="mt-12 flex flex-col items-center justify-between gap-4 border-t pt-8 md:flex-row">
           <p className="text-xs text-muted-foreground">
-            © {new Date().getFullYear()} MHN Graphics. All rights reserved.
+            © {new Date().getFullYear()} Oylkka Graphics. All rights reserved.
           </p>
           <nav className="flex flex-wrap justify-center gap-x-6 gap-y-2">
             {["Privacy Policy", "Terms of Service", "Cookie Policy"].map(

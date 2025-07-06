@@ -1,11 +1,9 @@
 import { Button } from "@/components/ui/button";
-import logo2 from "@/images/logoblack.png";
-import logo from "@/images/logowhite.png";
-import Image from "next/image";
 import Link from "next/link";
 import DesktopMenu from "./DesktopMenu";
 import MobileMenu from "./MobileMenu";
 import User from "./User";
+import Logo from "./logo";
 
 export default function Header({
   fixed = false,
@@ -28,19 +26,7 @@ export default function Header({
             {/* Render the MobileMenu component here */}
           </div>
           {/* Logo */}
-          <Link
-            href="/"
-            className={`items-baseline space-x-2 font-extrabold ${
-              fixed ? "text-white" : "text-black"
-            }`}
-          >
-            <Image
-              src={fixed ? logo : logo2}
-              alt="logo"
-              width={200}
-              className="w-40"
-            />
-          </Link>
+          <Logo fixed />
         </div>
 
         {/* Call to Action & Social Media for Desktop */}

@@ -27,7 +27,7 @@ export function Author({
           <Avatar className="h-12 w-12 border-2 border-primary/10">
             <AvatarImage src={author?.image} alt={author?.name} />
             <AvatarFallback className="bg-primary/10 text-primary">
-              {author?.name?.charAt(0) || "MHN"}
+              {author?.name?.charAt(0) || "Oy"}
             </AvatarFallback>
           </Avatar>
           <div>

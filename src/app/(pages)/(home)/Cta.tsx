@@ -8,7 +8,7 @@ export default function Cta() {
             Ready to Start Creating?
           </h2>
           <p className="mx-auto mb-8 text-white/90">
-            Join thousands of creators who are already using MHN Graphics to
+            Join thousands of creators who are already using Oylkka Graphics to
             bring their ideas to life.
           </p>
           <div className="flex flex-col justify-center gap-4 sm:flex-row">

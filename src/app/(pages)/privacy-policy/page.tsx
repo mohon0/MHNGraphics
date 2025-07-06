@@ -68,10 +68,11 @@ export default function PrivacyPolicy() {
           </CardHeader>
           <CardContent>
             <p className="text-muted-foreground">
-              At MHN Graphics, we are committed to protecting your privacy and
-              ensuring the security of your personal information. This Privacy
-              Policy outlines our practices concerning the collection, use, and
-              sharing of your data when you use our website or services.
+              At Oylkka Graphics, we are committed to protecting your privacy
+              and ensuring the security of your personal information. This
+              Privacy Policy outlines our practices concerning the collection,
+              use, and sharing of your data when you use our website or
+              services.
             </p>
           </CardContent>
         </Card>

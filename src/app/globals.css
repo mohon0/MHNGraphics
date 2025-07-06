@@ -58,8 +58,6 @@
   min-height: 10rem; /* Ensures the editing area inside ReactQuill is styled */
 }
 
-
-
 @layer base {
   * {
     @apply border-border outline-ring/50;

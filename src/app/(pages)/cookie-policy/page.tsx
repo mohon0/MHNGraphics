@@ -68,7 +68,7 @@ export default function CookiePolicy() {
           </CardHeader>
           <CardContent>
             <p className="text-muted-foreground">
-              This Cookie Policy explains how MHN Graphics uses cookies and
+              This Cookie Policy explains how Oylkka Graphics uses cookies and
               similar technologies to recognize you when you visit our website.
               It explains what these technologies are and why we use them, as
               well as your rights to control our use of them.

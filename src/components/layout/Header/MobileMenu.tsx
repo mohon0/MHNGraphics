@@ -24,7 +24,9 @@ export default function MobileMenu({ fixed = false }: { fixed?: boolean }) {
       </SheetTrigger>
       <SheetContent side="left" className="w-[300px] p-0 sm:w-[400px]">
         <SheetHeader className="border-b p-6 text-left">
-          <SheetTitle className="text-2xl font-bold">MHN Graphics</SheetTitle>
+          <SheetTitle className="text-2xl font-bold">
+            Oylkka Graphics
+          </SheetTitle>
         </SheetHeader>
         <ScrollArea className="h-[calc(100vh-5rem)]">
           <nav className="flex flex-col gap-3 p-6">
@@ -32,7 +34,7 @@ export default function MobileMenu({ fixed = false }: { fixed?: boolean }) {
 
             <Link href="/shop" legacyBehavior passHref>
               <div>
-                MHN Shop
+                Oylkka Shop
                 <Badge
                   variant="secondary"
                   className="ml-1 animate-bounce px-1 py-0 text-[10px] text-black delay-75"
@@ -43,7 +45,7 @@ export default function MobileMenu({ fixed = false }: { fixed?: boolean }) {
             </Link>
             <Link href="/mhn-it" legacyBehavior passHref>
               <div>
-                MHN IT Agency
+                Oylkka IT Agency
                 <Badge
                   variant="secondary"
                   className="ml-1 animate-bounce px-1 py-0 text-[10px] text-black delay-75"

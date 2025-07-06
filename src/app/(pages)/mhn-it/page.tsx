@@ -87,16 +87,16 @@ const caseStudies = [
 
 export default function ITPage() {
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex min-h-screen flex-col">
       {/* Hero Section */}
-      <section className="relative py-32 overflow-hidden">
+      <section className="relative overflow-hidden py-32">
         <div className="absolute inset-0 bg-primary"></div>
 
-        <div className="relative container mx-auto px-4 text-center text-white z-10">
-          <h1 className="text-4xl md:text-6xl font-bold mb-6">
+        <div className="container relative z-10 mx-auto px-4 text-center text-white">
+          <h1 className="mb-6 text-4xl font-bold md:text-6xl">
             Innovative IT Solutions for Your Business
           </h1>
-          <p className="text-xl mb-28 max-w-2xl mx-auto">
+          <p className="mx-auto mb-28 max-w-2xl text-xl">
             Empowering your digital transformation with cutting-edge technology
             and expert services
           </p>
@@ -105,7 +105,7 @@ export default function ITPage() {
           <svg
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 1440 320"
-            className="w-full h-auto"
+            className="h-auto w-full"
           >
             <path
               fill="#ffffff"
@@ -119,17 +119,17 @@ export default function ITPage() {
       {/* Services Section */}
       <section className="pb-20">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center mb-12">
+          <h2 className="mb-12 text-center text-3xl font-bold">
             Our IT Services
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
             {services.map((service, index) => (
               <Card
                 key={index}
-                className="transition-all duration-300 hover:shadow-lg group"
+                className="group transition-all duration-300 hover:shadow-lg"
               >
                 <CardHeader>
-                  <div className="mb-4 p-2 bg-zinc-100 rounded-full inline-block group-hover:bg-zinc-200 transition-colors">
+                  <div className="mb-4 inline-block rounded-full bg-zinc-100 p-2 transition-colors group-hover:bg-zinc-200">
                     <service.icon className="h-8 w-8 text-zinc-700" />
                   </div>
                   <CardTitle>{service.title}</CardTitle>
@@ -140,7 +140,7 @@ export default function ITPage() {
                 <CardFooter>
                   <Button
                     variant="link"
-                    className="group-hover:text-zinc-900 transition-colors"
+                    className="transition-colors group-hover:text-zinc-900"
                   >
                     Learn More <ArrowRight className="ml-2 h-4 w-4" />
                   </Button>
@@ -152,11 +152,11 @@ export default function ITPage() {
       </section>
 
       {/* Case Studies Section */}
-      <section className="py-20 bg-zinc-50">
+      <section className="bg-zinc-50 py-20">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center mb-12">Case Studies</h2>
+          <h2 className="mb-12 text-center text-3xl font-bold">Case Studies</h2>
           <Tabs defaultValue="case1" className="w-full">
-            <TabsList className="grid w-full grid-cols-3 mb-8">
+            <TabsList className="mb-8 grid w-full grid-cols-3">
               <TabsTrigger value="case1">E-commerce</TabsTrigger>
               <TabsTrigger value="case2">Healthcare</TabsTrigger>
               <TabsTrigger value="case3">FinTech</TabsTrigger>
@@ -168,12 +168,12 @@ export default function ITPage() {
                     <CardTitle>{study.title}</CardTitle>
                     <CardDescription>{study.client}</CardDescription>
                   </CardHeader>
-                  <CardContent className="grid md:grid-cols-2 gap-6">
+                  <CardContent className="grid gap-6 md:grid-cols-2">
                     <div>
                       <p className="mb-4">{study.description}</p>
                       <Button>Read Full Case Study</Button>
                     </div>
-                    <div className="relative aspect-video rounded-lg overflow-hidden">
+                    <div className="relative aspect-video overflow-hidden rounded-lg">
                       <Image
                         src={study.image}
                         alt={study.title}
@@ -192,10 +192,10 @@ export default function ITPage() {
       {/* Why Choose Us Section */}
       <section className="py-20">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center mb-12">
-            Why Choose MHN IT
+          <h2 className="mb-12 text-center text-3xl font-bold">
+            Why Choose Oylkka IT
           </h2>
-          <div className="grid md:grid-cols-2 gap-8 items-center">
+          <div className="grid items-center gap-8 md:grid-cols-2">
             <div>
               <ul className="space-y-4">
                 {[
@@ -206,7 +206,7 @@ export default function ITPage() {
                   "Proven track record of successful projects",
                 ].map((item, index) => (
                   <li key={index} className="flex items-center">
-                    <CheckCircle className="h-6 w-6 text-green-500 mr-2" />
+                    <CheckCircle className="mr-2 h-6 w-6 text-green-500" />
                     <span>{item}</span>
                   </li>
                 ))}
@@ -223,7 +223,7 @@ export default function ITPage() {
                 height={400}
                 className="rounded-lg shadow-lg"
               />
-              <div className="absolute -bottom-4 -right-4 bg-white p-4 rounded-lg shadow-lg">
+              <div className="absolute -bottom-4 -right-4 rounded-lg bg-white p-4 shadow-lg">
                 <p className="text-2xl font-bold text-zinc-900">10+ Years</p>
                 <p className="text-sm text-zinc-600">of IT Excellence</p>
               </div>
@@ -233,12 +233,12 @@ export default function ITPage() {
       </section>
 
       {/* Interactive Tech Stack Section */}
-      <section className="py-20 bg-zinc-900 text-white">
+      <section className="bg-zinc-900 py-20 text-white">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center mb-12">
+          <h2 className="mb-12 text-center text-3xl font-bold">
             Our Tech Stack
           </h2>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+          <div className="grid grid-cols-2 gap-8 md:grid-cols-4">
             {[
               { name: "React", icon: "/path/to/react-icon.svg" },
               { name: "Node.js", icon: "/path/to/nodejs-icon.svg" },
@@ -251,7 +251,7 @@ export default function ITPage() {
             ].map((tech, index) => (
               <div
                 key={index}
-                className="flex flex-col items-center p-4 bg-zinc-800 rounded-lg hover:bg-zinc-700 transition-colors"
+                className="flex flex-col items-center rounded-lg bg-zinc-800 p-4 transition-colors hover:bg-zinc-700"
               >
                 <Image
                   src={tech.icon}
@@ -268,16 +268,16 @@ export default function ITPage() {
       </section>
 
       {/* Call to Action */}
-      <section className="py-20 bg-gradient-to-r from-zinc-800 to-zinc-900 text-white">
+      <section className="bg-gradient-to-r from-zinc-800 to-zinc-900 py-20 text-white">
         <div className="container mx-auto px-4 text-center">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">
+          <h2 className="mb-4 text-3xl font-bold md:text-4xl">
             Ready to Transform Your IT Infrastructure?
           </h2>
-          <p className="text-xl mb-8 max-w-2xl mx-auto">
-            Let&#39;s discuss how MHN IT can help you achieve your technology
+          <p className="mx-auto mb-8 max-w-2xl text-xl">
+            Let&#39;s discuss how Oylkka IT can help you achieve your technology
             goals and drive your business forward.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <div className="flex flex-col justify-center gap-4 sm:flex-row">
             <Button
               size="lg"
               variant="secondary"
@@ -288,7 +288,7 @@ export default function ITPage() {
             <Button
               size="lg"
               variant="outline"
-              className="bg-transparent text-white border-white hover:bg-white hover:text-zinc-900"
+              className="border-white bg-transparent text-white hover:bg-white hover:text-zinc-900"
             >
               Contact Sales
             </Button>

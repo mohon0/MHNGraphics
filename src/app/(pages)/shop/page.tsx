@@ -139,16 +139,18 @@ export default function ShopPage() {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-4xl font-bold mb-8 text-center">MHN Graphics Shop</h1>
+      <h1 className="mb-8 text-center text-4xl font-bold">
+        Oylkka Graphics Shop
+      </h1>
 
       {/* Featured Products Section */}
       <section className="mb-16">
-        <h2 className="text-2xl font-semibold mb-6">Featured Products</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <h2 className="mb-6 text-2xl font-semibold">Featured Products</h2>
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
           {featuredProducts.map((product) => (
             <Card
               key={product.id}
-              className="flex flex-col overflow-hidden group"
+              className="group flex flex-col overflow-hidden"
             >
               <div className="relative aspect-square overflow-hidden">
                 <Image
@@ -156,16 +158,16 @@ export default function ShopPage() {
                   alt={product.name}
                   layout="fill"
                   objectFit="cover"
-                  className="group-hover:scale-105 transition-transform duration-300"
+                  className="transition-transform duration-300 group-hover:scale-105"
                 />
-                <div className="absolute top-2 left-2">
+                <div className="absolute left-2 top-2">
                   <Badge variant="secondary" className="bg-zinc-900 text-white">
                     Featured
                   </Badge>
                 </div>
               </div>
               <CardContent className="flex-grow p-4">
-                <CardTitle className="text-lg mb-2 line-clamp-2">
+                <CardTitle className="mb-2 line-clamp-2 text-lg">
                   {product.name}
                 </CardTitle>
                 <Badge variant="outline" className="mb-2">
@@ -175,7 +177,7 @@ export default function ShopPage() {
                   ${product.price.toFixed(2)}
                 </p>
               </CardContent>
-              <CardFooter className="flex justify-between items-center p-4 bg-zinc-50">
+              <CardFooter className="flex items-center justify-between bg-zinc-50 p-4">
                 <div className="flex items-center text-sm text-zinc-600">
                   <Download className="mr-1 h-4 w-4" />
                   {product.downloads.toLocaleString()}
@@ -192,12 +194,12 @@ export default function ShopPage() {
 
       {/* Promotional Banner */}
       <section className="mb-16">
-        <div className="relative overflow-hidden rounded-lg bg-gradient-to-r from-purple-600 to-indigo-600 text-white p-8">
+        <div className="relative overflow-hidden rounded-lg bg-gradient-to-r from-purple-600 to-indigo-600 p-8 text-white">
           <div className="relative z-10">
-            <h2 className="text-3xl font-bold mb-4">
+            <h2 className="mb-4 text-3xl font-bold">
               Summer Sale: 30% Off All Templates!
             </h2>
-            <p className="text-lg mb-6">
+            <p className="mb-6 text-lg">
               Elevate your designs with our premium templates. Limited time
               offer.
             </p>
@@ -205,7 +207,7 @@ export default function ShopPage() {
               Shop Templates <ArrowRight className="ml-2 h-5 w-5" />
             </Button>
           </div>
-          <div className="absolute top-0 right-0 w-1/2 h-full opacity-10">
+          <div className="absolute right-0 top-0 h-full w-1/2 opacity-10">
             <Image
               src="https://img.freepik.com/free-vector/abstract-geometric-pattern-background_1319-242.jpg?w=740&t=st=1703375896~exp=1703376496~hmac=6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f6f"
               alt="Geometric Pattern"
@@ -218,7 +220,7 @@ export default function ShopPage() {
 
       {/* Search and Filter Section */}
       <section className="mb-8">
-        <div className="flex flex-col md:flex-row gap-4">
+        <div className="flex flex-col gap-4 md:flex-row">
           <div className="flex-grow">
             <div className="relative">
               <Input
@@ -226,7 +228,7 @@ export default function ShopPage() {
                 placeholder="Search assets..."
                 className="w-full pl-10"
               />
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-zinc-400" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 transform text-zinc-400" />
             </div>
           </div>
           <div className="flex gap-4">
@@ -254,7 +256,7 @@ export default function ShopPage() {
 
       {/* Price Range Slider */}
       <section className="mb-8">
-        <h2 className="text-lg font-semibold mb-2">Price Range</h2>
+        <h2 className="mb-2 text-lg font-semibold">Price Range</h2>
         <Slider
           value={priceRange}
           onValueChange={setPriceRange}
@@ -262,7 +264,7 @@ export default function ShopPage() {
           step={1}
           className="w-full"
         />
-        <div className="flex justify-between mt-2 text-sm text-zinc-600">
+        <div className="mt-2 flex justify-between text-sm text-zinc-600">
           <span>${priceRange[0]}</span>
           <span>${priceRange[1]}+</span>
         </div>
@@ -270,11 +272,11 @@ export default function ShopPage() {
 
       {/* Product Grid */}
       <section className="mb-16">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
           {filteredProducts.map((product) => (
             <Card
               key={product.id}
-              className="flex flex-col overflow-hidden group"
+              className="group flex flex-col overflow-hidden"
             >
               <div className="relative aspect-square overflow-hidden">
                 <Image
@@ -282,11 +284,11 @@ export default function ShopPage() {
                   alt={product.name}
                   layout="fill"
                   objectFit="cover"
-                  className="group-hover:scale-105 transition-transform duration-300"
+                  className="transition-transform duration-300 group-hover:scale-105"
                 />
               </div>
               <CardContent className="flex-grow p-4">
-                <CardTitle className="text-lg mb-2 line-clamp-2">
+                <CardTitle className="mb-2 line-clamp-2 text-lg">
                   {product.name}
                 </CardTitle>
                 <Badge variant="outline" className="mb-2">
@@ -296,14 +298,14 @@ export default function ShopPage() {
                   ${product.price.toFixed(2)}
                 </p>
               </CardContent>
-              <CardFooter className="flex justify-between items-center p-4 bg-zinc-50">
+              <CardFooter className="flex items-center justify-between bg-zinc-50 p-4">
                 <div className="flex items-center text-sm text-zinc-600">
                   <Download className="mr-1 h-4 w-4" />
                   {product.downloads.toLocaleString()}
                 </div>
                 <Button
                   variant="outline"
-                  className="group-hover:bg-zinc-900 group-hover:text-white transition-colors"
+                  className="transition-colors group-hover:bg-zinc-900 group-hover:text-white"
                 >
                   <ShoppingCart className="mr-2 h-4 w-4" />
                   Add to Cart
@@ -316,14 +318,14 @@ export default function ShopPage() {
 
       {/* Customer Reviews */}
       <section className="mb-16">
-        <h2 className="text-2xl font-semibold mb-6">What Our Customers Say</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <h2 className="mb-6 text-2xl font-semibold">What Our Customers Say</h2>
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
           {[
             {
               name: "Alex Johnson",
               role: "Graphic Designer",
               comment:
-                "The quality of assets on MHN Graphics is outstanding. It has significantly improved my workflow.",
+                "The quality of assets on Oylkka Graphics is outstanding. It has significantly improved my workflow.",
               rating: 5,
             },
             {
@@ -343,11 +345,11 @@ export default function ShopPage() {
           ].map((review, index) => (
             <Card key={index} className="flex flex-col">
               <CardHeader>
-                <div className="flex items-center mb-2">
+                <div className="mb-2 flex items-center">
                   {[...Array(5)].map((_, i) => (
                     <Star
                       key={i}
-                      className={`h-5 w-5 ${i < review.rating ? "text-yellow-400 fill-yellow-400" : "text-zinc-300"}`}
+                      className={`h-5 w-5 ${i < review.rating ? "fill-yellow-400 text-yellow-400" : "text-zinc-300"}`}
                     />
                   ))}
                 </div>

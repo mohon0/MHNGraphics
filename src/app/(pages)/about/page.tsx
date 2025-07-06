@@ -20,7 +20,7 @@ export default function AboutPage() {
       <section className="relative h-[60vh] overflow-hidden">
         <Image
           src={img}
-          alt="MHN Graphics team at work"
+          alt="Oylkka Graphics team at work"
           layout="fill"
           objectFit="cover"
           className="brightness-50"
@@ -33,7 +33,7 @@ export default function AboutPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
             >
-              About MHN Graphics
+              About Oylkka Graphics
             </motion.h1>
             <motion.p
               className="mx-auto max-w-2xl text-xl text-white"
@@ -53,8 +53,8 @@ export default function AboutPage() {
           <h2 className="mb-8 text-center text-3xl font-bold">Our Story</h2>
           <div className="space-y-6 text-lg text-muted-foreground">
             <p>
-              MHN Graphics was born out of a passion for design and a vision to
-              help businesses thrive through compelling visual communication.
+              Oylkka Graphics was born out of a passion for design and a vision
+              to help businesses thrive through compelling visual communication.
               Founded in 2010 by John Doe, our journey began in a small studio
               with big dreams.
             </p>
@@ -81,7 +81,7 @@ export default function AboutPage() {
                 greatest reward is the success and satisfaction of our clients.
               </p>
               <p>
-                Today, MHN Graphics stands at the forefront of the design
+                Today, Oylkka Graphics stands at the forefront of the design
                 industry, continuously pushing boundaries and setting new
                 standards. We&apos;re not just creating designs; we&apos;re
                 crafting experiences that resonate with audiences and drive

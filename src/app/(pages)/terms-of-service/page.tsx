@@ -26,31 +26,31 @@ export default function TermsOfService() {
       title: "Acceptance of Terms",
       icon: <UserCheck className="h-6 w-6" />,
       content:
-        "By accessing or using the services provided by MHN Graphics, you agree to be bound by these Terms of Service. If you disagree with any part of the terms, you may not access our services.",
+        "By accessing or using the services provided by Oylkka Graphics, you agree to be bound by these Terms of Service. If you disagree with any part of the terms, you may not access our services.",
     },
     {
       title: "Use of Services",
       icon: <ScrollText className="h-6 w-6" />,
       content:
-        "Our services are provided 'as is' and are intended for lawful use only. You agree not to use our services for any illegal or unauthorized purpose. MHN Graphics reserves the right to terminate your access to the services for violations of these terms.",
+        "Our services are provided 'as is' and are intended for lawful use only. You agree not to use our services for any illegal or unauthorized purpose. Oylkka Graphics reserves the right to terminate your access to the services for violations of these terms.",
     },
     {
       title: "Intellectual Property",
       icon: <Scale className="h-6 w-6" />,
       content:
-        "All content, designs, and materials produced by MHN Graphics remain our intellectual property unless explicitly stated otherwise. You may not use, reproduce, or distribute our work without prior written consent.",
+        "All content, designs, and materials produced by Oylkka Graphics remain our intellectual property unless explicitly stated otherwise. You may not use, reproduce, or distribute our work without prior written consent.",
     },
     {
       title: "Limitation of Liability",
       icon: <ShieldAlert className="h-6 w-6" />,
       content:
-        "MHN Graphics shall not be liable for any indirect, incidental, special, consequential or punitive damages, including without limitation, loss of profits, data, use, goodwill, or other intangible losses, resulting from your access to or use of or inability to access or use the services.",
+        "Oylkka Graphics shall not be liable for any indirect, incidental, special, consequential or punitive damages, including without limitation, loss of profits, data, use, goodwill, or other intangible losses, resulting from your access to or use of or inability to access or use the services.",
     },
     {
       title: "Modifications to Services",
       icon: <FileWarning className="h-6 w-6" />,
       content:
-        "MHN Graphics reserves the right to modify or discontinue, temporarily or permanently, the services with or without notice. We shall not be liable to you or to any third party for any modification, price change, suspension or discontinuance of the service.",
+        "Oylkka Graphics reserves the right to modify or discontinue, temporarily or permanently, the services with or without notice. We shall not be liable to you or to any third party for any modification, price change, suspension or discontinuance of the service.",
     },
   ];
 
@@ -74,8 +74,8 @@ export default function TermsOfService() {
           </CardHeader>
           <CardContent>
             <p className="text-muted-foreground">
-              Welcome to MHN Graphics. These Terms of Service govern your use of
-              our website and services. By using our services, you agree to
+              Welcome to Oylkka Graphics. These Terms of Service govern your use
+              of our website and services. By using our services, you agree to
               these terms. Please read them carefully.
             </p>
           </CardContent>

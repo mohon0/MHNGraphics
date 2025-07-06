@@ -19,7 +19,7 @@ export function TeamSwitcher() {
               <AudioWaveform className="size-4" />
             </div>
             <div className="grid flex-1 text-left text-sm leading-tight">
-              <span className="truncate font-semibold">MHN Graphics</span>
+              <span className="truncate font-semibold">Oylkka Graphics</span>
             </div>
           </SidebarMenuButton>
         </SidebarMenuItem>

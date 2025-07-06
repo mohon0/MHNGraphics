@@ -5,12 +5,11 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 import { useFetchAllDesign } from "@/services/design";
-import { Design } from "@/utils/Interface";
+import type { Design } from "@/utils/Interface";
 import { ArrowRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import Marquee from "react-fast-marquee";
 
 interface ImageMarqueeProps {
   title?: string;
@@ -37,7 +36,7 @@ export default function ImageMarquee({
 
   if (isLoading) {
     return (
-      <section className="py-12 md:py-20">
+      <section className="p-2 py-12 md:py-20">
         <div className="container">
           <div className="mb-8 flex items-center justify-between">
             <h2 className="text-2xl font-bold md:text-3xl lg:text-4xl">
@@ -45,17 +44,10 @@ export default function ImageMarquee({
             </h2>
             <Skeleton className="h-10 w-32" />
           </div>
-          <div className="space-y-8">
-            <div className="grid grid-cols-2 gap-4 md:grid-cols-4 lg:grid-cols-6">
-              {Array.from({ length: 6 }).map((_, i) => (
-                <Skeleton key={i} className="aspect-square rounded-lg" />
-              ))}
-            </div>
-            <div className="grid grid-cols-2 gap-4 md:grid-cols-4 lg:grid-cols-6">
-              {Array.from({ length: 6 }).map((_, i) => (
-                <Skeleton key={i} className="aspect-square rounded-lg" />
-              ))}
-            </div>
+          <div className="grid grid-cols-2 gap-4 lg:grid-cols-5">
+            {Array.from({ length: 10 }).map((_, i) => (
+              <Skeleton key={i} className="aspect-square rounded-lg" />
+            ))}
           </div>
         </div>
       </section>
@@ -64,7 +56,7 @@ export default function ImageMarquee({
 
   if (isError) {
     return (
-      <section className="py-12 md:py-20">
+      <section className="p-2 py-12 md:py-20">
         <div className="container">
           <h2 className="mb-6 text-2xl font-bold md:text-3xl lg:text-4xl">
             {title}
@@ -80,18 +72,8 @@ export default function ImageMarquee({
   }
 
   const designs = data?.data || [];
-  const totalItems = data?.meta?.totalItems || 0;
 
-  // Only split the data if we have enough items
-  const firstSliderData =
-    totalItems > 10 ? designs.slice(0, Math.ceil(designs.length / 2)) : designs;
-
-  const secondSliderData =
-    totalItems > 10
-      ? designs.slice(Math.ceil(designs.length / 2))
-      : designs.slice().reverse(); // Reverse the array for visual variety if not enough items
-
-  // Don't render marquees on server to prevent hydration issues
+  // Don't render on server to prevent hydration issues
   if (!isClient) {
     return (
       <section className="py-12 md:py-20">
@@ -112,7 +94,7 @@ export default function ImageMarquee({
           <h2 className="text-2xl font-bold md:text-3xl lg:text-4xl">
             {title}
           </h2>
-          <Button asChild variant="outline" className="group">
+          <Button asChild variant="outline" className="group bg-transparent">
             <Link href={viewAllLink}>
               View all designs
               <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
@@ -121,42 +103,12 @@ export default function ImageMarquee({
         </div>
       </div>
 
-      <div className="space-y-8 overflow-hidden">
-        {/* First Marquee */}
-        <div className="relative before:absolute before:left-0 before:top-0 before:z-10 before:h-full before:w-12 before:bg-gradient-to-r before:from-background before:to-transparent after:absolute after:right-0 after:top-0 after:z-10 after:h-full after:w-12 after:bg-gradient-to-l after:from-background after:to-transparent">
-          <Marquee
-            pauseOnHover={true}
-            speed={30}
-            className="py-4"
-            gradient={false}
-          >
-            {firstSliderData.map((design: Design) => (
-              <DesignCard
-                key={design.id}
-                design={design}
-                className="mx-3 w-[200px] md:w-[240px]"
-              />
-            ))}
-          </Marquee>
-        </div>
-
-        {/* Second Marquee */}
-        <div className="relative before:absolute before:left-0 before:top-0 before:z-10 before:h-full before:w-12 before:bg-gradient-to-r before:from-background before:to-transparent after:absolute after:right-0 after:top-0 after:z-10 after:h-full after:w-12 after:bg-gradient-to-l after:from-background after:to-transparent">
-          <Marquee
-            pauseOnHover={true}
-            direction="right"
-            speed={40}
-            className="py-4"
-            gradient={false}
-          >
-            {secondSliderData.map((design: Design) => (
-              <DesignCard
-                key={design.id}
-                design={design}
-                className="mx-3 w-[200px] md:w-[240px]"
-              />
-            ))}
-          </Marquee>
+      {/* Grid Layout - 2 columns on mobile, 5 columns on desktop */}
+      <div className="container mx-auto p-2">
+        <div className="grid grid-cols-2 gap-3 md:gap-4 lg:grid-cols-5">
+          {designs.map((design: Design) => (
+            <DesignCard key={design.id} design={design} />
+          ))}
         </div>
       </div>
     </section>
@@ -190,8 +142,8 @@ function DesignCard({ design, className }: DesignCardProps) {
         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
 
         {/* Content overlay */}
-        <div className="absolute bottom-0 left-0 right-0 p-4 text-white opacity-0 transition-all duration-300 group-hover:bottom-0 group-hover:opacity-100">
-          <h3 className="line-clamp-1 text-sm font-medium md:text-base">
+        <div className="absolute bottom-0 left-0 right-0 p-3 text-white opacity-0 transition-all duration-300 group-hover:bottom-0 group-hover:opacity-100">
+          <h3 className="line-clamp-1 text-xs font-medium sm:text-sm">
             {design.name}
           </h3>
         </div>

@@ -93,13 +93,13 @@ export default function Contact() {
                 <div className="inline-flex h-12 w-12 items-center justify-center">
                   <Image
                     src={logo}
-                    alt="MHN Graphics Logo"
+                    alt="Oylkka Graphics Logo"
                     width={40}
                     height={40}
                     className="rounded"
                   />
                 </div>
-                <h3 className="mt-4 text-xl font-bold">MHN Graphics</h3>
+                <h3 className="mt-4 text-xl font-bold">Oylkka Graphics</h3>
                 <p className="mt-2 text-sm text-muted-foreground">
                   Transforming ideas into visual masterpieces. Your vision, our
                   expertise.

@@ -132,7 +132,7 @@ function SearchHeaderComponent({ fixed = false }: { fixed?: boolean }) {
                   }`}
                 >
                   <div className="font-philosopher ml-2 flex items-end gap-2 md:ml-0">
-                    <span className="text-2xl">MHN</span>
+                    <span className="text-2xl">Oylkka</span>
                     <span className="hidden text-xl md:block">Graphics</span>
                   </div>
                 </Link>

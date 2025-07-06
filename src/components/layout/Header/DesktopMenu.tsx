@@ -37,7 +37,7 @@ export default function DesktopMenu({
                 fixed ? "pl-2 text-sm text-white" : "pl-2 text-sm text-black"
               }
             >
-              MHN Shop
+              Oylkka Shop
             </NavigationMenuLink>
           </Link>
           <Badge
@@ -54,7 +54,7 @@ export default function DesktopMenu({
                 fixed ? "pl-2 text-sm text-white" : "pl-2 text-sm text-black"
               }
             >
-              MHN IT Agency
+              Oylkka IT Agency
             </NavigationMenuLink>
           </Link>
           <Badge
