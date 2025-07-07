@@ -2,6 +2,7 @@
 
 import Preview from "@/app/(pages)/best-computer-training-center/application/ApplicationPreview";
 import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
 import {
   Card,
   CardContent,
@@ -19,6 +20,11 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import {
   Select,
   SelectContent,
   SelectGroup,
@@ -30,9 +36,12 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { bangladeshDistricts } from "@/constant/District";
 import bkash from "@/images/tools/bkash.svg";
+import { cn } from "@/lib/utils";
 import { UserApplication } from "@/utils/Interface";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
+import { format } from "date-fns";
+import { CalendarIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
@@ -69,13 +78,9 @@ export const formSchema = z.object({
     .min(1, "Father's occupation is required")
     .max(40, "Must be 40 characters or less"),
 
-  birthDay: z
-    .string()
-    .trim()
-    .regex(
-      /^(0[1-9]|[12][0-9]|3[01])\/(0[1-9]|1[0-2])\/\d{4}$/,
-      "Date must be in the format dd/mm/yyyy",
-    ),
+  birthDay: z.date({
+    required_error: "A date of birth is required.",
+  }),
 
   mobileNumber: z
     .string()
@@ -372,11 +377,43 @@ export function StudentApplicationForm({
                       control={form.control}
                       name="birthDay"
                       render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Birth Date</FormLabel>
-                          <FormControl>
-                            <Input placeholder="13/01/2000" {...field} />
-                          </FormControl>
+                        <FormItem className="flex flex-col">
+                          <FormLabel>Date of birth</FormLabel>
+                          <Popover>
+                            <PopoverTrigger asChild>
+                              <FormControl>
+                                <Button
+                                  variant={"outline"}
+                                  className={cn(
+                                    "w-[240px] pl-3 text-left font-normal",
+                                    !field.value && "text-muted-foreground",
+                                  )}
+                                >
+                                  {field.value ? (
+                                    format(field.value, "PPP")
+                                  ) : (
+                                    <span>Pick a date</span>
+                                  )}
+                                  <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                </Button>
+                              </FormControl>
+                            </PopoverTrigger>
+                            <PopoverContent
+                              className="w-auto p-0"
+                              align="start"
+                            >
+                              <Calendar
+                                mode="single"
+                                selected={field.value}
+                                onSelect={field.onChange}
+                                disabled={(date) =>
+                                  date > new Date() ||
+                                  date < new Date("1900-01-01")
+                                }
+                                captionLayout="dropdown"
+                              />
+                            </PopoverContent>
+                          </Popover>
                           <FormMessage />
                         </FormItem>
                       )}

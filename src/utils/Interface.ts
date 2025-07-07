@@ -146,7 +146,7 @@ export interface UserApplication {
   studentName: string;
   fatherName: string;
   motherName: string;
-  birthDay: string;
+  birthDay: Date;
   bloodGroup: string;
   mobileNumber: string;
   guardianNumber: string;

@@ -1,6 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
 import {
   Card,
   CardContent,
@@ -20,6 +21,11 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import {
   Select,
   SelectContent,
   SelectGroup,
@@ -32,14 +38,15 @@ import { Separator } from "@/components/ui/separator";
 import { bangladeshDistricts } from "@/constant/District";
 import bkash from "@/images/tools/bkash.svg";
 import { ApplicationSchema } from "@/lib/Schemas";
+import { cn } from "@/lib/utils";
 import { useFetchDuration } from "@/services/admin";
 import { useSubmitApplication } from "@/services/application";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Upload } from "lucide-react";
+import { format } from "date-fns";
+import { CalendarIcon, Upload } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useCallback, useState } from "react";
-import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -272,23 +279,43 @@ export function StudentApplicationForm() {
                       control={form.control}
                       name="birthDay"
                       render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Birth Date</FormLabel>
-                          <FormControl>
-                            <DatePicker
-                              selected={
-                                field.value ? new Date(field.value) : null
-                              }
-                              onChange={(date) => field.onChange(date)}
-                              dateFormat="dd/MM/yyyy"
-                              placeholderText="DD/MM/YYYY"
-                              className="w-full rounded-md border p-2"
-                              showYearDropdown
-                              showMonthDropdown
-                              dropdownMode="select"
-                              maxDate={new Date()} // Prevent selecting future dates
-                            />
-                          </FormControl>
+                        <FormItem className="flex flex-col">
+                          <FormLabel>Date of birth</FormLabel>
+                          <Popover>
+                            <PopoverTrigger asChild>
+                              <FormControl>
+                                <Button
+                                  variant={"outline"}
+                                  className={cn(
+                                    "w-[240px] pl-3 text-left font-normal",
+                                    !field.value && "text-muted-foreground",
+                                  )}
+                                >
+                                  {field.value ? (
+                                    format(field.value, "PPP")
+                                  ) : (
+                                    <span>Pick a date</span>
+                                  )}
+                                  <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                </Button>
+                              </FormControl>
+                            </PopoverTrigger>
+                            <PopoverContent
+                              className="w-auto p-0"
+                              align="start"
+                            >
+                              <Calendar
+                                mode="single"
+                                selected={field.value}
+                                onSelect={field.onChange}
+                                disabled={(date) =>
+                                  date > new Date() ||
+                                  date < new Date("1900-01-01")
+                                }
+                                captionLayout="dropdown"
+                              />
+                            </PopoverContent>
+                          </Popover>
                           <FormMessage />
                         </FormItem>
                       )}
