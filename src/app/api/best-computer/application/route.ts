@@ -378,6 +378,7 @@ export async function PATCH(req: NextRequest) {
       design: updatedDesign,
     });
   } catch (error) {
+    console.log(error);
     return new NextResponse("Internal Server Error", { status: 500 });
   }
 }

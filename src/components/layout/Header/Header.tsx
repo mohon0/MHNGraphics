@@ -26,7 +26,7 @@ export default function Header({
             {/* Render the MobileMenu component here */}
           </div>
           {/* Logo */}
-          <Logo fixed />
+          <Logo fixed={fixed} />
         </div>
 
         {/* Call to Action & Social Media for Desktop */}

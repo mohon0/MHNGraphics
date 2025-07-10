@@ -200,7 +200,9 @@ export function StudentApplicationForm({
       fatherName: application.fatherName,
       motherName: application.motherName,
       fatherOccupation: application.fatherOccupation,
-      birthDay: application.birthDay,
+      birthDay: application.birthDay
+        ? new Date(application.birthDay)
+        : undefined,
       mobileNumber: application.mobileNumber,
       guardianNumber: application.guardianNumber,
       gender: application.gender,
@@ -236,9 +238,16 @@ export function StudentApplicationForm({
     setIsSubmitting(true);
 
     const submissionData = new FormData();
+
+    // Handle the date conversion specifically
     Object.entries(values).forEach(([key, value]) => {
       if (value !== undefined && value !== null) {
-        submissionData.append(key, value.toString());
+        // Convert Date objects to ISO string for Prisma
+        if (key === "birthDay" && value instanceof Date) {
+          submissionData.append(key, value.toISOString());
+        } else {
+          submissionData.append(key, value.toString());
+        }
       }
     });
 
@@ -249,6 +258,7 @@ export function StudentApplicationForm({
     if (deletedImage) {
       submissionData.append("deletedImage", deletedImage);
     }
+
     toast.loading("Please wait...");
 
     try {
@@ -267,7 +277,7 @@ export function StudentApplicationForm({
         toast.error("Failed to update design");
       } else {
         toast.dismiss();
-        toast.success("Design successfully updated");
+        toast.success("Application successfully updated");
       }
     } catch (error) {
       toast.dismiss();

@@ -4,8 +4,7 @@ const AnimatedButton = () => {
   return (
     <div className="flex flex-col items-center gap-10 md:flex-row">
       <Link
-        href="https://mhngraphics.vercel.app/best-computer-training-center/application"
-        target="__blank"
+        href="/best-computer-training-center/application"
         className="shadow-custom flex h-fit animate-pulse items-center gap-3 rounded-full border-4 bg-primary-100 px-8 py-4 text-lg text-white"
       >
         <p>আবেদন করুন</p>
