@@ -174,7 +174,7 @@ export async function POST(req: NextRequest) {
 
       const paymentDetails = {
         amount: 1,
-        callbackURL: `${myUrl}/api/best-computer/application/callback`,
+        callbackURL: `${myUrl}/api/best-computer/application/callback?applicationId=${newApplication.id}&userId=${newApplication.userId}`,
         userId: newApplication.userId,
         applicationId: newApplication.id,
         reference: "application-fee",
@@ -195,7 +195,7 @@ export async function POST(req: NextRequest) {
             newApplication.imageId,
           );
           if (result.result !== "ok") {
-            return new NextResponse("error", { status: 400 });
+            console.error("Error deleting image from Cloudinary:", result);
           }
         }
 

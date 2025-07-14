@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { bkashConfig } from "@/lib/bkash";
 import { executePayment, queryPayment } from "@/services/bkash";
 import { Prisma } from "@/components/helper/prisma/Prisma";
+import cloudinary from "@/utils/cloudinary";
 
 export async function GET(req: NextRequest) {
   const myUrl = process.env.NEXT_PUBLIC_SITE_URL;
@@ -44,6 +45,17 @@ export async function GET(req: NextRequest) {
             paymentFailedReason: statusMessage ?? "Bkash payment failed",
           },
         },
+      });
+
+      if (application.imageId) {
+        const result = await cloudinary.uploader.destroy(application.imageId);
+        if (result.result !== "ok") {
+          console.error("Error deleting image from Cloudinary:", result);
+        }
+      }
+
+      await Prisma.application.delete({
+        where: { id: applicationId },
       });
 
       return NextResponse.redirect(
@@ -91,6 +103,12 @@ export async function GET(req: NextRequest) {
       }
 
       // If both execution and query failed → delete application
+      if (application.imageId) {
+        const result = await cloudinary.uploader.destroy(application.imageId);
+        if (result.result !== "ok") {
+          console.error("Error deleting image from Cloudinary:", result);
+        }
+      }
       await Prisma.application.delete({ where: { id: applicationId } });
 
       return NextResponse.redirect(
