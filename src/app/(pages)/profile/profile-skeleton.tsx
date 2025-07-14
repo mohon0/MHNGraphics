@@ -7,12 +7,12 @@ export default function ProfileSkeleton() {
   return (
     <div className="container mx-auto mt-10 animate-pulse space-y-8">
       {/* Profile Header Skeleton */}
-      <Card className="overflow-hidden border-none bg-gradient-to-r from-slate-100 to-slate-50 shadow-md dark:from-slate-900 dark:to-slate-800">
+      <Card className="overflow-hidden border-none bg-linear-to-r from-slate-100 to-slate-50 shadow-md dark:from-slate-900 dark:to-slate-800">
         <CardContent className="p-6 sm:p-8">
           <div className="flex flex-col items-center gap-6 sm:flex-row sm:items-center">
             {/* Avatar Skeleton */}
             <div className="relative">
-              <div className="absolute -inset-1 rounded-full bg-gradient-to-r from-slate-200 to-slate-300 opacity-75 blur-sm dark:from-slate-700 dark:to-slate-600"></div>
+              <div className="absolute -inset-1 rounded-full bg-linear-to-r from-slate-200 to-slate-300 opacity-75 blur-xs dark:from-slate-700 dark:to-slate-600"></div>
               <Skeleton className="h-28 w-28 rounded-full" />
             </div>
 

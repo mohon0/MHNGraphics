@@ -154,7 +154,7 @@ function ApplicationListContent() {
         </Badge>
       </div>
 
-      <div className="sticky top-0 z-10 -mx-4 bg-background/95 px-4 py-4 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      <div className="sticky top-0 z-10 -mx-4 bg-background/95 px-4 py-4 backdrop-blur-sm supports-backdrop-filter:bg-background/60">
         <div className="flex flex-col gap-4 md:flex-row md:items-center">
           <div className="relative flex flex-1 items-center gap-2">
             <div className="relative flex-1">

@@ -28,7 +28,7 @@ export default function Preview() {
         <DialogHeader>
           <DialogTitle>Application Preview</DialogTitle>
         </DialogHeader>
-        <div className="h-[29rem] overflow-y-scroll">
+        <div className="h-116 overflow-y-scroll">
           <div>
             {/* Header */}
             <div className="flex flex-col items-center justify-center gap-6 bg-cyan-500 px-2 py-2 md:flex-row md:px-10 md:py-8 print:flex print:flex-row print:px-10 print:py-4">

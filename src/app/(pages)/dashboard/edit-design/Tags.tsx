@@ -74,7 +74,7 @@ export default function Tags() {
           onChange={(e) => setInput(e.target.value)}
           onKeyDown={handleKeyDown}
           placeholder="Add a tag..."
-          className="flex-grow"
+          className="grow"
         />
         <Button variant="outline" type="button" onClick={() => addTag(input)}>
           Add

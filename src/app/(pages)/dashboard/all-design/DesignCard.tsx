@@ -91,7 +91,7 @@ export default function DesignCard({
 
             <Link
               href={createSlug({ id: design.id, name: design.name })}
-              className="absolute inset-0 z-0 bg-gradient-to-t from-black/60 via-black/0 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+              className="absolute inset-0 z-0 bg-linear-to-t from-black/60 via-black/0 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
             />
             <div className="absolute right-2 top-2 flex gap-2 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
               <TooltipProvider>

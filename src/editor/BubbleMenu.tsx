@@ -62,7 +62,7 @@ export const BubbleMenu = ({
   if (!menuEl.current) return null; // Ensure menuEl exists before rendering
 
   return createPortal(
-    <div className={clsx("rounded bg-background shadow", className)}>
+    <div className={clsx("rounded bg-background shadow-sm", className)}>
       {children}
     </div>,
     menuEl.current,

@@ -261,7 +261,7 @@ function SingleApplication({ application }: { application: UserApplication }) {
         <Image
           src={logo2}
           alt=""
-          className="absolute -z-50 w-96 -translate-y-[39rem] translate-x-2/3 transform opacity-10 print:left-1/2 print:top-1/2 print:-translate-x-1/2 print:-translate-y-1/2"
+          className="absolute -z-50 w-96 -translate-y-156 translate-x-2/3 transform opacity-10 print:left-1/2 print:top-1/2 print:-translate-x-1/2 print:-translate-y-1/2"
         />
         <div className="mt-3 border text-sm md:mx-10 print:mx-8 print:text-black">
           <div>

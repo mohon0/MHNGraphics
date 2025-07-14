@@ -56,7 +56,7 @@ export function MessageBubble({
       )}
       <div
         className={cn(
-          "relative rounded-2xl px-4 py-2.5 shadow-sm",
+          "relative rounded-2xl px-4 py-2.5 shadow-xs",
           isSelf
             ? "rounded-br-sm bg-primary text-primary-foreground"
             : "rounded-bl-sm bg-muted",

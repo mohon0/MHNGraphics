@@ -142,7 +142,7 @@ function SearchPageContent() {
                   sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 33vw"
                   loading="lazy"
                 />
-                <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/70 to-transparent p-3 text-white opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                <div className="absolute inset-x-0 bottom-0 bg-linear-to-t from-black/70 to-transparent p-3 text-white opacity-0 transition-opacity duration-300 group-hover:opacity-100">
                   <h3 className="line-clamp-1 text-sm font-medium">
                     {item.name}
                   </h3>

@@ -48,7 +48,7 @@ export default function Component() {
   };
 
   return (
-    <div className="relative overflow-hidden bg-gradient-to-br from-slate-50 to-blue-50 px-4 py-20 text-center">
+    <div className="relative overflow-hidden bg-linear-to-br from-slate-50 to-blue-50 px-4 py-20 text-center">
       <motion.a
         href="/best-computer-training-center"
         className="block cursor-pointer"
@@ -100,7 +100,7 @@ export default function Component() {
             initial={{ width: 0, opacity: 0 }}
             animate={{ width: "200px", opacity: 1 }}
             transition={{ delay: 2, duration: 1, ease: "easeOut" }}
-            className="relative mx-auto mb-6 h-2 rounded-full bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500"
+            className="relative mx-auto mb-6 h-2 rounded-full bg-linear-to-r from-blue-500 via-purple-500 to-pink-500"
           >
             <motion.div
               animate={{
@@ -112,7 +112,7 @@ export default function Component() {
                 repeat: Number.POSITIVE_INFINITY,
                 ease: "easeInOut",
               }}
-              className="absolute inset-0 rounded-full bg-gradient-to-r from-blue-400 via-purple-400 to-pink-400 blur-sm"
+              className="absolute inset-0 rounded-full bg-linear-to-r from-blue-400 via-purple-400 to-pink-400 blur-xs"
             />
           </motion.div>
 

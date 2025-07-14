@@ -98,7 +98,7 @@ export default function UserDropdown({
             variant="ghost"
             size="icon"
             className={cn(
-              "relative h-10 w-10 rounded-full border border-transparent transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring",
+              "relative h-10 w-10 rounded-full border border-transparent transition-colors hover:bg-muted focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-ring",
               fixed && "border-border",
             )}
           >

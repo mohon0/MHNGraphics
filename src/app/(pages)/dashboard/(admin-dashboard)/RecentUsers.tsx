@@ -36,7 +36,7 @@ export default function RecentUsers() {
   });
 
   return (
-    <Card className="overflow-hidden bg-gradient-to-br from-white to-gray-50 shadow-lg">
+    <Card className="overflow-hidden bg-linear-to-br from-white to-gray-50 shadow-lg">
       <CardHeader className="border-b border-gray-100 bg-white pb-4">
         <div className="flex items-center justify-between">
           <CardTitle className="text-lg font-bold text-gray-800 md:text-2xl">
@@ -64,7 +64,7 @@ export default function RecentUsers() {
                   href={`/dashboard/users/${user.id}`}
                   className="flex items-center space-x-4 p-4 transition-all duration-200 ease-in-out group-hover:bg-blue-50"
                 >
-                  <Avatar className="h-12 w-12 rounded-full border-2 border-white shadow-sm transition-transform duration-200 ease-in-out group-hover:scale-110">
+                  <Avatar className="h-12 w-12 rounded-full border-2 border-white shadow-xs transition-transform duration-200 ease-in-out group-hover:scale-110">
                     <AvatarImage src={user.image} alt={user.name} />
                     <AvatarFallback>
                       <User className="h-6 w-6 text-gray-400" />

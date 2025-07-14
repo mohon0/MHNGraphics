@@ -11,7 +11,7 @@ export default function DesignSkeleton() {
         {Array.from({ length: 9 }).map((_, i) => (
           <div key={i} className="mb-6 break-inside-avoid">
             <Card className="overflow-hidden">
-              <Skeleton className="aspect-[3/4] w-full" />
+              <Skeleton className="aspect-3/4 w-full" />
               <CardContent className="p-3">
                 <Skeleton className="h-4 w-3/4" />
               </CardContent>

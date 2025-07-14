@@ -27,18 +27,18 @@ export default function AccessDenied() {
   return (
     <>
       <Header />
-      <div className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-br from-background to-muted p-4">
+      <div className="flex min-h-screen flex-col items-center justify-center bg-linear-to-br from-background to-muted p-4">
         <div
           className={`w-full max-w-md transform transition-all duration-500 ${
             isVisible ? "translate-y-0 opacity-100" : "-translate-y-8 opacity-0"
           }`}
         >
           <Card className="overflow-hidden border-destructive/20 shadow-lg">
-            <div className="absolute left-0 right-0 top-0 h-1 bg-gradient-to-r from-destructive/40 via-destructive to-destructive/40"></div>
+            <div className="absolute left-0 right-0 top-0 h-1 bg-linear-to-r from-destructive/40 via-destructive to-destructive/40"></div>
             <CardHeader className="pb-4">
               <div className="mb-4 flex justify-center">
                 <div className="relative">
-                  <div className="absolute -inset-0.5 animate-pulse rounded-full bg-red-500/20 blur-sm"></div>
+                  <div className="absolute -inset-0.5 animate-pulse rounded-full bg-red-500/20 blur-xs"></div>
                   <div className="relative flex h-20 w-20 items-center justify-center rounded-full bg-destructive/10">
                     <ShieldAlert className="h-10 w-10 text-destructive" />
                   </div>

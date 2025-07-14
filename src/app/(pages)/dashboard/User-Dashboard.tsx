@@ -65,7 +65,7 @@ export default function UserDashboard() {
 
   return (
     <div className="space-y-6">
-      <Card className="bg-gradient-to-r from-blue-500 to-purple-600 text-white">
+      <Card className="bg-linear-to-r from-blue-500 to-purple-600 text-white">
         <CardContent className="flex flex-col items-center gap-6 p-6 md:flex-row">
           <Avatar className="h-32 w-32 border-4 border-white">
             <AvatarImage src={userImage} alt={userData?.name || "User"} />

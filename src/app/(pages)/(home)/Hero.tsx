@@ -109,7 +109,7 @@ export default function HeroImmersiveEnhanced() {
               onError={() => setError("Failed to load image")}
             />
             {/* Enhanced gradient overlay for better text contrast */}
-            <div className="absolute inset-0 bg-gradient-to-b from-black/85 via-black/70 to-black/85" />
+            <div className="absolute inset-0 bg-linear-to-b from-black/85 via-black/70 to-black/85" />
           </motion.div>
         </AnimatePresence>
       </div>
@@ -129,19 +129,19 @@ export default function HeroImmersiveEnhanced() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.2, duration: 0.8 }}
-              className="mb-2 inline-block rounded-full bg-secondary/10 px-4 py-1.5 text-sm font-medium text-white shadow-sm backdrop-blur-sm"
+              className="mb-2 inline-block rounded-full bg-secondary/10 px-4 py-1.5 text-sm font-medium text-white shadow-xs backdrop-blur-xs"
             >
               Premium Design Resources
             </motion.div>
 
-            <h1 className="mb-6 text-4xl font-bold tracking-tight text-white drop-shadow-sm sm:text-5xl md:text-6xl lg:text-7xl">
+            <h1 className="mb-6 text-4xl font-bold tracking-tight text-white drop-shadow-xs sm:text-5xl md:text-6xl lg:text-7xl">
               <span className="block">{heroData[currentIndex].title}</span>
-              <span className="mt-2 block bg-gradient-to-r from-gray-600 to-muted bg-clip-text text-transparent drop-shadow">
+              <span className="mt-2 block bg-linear-to-r from-gray-600 to-muted bg-clip-text text-transparent drop-shadow-sm">
                 {heroData[currentIndex].subtitle}
               </span>
             </h1>
 
-            <p className="mx-auto mb-10 max-w-2xl text-lg text-white/90 drop-shadow-sm sm:text-xl">
+            <p className="mx-auto mb-10 max-w-2xl text-lg text-white/90 drop-shadow-xs sm:text-xl">
               {heroData[currentIndex].description}
             </p>
           </motion.div>
@@ -155,7 +155,7 @@ export default function HeroImmersiveEnhanced() {
         >
           <form
             onSubmit={handleSearch}
-            className="relative mx-auto mb-10 w-full max-w-2xl overflow-hidden rounded-full border border-white/30 bg-black/40 shadow-lg backdrop-blur-sm"
+            className="relative mx-auto mb-10 w-full max-w-2xl overflow-hidden rounded-full border border-white/30 bg-black/40 shadow-lg backdrop-blur-xs"
           >
             <div className="relative flex items-center">
               <Search className="absolute left-4 h-5 w-5 text-white/70" />
@@ -189,7 +189,7 @@ export default function HeroImmersiveEnhanced() {
             <Link key={index} href={category.href}>
               <Button
                 variant="outline"
-                className="border-white/30 bg-black/40 text-white shadow-md backdrop-blur-sm hover:bg-white/10 hover:text-white"
+                className="border-white/30 bg-black/40 text-white shadow-md backdrop-blur-xs hover:bg-white/10 hover:text-white"
               >
                 {category.name}
                 <ChevronRight className="ml-1 h-4 w-4" />
@@ -207,7 +207,7 @@ export default function HeroImmersiveEnhanced() {
               className={cn(
                 "h-2 w-2 rounded-full transition-all",
                 index === currentIndex
-                  ? "w-8 bg-primary shadow-sm"
+                  ? "w-8 bg-primary shadow-xs"
                   : "bg-white/60 hover:bg-white/90",
               )}
               aria-label={`Go to slide ${index + 1}`}

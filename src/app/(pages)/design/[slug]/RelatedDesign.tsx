@@ -77,7 +77,7 @@ function LoadingSkeleton() {
         {[...Array(3)].map((_, i) => (
           <div
             key={i}
-            className="w-full flex-shrink-0 space-y-3 md:w-1/3 lg:w-1/5"
+            className="w-full shrink-0 space-y-3 md:w-1/3 lg:w-1/5"
           >
             <Skeleton className="h-44 w-full rounded-xl" />
             <Skeleton className="h-6 w-3/4" />

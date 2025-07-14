@@ -245,13 +245,13 @@ export const Slider: React.FC = () => {
   const getThemeClasses = (theme: string) => {
     switch (theme) {
       case "gradient":
-        return "bg-gradient-to-br from-green-900/90 via-teal-900/90 to-emerald-900/90";
+        return "bg-linear-to-br from-green-900/90 via-teal-900/90 to-emerald-900/90";
       case "modern":
-        return "bg-gradient-to-br from-blue-900/90 via-purple-900/90 to-indigo-900/90";
+        return "bg-linear-to-br from-blue-900/90 via-purple-900/90 to-indigo-900/90";
       case "elegant":
-        return "bg-gradient-to-br from-orange-900/90 via-red-900/90 to-pink-900/90";
+        return "bg-linear-to-br from-orange-900/90 via-red-900/90 to-pink-900/90";
       default:
-        return "bg-gradient-to-br from-gray-900/90 to-black/90";
+        return "bg-linear-to-br from-gray-900/90 to-black/90";
     }
   };
 
@@ -275,7 +275,7 @@ export const Slider: React.FC = () => {
             const animation = slideAnimations[index];
             return (
               <CarouselItem key={index}>
-                <div className="relative h-[55rem] w-full overflow-hidden rounded-b-2xl shadow-2xl md:h-[40rem]">
+                <div className="relative h-220 w-full overflow-hidden rounded-b-2xl shadow-2xl md:h-160">
                   {/* Theme-based Overlay */}
                   <div
                     className={`absolute inset-0 ${getThemeClasses(slide.theme)}`}
@@ -284,7 +284,7 @@ export const Slider: React.FC = () => {
                   {/* Animated Background Elements */}
                   <div className="absolute inset-0 overflow-hidden">
                     <motion.div
-                      className={`absolute -right-40 -top-40 h-80 w-80 rounded-full bg-gradient-to-r ${slide.accentColor} opacity-20 blur-3xl`}
+                      className={`absolute -right-40 -top-40 h-80 w-80 rounded-full bg-linear-to-r ${slide.accentColor} opacity-20 blur-3xl`}
                       animate={{
                         scale: [1, 1.2, 1],
                         rotate: [0, 180, 360],
@@ -296,7 +296,7 @@ export const Slider: React.FC = () => {
                       }}
                     />
                     <motion.div
-                      className={`absolute -bottom-40 -left-40 h-80 w-80 rounded-full bg-gradient-to-r ${slide.accentColor} opacity-10 blur-3xl`}
+                      className={`absolute -bottom-40 -left-40 h-80 w-80 rounded-full bg-linear-to-r ${slide.accentColor} opacity-10 blur-3xl`}
                       animate={{
                         scale: [1.2, 1, 1.2],
                         rotate: [360, 180, 0],
@@ -326,7 +326,7 @@ export const Slider: React.FC = () => {
                             transition={animation.title.transition}
                           >
                             <Badge
-                              className={`mb-4 border-white/30 bg-gradient-to-r ${slide.accentColor} text-white shadow-lg`}
+                              className={`mb-4 border-white/30 bg-linear-to-r ${slide.accentColor} text-white shadow-lg`}
                             >
                               {slide.theme === "gradient" && (
                                 <Sparkles className="mr-1 h-3 w-3" />
@@ -384,7 +384,7 @@ export const Slider: React.FC = () => {
                                 >
                                   <Badge
                                     variant="secondary"
-                                    className="border-white/20 bg-white/10 text-white backdrop-blur-sm"
+                                    className="border-white/20 bg-white/10 text-white backdrop-blur-xs"
                                   >
                                     {feature}
                                   </Badge>
@@ -417,7 +417,7 @@ export const Slider: React.FC = () => {
                                   }
                                   transition={{ delay: 0.8 + idx * 0.1 }}
                                 >
-                                  <Card className="border-white/20 bg-white/10 text-center backdrop-blur-sm">
+                                  <Card className="border-white/20 bg-white/10 text-center backdrop-blur-xs">
                                     <CardContent className="p-3">
                                       <div className="mb-1 flex items-center justify-center text-white">
                                         {stat.icon}
@@ -448,14 +448,14 @@ export const Slider: React.FC = () => {
                           >
                             <Button
                               size="lg"
-                              className={`bg-gradient-to-r ${slide.accentColor} font-semibold text-white shadow-lg hover:shadow-xl`}
+                              className={`bg-linear-to-r ${slide.accentColor} font-semibold text-white shadow-lg hover:shadow-xl`}
                             >
                               শেখা শুরু করুন
                             </Button>
                             <Button
                               size="lg"
                               variant="outline"
-                              className="border-white bg-transparent text-white backdrop-blur-sm hover:bg-white hover:text-black"
+                              className="border-white bg-transparent text-white backdrop-blur-xs hover:bg-white hover:text-black"
                             >
                               আরও জানুন
                             </Button>
@@ -483,7 +483,7 @@ export const Slider: React.FC = () => {
                               className="h-auto w-full object-cover"
                             />
                             <div
-                              className={`absolute inset-0 bg-gradient-to-t ${slide.accentColor} opacity-20`}
+                              className={`absolute inset-0 bg-linear-to-t ${slide.accentColor} opacity-20`}
                             />
                           </div>
                         </motion.div>
@@ -496,8 +496,8 @@ export const Slider: React.FC = () => {
           })}
         </CarouselContent>
 
-        <CarouselPrevious className="absolute left-6 top-1/2 z-50 -translate-y-1/2 border-white/30 bg-white/20 text-white backdrop-blur-sm hover:bg-white/30" />
-        <CarouselNext className="absolute right-6 top-1/2 z-50 -translate-y-1/2 border-white/30 bg-white/20 text-white backdrop-blur-sm hover:bg-white/30" />
+        <CarouselPrevious className="absolute left-6 top-1/2 z-50 -translate-y-1/2 border-white/30 bg-white/20 text-white backdrop-blur-xs hover:bg-white/30" />
+        <CarouselNext className="absolute right-6 top-1/2 z-50 -translate-y-1/2 border-white/30 bg-white/20 text-white backdrop-blur-xs hover:bg-white/30" />
 
         {/* Custom Pagination Dots */}
         <div className="absolute bottom-6 left-1/2 z-30 flex -translate-x-1/2 items-center gap-2">

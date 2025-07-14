@@ -80,7 +80,7 @@ export default function WebDesignPage() {
             </div>
           </div>
         </div>
-        <div className="absolute inset-0 z-0 bg-gradient-to-r from-background to-background/50"></div>
+        <div className="absolute inset-0 z-0 bg-linear-to-r from-background to-background/50"></div>
       </section>
 
       {/* Services Section */}

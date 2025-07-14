@@ -8,12 +8,12 @@ interface props {
 
 export default function FeedBackModel({ img, name, des }: props) {
   return (
-    <div className="relative flex w-full max-w-[26rem] flex-col rounded-xl bg-transparent bg-clip-border text-gray-700 shadow-none">
+    <div className="relative flex w-full max-w-104 flex-col rounded-xl bg-transparent bg-clip-border text-gray-700 shadow-none">
       <div className="relative mx-0 mt-4 flex items-center gap-4 overflow-hidden rounded-xl bg-transparent bg-clip-border pb-8 pt-0 text-gray-700 shadow-none">
         <Image
           src={img}
           alt={name}
-          className="relative inline-block h-[58px] w-[58px] !rounded-full object-cover object-center"
+          className="relative inline-block h-[58px] w-[58px] rounded-full! object-cover object-center"
         />
         <div className="flex w-full flex-col gap-0.5">
           <div className="flex items-center justify-between">

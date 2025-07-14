@@ -74,7 +74,7 @@ const FeatureModel = ({ data }: { data: Props }) => {
             <MemoizedIcon size={50} />
           </motion.div>
 
-          <div className="flex flex-grow flex-col gap-6">
+          <div className="flex grow flex-col gap-6">
             <p className="text-2xl font-bold">{title}</p>
             <p className="text-muted-foreground">{description}</p>
           </div>

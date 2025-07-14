@@ -88,7 +88,7 @@ export default function ProfileHeader({ user, isLoading }: ProfileHeaderProps) {
 
   return (
     <div className="space-y-6">
-      <Card className="overflow-hidden border-none bg-gradient-to-r from-slate-100 to-slate-50 shadow-md dark:from-slate-900 dark:to-slate-800">
+      <Card className="overflow-hidden border-none bg-linear-to-r from-slate-100 to-slate-50 shadow-md dark:from-slate-900 dark:to-slate-800">
         <CardContent className="p-6 sm:p-8">
           <div className="flex flex-col items-center gap-6 sm:flex-row sm:items-center">
             <motion.div
@@ -97,8 +97,8 @@ export default function ProfileHeader({ user, isLoading }: ProfileHeaderProps) {
               transition={{ duration: 0.5 }}
               className="relative"
             >
-              <div className="absolute -inset-1 rounded-full bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-500 opacity-75 blur-sm"></div>
-              <Avatar className="h-28 w-28 border-4 border-background shadow-xl">
+              <div className="absolute -inset-1 rounded-full bg-linear-to-r from-pink-500 via-purple-500 to-cyan-500 opacity-75 blur-xs"></div>
+              <Avatar className="border-background h-28 w-28 border-4 shadow-xl">
                 <AvatarImage src={user.image} alt={user.name} />
                 <AvatarFallback className="text-4xl font-medium">
                   {user.name
@@ -126,7 +126,7 @@ export default function ProfileHeader({ user, isLoading }: ProfileHeaderProps) {
                     </Badge>
                   )}
                 </div>
-                <p className="max-w-md text-sm text-muted-foreground">
+                <p className="text-muted-foreground max-w-md text-sm">
                   {user.bio?.substring(0, 120)}
                   {user.bio?.length > 120 ? "..." : ""}
                 </p>

@@ -77,7 +77,7 @@ export function ConversationItem({
       onClick={onClick}
     >
       <div className="relative">
-        <Avatar className="h-12 w-12 border shadow-sm">
+        <Avatar className="h-12 w-12 border shadow-xs">
           <AvatarImage src={otherUser.image || ""} alt={otherUser.name || ""} />
           <AvatarFallback className="bg-primary/10 text-primary">
             {otherUser.name?.charAt(0).toUpperCase() || "U"}

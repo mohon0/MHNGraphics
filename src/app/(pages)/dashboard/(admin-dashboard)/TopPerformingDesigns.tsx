@@ -38,7 +38,7 @@ export default function TopPerformingDesigns() {
   }, [data]);
 
   return (
-    <Card className="overflow-hidden bg-gradient-to-br from-white to-gray-50 shadow-lg">
+    <Card className="overflow-hidden bg-linear-to-br from-white to-gray-50 shadow-lg">
       <CardHeader className="border-b border-gray-100 bg-white pb-4">
         <div className="flex items-center justify-between">
           <CardTitle className="text-lg font-bold text-gray-800 md:text-2xl">
@@ -66,7 +66,7 @@ export default function TopPerformingDesigns() {
                   href={`${createSlug({ id: design.id, name: design.name })}`}
                   className="flex items-center space-x-4 p-4 transition-all duration-200 ease-in-out group-hover:bg-blue-50"
                 >
-                  <div className="relative h-16 w-16 overflow-hidden rounded-md shadow-sm transition-transform duration-200 ease-in-out group-hover:scale-105">
+                  <div className="relative h-16 w-16 overflow-hidden rounded-md shadow-xs transition-transform duration-200 ease-in-out group-hover:scale-105">
                     {design.image ? (
                       <Image
                         src={design.image || "/placeholder.svg"}

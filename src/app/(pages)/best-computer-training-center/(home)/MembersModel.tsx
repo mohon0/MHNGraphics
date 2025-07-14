@@ -17,7 +17,7 @@ export default function MembersModel({ name, title, img }: props) {
         <h4 className="text-blue-gray-900 mb-2 block font-sans text-2xl font-semibold leading-snug tracking-normal antialiased">
           {name}
         </h4>
-        <p className="from-blue-gray-600 to-blue-gray-400 block bg-gradient-to-tr bg-clip-text font-sans text-base font-medium leading-relaxed antialiased">
+        <p className="from-blue-gray-600 to-blue-gray-400 block bg-linear-to-tr bg-clip-text font-sans text-base font-medium leading-relaxed antialiased">
           {title}
         </p>
       </div>

@@ -2,7 +2,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 export default function HeroSkeleton() {
   return (
-    <div className="relative h-96 md:h-[29.5rem]">
+    <div className="relative h-96 md:h-118">
       <Skeleton className="h-full w-full bg-gray-300" />
       <div className="absolute inset-0 flex flex-col items-center justify-center space-y-6 px-4 md:space-y-8 lg:space-y-10">
         <div className="w-full max-w-2xl text-center">

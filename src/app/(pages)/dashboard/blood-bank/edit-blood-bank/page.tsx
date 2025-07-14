@@ -179,14 +179,14 @@ function BloodDonation() {
           </div>
         </div>
       ) : data ? (
-        <div className="min-h-screen bg-gradient-to-b from-red-50 to-white py-8">
+        <div className="min-h-screen bg-linear-to-b from-red-50 to-white py-8">
           <div className="container mx-auto px-4">
             {/* Header Section */}
             <Header />
 
             {/* Main Form Section */}
             <Card className="mx-auto max-w-4xl border-red-100 shadow-md">
-              <CardHeader className="bg-gradient-to-r from-red-500 to-red-600 text-white">
+              <CardHeader className="bg-linear-to-r from-red-500 to-red-600 text-white">
                 <CardTitle className="text-2xl">
                   Update Donor Information
                 </CardTitle>
@@ -624,7 +624,7 @@ function BloodDonation() {
                       <Button
                         type="submit"
                         size="lg"
-                        className="bg-gradient-to-r from-red-500 to-red-600 px-10 py-6 text-lg font-semibold text-white transition-all hover:from-red-600 hover:to-red-700"
+                        className="bg-linear-to-r from-red-500 to-red-600 px-10 py-6 text-lg font-semibold text-white transition-all hover:from-red-600 hover:to-red-700"
                       >
                         Update Information
                       </Button>

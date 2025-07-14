@@ -75,10 +75,10 @@ export default function PricingPage() {
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
         {/* Header Section */}
         <div className="mx-auto max-w-4xl text-center">
-          <h1 className="text-4xl font-bold tracking-tight text-primary sm:text-5xl">
+          <h1 className="text-primary text-4xl font-bold tracking-tight sm:text-5xl">
             Design Pricing Plans
           </h1>
-          <p className="mt-6 text-lg leading-8 text-muted-foreground">
+          <p className="text-muted-foreground mt-6 text-lg leading-8">
             Choose a plan that fits your design needs. Our packages are tailored
             for businesses of all sizes.
           </p>
@@ -89,7 +89,7 @@ export default function PricingPage() {
           {tiers.map((tier) => (
             <Card
               key={tier.name}
-              className={`transform transition-transform hover:scale-105 ${tier.highlighted ? "ring-2 ring-primary" : ""}`}
+              className={`transform transition-transform hover:scale-105 ${tier.highlighted ? "ring-primary ring-2" : ""}`}
             >
               <CardHeader>
                 <CardTitle className="text-2xl font-bold">
@@ -103,7 +103,7 @@ export default function PricingPage() {
                 <div className="mt-4 flex items-baseline text-5xl font-bold">
                   {tier.price}
                   {tier.name !== "Premium Pack" && (
-                    <span className="text-xl font-semibold text-muted-foreground">
+                    <span className="text-muted-foreground text-xl font-semibold">
                       /project
                     </span>
                   )}
@@ -112,7 +112,7 @@ export default function PricingPage() {
                   {tier.features.map((feature) => (
                     <li key={feature} className="flex">
                       <Check
-                        className="h-6 w-6 flex-shrink-0 text-primary"
+                        className="text-primary h-6 w-6 shrink-0"
                         aria-hidden="true"
                       />
                       <span className="ml-3 text-sm">{feature}</span>
@@ -140,13 +140,13 @@ export default function PricingPage() {
 
         {/* Contact CTA Section */}
         <div className="mt-24 text-center">
-          <p className="text-base font-semibold text-primary">
+          <p className="text-primary text-base font-semibold">
             Need a custom solution?
           </p>
           <h2 className="mt-2 text-2xl font-bold tracking-tight">
             Our team is here to help
           </h2>
-          <p className="mt-4 text-lg text-muted-foreground">
+          <p className="text-muted-foreground mt-4 text-lg">
             Reach out, and we&apos;ll craft a design package to meet your unique
             needs.
           </p>

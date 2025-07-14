@@ -241,7 +241,7 @@ export default function DesignPagination({
         </PaginationContent>
       </Pagination>
 
-      <div className="text-sm text-muted-foreground">
+      <div className="text-muted-foreground text-sm">
         Page {currentPage} of {totalPages}
       </div>
     </div>

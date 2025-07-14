@@ -4,7 +4,7 @@ import Image from "next/image";
 
 export default function Header() {
   return (
-    <div className="relative mb-16 mt-6 overflow-hidden rounded-xl bg-gradient-to-r from-primary via-primary/90 to-primary p-6 text-white shadow-lg md:p-10">
+    <div className="relative mb-16 mt-6 overflow-hidden rounded-xl bg-linear-to-r from-primary via-primary/90 to-primary p-6 text-white shadow-lg md:p-10">
       <div className="absolute -right-20 -top-20 h-64 w-64 rounded-full bg-white/10"></div>
       <div className="absolute -bottom-16 -left-16 h-40 w-40 rounded-full bg-white/10"></div>
 

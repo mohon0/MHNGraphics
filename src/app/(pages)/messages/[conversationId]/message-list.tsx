@@ -298,15 +298,15 @@ export default function MessageList({ conversationId }: MessageListProps) {
             {Object.entries(messageGroups).map(([date, messagesGroup]) => (
               <div key={date} className="space-y-2">
                 <div className="relative flex items-center py-2">
-                  <div className="flex-grow border-t border-border"></div>
-                  <span className="mx-4 flex-shrink-0 text-xs text-muted-foreground">
+                  <div className="grow border-t border-border"></div>
+                  <span className="mx-4 shrink-0 text-xs text-muted-foreground">
                     {new Date(date).toLocaleDateString(undefined, {
                       weekday: "long",
                       month: "short",
                       day: "numeric",
                     })}
                   </span>
-                  <div className="flex-grow border-t border-border"></div>
+                  <div className="grow border-t border-border"></div>
                 </div>
                 {renderMessages(messagesGroup)}
               </div>

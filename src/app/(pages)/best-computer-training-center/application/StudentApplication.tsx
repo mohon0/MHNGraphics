@@ -868,12 +868,12 @@ export function StudentApplicationForm() {
                   <Separator className="mb-4" />
                 </div>
               </div>
-              <div className="rounded-sm border border-primary p-2">
-                <p className="text-sm text-muted-foreground">
-                  <span className="font-semibold text-primary">Note:</span> You
+              <div className="border-primary rounded-sm border p-2">
+                <p className="text-muted-foreground text-sm">
+                  <span className="text-primary font-semibold">Note:</span> You
                   will be redirected to the payment gateway to complete your
                   payment of{" "}
-                  <span className="font-semibold text-foreground">৳100</span>.{" "}
+                  <span className="text-foreground font-semibold">৳100</span>.{" "}
                   <br />
                   <span className="font-medium text-red-600">
                     Application fees are non-refundable.

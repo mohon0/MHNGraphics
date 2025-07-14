@@ -29,7 +29,7 @@ const faqs = [
   {
     question: "How do we get started with a project?",
     answer:
-      "To get started, simply reach out to us via our contact form or email. We'll schedule an initial consultation to discuss your needs, provide a custom quote, and outline the next steps. Once you approve the proposal, we'll begin the creative process.",
+      "To get started, simply reach out to us via our contact form or email. We'll schedule an initial consultation to discuss your needs, provide a custom quote, and outline-solid the next steps. Once you approve the proposal, we'll begin the creative process.",
   },
   {
     question: "What is your payment structure?",

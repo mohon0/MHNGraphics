@@ -76,7 +76,7 @@ const designProcess = [
 
 export default function UIUXPage() {
   return (
-    <div className="flex min-h-screen flex-col bg-gradient-to-b from-background to-background/95 text-foreground">
+    <div className="flex min-h-screen flex-col bg-linear-to-b from-background to-background/95 text-foreground">
       {/* Hero Section */}
       <section className="relative overflow-hidden py-20 lg:py-32">
         <div className="container relative z-10 mx-auto px-4">
@@ -112,7 +112,7 @@ export default function UIUXPage() {
             </div>
           </div>
         </div>
-        <div className="absolute inset-0 z-0 bg-gradient-to-r from-background via-background to-background/50"></div>
+        <div className="absolute inset-0 z-0 bg-linear-to-r from-background via-background to-background/50"></div>
       </section>
 
       {/* Services Section */}

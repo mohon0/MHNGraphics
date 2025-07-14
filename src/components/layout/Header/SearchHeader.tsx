@@ -177,7 +177,7 @@ function SearchHeaderComponent({ fixed = false }: { fixed?: boolean }) {
                     handleSearch();
                   }
                 }}
-                className="lg:w-[30rem]"
+                className="lg:w-120"
               />
               <Button onClick={handleSearch} type="submit">
                 <span>

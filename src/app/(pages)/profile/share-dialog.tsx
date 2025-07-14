@@ -100,7 +100,7 @@ export default function ShareDialog({
   };
 
   const ShareButton = ({ children }: { children: React.ReactNode }) => (
-    <div className="flex h-12 w-12 items-center justify-center rounded-full bg-muted transition-all duration-300 hover:scale-110 hover:bg-muted/80">
+    <div className="bg-muted hover:bg-muted/80 flex h-12 w-12 items-center justify-center rounded-full transition-all duration-300 hover:scale-110">
       {children}
     </div>
   );

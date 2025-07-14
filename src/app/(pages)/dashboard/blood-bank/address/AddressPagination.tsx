@@ -80,7 +80,7 @@ export default function AddressPagination({
               onClick={() => handlePageChange(page as number)}
               className={`relative inline-flex items-center rounded-md px-4 py-2 text-sm font-semibold focus:z-20 focus:outline-offset-0 ${
                 currentPage === page
-                  ? "z-10 bg-primary text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                  ? "z-10 bg-primary text-white focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                   : "text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
               }`}
               aria-current={currentPage === page ? "page" : undefined}

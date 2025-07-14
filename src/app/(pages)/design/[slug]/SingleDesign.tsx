@@ -286,23 +286,23 @@ export default function SingleDesign(props: { params: Params }) {
           <div className="grid gap-8 lg:grid-cols-12 lg:gap-12">
             {/* Main content - Image */}
             <div className="lg:col-span-8">
-              <div className="relative overflow-hidden rounded-xl bg-gradient-to-b from-muted/50 to-background">
+              <div className="relative overflow-hidden rounded-xl bg-linear-to-b from-muted/50 to-background">
                 {isLoading ? (
-                  <Skeleton className="h-[30rem] w-full rounded-xl md:h-[40rem]" />
+                  <Skeleton className="h-120 w-full rounded-xl md:h-160" />
                 ) : (
                   <div className="group relative overflow-hidden rounded-xl bg-secondary shadow-xl">
                     <div className="absolute right-4 top-4 z-10">
                       <Button
                         variant="secondary"
                         size="sm"
-                        className="bg-background/80 backdrop-blur-sm hover:bg-background"
+                        className="bg-background/80 backdrop-blur-xs hover:bg-background"
                         onClick={() => setIsFullscreen(true)}
                       >
                         <Maximize2 className="mr-2 h-4 w-4" />
                         Full Screen
                       </Button>
                     </div>
-                    <div className="flex items-center justify-center bg-secondary p-4 md:h-[38rem]">
+                    <div className="flex items-center justify-center bg-secondary p-4 md:h-152">
                       <Image
                         onContextMenu={(e) => e.preventDefault()}
                         src={image || "/placeholder.svg"}
@@ -334,7 +334,7 @@ export default function SingleDesign(props: { params: Params }) {
               {isLoading ? (
                 <Skeleton className="mt-6 h-24 w-full" />
               ) : description && description.length > 11 ? (
-                <Card className="mt-6 overflow-hidden border-0 bg-muted/30 shadow-sm">
+                <Card className="mt-6 overflow-hidden border-0 bg-muted/30 shadow-xs">
                   <CardContent className="p-6">
                     <div
                       className="prose max-w-none dark:prose-invert"
@@ -362,7 +362,7 @@ export default function SingleDesign(props: { params: Params }) {
             {/* Sidebar Design Details */}
             <div className="lg:col-span-4">
               <div className="sticky top-20">
-                <Card className="overflow-hidden border-0 bg-muted/30 shadow-sm">
+                <Card className="overflow-hidden border-0 bg-muted/30 shadow-xs">
                   <CardContent className="space-y-6 p-6">
                     {isLoading ? (
                       <DesignDetailsSkeleton />

@@ -268,7 +268,7 @@ export default function ITPage() {
       </section>
 
       {/* Call to Action */}
-      <section className="bg-gradient-to-r from-zinc-800 to-zinc-900 py-20 text-white">
+      <section className="bg-linear-to-r from-zinc-800 to-zinc-900 py-20 text-white">
         <div className="container mx-auto px-4 text-center">
           <h2 className="mb-4 text-3xl font-bold md:text-4xl">
             Ready to Transform Your IT Infrastructure?

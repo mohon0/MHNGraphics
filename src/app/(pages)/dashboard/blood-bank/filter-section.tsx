@@ -16,7 +16,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { BLOOD_GROUPS } from "@/lib/utils";
+import { BLOOD_GROUPS } from "@/constant/blood-group";
 import { DropletIcon, FilterIcon, SearchIcon } from "lucide-react";
 import Link from "next/link";
 
@@ -43,7 +43,7 @@ export function FilterSection({
     <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
       <div className="flex items-center gap-2">
         <div className="relative flex-1">
-          <SearchIcon className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+          <SearchIcon className="text-muted-foreground absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2" />
           <Input
             type="text"
             placeholder="Search by donor name"

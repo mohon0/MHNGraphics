@@ -93,8 +93,8 @@ export function Slider() {
     <section className="relative overflow-hidden py-16 md:py-24">
       {/* Background decoration */}
       <div className="absolute inset-0 -z-10 bg-muted/30" />
-      <div className="absolute -left-20 -top-20 -z-10 h-[40rem] w-[40rem] rounded-full bg-primary/5 blur-3xl" />
-      <div className="absolute -bottom-20 -right-20 -z-10 h-[40rem] w-[40rem] rounded-full bg-primary/5 blur-3xl" />
+      <div className="absolute -left-20 -top-20 -z-10 h-160 w-160 rounded-full bg-primary/5 blur-3xl" />
+      <div className="absolute -bottom-20 -right-20 -z-10 h-160 w-160 rounded-full bg-primary/5 blur-3xl" />
 
       <div className="container mx-auto px-4 md:px-6">
         <div className="mb-10 flex flex-col items-center justify-between gap-4 md:mb-16 md:flex-row">
@@ -102,7 +102,7 @@ export function Slider() {
             <h2 className="text-3xl font-bold tracking-tight md:text-4xl lg:text-5xl">
               Explore Our <span className="text-primary">Asset Categories</span>
             </h2>
-            <p className="mt-4 max-w-[40rem] text-muted-foreground">
+            <p className="mt-4 max-w-160 text-muted-foreground">
               Discover our extensive collection of high-quality assets ready for
               your next creative project.
             </p>
@@ -152,7 +152,7 @@ export function Slider() {
               >
                 <Link href={item.link} className="group block h-full">
                   <div className="overflow-hidden rounded-xl">
-                    <div className="relative aspect-[4/3] overflow-hidden">
+                    <div className="relative aspect-4/3 overflow-hidden">
                       {/* Image */}
                       <Image
                         src={item.img || "/placeholder.svg"}
@@ -165,7 +165,7 @@ export function Slider() {
                       {/* Gradient overlay */}
                       <div
                         className={cn(
-                          "absolute inset-0 bg-gradient-to-t opacity-90",
+                          "absolute inset-0 bg-linear-to-t opacity-90",
                           item.color,
                         )}
                       />

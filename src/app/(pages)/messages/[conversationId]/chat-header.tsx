@@ -57,7 +57,7 @@ export function ChatHeader({ user, isLoading = false }: ChatHeaderProps) {
 
   if (isLoading) {
     return (
-      <div className="flex h-16 items-center justify-between border-b px-4 shadow-sm">
+      <div className="flex h-16 items-center justify-between border-b px-4 shadow-xs">
         <div className="flex items-center gap-3">
           <Skeleton className="h-10 w-10 rounded-full" />
           <div>
@@ -71,7 +71,7 @@ export function ChatHeader({ user, isLoading = false }: ChatHeaderProps) {
 
   if (!user) {
     return (
-      <div className="flex h-16 items-center justify-between border-b px-4 shadow-sm">
+      <div className="flex h-16 items-center justify-between border-b px-4 shadow-xs">
         <Button
           variant="ghost"
           size="icon"
@@ -85,7 +85,7 @@ export function ChatHeader({ user, isLoading = false }: ChatHeaderProps) {
   }
 
   return (
-    <div className="flex h-16 items-center justify-between border-b px-4 shadow-sm">
+    <div className="flex h-16 items-center justify-between border-b px-4 shadow-xs">
       <div className="flex items-center gap-3">
         <Button
           variant="ghost"

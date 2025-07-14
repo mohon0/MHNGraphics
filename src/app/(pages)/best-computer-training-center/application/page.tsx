@@ -228,7 +228,7 @@ function UserApplicationCard({ application }: UserApplicationCardProps) {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
     >
-      <Card className="mx-auto my-10 w-full max-w-2xl overflow-hidden border-2 border-blue-200 bg-gradient-to-br from-blue-50 to-indigo-50 dark:border-blue-800 dark:from-gray-800 dark:to-gray-900">
+      <Card className="mx-auto my-10 w-full max-w-2xl overflow-hidden border-2 border-blue-200 bg-linear-to-br from-blue-50 to-indigo-50 dark:border-blue-800 dark:from-gray-800 dark:to-gray-900">
         <CardHeader className="flex flex-col items-center gap-4 bg-white p-6 dark:bg-gray-800 sm:flex-row">
           <Avatar className="h-24 w-24 border-4 border-blue-200 dark:border-blue-700">
             <AvatarImage src={image} alt={studentName} />

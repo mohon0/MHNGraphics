@@ -71,7 +71,7 @@ export default function PaginationComponent({
           <Button
             variant="outline"
             size="icon"
-            className="h-10 w-10 rounded-md border ring-1 ring-inset ring-gray-300"
+            className="h-10 w-10 rounded-md border ring-1 ring-gray-300 ring-inset"
             onClick={() => handlePageChange(currentPage - 1)}
             disabled={currentPage <= 1}
           >
@@ -87,7 +87,7 @@ export default function PaginationComponent({
         {pages.map((page, index) => (
           <PaginationItem key={index}>
             {page === "ellipsis" ? (
-              <span className="relative inline-flex items-center rounded-md px-4 py-2 text-sm font-semibold text-gray-700 ring-1 ring-inset ring-gray-300 focus:outline-offset-0">
+              <span className="relative inline-flex items-center rounded-md px-4 py-2 text-sm font-semibold text-gray-700 ring-1 ring-gray-300 ring-inset focus:outline-offset-0">
                 ...
               </span>
             ) : (
@@ -101,7 +101,7 @@ export default function PaginationComponent({
                   className={`h-10 w-10 rounded-md text-sm font-semibold ${
                     currentPage === page
                       ? "bg-primary text-primary-foreground"
-                      : "ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+                      : "ring-1 ring-gray-300 ring-inset hover:bg-gray-50"
                   }`}
                   aria-current={currentPage === page ? "page" : undefined}
                 >
@@ -116,7 +116,7 @@ export default function PaginationComponent({
           <Button
             variant="outline"
             size="icon"
-            className="h-10 w-10 rounded-md border ring-1 ring-inset ring-gray-300"
+            className="h-10 w-10 rounded-md border ring-1 ring-gray-300 ring-inset"
             onClick={() => handlePageChange(currentPage + 1)}
             disabled={currentPage >= totalPages}
           >

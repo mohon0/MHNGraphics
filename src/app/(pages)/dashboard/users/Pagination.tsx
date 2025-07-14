@@ -89,7 +89,7 @@ export default function UsersPagination({
                 onClick={() => handlePageChange(pageNum as number)}
                 className={`relative inline-flex items-center rounded-md px-3 py-2 text-xs font-semibold focus:z-20 focus:outline-offset-0 sm:px-4 sm:text-sm ${
                   page === pageNum
-                    ? "z-10 bg-primary text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                    ? "z-10 bg-primary text-white focus-visible:outline-solid focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                     : "text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
                 }`}
                 aria-current={page === pageNum ? "page" : undefined}

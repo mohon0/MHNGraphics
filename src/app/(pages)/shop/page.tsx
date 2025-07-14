@@ -166,7 +166,7 @@ export default function ShopPage() {
                   </Badge>
                 </div>
               </div>
-              <CardContent className="flex-grow p-4">
+              <CardContent className="grow p-4">
                 <CardTitle className="mb-2 line-clamp-2 text-lg">
                   {product.name}
                 </CardTitle>
@@ -194,7 +194,7 @@ export default function ShopPage() {
 
       {/* Promotional Banner */}
       <section className="mb-16">
-        <div className="relative overflow-hidden rounded-lg bg-gradient-to-r from-purple-600 to-indigo-600 p-8 text-white">
+        <div className="relative overflow-hidden rounded-lg bg-linear-to-r from-purple-600 to-indigo-600 p-8 text-white">
           <div className="relative z-10">
             <h2 className="mb-4 text-3xl font-bold">
               Summer Sale: 30% Off All Templates!
@@ -221,7 +221,7 @@ export default function ShopPage() {
       {/* Search and Filter Section */}
       <section className="mb-8">
         <div className="flex flex-col gap-4 md:flex-row">
-          <div className="flex-grow">
+          <div className="grow">
             <div className="relative">
               <Input
                 type="search"
@@ -287,7 +287,7 @@ export default function ShopPage() {
                   className="transition-transform duration-300 group-hover:scale-105"
                 />
               </div>
-              <CardContent className="flex-grow p-4">
+              <CardContent className="grow p-4">
                 <CardTitle className="mb-2 line-clamp-2 text-lg">
                   {product.name}
                 </CardTitle>
