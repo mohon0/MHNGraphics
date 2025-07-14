@@ -212,7 +212,7 @@ export async function POST(req: NextRequest) {
         });
       }
       // Update order with payment initiation details
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
       const currentMetadata =
         (newApplication.metadata as Record<string, any>) || {};
       await Prisma.application.update({

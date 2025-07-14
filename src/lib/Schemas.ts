@@ -148,8 +148,6 @@ export const ApplicationSchema = z.object({
 
   education: z.string().trim().min(1, "Education is required"),
 
-  trxId: z.string().trim().min(1, "Transaction ID is required"),
-
   educationBoard: z.string().trim().min(1, "Education board is required"),
 
   rollNumber: z.string().trim().min(1, "Roll number is required"),

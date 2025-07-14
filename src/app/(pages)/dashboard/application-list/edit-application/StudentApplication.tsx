@@ -949,16 +949,6 @@ export function StudentApplicationForm({
                   </h2>
                   <Separator className="mb-4" />
                   <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                    <Link
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      href="https://shop.bkash.com/mia-store01779120023/pay/bdt100/ZHHBE3"
-                      className="relative mt-2 flex w-fit items-center gap-2 rounded-lg border bg-secondary px-2 shadow-lg"
-                    >
-                      <Image src={bkash} alt="bkash" className="w-20" />
-                      <span>Pay with bkash</span>
-                      <div className="absolute -right-6 top-0 h-3 w-3 animate-ping rounded-full bg-pink-600"></div>
-                    </Link>
                     <FormField
                       control={form.control}
                       name="transactionId"
@@ -966,7 +956,11 @@ export function StudentApplicationForm({
                         <FormItem>
                           <FormLabel>TransactionID</FormLabel>
                           <FormControl>
-                            <Input placeholder="TransactionID" {...field} />
+                            <Input
+                              placeholder="TransactionID"
+                              disabled
+                              {...field}
+                            />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -975,13 +969,7 @@ export function StudentApplicationForm({
                   </div>
                 </div>
               </div>
-              <div className="rounded-sm border border-primary p-2">
-                <p>
-                  ১০০/= টাকা আবেদন ফি সহ- কোর্স ফি বিকাশ পেমেন্ট করে,
-                  Transaction ID লিখুন। তারপর Submit করুন। অবশ্যই পেমেন্ট রিসিট
-                  মূল ফরম এর সাথে সংযুক্ত করতে হবে
-                </p>
-              </div>
+
               <div className="flex flex-col gap-4 md:flex-row md:gap-10">
                 <Preview />
                 <Button

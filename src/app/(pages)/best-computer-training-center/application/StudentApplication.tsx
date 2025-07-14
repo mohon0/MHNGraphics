@@ -36,7 +36,6 @@ import {
 } from "@/components/ui/select";
 import { Separator } from "@/components/ui/separator";
 import { bangladeshDistricts } from "@/constant/District";
-import bkash from "@/images/tools/bkash.svg";
 import { ApplicationSchema } from "@/lib/Schemas";
 import { cn } from "@/lib/utils";
 import { useFetchDuration } from "@/services/admin";
@@ -89,7 +88,6 @@ export function StudentApplicationForm() {
       gender: undefined,
       maritalStatus: undefined,
       bloodGroup: "",
-      trxId: "",
       religion: "",
       nationality: "Bangladeshi",
       nidBirthReg: "",
@@ -868,40 +866,21 @@ export function StudentApplicationForm() {
                     Payment Information
                   </h2>
                   <Separator className="mb-4" />
-                  <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                    <Link
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      href="https://shop.bkash.com/mia-store01779120023/pay/bdt100/ZHHBE3"
-                      className="relative mt-2 flex w-fit items-center gap-2 rounded-lg border bg-secondary px-2 shadow-lg"
-                    >
-                      <Image src={bkash} alt="bkash" className="w-20" />
-                      <span>Pay with bkash</span>
-                      <div className="absolute -right-6 top-0 h-3 w-3 animate-ping rounded-full bg-pink-600"></div>
-                    </Link>
-                    <FormField
-                      control={form.control}
-                      name="trxId"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>TransactionID</FormLabel>
-                          <FormControl>
-                            <Input placeholder="TransactionID" {...field} />
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </div>
                 </div>
               </div>
               <div className="rounded-sm border border-primary p-2">
-                <p>
-                  ১০০/= টাকা আবেদন ফি বিকাশ পেমেন্ট করে, Transaction ID লিখুন।
-                  তারপর Submit করুন। অবশ্যই পেমেন্ট রিসিট মূল ফরম এর সাথে
-                  সংযুক্ত করতে হবে
+                <p className="text-sm text-muted-foreground">
+                  <span className="font-semibold text-primary">Note:</span> You
+                  will be redirected to the payment gateway to complete your
+                  payment of{" "}
+                  <span className="font-semibold text-foreground">৳100</span>.{" "}
+                  <br />
+                  <span className="font-medium text-red-600">
+                    Application fees are non-refundable.
+                  </span>
                 </p>
               </div>
+
               <div className="flex flex-col gap-4 md:flex-row md:gap-10">
                 <Preview />
                 <Button
