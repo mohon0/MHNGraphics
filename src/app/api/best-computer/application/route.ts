@@ -1,9 +1,12 @@
 import { UploadImage } from "@/components/helper/image/UploadImage";
 import { Prisma } from "@/components/helper/prisma/Prisma";
+import { bkashConfig } from "@/lib/bkash";
+import { createPayment } from "@/services/bkash";
 import cloudinary from "@/utils/cloudinary";
 import { getToken } from "next-auth/jwt";
 import { NextRequest, NextResponse } from "next/server";
 
+const myUrl = process.env.NEXT_PUBLIC_SITE_URL;
 const secret = process.env.NEXTAUTH_SECRET;
 
 // Utility function to safely retrieve string values
@@ -160,10 +163,76 @@ export async function POST(req: NextRequest) {
           imageId: imageUrl.public_id,
           status: "Pending",
           certificate: "Pending",
+          applicationFee: "Pending",
+          applicationFeeAmount: 0,
+          metadata: {
+            paymentPending: true,
+            paymentMethod: "BKASH",
+          },
         },
       });
 
-      return NextResponse.json(newApplication, { status: 201 });
+      const paymentDetails = {
+        amount: 1,
+        callbackURL: `${myUrl}/api/best-computer/application/callback`,
+        userId: newApplication.userId,
+        applicationId: newApplication.id,
+        reference: "application-fee",
+        name: newApplication.studentName,
+        email: newApplication.email ?? "",
+        phone: newApplication.mobileNumber ?? "",
+      };
+
+      const createPaymentResponse = await createPayment(
+        bkashConfig,
+        paymentDetails,
+      );
+
+      if (createPaymentResponse.statusCode !== "0000") {
+        // Update order status to FAILED
+        if (newApplication.imageId) {
+          const result = await cloudinary.uploader.destroy(
+            newApplication.imageId,
+          );
+          if (result.result !== "ok") {
+            return new NextResponse("error", { status: 400 });
+          }
+        }
+
+        await Prisma.application.delete({
+          where: {
+            id: newApplication.id,
+          },
+        });
+
+        return NextResponse.json({
+          message: "Payment Failed",
+          error: createPaymentResponse.statusMessage,
+          paymentMethod: "BKASH",
+        });
+      }
+      // Update order with payment initiation details
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const currentMetadata =
+        (newApplication.metadata as Record<string, any>) || {};
+      await Prisma.application.update({
+        where: { id: newApplication.id },
+        data: {
+          metadata: {
+            ...currentMetadata,
+            paymentInitiated: true,
+            initiatedAt: new Date().toISOString(),
+            bkashPaymentID: createPaymentResponse.paymentID,
+          },
+        },
+      });
+
+      return NextResponse.json({
+        message: "Payment initiated successfully",
+        url: createPaymentResponse.bkashURL,
+        applicationId: newApplication.id,
+        paymentMethod: "BKASH",
+      });
     } catch (createError) {
       return NextResponse.json(
         { message: "Application creation failed" },

@@ -15,9 +15,9 @@ export const useSubmitApplication = () => {
       values: z.infer<typeof ApplicationSchema>,
     ): Promise<AxiosResponse> => {
       const formData = new FormData();
+
       (Object.keys(values) as (keyof typeof values)[]).forEach((key) => {
         if (key === "image" && values[key]) {
-          // Assuming `image` is a FileList
           formData.append("image", values[key][0]);
         } else {
           const value = values[key];
@@ -27,15 +27,24 @@ export const useSubmitApplication = () => {
         }
       });
 
-      // Make the POST request
-      return axios.post("/api/best-computer/application", formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
+      return axios.post("/api/best-computer/application", formData);
     },
-    onSuccess: () => {
-      // Perform any side effects on success
-      router.push("/best-computer-training-center");
+
+    onSuccess: (response) => {
+      if (response.status === 501) {
+        console.warn("Payment gateway is not configured");
+        return;
+      }
+
+      const url = response.data?.payment?.bkashURL || response.data?.url;
+
+      if (url) {
+        router.push(url);
+      } else {
+        router.push("/best-computer-training-center");
+      }
     },
+
     onError: (error) => {
       console.error("Submission error:", error);
     },
@@ -44,12 +53,7 @@ export const useSubmitApplication = () => {
   const submitApplication = async (
     values: z.infer<typeof ApplicationSchema>,
   ) => {
-    // Wrap the mutation call with toast.promise
-    return toast.promise(mutation.mutateAsync(values), {
-      loading: "Please wait...",
-      success: "Application was successfully submitted",
-      error: "An error occurred",
-    });
+    return mutation.mutateAsync(values);
   };
 
   return {
@@ -57,7 +61,6 @@ export const useSubmitApplication = () => {
     isSubmitting: mutation.status === "pending",
   };
 };
-
 export const useUpdateApplication = (appId: string, refetch: () => void) => {
   const mutation = useMutation<AxiosResponse, Error, Record<string, string>>({
     mutationFn: async (updateFields) => {
