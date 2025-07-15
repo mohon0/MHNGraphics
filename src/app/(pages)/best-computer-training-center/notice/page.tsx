@@ -227,7 +227,7 @@ export default function Notice() {
         {/* Pagination */}
         {data && data.totalPages > 1 && (
           <div className="mt-4 flex flex-col items-center justify-between gap-4 sm:flex-row">
-            <div className="text-sm text-muted-foreground">
+            <div className="text-muted-foreground text-sm">
               Showing {startNumber} to{" "}
               {Math.min(
                 startNumber + data.notices.length - 1,

@@ -173,7 +173,7 @@ export async function POST(req: NextRequest) {
       });
 
       const paymentDetails = {
-        amount: 1,
+        amount: 100,
         callbackURL: `${myUrl}/api/best-computer/application/callback?applicationId=${newApplication.id}&userId=${newApplication.userId}`,
         userId: newApplication.userId,
         applicationId: newApplication.id,
@@ -218,6 +218,8 @@ export async function POST(req: NextRequest) {
       await Prisma.application.update({
         where: { id: newApplication.id },
         data: {
+          applicationFeeAmount: 100,
+          applicationFee: "Paid",
           metadata: {
             ...currentMetadata,
             paymentInitiated: true,
