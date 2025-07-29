@@ -1,11 +1,9 @@
-import { UploadImage } from "@/components/helper/image/UploadImage";
-import { Prisma } from "@/components/helper/prisma/Prisma";
-import cloudinary from "@/utils/cloudinary";
-
-import bcrypt from "bcrypt";
-
-import { getToken } from "next-auth/jwt";
-import { NextRequest, NextResponse } from "next/server";
+import bcrypt from 'bcrypt';
+import { type NextRequest, NextResponse } from 'next/server';
+import { getToken } from 'next-auth/jwt';
+import { UploadImage } from '@/components/helper/image/UploadImage';
+import { Prisma } from '@/components/helper/prisma/Prisma';
+import cloudinary from '@/utils/cloudinary';
 
 const secret = process.env.NEXTAUTH_SECRET;
 
@@ -13,7 +11,7 @@ export async function GET(req: NextRequest) {
   const token = await getToken({ req, secret });
 
   if (!token)
-    return NextResponse.json({ message: "Token not found" }, { status: 401 });
+    return NextResponse.json({ message: 'Token not found' }, { status: 401 });
 
   const id = token.sub;
 
@@ -30,7 +28,7 @@ export async function GET(req: NextRequest) {
     });
 
     if (!user)
-      return NextResponse.json({ message: "User not found" }, { status: 404 });
+      return NextResponse.json({ message: 'User not found' }, { status: 404 });
 
     const userInfo = {
       name: user.name,
@@ -41,26 +39,27 @@ export async function GET(req: NextRequest) {
     };
 
     return NextResponse.json(userInfo);
+    // biome-ignore lint: error
   } catch (error) {
-    return NextResponse.json({ message: "Server error" }, { status: 500 });
+    return NextResponse.json({ message: 'Server error' }, { status: 500 });
   }
 }
 
 export async function PUT(req: NextRequest) {
   try {
     const formData = await req.formData();
-    const name = formData.get("name")?.toString();
-    const bio = formData.get("bio")?.toString();
-    const coverImageBlob = formData.get("avatar");
+    const name = formData.get('name')?.toString();
+    const bio = formData.get('bio')?.toString();
+    const coverImageBlob = formData.get('avatar');
 
     if (!name) {
-      return NextResponse.json({ message: "Missing name" }, { status: 400 });
+      return NextResponse.json({ message: 'Missing name' }, { status: 400 });
     }
 
     const token = await getToken({ req, secret });
     if (!token)
       return NextResponse.json(
-        { message: "You are not logged in" },
+        { message: 'You are not logged in' },
         { status: 401 },
       );
 
@@ -68,22 +67,22 @@ export async function PUT(req: NextRequest) {
       where: { id: token.sub },
     });
     if (!existingUser)
-      return NextResponse.json({ message: "User not found" }, { status: 404 });
+      return NextResponse.json({ message: 'User not found' }, { status: 404 });
 
-    let imageUrl = { secure_url: "", public_id: "" };
+    let imageUrl = { secure_url: '', public_id: '' };
 
     // Only check for image existence and deletion if a new image is provided
     if (coverImageBlob instanceof File) {
       // If there's a new image, check if there's an existing one to delete
       if (existingUser.imageId) {
         const result = await cloudinary.uploader.destroy(existingUser.imageId);
-        if (result.result !== "ok") {
-          return new NextResponse("error", { status: 400 });
+        if (result.result !== 'ok') {
+          return new NextResponse('error', { status: 400 });
         }
       }
 
       // Upload the image to Cloudinary and get the URL
-      imageUrl = await UploadImage(coverImageBlob, "profile/");
+      imageUrl = await UploadImage(coverImageBlob, 'profile/');
     }
 
     // Update user info with new image URL if provided
@@ -98,9 +97,10 @@ export async function PUT(req: NextRequest) {
     });
 
     return NextResponse.json(updatedUser);
+    // biome-ignore lint: error
   } catch (error) {
     return NextResponse.json(
-      { message: "Error updating user" },
+      { message: 'Error updating user' },
       { status: 500 },
     );
   }
@@ -111,13 +111,13 @@ export async function PATCH(req: NextRequest) {
     const data = await req.json();
     const { currentPassword, newPassword } = data;
     if (!currentPassword || !newPassword) {
-      return NextResponse.json({ message: "Missing data" }, { status: 400 });
+      return NextResponse.json({ message: 'Missing data' }, { status: 400 });
     }
 
     const token = await getToken({ req, secret });
     if (!token)
       return NextResponse.json(
-        { message: "You are not logged in" },
+        { message: 'You are not logged in' },
         { status: 401 },
       );
 
@@ -125,10 +125,10 @@ export async function PATCH(req: NextRequest) {
       where: { id: token.sub },
     });
     if (!existingUser)
-      return NextResponse.json({ message: "User not found" }, { status: 404 });
+      return NextResponse.json({ message: 'User not found' }, { status: 404 });
     // Check if the password is not null before comparing
     if (existingUser.password === null) {
-      return new NextResponse("User password is null", { status: 500 });
+      return new NextResponse('User password is null', { status: 500 });
     }
 
     const isPasswordValid = await bcrypt.compare(
@@ -137,7 +137,7 @@ export async function PATCH(req: NextRequest) {
     );
 
     if (!isPasswordValid) {
-      return new NextResponse("Current password is incorrect", { status: 400 });
+      return new NextResponse('Current password is incorrect', { status: 400 });
     }
 
     const hashedNewPassword = await bcrypt.hash(newPassword, 10);
@@ -149,9 +149,10 @@ export async function PATCH(req: NextRequest) {
       },
     });
 
-    return new NextResponse("Password updated successfully");
+    return new NextResponse('Password updated successfully');
+    // biome-ignore lint: error
   } catch (error) {
-    return new NextResponse("Error updating password", { status: 500 });
+    return new NextResponse('Error updating password', { status: 500 });
   } finally {
     Prisma.$disconnect();
   }

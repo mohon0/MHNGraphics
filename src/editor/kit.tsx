@@ -1,18 +1,18 @@
-import { CharacterCount } from "@tiptap/extension-character-count";
-import { Color } from "@tiptap/extension-color";
-import { Highlight } from "@tiptap/extension-highlight";
-import { ListKeymap } from "@tiptap/extension-list-keymap";
-import { Placeholder } from "@tiptap/extension-placeholder";
-import { Subscript } from "@tiptap/extension-subscript";
-import { Superscript } from "@tiptap/extension-superscript";
-import { TextAlign } from "@tiptap/extension-text-align";
-import { TextStyle } from "@tiptap/extension-text-style";
-import { Underline } from "@tiptap/extension-underline";
-import { StarterKit } from "@tiptap/starter-kit";
-import Link from "./extensions/Link";
-import { Selection } from "./extensions/Selection";
-import { Table } from "./extensions/Table";
-import { Youtube } from "./extensions/Youtube";
+import { CharacterCount } from '@tiptap/extension-character-count';
+import { Color } from '@tiptap/extension-color';
+import { Highlight } from '@tiptap/extension-highlight';
+import { ListKeymap } from '@tiptap/extension-list-keymap';
+import { Placeholder } from '@tiptap/extension-placeholder';
+import { Subscript } from '@tiptap/extension-subscript';
+import { Superscript } from '@tiptap/extension-superscript';
+import { TextAlign } from '@tiptap/extension-text-align';
+import { TextStyle } from '@tiptap/extension-text-style';
+import { Underline } from '@tiptap/extension-underline';
+import { StarterKit } from '@tiptap/starter-kit';
+import Link from './extensions/Link';
+import { Selection } from './extensions/Selection';
+import { Table } from './extensions/Table';
+import { Youtube } from './extensions/Youtube';
 
 const ExtensionKit = [
   StarterKit.configure({
@@ -23,9 +23,9 @@ const ExtensionKit = [
   Placeholder.configure({
     includeChildren: true,
     showOnlyCurrent: true,
-    placeholder: ({ editor, node }) => {
+    placeholder: ({ editor }) => {
       // @ts-ignore
-      const placeholder = editor.options.editorProps["placeholder"];
+      const placeholder = editor.options.editorProps.placeholder;
       return placeholder?.paragraph;
     },
   }),
@@ -34,7 +34,7 @@ const ExtensionKit = [
   Underline,
   Superscript,
   Subscript,
-  TextAlign.configure({ types: ["heading", "paragraph"] }),
+  TextAlign.configure({ types: ['heading', 'paragraph'] }),
   TextStyle,
   Color,
   Highlight.configure({ multicolor: true }),

@@ -1,14 +1,14 @@
-"use client";
+'use client';
 
-import { Button } from "@/components/ui/button";
+import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { Button } from '@/components/ui/button';
 import {
   Pagination,
   PaginationContent,
   PaginationEllipsis,
   PaginationItem,
-} from "@/components/ui/pagination";
-import { ChevronLeft, ChevronRight } from "lucide-react";
-import { useRouter } from "next/navigation";
+} from '@/components/ui/pagination';
 
 interface PaginationProps {
   totalPages: number;
@@ -71,34 +71,35 @@ export default function PaginationComponent({
   };
 
   return (
-    <Pagination className="select-none">
-      <PaginationContent className="flex flex-wrap items-center gap-2">
+    <Pagination className='select-none'>
+      <PaginationContent className='flex flex-wrap items-center gap-2'>
         <PaginationItem>
           <Button
-            variant="outline"
-            size="icon"
-            className="h-9 w-9 rounded-md"
+            variant='outline'
+            size='icon'
+            className='h-9 w-9 rounded-md'
             onClick={() => handlePageChange(currentPage - 1)}
             disabled={currentPage <= 1}
           >
-            <ChevronLeft className="h-4 w-4" />
-            <span className="sr-only">Go to previous page</span>
+            <ChevronLeft className='h-4 w-4' />
+            <span className='sr-only'>Go to previous page</span>
           </Button>
         </PaginationItem>
-        <span className="relative z-10 inline-flex items-center rounded-md bg-gray-100 px-4 py-2 text-sm font-semibold text-gray-500 focus:outline-offset-0">
+        <span className='relative z-10 inline-flex items-center rounded-md bg-gray-100 px-4 py-2 text-sm font-semibold text-gray-500 focus:outline-offset-0'>
           Page {currentPage} of {totalPages}
         </span>
         {pages.map((page, i) =>
           page === -1 ? (
+            // biome-ignore lint: error
             <PaginationItem key={`ellipsis-${i}`}>
               <PaginationEllipsis />
             </PaginationItem>
           ) : (
             <PaginationItem key={page}>
               <Button
-                variant={currentPage === page ? "default" : "outline"}
-                size="icon"
-                className={`h-9 w-9 rounded-md ${currentPage === page ? "pointer-events-none" : ""}`}
+                variant={currentPage === page ? 'default' : 'outline'}
+                size='icon'
+                className={`h-9 w-9 rounded-md ${currentPage === page ? 'pointer-events-none' : ''}`}
                 onClick={() => handlePageChange(page)}
               >
                 {page}
@@ -109,14 +110,14 @@ export default function PaginationComponent({
 
         <PaginationItem>
           <Button
-            variant="outline"
-            size="icon"
-            className="h-9 w-9 rounded-md"
+            variant='outline'
+            size='icon'
+            className='h-9 w-9 rounded-md'
             onClick={() => handlePageChange(currentPage + 1)}
             disabled={currentPage >= totalPages}
           >
-            <ChevronRight className="h-4 w-4" />
-            <span className="sr-only">Go to next page</span>
+            <ChevronRight className='h-4 w-4' />
+            <span className='sr-only'>Go to next page</span>
           </Button>
         </PaginationItem>
       </PaginationContent>

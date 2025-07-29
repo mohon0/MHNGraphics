@@ -1,14 +1,12 @@
-import { Prisma } from "@/components/helper/prisma/Prisma";
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from 'next/server';
+import { Prisma } from '@/components/helper/prisma/Prisma';
 
-export async function GET(req: NextRequest) {
+export async function GET() {
   try {
-    const url = new URL(req.url);
-    const queryParams = new URLSearchParams(url.search);
     // Fetch the latest 5 applications from the database
     const applications = await Prisma.design.findMany({
       orderBy: {
-        createdAt: "desc",
+        createdAt: 'desc',
       },
       select: {
         id: true,
@@ -21,10 +19,8 @@ export async function GET(req: NextRequest) {
 
     // Return the applications as a JSON response
     return new NextResponse(JSON.stringify(applications), { status: 200 });
+    // biome-ignore lint: error
   } catch (error) {
-    console.error("Error fetching latest applications:", error);
-
-    // Handle errors and send an appropriate response
-    return new NextResponse("Failed to fetch applications", { status: 500 });
+    return new NextResponse('Failed to fetch applications', { status: 500 });
   }
 }

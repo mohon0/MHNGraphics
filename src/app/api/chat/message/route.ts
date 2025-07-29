@@ -1,8 +1,8 @@
-import { authOptions } from "@/app/api/auth/[...nextauth]/Options";
-import { AblyService } from "@/lib/ably";
-import Prisma from "@/lib/prisma";
-import { getServerSession, Session } from "next-auth";
-import { NextRequest, NextResponse } from "next/server";
+import { type NextRequest, NextResponse } from 'next/server';
+import { getServerSession, type Session } from 'next-auth';
+import { authOptions } from '@/app/api/auth/[...nextauth]/Options';
+import { AblyService } from '@/lib/ably';
+import Prisma from '@/lib/prisma';
 
 interface CustomSession extends Session {
   user: {
@@ -19,27 +19,27 @@ export async function GET(req: NextRequest) {
     const session = (await getServerSession(authOptions)) as CustomSession;
 
     if (!session?.user?.id) {
-      return new NextResponse(JSON.stringify({ message: "Unauthorized" }), {
+      return new NextResponse(JSON.stringify({ message: 'Unauthorized' }), {
         status: 401,
       });
     }
 
     const url = new URL(req.url);
-    const conversationId = url.searchParams.get("conversationId");
-    const cursor = url.searchParams.get("cursor");
-    const limit = parseInt(url.searchParams.get("limit") || "20", 10);
+    const conversationId = url.searchParams.get('conversationId');
+    const cursor = url.searchParams.get('cursor');
+    const limit = parseInt(url.searchParams.get('limit') || '20', 10);
 
     if (!conversationId) {
       return new NextResponse(
-        JSON.stringify({ message: "Conversation ID is required" }),
+        JSON.stringify({ message: 'Conversation ID is required' }),
         {
           status: 400,
         },
       );
     }
 
-    if (isNaN(limit) || limit <= 0) {
-      return new NextResponse(JSON.stringify({ message: "Invalid limit" }), {
+    if (Number.isNaN(limit) || limit <= 0) {
+      return new NextResponse(JSON.stringify({ message: 'Invalid limit' }), {
         status: 400,
       });
     }
@@ -50,7 +50,7 @@ export async function GET(req: NextRequest) {
     });
 
     if (!currentUser) {
-      return new NextResponse(JSON.stringify({ message: "Unauthorized" }), {
+      return new NextResponse(JSON.stringify({ message: 'Unauthorized' }), {
         status: 401,
       });
     }
@@ -63,7 +63,7 @@ export async function GET(req: NextRequest) {
     });
 
     if (!isParticipant) {
-      return new NextResponse(JSON.stringify({ message: "Forbidden" }), {
+      return new NextResponse(JSON.stringify({ message: 'Forbidden' }), {
         status: 403,
       });
     }
@@ -83,7 +83,7 @@ export async function GET(req: NextRequest) {
         },
       },
       orderBy: {
-        createdAt: "desc",
+        createdAt: 'desc',
       },
       take: limit,
       ...(cursor && {
@@ -105,7 +105,8 @@ export async function GET(req: NextRequest) {
           readAt: new Date(),
         },
       })
-      .catch((err) => console.error("Failed to mark messages as read:", err));
+      // biome-ignore lint: error
+      .catch((err) => console.error('Failed to mark messages as read:', err));
 
     const nextCursor =
       messages.length === limit ? messages[messages.length - 1].id : null;
@@ -115,12 +116,12 @@ export async function GET(req: NextRequest) {
         items: messages.reverse(),
         nextCursor,
       }),
-      { status: 200, headers: { "Content-Type": "application/json" } },
+      { status: 200, headers: { 'Content-Type': 'application/json' } },
     );
+    // biome-ignore lint: error
   } catch (error) {
-    console.error("MESSAGES_GET_ERROR", error);
     return new NextResponse(
-      JSON.stringify({ message: "Internal server error" }),
+      JSON.stringify({ message: 'Internal server error' }),
       {
         status: 500,
       },
@@ -132,14 +133,14 @@ export async function POST(req: NextRequest) {
   try {
     const session = (await getServerSession(authOptions)) as CustomSession;
     if (!session?.user?.id) {
-      return new NextResponse("Unauthorized", { status: 401 });
+      return new NextResponse('Unauthorized', { status: 401 });
     }
     const { content } = await req.json();
     const { searchParams } = new URL(req.url);
-    const conversationId = searchParams.get("conversationId");
+    const conversationId = searchParams.get('conversationId');
 
     if (!content || !conversationId) {
-      return new NextResponse("Content is required", { status: 400 });
+      return new NextResponse('Content is required', { status: 400 });
     }
 
     const currentUser = await Prisma.user.findUnique({
@@ -147,7 +148,7 @@ export async function POST(req: NextRequest) {
     });
 
     if (!currentUser) {
-      return new NextResponse("Unauthorized", { status: 401 });
+      return new NextResponse('Unauthorized', { status: 401 });
     }
 
     // Find the conversation and check if the current user is a participant
@@ -159,7 +160,7 @@ export async function POST(req: NextRequest) {
     });
 
     if (!conversation) {
-      return new NextResponse("Conversation not found", { status: 404 });
+      return new NextResponse('Conversation not found', { status: 404 });
     }
 
     const isParticipant = conversation.participants.some(
@@ -167,7 +168,7 @@ export async function POST(req: NextRequest) {
     );
 
     if (!isParticipant) {
-      return new NextResponse("Forbidden", { status: 403 });
+      return new NextResponse('Forbidden', { status: 403 });
     }
 
     // Find the other participant to set as receiver
@@ -176,7 +177,7 @@ export async function POST(req: NextRequest) {
     );
 
     if (!otherParticipant) {
-      return new NextResponse("Receiver not found", { status: 404 });
+      return new NextResponse('Receiver not found', { status: 404 });
     }
 
     // Create the message
@@ -207,11 +208,11 @@ export async function POST(req: NextRequest) {
     // Publish to Ably
     const ably = AblyService.getInstance();
     const channel = ably.channels.get(`conversation:${conversationId}`);
-    await channel.publish("new-message", message);
+    await channel.publish('new-message', message);
 
     return NextResponse.json(message);
+    // biome-ignore lint: error
   } catch (error) {
-    console.error("MESSAGE_POST", error);
-    return new NextResponse("Internal Error", { status: 500 });
+    return new NextResponse('Internal Error', { status: 500 });
   }
 }

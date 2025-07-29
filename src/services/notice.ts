@@ -1,9 +1,9 @@
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-import axios from "axios";
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import axios from 'axios';
 
 export function useNotice(page: number = 1, pageSize: number = 10) {
   return useQuery({
-    queryKey: ["notices", page, pageSize],
+    queryKey: ['notices', page, pageSize],
     queryFn: async () => {
       const response = await axios.get(
         `/api/notice?page=${page}&pageSize=${pageSize}`,
@@ -13,7 +13,7 @@ export function useNotice(page: number = 1, pageSize: number = 10) {
   });
 }
 
-import { useMutation } from "@tanstack/react-query";
+import { useMutation } from '@tanstack/react-query';
 
 interface UseUploadNoticeOptions {
   onSuccess?: () => void;
@@ -26,14 +26,14 @@ export function useUploadNotice({
 }: UseUploadNoticeOptions = {}) {
   return useMutation({
     mutationFn: async (formData: FormData) => {
-      const response = await fetch("/api/notice", {
-        method: "POST",
+      const response = await fetch('/api/notice', {
+        method: 'POST',
         body: formData,
       });
 
       if (!response.ok) {
         const errorData = await response.json().catch(() => ({}));
-        throw new Error(errorData.message || "Failed to upload notice");
+        throw new Error(errorData.message || 'Failed to upload notice');
       }
 
       return response.json();
@@ -42,7 +42,7 @@ export function useUploadNotice({
       // Return context that will be passed to onSuccess/onError
       return {};
     },
-    onSuccess: (data) => {
+    onSuccess: () => {
       // Call custom onSuccess callback
       onSuccess?.();
     },
@@ -65,12 +65,12 @@ export function useDeleteNotice({
 
   return useMutation({
     mutationFn: async (id: string) => {
-      const response = await axios.delete("/api/notice", { params: { id } });
+      const response = await axios.delete('/api/notice', { params: { id } });
       return response.data;
     },
     onSuccess: () => {
       // Invalidate and refetch notices query to update the UI
-      queryClient.invalidateQueries({ queryKey: ["notices"] });
+      queryClient.invalidateQueries({ queryKey: ['notices'] });
       onSuccess?.();
     },
     onError: (error: Error) => {

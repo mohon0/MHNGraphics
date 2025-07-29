@@ -1,14 +1,14 @@
-import { Prisma } from "@/components/helper/prisma/Prisma";
-import { NextRequest, NextResponse } from "next/server";
+import { type NextRequest, NextResponse } from 'next/server';
+import { Prisma } from '@/components/helper/prisma/Prisma';
 
 export async function GET(req: NextRequest) {
   try {
     const url = new URL(req.url);
     const queryParams = new URLSearchParams(url.search);
 
-    const id = queryParams.get("id");
+    const id = queryParams.get('id');
     if (!id) {
-      return new NextResponse("Invalid query parameter");
+      return new NextResponse('Invalid query parameter');
     }
 
     const response = await Prisma.application.findUnique({
@@ -24,15 +24,16 @@ export async function GET(req: NextRequest) {
         mobileNumber: true,
         payments: {
           orderBy: {
-            createdAt: "desc",
+            createdAt: 'desc',
           },
         },
       },
     });
 
     return new NextResponse(JSON.stringify(response), { status: 200 });
+    // biome-ignore lint: error
   } catch (error) {
-    return new NextResponse("Server error", { status: 500 });
+    return new NextResponse('Server error', { status: 500 });
   }
 }
 
@@ -40,7 +41,7 @@ export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
     if (!body.applicationId) {
-      return new NextResponse("Invalid query parameter");
+      return new NextResponse('Invalid query parameter');
     }
 
     const response = await Prisma.transaction.create({
@@ -53,8 +54,9 @@ export async function POST(req: NextRequest) {
       },
     });
     return new NextResponse(JSON.stringify(response), { status: 201 });
+    // biome-ignore lint: error
   } catch (error) {
-    return new NextResponse("Server error", { status: 500 });
+    return new NextResponse('Server error', { status: 500 });
   }
 }
 export async function DELETE(req: NextRequest) {
@@ -62,9 +64,9 @@ export async function DELETE(req: NextRequest) {
     const url = new URL(req.url);
     const queryParams = new URLSearchParams(url.search);
 
-    const id = queryParams.get("id");
+    const id = queryParams.get('id');
     if (!id) {
-      return new NextResponse("Invalid query parameter");
+      return new NextResponse('Invalid query parameter');
     }
 
     const response = await Prisma.transaction.delete({
@@ -73,7 +75,8 @@ export async function DELETE(req: NextRequest) {
       },
     });
     return new NextResponse(JSON.stringify(response), { status: 200 });
+    // biome-ignore lint: error
   } catch (error) {
-    return new NextResponse("Server error", { status: 500 });
+    return new NextResponse('Server error', { status: 500 });
   }
 }

@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { Input } from "@/components/ui/input";
-import { useDebounce } from "@/hooks/useDebounce";
-import { Search } from "lucide-react";
-import { useEffect, useState } from "react";
+import { Search } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { Input } from '@/components/ui/input';
+import { useDebounce } from '@/hooks/useDebounce';
 
 interface CommentSearchProps {
   onSearch: (query: string) => void;
@@ -11,7 +11,7 @@ interface CommentSearchProps {
 }
 
 export function CommentSearch({ onSearch, disabled }: CommentSearchProps) {
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchTerm, setSearchTerm] = useState('');
   const debouncedSearchTerm = useDebounce(searchTerm, 500);
 
   // Trigger search when debounced value changes
@@ -20,13 +20,13 @@ export function CommentSearch({ onSearch, disabled }: CommentSearchProps) {
   }, [debouncedSearchTerm, onSearch]);
 
   return (
-    <div className="relative">
-      <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+    <div className='relative'>
+      <Search className='absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground' />
       <Input
-        placeholder="Search comments..."
+        placeholder='Search comments...'
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
-        className="pl-9"
+        className='pl-9'
         disabled={disabled}
       />
     </div>

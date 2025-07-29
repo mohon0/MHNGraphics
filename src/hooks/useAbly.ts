@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import * as Ably from "ably";
-import { useSession } from "next-auth/react";
-import { useEffect, useState } from "react";
+import * as Ably from 'ably';
+import { useSession } from 'next-auth/react';
+import { useEffect, useState } from 'react';
 
 export interface TypingIndicatorState {
   userId: string;
@@ -27,8 +27,8 @@ export function useAbly() {
 
     const connectToAbly = async () => {
       try {
-        const response = await fetch("/api/chat/ably-token");
-        if (!response.ok) throw new Error("Failed to get Ably token");
+        const response = await fetch('/api/chat/ably-token');
+        if (!response.ok) throw new Error('Failed to get Ably token');
 
         const tokenRequest = await response.json();
 
@@ -39,16 +39,16 @@ export function useAbly() {
           clientId: session?.user?.id,
         });
 
-        ablyInstance.connection.on("connected", () => {
-          console.log("Connected to Ably");
+        ablyInstance.connection.on('connected', () => {
           setIsConnected(true);
         });
 
-        ablyInstance.connection.on("disconnected", () => {
+        ablyInstance.connection.on('disconnected', () => {
           setIsConnected(false);
         });
 
-        ablyInstance.connection.on("failed", (err) => {
+        ablyInstance.connection.on('failed', (err) => {
+          // biome-ignore lint: error
           setError(err as any);
           setIsConnected(false);
         });
@@ -75,6 +75,7 @@ export function useAbly() {
 
     const channel = ably.channels.get(`typing:${conversationId}`);
 
+    // biome-ignore lint: error
     const onTypingUpdate = (message: any) => {
       const data = message.data as TypingIndicatorState;
 
@@ -90,7 +91,7 @@ export function useAbly() {
       }
     };
 
-    channel.subscribe("typing", onTypingUpdate);
+    channel.subscribe('typing', onTypingUpdate);
 
     // Clean up old typing indicators periodically
     const interval = setInterval(() => {
@@ -115,7 +116,7 @@ export function useAbly() {
     }, 1000);
 
     return () => {
-      channel.unsubscribe("typing", onTypingUpdate);
+      channel.unsubscribe('typing', onTypingUpdate);
       clearInterval(interval);
     };
   };
@@ -129,7 +130,7 @@ export function useAbly() {
 
     const channel = ably.channels.get(`typing:${conversationId}`);
 
-    await channel.publish("typing", {
+    await channel.publish('typing', {
       userId: session.user.id,
       conversationId,
       isTyping,

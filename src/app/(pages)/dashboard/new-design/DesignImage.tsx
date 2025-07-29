@@ -1,19 +1,19 @@
-"use client";
-import { Button } from "@/components/ui/button";
+'use client';
+import { Upload, X } from 'lucide-react';
+import Image from 'next/image';
+import { useState } from 'react';
+import { CgAsterisk } from 'react-icons/cg';
+import { toast } from 'sonner';
+import { Button } from '@/components/ui/button';
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Upload, X } from "lucide-react";
-import Image from "next/image";
-import { useState } from "react";
-import { CgAsterisk } from "react-icons/cg";
-import { toast } from "sonner";
+} from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 
 interface ArticleImageProps {
   image: File | null;
@@ -51,59 +51,59 @@ export function DesignImage({ image, setImage, error }: ArticleImageProps) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="flex items-center gap-1">
+        <CardTitle className='flex items-center gap-1'>
           Cover Image
-          <CgAsterisk className="h-3 w-3 text-destructive" aria-hidden="true" />
+          <CgAsterisk className='h-3 w-3 text-destructive' aria-hidden='true' />
         </CardTitle>
         <CardDescription>
           Upload an image. Maximum file size is {MAX_IMAGE_SIZE_KB} KB.
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <div className="grid gap-4">
+        <div className='grid gap-4'>
           {image ? (
-            <div className="relative h-48 w-full max-w-sm overflow-hidden rounded-md">
+            <div className='relative h-48 w-full max-w-sm overflow-hidden rounded-md'>
               <Image
                 src={URL.createObjectURL(image)}
-                alt="Product image"
+                alt='Product image'
                 fill
-                className="object-cover"
+                className='object-cover'
               />
               <Button
-                variant="destructive"
-                size="icon"
-                className="absolute right-2 top-2"
+                variant='destructive'
+                size='icon'
+                className='absolute right-2 top-2'
                 onClick={removeImage}
               >
-                <X className="h-4 w-4" />
-                <span className="sr-only">Remove image</span>
+                <X className='h-4 w-4' />
+                <span className='sr-only'>Remove image</span>
               </Button>
             </div>
           ) : (
-            <div className="h-48 w-full max-w-sm">
+            <div className='h-48 w-full max-w-sm'>
               <Label
-                htmlFor="image-upload"
-                className="flex h-full w-full cursor-pointer flex-col items-center justify-center rounded-md border border-dashed border-muted-foreground bg-muted"
+                htmlFor='image-upload'
+                className='flex h-full w-full cursor-pointer flex-col items-center justify-center rounded-md border border-dashed border-muted-foreground bg-muted'
               >
                 <Upload
-                  className="h-8 w-8 text-muted-foreground"
-                  aria-hidden="true"
+                  className='h-8 w-8 text-muted-foreground'
+                  aria-hidden='true'
                 />
-                <span className="mt-2 text-sm text-muted-foreground">
+                <span className='mt-2 text-sm text-muted-foreground'>
                   Click to upload
                 </span>
                 <Input
-                  id="image-upload"
-                  type="file"
-                  accept="image/*"
-                  className="sr-only"
+                  id='image-upload'
+                  type='file'
+                  accept='image/*'
+                  className='sr-only'
                   onChange={handleImageUpload}
                 />
               </Label>
             </div>
           )}
           {(imageError || error) && (
-            <p className="text-sm text-destructive" role="alert">
+            <p className='text-sm text-destructive' role='alert'>
               {imageError || error}
             </p>
           )}

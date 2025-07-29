@@ -1,4 +1,4 @@
-import { StaticImageData } from "next/image";
+import type { StaticImageData } from 'next/image';
 
 export interface PaymentReport {
   id: string;
@@ -150,7 +150,7 @@ export interface UserApplication {
   bloodGroup: string;
   mobileNumber: string;
   guardianNumber: string;
-  gender: "male" | "female" | "other";
+  gender: 'male' | 'female' | 'other';
   gpa: string;
   nationality: string;
   nid: string;
@@ -166,11 +166,11 @@ export interface UserApplication {
   education: string;
   board: string;
   course: string;
-  pc: "laptop" | "pc" | "no" | undefined;
+  pc: 'laptop' | 'pc' | 'no' | undefined;
   email: string;
   transactionId: string;
   fatherOccupation: string;
-  maritalStatus: "Single" | "Married" | "Divorced" | "Widowed";
+  maritalStatus: 'Single' | 'Married' | 'Divorced' | 'Widowed';
   roll: number;
   user: {
     phoneNumber: string;

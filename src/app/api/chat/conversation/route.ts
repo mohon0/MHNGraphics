@@ -1,19 +1,19 @@
-import { Prisma } from "@/components/helper/prisma/Prisma";
-import { getServerSession } from "next-auth/next";
-import { NextResponse } from "next/server";
-import { authOptions } from "../../auth/[...nextauth]/Options";
-import { CustomSession } from "../../profile/route";
+import { NextResponse } from 'next/server';
+import { getServerSession } from 'next-auth/next';
+import { Prisma } from '@/components/helper/prisma/Prisma';
+import { authOptions } from '../../auth/[...nextauth]/Options';
+import type { CustomSession } from '../../profile/route';
 
 export async function POST(req: Request) {
   try {
     const session = (await getServerSession(authOptions)) as CustomSession;
     if (!session?.user?.id) {
-      return new NextResponse("Unauthorized", { status: 401 });
+      return new NextResponse('Unauthorized', { status: 401 });
     }
 
     const { userId } = await req.json();
     if (!userId) {
-      return new NextResponse("User ID is required", { status: 400 });
+      return new NextResponse('User ID is required', { status: 400 });
     }
 
     const currentUser = await Prisma.user.findUnique({
@@ -21,7 +21,7 @@ export async function POST(req: Request) {
     });
 
     if (!currentUser) {
-      return new NextResponse("Unauthorized", { status: 401 });
+      return new NextResponse('Unauthorized', { status: 401 });
     }
 
     // Check if conversation already exists between these users
@@ -74,9 +74,9 @@ export async function POST(req: Request) {
     });
 
     return NextResponse.json(newConversation);
+    // biome-ignore lint: error
   } catch (error) {
-    console.error("CONVERSATION_POST", error);
-    return new NextResponse("Internal Error", { status: 500 });
+    return new NextResponse('Internal Error', { status: 500 });
   }
 }
 
@@ -86,7 +86,7 @@ export async function GET() {
     const userId = session?.user?.id;
 
     if (!userId) {
-      return new NextResponse("Unauthorized", { status: 401 });
+      return new NextResponse('Unauthorized', { status: 401 });
     }
 
     const conversations = await Prisma.conversation.findMany({
@@ -111,12 +111,12 @@ export async function GET() {
           },
         },
         messages: {
-          orderBy: { createdAt: "desc" },
+          orderBy: { createdAt: 'desc' },
           take: 1,
         },
       },
       orderBy: {
-        updatedAt: "desc",
+        updatedAt: 'desc',
       },
     });
 
@@ -135,8 +135,8 @@ export async function GET() {
     });
 
     return new NextResponse(JSON.stringify(formatted), { status: 200 });
+    // biome-ignore lint: error
   } catch (error) {
-    console.error("CONVERSATIONS_GET", error);
-    return new NextResponse("Internal Error", { status: 500 });
+    return new NextResponse('Internal Error', { status: 500 });
   }
 }

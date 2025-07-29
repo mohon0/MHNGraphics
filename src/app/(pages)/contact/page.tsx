@@ -1,9 +1,5 @@
-import Contact from "./Contact";
+import Contact from './Contact';
 
 export default function page() {
-  return (
-    <>
-      <Contact />
-    </>
-  );
+  return <Contact />;
 }

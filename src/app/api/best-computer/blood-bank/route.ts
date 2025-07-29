@@ -1,41 +1,42 @@
-import { UploadImage } from "@/components/helper/image/UploadImage";
-import { Prisma } from "@/components/helper/prisma/Prisma";
-import cloudinary from "@/utils/cloudinary";
-import { getServerSession } from "next-auth/next";
-import { NextRequest, NextResponse } from "next/server";
-import { authOptions } from "../../auth/[...nextauth]/Options";
-import { CustomSession } from "../../profile/route";
+import { type NextRequest, NextResponse } from 'next/server';
+import { getServerSession } from 'next-auth/next';
+import { UploadImage } from '@/components/helper/image/UploadImage';
+import { Prisma } from '@/components/helper/prisma/Prisma';
+import cloudinary from '@/utils/cloudinary';
+import { authOptions } from '../../auth/[...nextauth]/Options';
+import type { CustomSession } from '../../profile/route';
 
 function getStringValue(formData: FormData, key: string): string {
   const value = formData.get(key);
-  return typeof value === "string" ? value : "";
+  return typeof value === 'string' ? value : '';
 }
 
 export async function POST(req: NextRequest) {
   try {
     const formData = await req.formData();
 
-    const name = getStringValue(formData, "fullName");
-    const birthDate = getStringValue(formData, "birthDay");
-    const bloodGroup = getStringValue(formData, "bloodGroup");
-    const allergies = getStringValue(formData, "allergies");
-    const donatedBefore = getStringValue(formData, "donatedBefore");
-    const diseases = getStringValue(formData, "diseases");
-    const district = getStringValue(formData, "district");
-    const address = getStringValue(formData, "address");
-    const occupation = getStringValue(formData, "Occupation");
-    const number = getStringValue(formData, "number");
-    const number2 = getStringValue(formData, "number2");
+    const name = getStringValue(formData, 'fullName');
+    const birthDate = getStringValue(formData, 'birthDay');
+    const bloodGroup = getStringValue(formData, 'bloodGroup');
+    const allergies = getStringValue(formData, 'allergies');
+    const donatedBefore = getStringValue(formData, 'donatedBefore');
+    const diseases = getStringValue(formData, 'diseases');
+    const district = getStringValue(formData, 'district');
+    const address = getStringValue(formData, 'address');
+    const occupation = getStringValue(formData, 'Occupation');
+    const number = getStringValue(formData, 'number');
+    const number2 = getStringValue(formData, 'number2');
 
-    let imageUrl = { secure_url: "", public_id: "" };
-    const imageFile = formData.get("image") as Blob;
+    let imageUrl = { secure_url: '', public_id: '' };
+    const imageFile = formData.get('image') as Blob;
 
     if (imageFile) {
       try {
-        imageUrl = await UploadImage(imageFile, "blood-bank/");
+        imageUrl = await UploadImage(imageFile, 'blood-bank/');
+        // biome-ignore lint: error
       } catch (uploadError) {
         return NextResponse.json(
-          { message: "Image upload failed" },
+          { message: 'Image upload failed' },
           { status: 500 },
         );
       }
@@ -63,11 +64,11 @@ export async function POST(req: NextRequest) {
     // Return the response data
     return new NextResponse(JSON.stringify(bloodDonation), {
       status: 201,
-      headers: { "Content-Type": "application/json" },
+      headers: { 'Content-Type': 'application/json' },
     });
+    // biome-ignore lint: error
   } catch (error) {
-    console.error(error);
-    return new NextResponse("Internal Server Error", { status: 500 });
+    return new NextResponse('Internal Server Error', { status: 500 });
   } finally {
     Prisma.$disconnect();
   }
@@ -77,28 +78,28 @@ export async function PUT(req: NextRequest) {
   try {
     const formData = await req.formData();
 
-    const id = getStringValue(formData, "id");
+    const id = getStringValue(formData, 'id');
     if (!id) {
-      return new NextResponse("ID is required", { status: 400 });
+      return new NextResponse('ID is required', { status: 400 });
     }
 
     const existingApp = await Prisma.bloodDonation.findUnique({
       where: { id },
     });
     if (!existingApp) {
-      return new NextResponse("No data found", { status: 404 });
+      return new NextResponse('No data found', { status: 404 });
     }
 
     let image = existingApp.image;
     let imageId = existingApp.imageId;
 
-    const imageData = formData.get("image") as Blob | null;
+    const imageData = formData.get('image') as Blob | null;
 
     // Delete the old image if a new one is provided
     if (imageData && imageId) {
       const deleteResult = await cloudinary.uploader.destroy(imageId);
-      if (deleteResult.result !== "ok") {
-        return new NextResponse("Error deleting previous image", {
+      if (deleteResult.result !== 'ok') {
+        return new NextResponse('Error deleting previous image', {
           status: 400,
         });
       }
@@ -106,31 +107,31 @@ export async function PUT(req: NextRequest) {
 
     // Upload the new image if provided
     if (imageData && imageData instanceof Blob) {
-      const uploadResult = await UploadImage(imageData, "blood-bank/");
+      const uploadResult = await UploadImage(imageData, 'blood-bank/');
       image = uploadResult.secure_url;
       imageId = uploadResult.public_id;
     }
 
     // Prepare updated data
     const updatedData: Record<string, string | Date | null> = {
-      name: getStringValue(formData, "fullName"),
-      birthDate: getStringValue(formData, "birthDay"),
-      bloodGroup: getStringValue(formData, "bloodGroup"),
-      allergies: getStringValue(formData, "allergies"),
-      donatedBefore: getStringValue(formData, "donatedBefore"),
-      diseases: getStringValue(formData, "diseases"),
-      district: getStringValue(formData, "district"),
-      address: getStringValue(formData, "address"),
-      occupation: getStringValue(formData, "Occupation"),
-      number: getStringValue(formData, "number"),
-      number2: getStringValue(formData, "number2"),
+      name: getStringValue(formData, 'fullName'),
+      birthDate: getStringValue(formData, 'birthDay'),
+      bloodGroup: getStringValue(formData, 'bloodGroup'),
+      allergies: getStringValue(formData, 'allergies'),
+      donatedBefore: getStringValue(formData, 'donatedBefore'),
+      diseases: getStringValue(formData, 'diseases'),
+      district: getStringValue(formData, 'district'),
+      address: getStringValue(formData, 'address'),
+      occupation: getStringValue(formData, 'Occupation'),
+      number: getStringValue(formData, 'number'),
+      number2: getStringValue(formData, 'number2'),
       image,
       imageId,
     };
 
     // Remove null or undefined values
     Object.keys(updatedData).forEach(
-      (key) => updatedData[key] === "" && delete updatedData[key],
+      (key) => updatedData[key] === '' && delete updatedData[key],
     );
 
     // Save updated data using Prisma
@@ -141,11 +142,11 @@ export async function PUT(req: NextRequest) {
 
     return new NextResponse(JSON.stringify(bloodDonation), {
       status: 200,
-      headers: { "Content-Type": "application/json" },
+      headers: { 'Content-Type': 'application/json' },
     });
+    // biome-ignore lint: error
   } catch (error) {
-    console.error(error);
-    return new NextResponse("Internal Server Error", { status: 500 });
+    return new NextResponse('Internal Server Error', { status: 500 });
   } finally {
     Prisma.$disconnect();
   }
@@ -155,15 +156,16 @@ export async function GET(req: NextRequest) {
   try {
     const url = new URL(req.url);
     const queryParams = new URLSearchParams(url.search);
-    const page = queryParams.get("page")
-      ? parseInt(queryParams.get("page")!, 10)
+    const page = queryParams.get('page')
+      ? // biome-ignore lint: error
+        parseInt(queryParams.get('page')!, 10)
       : 1;
     const pageSize = 12;
 
     const skipCount = (page - 1) * pageSize;
 
-    const searchName = queryParams.get("search") || "";
-    const bloodGroup = (queryParams.get("bloodGroup") || "All").trim();
+    const searchName = queryParams.get('search') || '';
+    const bloodGroup = (queryParams.get('bloodGroup') || 'All').trim();
 
     const allUsers = await Prisma.bloodDonation.findMany({
       select: {
@@ -184,16 +186,16 @@ export async function GET(req: NextRequest) {
       where: {
         name: {
           contains: searchName,
-          mode: "insensitive",
+          mode: 'insensitive',
         },
 
-        ...(bloodGroup !== "All" && { bloodGroup: { equals: bloodGroup } }),
+        ...(bloodGroup !== 'All' && { bloodGroup: { equals: bloodGroup } }),
       },
 
       skip: skipCount,
       take: pageSize,
       orderBy: {
-        createdAt: "desc",
+        createdAt: 'desc',
       },
     });
 
@@ -201,9 +203,9 @@ export async function GET(req: NextRequest) {
       where: {
         name: {
           contains: searchName,
-          mode: "insensitive",
+          mode: 'insensitive',
         },
-        ...(bloodGroup !== "All" && { bloodGroup: { equals: bloodGroup } }),
+        ...(bloodGroup !== 'All' && { bloodGroup: { equals: bloodGroup } }),
       },
     });
 
@@ -211,16 +213,17 @@ export async function GET(req: NextRequest) {
       return new NextResponse(
         JSON.stringify({ users: allUsers, count: totalUsersCount }),
         {
-          headers: { "Content-Type": "application/json" },
+          headers: { 'Content-Type': 'application/json' },
         },
       );
     } else {
-      return new NextResponse("No users found.", { status: 200 });
+      return new NextResponse('No users found.', { status: 200 });
     }
+    // biome-ignore lint: error
   } catch (error) {
-    return new NextResponse("Internal Server Error", {
+    return new NextResponse('Internal Server Error', {
       status: 500,
-      headers: { "Content-Type": "text/plain" },
+      headers: { 'Content-Type': 'text/plain' },
     });
   } finally {
     Prisma.$disconnect();
@@ -233,31 +236,31 @@ export async function DELETE(req: NextRequest) {
 
     // Check if the user is logged in
     if (!session) {
-      return new NextResponse(JSON.stringify({ error: "User not logged in" }), {
+      return new NextResponse(JSON.stringify({ error: 'User not logged in' }), {
         status: 401,
-        headers: { "Content-Type": "application/json" },
+        headers: { 'Content-Type': 'application/json' },
       });
     }
 
     const { role: authorRole } = session.user;
 
     // Check if the user is an admin
-    if (authorRole !== "ADMIN") {
+    if (authorRole !== 'ADMIN') {
       return new NextResponse(
-        JSON.stringify({ error: "Only admins have access to this" }),
-        { status: 403, headers: { "Content-Type": "application/json" } },
+        JSON.stringify({ error: 'Only admins have access to this' }),
+        { status: 403, headers: { 'Content-Type': 'application/json' } },
       );
     }
 
     // Parse query parameters
     const url = new URL(req.url);
     const queryParams = new URLSearchParams(url.search);
-    const id = queryParams.get("id");
+    const id = queryParams.get('id');
 
     if (!id) {
       return new NextResponse(
-        JSON.stringify({ error: "User ID not provided" }),
-        { status: 400, headers: { "Content-Type": "application/json" } },
+        JSON.stringify({ error: 'User ID not provided' }),
+        { status: 400, headers: { 'Content-Type': 'application/json' } },
       );
     }
 
@@ -272,19 +275,19 @@ export async function DELETE(req: NextRequest) {
     });
 
     if (!user) {
-      return new NextResponse(JSON.stringify({ error: "User not found" }), {
+      return new NextResponse(JSON.stringify({ error: 'User not found' }), {
         status: 404,
-        headers: { "Content-Type": "application/json" },
+        headers: { 'Content-Type': 'application/json' },
       });
     }
 
     // Delete the associated image from Cloudinary
     if (user.imageId) {
       const result = await cloudinary.uploader.destroy(user.imageId);
-      if (result.result !== "ok") {
+      if (result.result !== 'ok') {
         return new NextResponse(
-          JSON.stringify({ error: "Error deleting the previous image" }),
-          { status: 400, headers: { "Content-Type": "application/json" } },
+          JSON.stringify({ error: 'Error deleting the previous image' }),
+          { status: 400, headers: { 'Content-Type': 'application/json' } },
         );
       }
     }
@@ -295,14 +298,14 @@ export async function DELETE(req: NextRequest) {
     });
 
     return new NextResponse(
-      JSON.stringify({ message: "User deleted successfully" }),
-      { status: 200, headers: { "Content-Type": "application/json" } },
+      JSON.stringify({ message: 'User deleted successfully' }),
+      { status: 200, headers: { 'Content-Type': 'application/json' } },
     );
+    // biome-ignore lint: error
   } catch (error) {
-    console.error("DELETE Error:", error);
     return new NextResponse(
-      JSON.stringify({ error: "Internal Server Error" }),
-      { status: 500, headers: { "Content-Type": "application/json" } },
+      JSON.stringify({ error: 'Internal Server Error' }),
+      { status: 500, headers: { 'Content-Type': 'application/json' } },
     );
   } finally {
     await Prisma.$disconnect();

@@ -1,6 +1,6 @@
-"use client";
-import debounce from "lodash.debounce";
-import { useEffect, useRef, useState } from "react";
+'use client';
+import debounce from 'lodash.debounce';
+import { useEffect, useRef, useState } from 'react';
 
 // Custom Debounce Hook
 export function useDebounce(value: string, delay: number) {
@@ -16,7 +16,7 @@ export function useDebounce(value: string, delay: number) {
     return () => {
       currentDebounce.cancel();
     };
-  }, [value, delay]);
+  }, [value]);
 
   return debouncedValue;
 }

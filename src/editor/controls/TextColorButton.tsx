@@ -1,23 +1,24 @@
-"use client";
-import { Button } from "@/components/ui/button";
+'use client';
+import { useEditorState } from '@tiptap/react';
+import { Palette } from 'lucide-react';
+import type React from 'react';
+import { type CSSProperties, useRef } from 'react';
+import { createPortal } from 'react-dom';
+import { Button } from '@/components/ui/button';
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover";
+} from '@/components/ui/popover';
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "@/components/ui/tooltip";
-import { useEditorState } from "@tiptap/react";
-import { Palette } from "lucide-react";
-import React, { CSSProperties, useRef } from "react";
-import { createPortal } from "react-dom";
-import ColorPicker from "../color-picker";
-import useMount from "../hooks/useMount";
-import { useTiptapContext } from "../Provider";
+} from '@/components/ui/tooltip';
+import ColorPicker from '../color-picker';
+import useMount from '../hooks/useMount';
+import { useTiptapContext } from '../Provider';
 
 const TextColorButton: React.FC = () => {
   const buttonRef = useRef<HTMLButtonElement>(null);
@@ -27,21 +28,21 @@ const TextColorButton: React.FC = () => {
   const state = useEditorState({
     editor,
     selector: (ctx) => ({
-      color: ctx.editor.getAttributes("textStyle").color || "DEFAULT",
-      disabled: !ctx.editor.can().setColor(""),
+      color: ctx.editor.getAttributes('textStyle').color || 'DEFAULT',
+      disabled: !ctx.editor.can().setColor(''),
     }),
   });
 
   const colorBarStyle: CSSProperties = {
-    position: "absolute",
+    position: 'absolute',
     bottom: 0,
     left: 4,
     right: 4,
     height: 4,
     borderRadius: 4,
-    pointerEvents: "none",
+    pointerEvents: 'none',
     background:
-      state.color === "DEFAULT" ? "hsl(var(--foreground))" : state.color,
+      state.color === 'DEFAULT' ? 'hsl(var(--foreground))' : state.color,
   };
 
   const renderBar =
@@ -58,17 +59,17 @@ const TextColorButton: React.FC = () => {
               <PopoverTrigger asChild>
                 <Button
                   ref={buttonRef}
-                  variant="ghost"
-                  size="icon"
-                  type="button"
+                  variant='ghost'
+                  size='icon'
+                  type='button'
                   disabled={state.disabled}
-                  aria-label="Text color"
-                  style={{ position: "relative" }}
+                  aria-label='Text color'
+                  style={{ position: 'relative' }}
                 >
                   <Palette size={16} />
                 </Button>
               </PopoverTrigger>
-              <PopoverContent className="w-auto p-2">
+              <PopoverContent className='w-auto p-2'>
                 <ColorPicker
                   color={state.color}
                   onChange={(color) =>

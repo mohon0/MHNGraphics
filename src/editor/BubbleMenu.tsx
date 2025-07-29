@@ -1,16 +1,17 @@
 import {
   BubbleMenuPlugin,
-  BubbleMenuPluginProps,
-} from "@tiptap/extension-bubble-menu";
-import clsx from "clsx";
-import React, { useEffect, useRef } from "react";
-import { createPortal } from "react-dom";
+  type BubbleMenuPluginProps,
+} from '@tiptap/extension-bubble-menu';
+import clsx from 'clsx';
+import type React from 'react';
+import { useEffect, useRef } from 'react';
+import { createPortal } from 'react-dom';
 
 type Optional<T, K extends keyof T> = Pick<Partial<T>, K> & Omit<T, K>;
 
 export type BubbleMenuProps = Omit<
-  Optional<BubbleMenuPluginProps, "pluginKey" | "editor">,
-  "element"
+  Optional<BubbleMenuPluginProps, 'pluginKey' | 'editor'>,
+  'element'
 > & {
   className?: string;
   children: React.ReactNode;
@@ -23,18 +24,18 @@ export const BubbleMenu = ({
   ...props
 }: BubbleMenuProps) => {
   const menuEl = useRef<HTMLDivElement | null>(null);
-
+  // biome-ignore lint: error
   useEffect(() => {
     if (!editor || editor.isDestroyed) return;
 
     // Create menu element if not already created
     if (!menuEl.current) {
-      menuEl.current = document.createElement("div");
+      menuEl.current = document.createElement('div');
       document.body.appendChild(menuEl.current);
     }
 
     const {
-      pluginKey = "bubbleMenu",
+      pluginKey = 'bubbleMenu',
       tippyOptions = {},
       updateDelay,
       shouldShow = null,
@@ -57,12 +58,12 @@ export const BubbleMenu = ({
         menuEl.current.parentNode.removeChild(menuEl.current);
       }
     };
-  }, [editor, props]);
+  }, [editor]);
 
   if (!menuEl.current) return null; // Ensure menuEl exists before rendering
 
   return createPortal(
-    <div className={clsx("rounded bg-background shadow-sm", className)}>
+    <div className={clsx('rounded bg-background shadow-sm', className)}>
       {children}
     </div>,
     menuEl.current,

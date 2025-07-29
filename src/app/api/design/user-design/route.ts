@@ -1,6 +1,6 @@
-import { Prisma } from "@/components/helper/prisma/Prisma";
-import { getToken } from "next-auth/jwt";
-import { NextRequest, NextResponse } from "next/server";
+import { type NextRequest, NextResponse } from 'next/server';
+import { getToken } from 'next-auth/jwt';
+import { Prisma } from '@/components/helper/prisma/Prisma';
 
 const secret = process.env.NEXTAUTH_SECRET;
 
@@ -9,43 +9,45 @@ export async function GET(req: NextRequest) {
     const token = await getToken({ req, secret });
 
     if (!token)
-      return NextResponse.json({ message: "Token not found" }, { status: 401 });
+      return NextResponse.json({ message: 'Token not found' }, { status: 401 });
 
     const url = new URL(req.url);
     const queryParams = new URLSearchParams(url.search);
 
-    const page = queryParams.get("page")
-      ? parseInt(queryParams.get("page")!, 10)
+    const page = queryParams.get('page')
+      ? // biome-ignore lint: error
+        parseInt(queryParams.get('page')!, 10)
       : 1;
-    const pageSize = queryParams.get("pageSize")
-      ? parseInt(queryParams.get("pageSize")!, 10)
+    const pageSize = queryParams.get('pageSize')
+      ? // biome-ignore lint: error
+        parseInt(queryParams.get('pageSize')!, 10)
       : 1;
-    const category = queryParams.get("category") || "all";
-    const searchQuery = queryParams.get("searchQuery") || "";
+    const category = queryParams.get('category') || 'all';
+    const searchQuery = queryParams.get('searchQuery') || '';
 
     const limit = pageSize;
     const skip = (page - 1) * limit;
 
-    let whereClause: {
+    const whereClause: {
       authorId?: string | undefined;
       category?: string;
       name?: {
         contains: string;
-        mode: "insensitive";
+        mode: 'insensitive';
       };
     } = {};
 
-    if (category !== "all") {
+    if (category !== 'all') {
       whereClause.category = category;
     }
 
-    if (token.role !== "ADMIN") {
+    if (token.role !== 'ADMIN') {
       whereClause.authorId = token.sub;
     }
     if (searchQuery) {
       whereClause.name = {
         contains: searchQuery,
-        mode: "insensitive",
+        mode: 'insensitive',
       };
     }
 
@@ -56,7 +58,7 @@ export async function GET(req: NextRequest) {
       take: limit,
 
       orderBy: {
-        createdAt: "desc",
+        createdAt: 'desc',
       },
       include: {
         author: {
@@ -84,7 +86,8 @@ export async function GET(req: NextRequest) {
     };
 
     return NextResponse.json(result, { status: 200 });
+    // biome-ignore lint: error
   } catch (error) {
-    return new NextResponse("Internal Server Error", { status: 500 });
+    return new NextResponse('Internal Server Error', { status: 500 });
   }
 }

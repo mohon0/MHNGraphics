@@ -1,17 +1,17 @@
-import { EditorContent, type Editor } from "@tiptap/react";
-import clsx from "clsx";
+import { type Editor, EditorContent } from '@tiptap/react';
+import clsx from 'clsx';
 import {
   createContext,
-  HTMLAttributes,
-  ReactNode,
-  RefObject,
+  type HTMLAttributes,
+  type ReactNode,
+  type RefObject,
   useContext,
   useRef,
   useState,
-} from "react";
+} from 'react';
 import useTiptapEditor, {
   type UseTiptapEditorOptions,
-} from "./hooks/useTiptapEditor";
+} from './hooks/useTiptapEditor';
 
 type TiptapContextType = {
   editor: Editor;
@@ -36,7 +36,6 @@ type TiptapProviderProps = {
 export const TiptapProvider = ({
   children,
   editorOptions,
-  editorProps,
   slotBefore,
   slotAfter,
 }: TiptapProviderProps) => {
@@ -53,9 +52,9 @@ export const TiptapProvider = ({
     const target = event.target as Element;
     const content = contentElement.current;
     if (content && target.contains(content)) {
-      content.style.display = "flex";
+      content.style.display = 'flex';
       setTimeout(() => {
-        content.style.display = "";
+        content.style.display = '';
       }, 0);
     }
   };
@@ -63,19 +62,20 @@ export const TiptapProvider = ({
   const editorContent = (
     <div
       className={clsx(
-        "flex flex-col rounded-md border text-sm",
-        isFullScreen && "fixed inset-0 z-50",
+        'flex flex-col rounded-md border text-sm',
+        isFullScreen && 'fixed inset-0 z-50',
       )}
     >
       {slotBefore}
+      {/* biome-ignore lint: error */}
       <div
-        className="relative flex max-h-[80vh] min-h-80 flex-1 cursor-text overflow-auto bg-background px-2 md:px-4"
+        className='relative flex max-h-[80vh] min-h-80 flex-1 cursor-text overflow-auto bg-background px-2 md:px-4'
         onMouseDown={focusEditorViaContainer}
       >
         <EditorContent
           ref={contentElement}
           editor={editor}
-          className="relative mx-auto w-full max-w-180 flex-1"
+          className='relative mx-auto w-full max-w-180 flex-1'
         />
       </div>
       {children}

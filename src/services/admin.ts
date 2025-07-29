@@ -1,8 +1,8 @@
-import { QUERY_KEYS } from "@/constant/QueryKeys";
-import { useDebounce } from "@/hooks/useDebounce";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import axios from "axios";
-import { toast } from "sonner";
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import axios from 'axios';
+import { toast } from 'sonner';
+import { QUERY_KEYS } from '@/constant/QueryKeys';
+import { useDebounce } from '@/hooks/useDebounce';
 
 export function useFetchAdminData() {
   return useQuery({
@@ -16,7 +16,7 @@ export function useFetchAdminData() {
 
 export function FetchRecentApplication() {
   return useQuery({
-    queryKey: ["Recent applications"],
+    queryKey: ['Recent applications'],
     queryFn: async () => {
       const response = await axios.get(`/api/admin/recent-data/application`);
       return response.data;
@@ -25,7 +25,7 @@ export function FetchRecentApplication() {
 }
 export function FetchRecentDesign() {
   return useQuery({
-    queryKey: ["Recent design"],
+    queryKey: ['Recent design'],
     queryFn: async () => {
       const response = await axios.get(`/api/admin/recent-data/design`);
       return response.data;
@@ -63,15 +63,15 @@ export function useUserStatusUpdate() {
         })
         .then((res) => res.data);
       return toast.promise(updatePromise, {
-        loading: "Updating user status...",
+        loading: 'Updating user status...',
         success: (data) => {
           queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.USER_LIST] });
-          return data.message || "Status updated successfully 🎉";
+          return data.message || 'Status updated successfully 🎉';
         },
         error: (error) =>
           axios.isAxiosError(error)
-            ? error.response?.data?.message || "Failed to update Status ❌"
-            : "Something went wrong. Please try again.",
+            ? error.response?.data?.message || 'Failed to update Status ❌'
+            : 'Something went wrong. Please try again.',
       });
     },
   });
@@ -89,16 +89,16 @@ export const useUpdateDesignStatus = () => {
         .then((res) => res.data); // Unwrap response before passing to toast
 
       return toast.promise(updatePromise, {
-        loading: "Updating design status...",
+        loading: 'Updating design status...',
         success: (data) => {
           queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.ALL_DESIGN] });
           queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.USER_DESIGN] });
-          return data.message || "Design updated successfully 🎉";
+          return data.message || 'Design updated successfully 🎉';
         },
         error: (error) =>
           axios.isAxiosError(error)
-            ? error.response?.data?.message || "Failed to update design ❌"
-            : "Something went wrong. Please try again.",
+            ? error.response?.data?.message || 'Failed to update design ❌'
+            : 'Something went wrong. Please try again.',
       });
     },
   });
@@ -113,15 +113,15 @@ export function useDeleteUser() {
         .then((res) => res.data);
 
       return toast.promise(updatePromise, {
-        loading: "Deleting user...",
+        loading: 'Deleting user...',
         success: (data) => {
           queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.USER_LIST] });
-          return data.message || "User deleted successfully 🎉";
+          return data.message || 'User deleted successfully 🎉';
         },
         error: (error) =>
           axios.isAxiosError(error)
-            ? error.response?.data?.message || "Failed to delete user ❌"
-            : "Something went wrong. Please try again.",
+            ? error.response?.data?.message || 'Failed to delete user ❌'
+            : 'Something went wrong. Please try again.',
       });
     },
   });
@@ -156,8 +156,8 @@ export const useDurationToggle = (
   const mutation = useMutation({
     mutationFn: async (newData: boolean) => {
       return axios.patch(
-        "api/admin/duration",
-        { button: newData ? "On" : "Off" },
+        'api/admin/duration',
+        { button: newData ? 'On' : 'Off' },
         { withCredentials: true },
       );
     },
@@ -173,9 +173,9 @@ export const useDurationToggle = (
     const newData = !visibility;
 
     await toast.promise(mutation.mutateAsync(newData), {
-      loading: "Please wait...",
-      success: "Status updated successfully",
-      error: "Error updating status",
+      loading: 'Please wait...',
+      success: 'Status updated successfully',
+      error: 'Error updating status',
     });
   };
 
@@ -208,17 +208,17 @@ export function useDeleteComment() {
         .then((res) => res.data);
 
       return toast.promise(updatePromise, {
-        loading: "Deleting Comment...",
+        loading: 'Deleting Comment...',
         success: (data) => {
           queryClient.invalidateQueries({
             queryKey: [QUERY_KEYS.COMMENT_LIST],
           });
-          return data.message || "Comment deleted successfully 🎉";
+          return data.message || 'Comment deleted successfully 🎉';
         },
         error: (error) =>
           axios.isAxiosError(error)
-            ? error.response?.data?.message || "Failed to delete comment ❌"
-            : "Something went wrong. Please try again.",
+            ? error.response?.data?.message || 'Failed to delete comment ❌'
+            : 'Something went wrong. Please try again.',
       });
     },
   });

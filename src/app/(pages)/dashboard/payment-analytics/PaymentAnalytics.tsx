@@ -1,35 +1,35 @@
-"use client";
+'use client';
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  ArrowDown,
+  ArrowUp,
+  DollarSignIcon as BangladeshiTakaSign,
+} from 'lucide-react';
+import { useState } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { usePaymentAnalytics } from "@/services/admin";
-import {
-  ArrowDown,
-  ArrowUp,
-  DollarSignIcon as BangladeshiTakaSign,
-} from "lucide-react";
-import { useState } from "react";
-import CumulativeRevenueChart from "./CumulativeRevenueChart";
-import MonthlyComparisonChart from "./MonthlyComparisonChart";
-import PaymentMethodChart from "./PaymentMethodChart";
-import PaymentSkeleton from "./PaymentSkeleton";
-import PaymentTrendChart from "./PaymentTrendChart";
+} from '@/components/ui/select';
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { usePaymentAnalytics } from '@/services/admin';
+import CumulativeRevenueChart from './CumulativeRevenueChart';
+import MonthlyComparisonChart from './MonthlyComparisonChart';
+import PaymentMethodChart from './PaymentMethodChart';
+import PaymentSkeleton from './PaymentSkeleton';
+import PaymentTrendChart from './PaymentTrendChart';
 
 const CHART_TYPES = [
-  { value: "trends", label: "Payment Trends" },
-  { value: "comparison", label: "Monthly Comparison" },
-  { value: "methods", label: "Payment Methods" },
-  { value: "cumulative", label: "Cumulative Revenue" },
+  { value: 'trends', label: 'Payment Trends' },
+  { value: 'comparison', label: 'Monthly Comparison' },
+  { value: 'methods', label: 'Payment Methods' },
+  { value: 'cumulative', label: 'Cumulative Revenue' },
 ] as const;
 
-type ChartType = (typeof CHART_TYPES)[number]["value"];
+type ChartType = (typeof CHART_TYPES)[number]['value'];
 
 /**
  * PaymentAnalytics Component
@@ -39,7 +39,7 @@ type ChartType = (typeof CHART_TYPES)[number]["value"];
  */
 export default function PaymentAnalytics() {
   const { isPending, data, isError } = usePaymentAnalytics();
-  const [activeChart, setActiveChart] = useState<ChartType>("trends");
+  const [activeChart, setActiveChart] = useState<ChartType>('trends');
 
   // Handler for both Select and Tabs value changes
   const handleChartChange = (value: string) => {
@@ -60,8 +60,8 @@ export default function PaymentAnalytics() {
 
   if (isError) {
     return (
-      <div className="flex h-[400px] items-center justify-center">
-        <p className="text-red-500">Error loading payment analytics.</p>
+      <div className='flex h-[400px] items-center justify-center'>
+        <p className='text-red-500'>Error loading payment analytics.</p>
       </div>
     );
   }
@@ -69,28 +69,28 @@ export default function PaymentAnalytics() {
   const { summary, chartData } = data;
 
   return (
-    <div className="space-y-8">
+    <div className='space-y-8'>
       {/* Summary Cards section remains the same */}
-      <div className="grid gap-4 md:grid-cols-3">
+      <div className='grid gap-4 md:grid-cols-3'>
         {/* Total Payments Card */}
         <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">
+          <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
+            <CardTitle className='text-sm font-medium'>
               Total Payments
             </CardTitle>
-            <BangladeshiTakaSign className="h-4 w-4 text-green-500" />
+            <BangladeshiTakaSign className='h-4 w-4 text-green-500' />
           </CardHeader>
           <CardContent>
-            <div className="flex items-center justify-between">
-              <div className="text-2xl font-bold">
+            <div className='flex items-center justify-between'>
+              <div className='text-2xl font-bold'>
                 ৳{summary.totalPayments.toLocaleString()}
               </div>
-              <div className="flex items-center space-x-1 text-green-500">
-                <ArrowUp className="h-4 w-4" />
-                <span className="text-xs">12.5%</span>
+              <div className='flex items-center space-x-1 text-green-500'>
+                <ArrowUp className='h-4 w-4' />
+                <span className='text-xs'>12.5%</span>
               </div>
             </div>
-            <p className="text-xs text-muted-foreground">
+            <p className='text-xs text-muted-foreground'>
               +2.1% from last month
             </p>
           </CardContent>
@@ -98,21 +98,21 @@ export default function PaymentAnalytics() {
 
         {/* Total Refunds Card */}
         <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Refunds</CardTitle>
-            <BangladeshiTakaSign className="h-4 w-4 text-red-500" />
+          <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
+            <CardTitle className='text-sm font-medium'>Total Refunds</CardTitle>
+            <BangladeshiTakaSign className='h-4 w-4 text-red-500' />
           </CardHeader>
           <CardContent>
-            <div className="flex items-center justify-between">
-              <div className="text-2xl font-bold">
+            <div className='flex items-center justify-between'>
+              <div className='text-2xl font-bold'>
                 ৳{summary.totalRefunds.toLocaleString()}
               </div>
-              <div className="flex items-center space-x-1 text-red-500">
-                <ArrowDown className="h-4 w-4" />
-                <span className="text-xs">0.8%</span>
+              <div className='flex items-center space-x-1 text-red-500'>
+                <ArrowDown className='h-4 w-4' />
+                <span className='text-xs'>0.8%</span>
               </div>
             </div>
-            <p className="text-xs text-muted-foreground">
+            <p className='text-xs text-muted-foreground'>
               -0.3% from last month
             </p>
           </CardContent>
@@ -120,21 +120,21 @@ export default function PaymentAnalytics() {
 
         {/* Net Amount Card */}
         <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Net Amount</CardTitle>
-            <BangladeshiTakaSign className="h-4 w-4 text-blue-500" />
+          <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
+            <CardTitle className='text-sm font-medium'>Net Amount</CardTitle>
+            <BangladeshiTakaSign className='h-4 w-4 text-blue-500' />
           </CardHeader>
           <CardContent>
-            <div className="flex items-center justify-between">
-              <div className="text-2xl font-bold">
+            <div className='flex items-center justify-between'>
+              <div className='text-2xl font-bold'>
                 ৳{summary.netAmount.toLocaleString()}
               </div>
-              <div className="flex items-center space-x-1 text-blue-500">
-                <ArrowUp className="h-4 w-4" />
-                <span className="text-xs">10.2%</span>
+              <div className='flex items-center space-x-1 text-blue-500'>
+                <ArrowUp className='h-4 w-4' />
+                <span className='text-xs'>10.2%</span>
               </div>
             </div>
-            <p className="text-xs text-muted-foreground">
+            <p className='text-xs text-muted-foreground'>
               +1.8% from last month
             </p>
           </CardContent>
@@ -142,12 +142,12 @@ export default function PaymentAnalytics() {
       </div>
 
       {/* Responsive Charts Section */}
-      <div className="space-y-4">
+      <div className='space-y-4'>
         {/* Mobile Select Dropdown */}
-        <div className="md:hidden">
+        <div className='md:hidden'>
           <Select value={activeChart} onValueChange={handleChartChange}>
-            <SelectTrigger className="w-full">
-              <SelectValue placeholder="Select chart type" />
+            <SelectTrigger className='w-full'>
+              <SelectValue placeholder='Select chart type' />
             </SelectTrigger>
             <SelectContent>
               {CHART_TYPES.map((type) => (
@@ -163,11 +163,11 @@ export default function PaymentAnalytics() {
         <Tabs
           value={activeChart}
           onValueChange={handleChartChange}
-          className="hidden space-y-4 md:block"
+          className='hidden space-y-4 md:block'
         >
-          <div className="relative">
-            <div className="absolute inset-0 left-0 right-0 h-[2px] bg-muted" />
-            <TabsList className="relative w-full justify-start rounded-none border-b bg-transparent p-0">
+          <div className='relative'>
+            <div className='absolute inset-0 left-0 right-0 h-[2px] bg-muted' />
+            <TabsList className='relative w-full justify-start rounded-none border-b bg-transparent p-0'>
               {CHART_TYPES.map((type) => (
                 <TabsTrigger key={type.value} value={type.value}>
                   {type.label}
@@ -185,12 +185,12 @@ export default function PaymentAnalytics() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            {activeChart === "trends" && <PaymentTrendChart data={chartData} />}
-            {activeChart === "comparison" && (
+            {activeChart === 'trends' && <PaymentTrendChart data={chartData} />}
+            {activeChart === 'comparison' && (
               <MonthlyComparisonChart data={chartData} />
             )}
-            {activeChart === "methods" && <PaymentMethodChart />}
-            {activeChart === "cumulative" && (
+            {activeChart === 'methods' && <PaymentMethodChart />}
+            {activeChart === 'cumulative' && (
               <CumulativeRevenueChart data={chartData} />
             )}
           </CardContent>

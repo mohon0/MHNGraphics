@@ -1,6 +1,11 @@
-"use client";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+'use client';
+import { motion, useMotionValueEvent, useScroll } from 'framer-motion';
+import { LucideSearch } from 'lucide-react';
+import Link from 'next/link';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { Suspense, useCallback, useEffect, useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import {
   Select,
   SelectContent,
@@ -9,16 +14,11 @@ import {
   SelectLabel,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Skeleton } from "@/components/ui/skeleton";
-import { designCategories } from "@/constant/DesignCategory";
-import { motion, useMotionValueEvent, useScroll } from "framer-motion";
-import { LucideSearch } from "lucide-react";
-import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
-import { Suspense, useCallback, useEffect, useState } from "react";
-import DesktopMenu from "./DesktopMenu";
-import User from "./User";
+} from '@/components/ui/select';
+import { Skeleton } from '@/components/ui/skeleton';
+import { designCategories } from '@/constant/DesignCategory';
+import DesktopMenu from './DesktopMenu';
+import User from './User';
 
 function SearchHeaderComponent({ fixed = false }: { fixed?: boolean }) {
   const router = useRouter();
@@ -28,20 +28,20 @@ function SearchHeaderComponent({ fixed = false }: { fixed?: boolean }) {
   const [disableAnimation, setDisableAnimation] = useState(false);
   const { scrollY } = useScroll();
   const [category, setCategory] = useState<string>(
-    searchParams.get("category") || "all",
+    searchParams.get('category') || 'all',
   );
   const [searchQuery, setSearchQuery] = useState<string>(
-    searchParams.get("query")?.replace(/\+/g, " ") || "",
+    searchParams.get('query')?.replace(/\+/g, ' ') || '',
   );
 
-  useMotionValueEvent(scrollY, "change", (latest) => {
+  useMotionValueEvent(scrollY, 'change', (latest) => {
     setIsScrolled(latest > 50);
   });
 
   // Synchronize state with URL parameters
   useEffect(() => {
-    const currentCategory = searchParams.get("category") || "all";
-    const currentQuery = searchParams.get("query")?.replace(/\+/g, " ") || "";
+    const currentCategory = searchParams.get('category') || 'all';
+    const currentQuery = searchParams.get('query')?.replace(/\+/g, ' ') || '';
     setCategory(currentCategory);
     setSearchQuery(currentQuery);
   }, [searchParams]);
@@ -52,7 +52,7 @@ function SearchHeaderComponent({ fixed = false }: { fixed?: boolean }) {
       router.push(
         `/design?category=${encodeURIComponent(value)}&query=${searchQuery
           .trim()
-          .replace(/ /g, "+")}&page=1`,
+          .replace(/ /g, '+')}&page=1`,
       );
     },
     [router, searchQuery],
@@ -66,7 +66,7 @@ function SearchHeaderComponent({ fixed = false }: { fixed?: boolean }) {
   );
 
   const handleSearch = useCallback(() => {
-    const encodedQuery = searchQuery.trim().replace(/ /g, "+"); // Replace spaces with +
+    const encodedQuery = searchQuery.trim().replace(/ /g, '+'); // Replace spaces with +
     router.push(
       `/design?category=${encodeURIComponent(category)}&query=${encodedQuery}&page=1`,
     );
@@ -81,26 +81,26 @@ function SearchHeaderComponent({ fixed = false }: { fixed?: boolean }) {
     // Initial check
     handleResize();
     // Add resize listener
-    window.addEventListener("resize", handleResize);
+    window.addEventListener('resize', handleResize);
 
     return () => {
-      window.removeEventListener("resize", handleResize);
+      window.removeEventListener('resize', handleResize);
     };
   }, []);
 
   return (
     <>
       <div>
-        <div className="container mx-auto px-2">
-          <div className="flex h-14 items-center justify-between">
-            <div className="flex items-center space-x-8">
-              <div className="z-20 ml-48 hidden lg:block">
+        <div className='container mx-auto px-2'>
+          <div className='flex h-14 items-center justify-between'>
+            <div className='flex items-center space-x-8'>
+              <div className='z-20 ml-48 hidden lg:block'>
                 <DesktopMenu fixed={fixed} />
               </div>
             </div>
-            <div className="flex items-center space-x-4">
-              <Link href="/company/pricing">
-                <Button variant="outline">Pricing</Button>
+            <div className='flex items-center space-x-4'>
+              <Link href='/company/pricing'>
+                <Button variant='outline'>Pricing</Button>
               </Link>
               <User />
             </div>
@@ -109,31 +109,31 @@ function SearchHeaderComponent({ fixed = false }: { fixed?: boolean }) {
       </div>
 
       {/* Search Bar */}
-      <div className="left-0 top-0 z-10 border-b bg-background lg:sticky">
-        <div className="mx-auto py-2 md:container">
-          <div className="flex items-center gap-2">
-            <div className="flex items-center">
+      <div className='left-0 top-0 z-10 border-b bg-background lg:sticky'>
+        <div className='mx-auto py-2 md:container'>
+          <div className='flex items-center gap-2'>
+            <div className='flex items-center'>
               <motion.div
-                className="mr-4"
+                className='mr-4'
                 initial={{ y: -56 }}
                 animate={
                   !disableAnimation
                     ? {
                         y: isScrolled ? 0 : -56,
-                        transition: { type: "spring" },
+                        transition: { type: 'spring' },
                       }
                     : {}
                 }
               >
                 <Link
-                  href="/"
+                  href='/'
                   className={`space-x-2 font-extrabold ${
-                    fixed ? "text-white" : "text-black"
+                    fixed ? 'text-white' : 'text-black'
                   }`}
                 >
-                  <div className="font-philosopher ml-2 flex items-end gap-2 md:ml-0">
-                    <span className="text-2xl">Oylkka</span>
-                    <span className="hidden text-xl md:block">Graphics</span>
+                  <div className='font-philosopher ml-2 flex items-end gap-2 md:ml-0'>
+                    <span className='text-2xl'>Oylkka</span>
+                    <span className='hidden text-xl md:block'>Graphics</span>
                   </div>
                 </Link>
               </motion.div>
@@ -144,21 +144,21 @@ function SearchHeaderComponent({ fixed = false }: { fixed?: boolean }) {
               >
                 <SelectTrigger
                   className={`bg-background ${
-                    isScrolled ? "md:ml-10" : "md:-ml-44"
+                    isScrolled ? 'md:ml-10' : 'md:-ml-44'
                   } -ml-20 transition-all duration-200 md:min-w-32`}
                 >
-                  <SelectValue placeholder="Category" />
+                  <SelectValue placeholder='Category' />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectGroup>
                     <SelectLabel>All Categories</SelectLabel>
-                    <SelectItem value="all">All</SelectItem>
+                    <SelectItem value='all'>All</SelectItem>
                     {designCategories.map((category) => (
                       <SelectItem
                         key={category.value}
                         value={category.value
                           .toLowerCase()
-                          .replace(/\s+/g, "_")}
+                          .replace(/\s+/g, '_')}
                       >
                         {category.label}
                       </SelectItem>
@@ -167,23 +167,23 @@ function SearchHeaderComponent({ fixed = false }: { fixed?: boolean }) {
                 </SelectContent>
               </Select>
             </div>
-            <div className="mr-2 flex flex-1 items-center gap-2 md:mr-0 md:flex-initial">
+            <div className='mr-2 flex flex-1 items-center gap-2 md:mr-0 md:flex-initial'>
               <Input
-                placeholder="Search by name"
+                placeholder='Search by name'
                 value={searchQuery}
                 onChange={handleSearchChange}
                 onKeyDown={(e) => {
-                  if (e.key === "Enter") {
+                  if (e.key === 'Enter') {
                     handleSearch();
                   }
                 }}
-                className="lg:w-120"
+                className='lg:w-120'
               />
-              <Button onClick={handleSearch} type="submit">
+              <Button onClick={handleSearch} type='submit'>
                 <span>
                   <LucideSearch />
                 </span>
-                <span className="hidden md:block">Search</span>
+                <span className='hidden md:block'>Search</span>
               </Button>
             </div>
           </div>
@@ -198,7 +198,7 @@ export default function SearchHeader() {
     <Suspense
       fallback={
         <div>
-          <Skeleton className="h-20" />
+          <Skeleton className='h-20' />
         </div>
       }
     >

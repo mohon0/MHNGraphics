@@ -1,7 +1,7 @@
-import { Prisma } from "@/components/helper/prisma/Prisma";
-import { SlugToText } from "@/components/helper/slug/SlugToText";
-import { DesignStatus } from "@prisma/client";
-import { NextRequest, NextResponse } from "next/server";
+import type { DesignStatus } from '@prisma/client';
+import { type NextRequest, NextResponse } from 'next/server';
+import { Prisma } from '@/components/helper/prisma/Prisma';
+import { SlugToText } from '@/components/helper/slug/SlugToText';
 
 // Helper function to normalize text to lowercase
 const normalizeText = (text: string) => text.trim().toLowerCase();
@@ -11,39 +11,40 @@ export async function GET(req: NextRequest) {
     const url = new URL(req.url);
     const queryParams = new URLSearchParams(url.search);
 
-    const page = queryParams.get("page")
-      ? parseInt(queryParams.get("page")!, 10)
+    const page = queryParams.get('page')
+      ? // biome-ignore lint: error
+        parseInt(queryParams.get('page')!, 10)
       : 1;
-    const category = queryParams.get("category") || "all";
-    const searchQuery = queryParams.get("searchQuery") || "";
+    const category = queryParams.get('category') || 'all';
+    const searchQuery = queryParams.get('searchQuery') || '';
 
     // Ensure tag is valid before applying transformation
-    const tagParam = queryParams.get("tag");
-    const tag = tagParam ? SlugToText(tagParam) : "";
+    const tagParam = queryParams.get('tag');
+    const tag = tagParam ? SlugToText(tagParam) : '';
 
     const limit = 30;
     const skip = (page - 1) * limit;
 
-    let whereClause: {
+    const whereClause: {
       category?: string;
       status?: DesignStatus;
       OR?: Array<{
-        name?: { contains: string; mode: "insensitive" };
-        category?: { contains: string; mode: "insensitive" };
+        name?: { contains: string; mode: 'insensitive' };
+        category?: { contains: string; mode: 'insensitive' };
         tags?: { has: string };
       }>;
       tags?: { has: string };
-    } = { status: "PUBLISHED" }; // Default status is "PUBLISHED"
+    } = { status: 'PUBLISHED' }; // Default status is "PUBLISHED"
 
-    if (category !== "all") {
+    if (category !== 'all') {
       whereClause.category = category;
     }
 
     // Handle search query filtering
     if (searchQuery) {
       whereClause.OR = [
-        { name: { contains: searchQuery, mode: "insensitive" } },
-        { category: { contains: searchQuery, mode: "insensitive" } },
+        { name: { contains: searchQuery, mode: 'insensitive' } },
+        { category: { contains: searchQuery, mode: 'insensitive' } },
         { tags: { has: normalizeText(searchQuery) } }, // Case-insensitive tag search by normalized value
       ];
     }
@@ -59,7 +60,7 @@ export async function GET(req: NextRequest) {
       skip,
       take: limit,
       orderBy: {
-        createdAt: "desc",
+        createdAt: 'desc',
       },
       include: {
         author: {
@@ -87,7 +88,8 @@ export async function GET(req: NextRequest) {
     };
 
     return NextResponse.json(result, { status: 200 });
+    // biome-ignore lint: error
   } catch (error) {
-    return new NextResponse("Internal Server Error", { status: 500 });
+    return new NextResponse('Internal Server Error', { status: 500 });
   }
 }

@@ -1,11 +1,11 @@
-import { QUERY_KEYS } from "@/constant/QueryKeys";
-import { useDebounce } from "@/hooks/useDebounce";
-import { ApplicationSchema } from "@/lib/Schemas";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import axios, { AxiosResponse } from "axios";
-import { useRouter } from "next/navigation";
-import { toast } from "sonner";
-import { z } from "zod";
+import { useMutation, useQuery } from '@tanstack/react-query';
+import axios, { type AxiosResponse } from 'axios';
+import { useRouter } from 'next/navigation';
+import { toast } from 'sonner';
+import type { z } from 'zod';
+import { QUERY_KEYS } from '@/constant/QueryKeys';
+import { useDebounce } from '@/hooks/useDebounce';
+import type { ApplicationSchema } from '@/lib/Schemas';
 
 export const useSubmitApplication = () => {
   const router = useRouter();
@@ -17,8 +17,8 @@ export const useSubmitApplication = () => {
       const formData = new FormData();
 
       (Object.keys(values) as (keyof typeof values)[]).forEach((key) => {
-        if (key === "image" && values[key]) {
-          formData.append("image", values[key][0]);
+        if (key === 'image' && values[key]) {
+          formData.append('image', values[key][0]);
         } else {
           const value = values[key];
           if (value !== undefined && value !== null) {
@@ -27,12 +27,11 @@ export const useSubmitApplication = () => {
         }
       });
 
-      return axios.post("/api/best-computer/application", formData);
+      return axios.post('/api/best-computer/application', formData);
     },
 
     onSuccess: (response) => {
       if (response.status === 501) {
-        console.warn("Payment gateway is not configured");
         return;
       }
 
@@ -41,12 +40,12 @@ export const useSubmitApplication = () => {
       if (url) {
         router.push(url);
       } else {
-        router.push("/best-computer-training-center");
+        router.push('/best-computer-training-center');
       }
     },
 
-    onError: (error) => {
-      console.error("Submission error:", error);
+    onError: () => {
+      return null;
     },
   });
 
@@ -58,19 +57,19 @@ export const useSubmitApplication = () => {
 
   return {
     submitApplication,
-    isSubmitting: mutation.status === "pending",
+    isSubmitting: mutation.status === 'pending',
   };
 };
 export const useUpdateApplication = (appId: string, refetch: () => void) => {
   const mutation = useMutation<AxiosResponse, Error, Record<string, string>>({
     mutationFn: async (updateFields) => {
       const formData = new FormData();
-      formData.append("id", appId);
+      formData.append('id', appId);
       Object.entries(updateFields).forEach(([key, value]) => {
         formData.append(key, value);
       });
-      return axios.patch("/api/best-computer/application", formData, {
-        headers: { "Content-Type": "multipart/form-data" },
+      return axios.patch('/api/best-computer/application', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
       });
     },
     onSuccess: (data) => {
@@ -78,8 +77,8 @@ export const useUpdateApplication = (appId: string, refetch: () => void) => {
         refetch();
       }
     },
-    onError: (error) => {
-      console.error("Error updating application:", error);
+    onError: () => {
+      return null;
     },
   });
 
@@ -87,15 +86,15 @@ export const useUpdateApplication = (appId: string, refetch: () => void) => {
     updateFields: Record<string, string>,
   ) => {
     return toast.promise(mutation.mutateAsync(updateFields), {
-      loading: "Updating application...",
-      success: "Application updated successfully",
-      error: "Error updating application",
+      loading: 'Updating application...',
+      success: 'Application updated successfully',
+      error: 'Error updating application',
     });
   };
 
   return {
     updateApplicationData,
-    isUpdating: mutation.status === "pending",
+    isUpdating: mutation.status === 'pending',
   };
 };
 
@@ -109,23 +108,23 @@ export const useDeleteApplication = (appId: string, refetch: () => void) => {
         refetch();
       }
     },
-    onError: (error) => {
-      console.error("Error deleting application:", error);
+    onError: () => {
+      return null;
     },
   });
 
   const deleteApplication = async () => {
     // Wrap the mutation call with toast.promise to handle notifications
     return toast.promise(mutation.mutateAsync(), {
-      loading: "Deleting application...",
-      success: "Application deleted successfully",
-      error: "Error deleting application",
+      loading: 'Deleting application...',
+      success: 'Application deleted successfully',
+      error: 'Error deleting application',
     });
   };
 
   return {
     deleteApplication,
-    isDeleting: mutation.status === "pending", // Tanstack Query uses "pending" as the active state
+    isDeleting: mutation.status === 'pending', // Tanstack Query uses "pending" as the active state
   };
 };
 
@@ -174,7 +173,7 @@ export function useApplicationList({
 
 export function useSingleApplication({ id }: { id: string }) {
   return useQuery({
-    queryKey: ["Single Application", id],
+    queryKey: ['Single Application', id],
     queryFn: async () => {
       const response = await axios.get(
         `/api/best-computer/single-application?id=${id}`,
@@ -186,7 +185,7 @@ export function useSingleApplication({ id }: { id: string }) {
 
 export function useUserApplication() {
   return useQuery({
-    queryKey: ["User Application Data"],
+    queryKey: ['User Application Data'],
     queryFn: async () => {
       const response = await axios.get(`/api/best-computer/application`);
       return response.data;

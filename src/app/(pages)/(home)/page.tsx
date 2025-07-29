@@ -1,10 +1,10 @@
-import Header from "@/components/layout/Header/Header";
-import Footer from "@/components/layout/footer/Footer";
-import Contact from "../contact/Contact";
-import Hero from "./Hero";
-import ImageSlider from "./ImageSlider";
-import { Slider } from "./Slider";
-import State from "./State";
+import Footer from '@/components/layout/footer/Footer';
+import Header from '@/components/layout/Header/Header';
+import Contact from '../contact/Contact';
+import Hero from './Hero';
+import ImageSlider from './ImageSlider';
+import { Slider } from './Slider';
+import State from './State';
 
 export default function Home() {
   return (

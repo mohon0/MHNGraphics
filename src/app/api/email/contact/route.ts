@@ -1,13 +1,13 @@
-import { NextRequest, NextResponse } from "next/server";
-import nodemailer from "nodemailer";
-import { z } from "zod";
+import { type NextRequest, NextResponse } from 'next/server';
+import nodemailer from 'nodemailer';
+import { z } from 'zod';
 
 // Define a schema for input validation
 const contactSchema = z.object({
-  username: z.string().min(1, "Username is required"),
-  email: z.string().email("Invalid email address"),
+  username: z.string().min(1, 'Username is required'),
+  email: z.string().email('Invalid email address'),
   phoneNumber: z.string().optional(),
-  message: z.string().min(1, "Message is required"),
+  message: z.string().min(1, 'Message is required'),
 });
 
 export async function POST(req: NextRequest) {
@@ -18,7 +18,7 @@ export async function POST(req: NextRequest) {
     const transporter = nodemailer.createTransport({
       host: process.env.SMTP_SERVER,
       port: Number(process.env.SMTP_PORT),
-      secure: process.env.SMTP_SECURE === "true",
+      secure: process.env.SMTP_SECURE === 'true',
       auth: {
         user: process.env.SMTP_USER,
         pass: process.env.SMTP_PASS,
@@ -27,8 +27,8 @@ export async function POST(req: NextRequest) {
 
     const mailOptions = {
       from: `"Oylkka Graphics" <${process.env.SMTP_SENDER}>`,
-      to: "contact@freelancermohon.com",
-      subject: "New Contact Form Submission",
+      to: 'contact@freelancermohon.com',
+      subject: 'New Contact Form Submission',
       html: `
 <!DOCTYPE html>
 <html lang="en">
@@ -69,7 +69,7 @@ export async function POST(req: NextRequest) {
                                     <td style="padding: 16px; background-color: #f3f4f6; border-radius: 6px;">
                                         <p style="margin: 0 0 8px 0;"><strong style="color: #4f46e5; font-weight: 600;">Name:</strong> ${username}</p>
                                         <p style="margin: 0 0 8px 0;"><strong style="color: #4f46e5; font-weight: 600;">Email:</strong> ${email}</p>
-                                        ${phoneNumber ? `<p style="margin: 0 0 8px 0;"><strong style="color: #4f46e5; font-weight: 600;">Phone Number:</strong> ${phoneNumber}</p>` : ""}
+                                        ${phoneNumber ? `<p style="margin: 0 0 8px 0;"><strong style="color: #4f46e5; font-weight: 600;">Phone Number:</strong> ${phoneNumber}</p>` : ''}
                                         <p style="margin: 0 0 8px 0;"><strong style="color: #4f46e5; font-weight: 600;">Message:</strong></p>
                                         <p style="margin: 0; padding: 12px; background-color: #ffffff; border-radius: 4px; border-left: 4px solid #4f46e5;">${message}</p>
                                     </td>
@@ -98,21 +98,19 @@ export async function POST(req: NextRequest) {
     await transporter.sendMail(mailOptions);
 
     return NextResponse.json(
-      { message: "Email sent successfully" },
+      { message: 'Email sent successfully' },
       { status: 200 },
     );
   } catch (error) {
-    console.error("Error sending email:", error);
-
     if (error instanceof z.ZodError) {
       return NextResponse.json(
-        { message: "Invalid input data", errors: error.errors },
+        { message: 'Invalid input data', errors: error.errors },
         { status: 400 },
       );
     }
 
     return NextResponse.json(
-      { message: "Internal Server Error" },
+      { message: 'Internal Server Error' },
       { status: 500 },
     );
   }

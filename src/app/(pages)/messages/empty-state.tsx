@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import { Button } from "@/components/ui/button";
-import { MessageSquarePlus } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { MessageSquarePlus } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { Button } from '@/components/ui/button';
 
 interface EmptyStateProps {
   title?: string;
@@ -11,22 +11,22 @@ interface EmptyStateProps {
 }
 
 export function EmptyState({
-  title = "No conversation selected",
-  description = "Choose a conversation from the sidebar or start a new one.",
+  title = 'No conversation selected',
+  description = 'Choose a conversation from the sidebar or start a new one.',
   showNewChatButton = true,
 }: EmptyStateProps) {
   const router = useRouter();
 
   return (
-    <div className="flex h-full flex-col items-center justify-center p-6 text-center">
-      <div className="flex h-20 w-20 items-center justify-center rounded-full bg-primary/10">
-        <MessageSquarePlus className="h-10 w-10 text-primary" />
+    <div className='flex h-full flex-col items-center justify-center p-6 text-center'>
+      <div className='flex h-20 w-20 items-center justify-center rounded-full bg-primary/10'>
+        <MessageSquarePlus className='h-10 w-10 text-primary' />
       </div>
-      <h3 className="mt-6 text-xl font-semibold">{title}</h3>
-      <p className="mt-2 max-w-sm text-muted-foreground">{description}</p>
+      <h3 className='mt-6 text-xl font-semibold'>{title}</h3>
+      <p className='mt-2 max-w-sm text-muted-foreground'>{description}</p>
       {showNewChatButton && (
-        <Button className="mt-6" onClick={() => router.push("/messages/new")}>
-          <MessageSquarePlus className="mr-2 h-4 w-4" />
+        <Button className='mt-6' onClick={() => router.push('/messages/new')}>
+          <MessageSquarePlus className='mr-2 h-4 w-4' />
           Start a new chat
         </Button>
       )}

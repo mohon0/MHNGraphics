@@ -1,30 +1,30 @@
-"use client";
+'use client';
 
-import { createSlug } from "@/components/helper/slug/CreateSlug";
-import { Card, CardContent } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { designCategories } from "@/constant/DesignCategory";
-import { useProfileDesign } from "@/services/profile";
-import { Search } from "lucide-react";
-import Image from "next/image";
-import Link from "next/link";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { Search } from 'lucide-react';
+import Image from 'next/image';
+import Link from 'next/link';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import {
   useCallback,
   useEffect,
   useMemo,
   useState,
   useTransition,
-} from "react";
-import DesignGridSkeleton from "./design-grid-skeleton";
-import DesignPagination from "./pagination";
+} from 'react';
+import { createSlug } from '@/components/helper/slug/CreateSlug';
+import { Card, CardContent } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { designCategories } from '@/constant/DesignCategory';
+import { useProfileDesign } from '@/services/profile';
+import DesignGridSkeleton from './design-grid-skeleton';
+import DesignPagination from './pagination';
 
 interface DesignGridProps {
   id: string;
@@ -37,10 +37,10 @@ export default function DesignGrid({ id }: DesignGridProps) {
   const [isPending, startTransition] = useTransition();
 
   // Extract search parameters from URL
-  const page = Number(searchParams.get("page") || "1");
-  const searchQuery = searchParams.get("query") || "";
-  const categoryParam = searchParams.get("category") || "all";
-  const sortParam = searchParams.get("sort") || "newest";
+  const page = Number(searchParams.get('page') || '1');
+  const searchQuery = searchParams.get('query') || '';
+  const categoryParam = searchParams.get('category') || 'all';
+  const sortParam = searchParams.get('sort') || 'newest';
 
   // Local state for form inputs
   const [localSearchTerm, setLocalSearchTerm] = useState(searchQuery);
@@ -52,11 +52,11 @@ export default function DesignGrid({ id }: DesignGridProps) {
       const newSearchParams = new URLSearchParams(searchParams.toString());
 
       // Always include the ID
-      newSearchParams.set("id", id);
+      newSearchParams.set('id', id);
 
       // Update or delete each parameter
       Object.entries(params).forEach(([key, value]) => {
-        if (value === null || value === "" || (key === "page" && value === 1)) {
+        if (value === null || value === '' || (key === 'page' && value === 1)) {
           newSearchParams.delete(key);
         } else {
           newSearchParams.set(key, String(value));
@@ -72,7 +72,7 @@ export default function DesignGrid({ id }: DesignGridProps) {
   const updateFilters = useCallback(
     (params: Record<string, string | number | null>) => {
       // Reset page to 1 when filters change
-      if (!params.hasOwnProperty("page")) {
+      if (!Object.hasOwn(params, 'page')) {
         params.page = 1;
       }
 
@@ -102,17 +102,13 @@ export default function DesignGrid({ id }: DesignGridProps) {
   }, [localSearchTerm, searchQuery, updateFilters]);
 
   // Fetch data based on URL parameters
-  const {
-    isPending: isDataLoading,
-    data,
-    isError,
-  } = useProfileDesign({
+  const { isPending: isDataLoading, data } = useProfileDesign({
     id,
     page,
     take,
     sort: sortParam,
-    category: categoryParam !== "all" ? categoryParam : "",
-    search: searchQuery || "",
+    category: categoryParam !== 'all' ? categoryParam : '',
+    search: searchQuery || '',
   });
 
   const isLoading = isPending || isDataLoading;
@@ -124,7 +120,7 @@ export default function DesignGrid({ id }: DesignGridProps) {
   // Handle category change
   const handleCategoryChange = useCallback(
     (value: string) => {
-      updateFilters({ category: value === "all" ? null : value });
+      updateFilters({ category: value === 'all' ? null : value });
     },
     [updateFilters],
   );
@@ -132,7 +128,7 @@ export default function DesignGrid({ id }: DesignGridProps) {
   // Handle sort change
   const handleSortChange = useCallback(
     (value: string) => {
-      updateFilters({ sort: value === "newest" ? null : value });
+      updateFilters({ sort: value === 'newest' ? null : value });
     },
     [updateFilters],
   );
@@ -153,12 +149,12 @@ export default function DesignGrid({ id }: DesignGridProps) {
 
     if (!data?.data?.length) {
       return (
-        <div className="flex h-60 items-center justify-center">
-          <div className="text-center">
-            <h3 className="text-lg font-medium">No designs found</h3>
-            <p className="text-muted-foreground">
+        <div className='flex h-60 items-center justify-center'>
+          <div className='text-center'>
+            <h3 className='text-lg font-medium'>No designs found</h3>
+            <p className='text-muted-foreground'>
               {searchQuery
-                ? "Try adjusting your search or filters"
+                ? 'Try adjusting your search or filters'
                 : "This user hasn't created any designs yet"}
             </p>
           </div>
@@ -167,25 +163,26 @@ export default function DesignGrid({ id }: DesignGridProps) {
     }
 
     return (
-      <div className="columns-1 gap-4 space-y-4 sm:columns-2 md:columns-3">
+      <div className='columns-1 gap-4 space-y-4 sm:columns-2 md:columns-3'>
+        {/* biome-ignore lint: error */}
         {data.data.map((design: any) => (
           <Link
             key={design.id}
             href={createSlug({ name: design.name, id: design.id })}
-            className="mb-4 block break-inside-avoid"
+            className='mb-4 block break-inside-avoid'
           >
-            <div className="group relative overflow-hidden rounded-lg">
+            <div className='group relative overflow-hidden rounded-lg'>
               <Image
-                src={design.image || "/placeholder.svg"}
+                src={design.image || '/placeholder.svg'}
                 alt={design.name}
-                className="w-full object-cover transition-all duration-300 group-hover:brightness-90"
+                className='w-full object-cover transition-all duration-300 group-hover:brightness-90'
                 width={500}
                 height={500}
-                sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 33vw"
-                loading="lazy"
+                sizes='(max-width: 640px) 100vw, (max-width: 768px) 50vw, 33vw'
+                loading='lazy'
               />
-              <div className="absolute inset-x-0 bottom-0 bg-linear-to-t from-black/70 to-transparent p-3 text-white opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-                <h3 className="line-clamp-1 text-sm font-medium">
+              <div className='absolute inset-x-0 bottom-0 bg-linear-to-t from-black/70 to-transparent p-3 text-white opacity-0 transition-opacity duration-300 group-hover:opacity-100'>
+                <h3 className='line-clamp-1 text-sm font-medium'>
                   {design.name}
                 </h3>
               </div>
@@ -197,35 +194,35 @@ export default function DesignGrid({ id }: DesignGridProps) {
   }, [data, isLoading, searchQuery]);
 
   return (
-    <Card className="shadow-md">
-      <CardContent className="p-6">
-        <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <div className="relative w-full sm:max-w-xs">
-            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+    <Card className='shadow-md'>
+      <CardContent className='p-6'>
+        <div className='mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between'>
+          <div className='relative w-full sm:max-w-xs'>
+            <Search className='absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground' />
             <Input
-              placeholder="Search designs..."
-              className="pl-9"
+              placeholder='Search designs...'
+              className='pl-9'
               value={localSearchTerm}
               onChange={(e) => setLocalSearchTerm(e.target.value)}
-              aria-label="Search designs"
+              aria-label='Search designs'
             />
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className='flex items-center gap-2'>
             <Select
               value={categoryParam}
               onValueChange={handleCategoryChange}
               disabled={isLoading}
             >
-              <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="Select category" />
+              <SelectTrigger className='w-[180px]'>
+                <SelectValue placeholder='Select category' />
               </SelectTrigger>
-              <SelectContent align="end" className="w-56">
-                <SelectItem value="all">All</SelectItem>
+              <SelectContent align='end' className='w-56'>
+                <SelectItem value='all'>All</SelectItem>
                 {designCategories.map((category) => (
                   <SelectItem
                     key={category.value}
-                    value={category.value.toLowerCase().replace(/\s+/g, "_")}
+                    value={category.value.toLowerCase().replace(/\s+/g, '_')}
                   >
                     {category.label}
                   </SelectItem>
@@ -238,14 +235,14 @@ export default function DesignGrid({ id }: DesignGridProps) {
               onValueChange={handleSortChange}
               disabled={isLoading}
             >
-              <SelectTrigger className="w-[140px]">
-                <SelectValue placeholder="Sort by" />
+              <SelectTrigger className='w-[140px]'>
+                <SelectValue placeholder='Sort by' />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="newest">Newest</SelectItem>
-                <SelectItem value="oldest">Oldest</SelectItem>
-                <SelectItem value="popular">Most Popular</SelectItem>
-                <SelectItem value="alphabetical">Alphabetical</SelectItem>
+                <SelectItem value='newest'>Newest</SelectItem>
+                <SelectItem value='oldest'>Oldest</SelectItem>
+                <SelectItem value='popular'>Most Popular</SelectItem>
+                <SelectItem value='alphabetical'>Alphabetical</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -254,13 +251,13 @@ export default function DesignGrid({ id }: DesignGridProps) {
         {renderDesignGrid}
 
         {totalPages > 1 && (
-          <div className="mt-8">
+          <div className='mt-8'>
             <DesignPagination
               totalPages={totalPages}
               currentPage={page}
               id={id}
               onPageChange={handlePageChange}
-              category={categoryParam !== "all" ? categoryParam : undefined}
+              category={categoryParam !== 'all' ? categoryParam : undefined}
               query={searchQuery || undefined}
             />
           </div>

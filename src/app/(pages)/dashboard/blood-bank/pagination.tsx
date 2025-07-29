@@ -1,11 +1,10 @@
-import { Button } from "@/components/ui/button";
-import { PaginationProps } from "@/utils/Interface";
-
 import {
   ChevronLeftIcon,
   ChevronRightIcon,
   MoreHorizontalIcon,
-} from "lucide-react";
+} from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import type { PaginationProps } from '@/utils/Interface';
 
 export function Pagination({
   totalPages,
@@ -38,7 +37,7 @@ export function Pagination({
 
     // Add ellipsis before range if needed
     if (rangeStart > 2) {
-      pages.push("ellipsis-start");
+      pages.push('ellipsis-start');
     }
 
     // Add pages in range
@@ -48,7 +47,7 @@ export function Pagination({
 
     // Add ellipsis after range if needed
     if (rangeEnd < totalPages - 1) {
-      pages.push("ellipsis-end");
+      pages.push('ellipsis-end');
     }
 
     // Add last page if more than 1 page
@@ -62,28 +61,29 @@ export function Pagination({
   const pages = generatePagination();
 
   return (
-    <div className="flex items-center justify-center space-x-2">
+    <div className='flex items-center justify-center space-x-2'>
       <Button
-        variant="outline"
-        size="icon"
+        variant='outline'
+        size='icon'
         onClick={() => setPage(Math.max(1, currentPage - 1))}
         disabled={currentPage === 1}
-        aria-label="Previous page"
+        aria-label='Previous page'
       >
-        <ChevronLeftIcon className="h-4 w-4" />
+        <ChevronLeftIcon className='h-4 w-4' />
       </Button>
 
       {pages.map((page, i) => {
-        if (page === "ellipsis-start" || page === "ellipsis-end") {
+        if (page === 'ellipsis-start' || page === 'ellipsis-end') {
           return (
             <Button
+              // biome-ignore lint: error
               key={`ellipsis-${i}`}
-              variant="outline"
-              size="icon"
+              variant='outline'
+              size='icon'
               disabled
-              className="cursor-default"
+              className='cursor-default'
             >
-              <MoreHorizontalIcon className="h-4 w-4" />
+              <MoreHorizontalIcon className='h-4 w-4' />
             </Button>
           );
         }
@@ -91,11 +91,11 @@ export function Pagination({
         return (
           <Button
             key={page}
-            variant={currentPage === page ? "default" : "outline"}
-            size="icon"
+            variant={currentPage === page ? 'default' : 'outline'}
+            size='icon'
             onClick={() => setPage(page as number)}
             aria-label={`Page ${page}`}
-            aria-current={currentPage === page ? "page" : undefined}
+            aria-current={currentPage === page ? 'page' : undefined}
           >
             {page}
           </Button>
@@ -103,13 +103,13 @@ export function Pagination({
       })}
 
       <Button
-        variant="outline"
-        size="icon"
+        variant='outline'
+        size='icon'
         onClick={() => setPage(Math.min(totalPages, currentPage + 1))}
         disabled={currentPage === totalPages}
-        aria-label="Next page"
+        aria-label='Next page'
       >
-        <ChevronRightIcon className="h-4 w-4" />
+        <ChevronRightIcon className='h-4 w-4' />
       </Button>
     </div>
   );

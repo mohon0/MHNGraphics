@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import {
   Bar,
@@ -9,7 +9,7 @@ import {
   Tooltip,
   XAxis,
   YAxis,
-} from "recharts";
+} from 'recharts';
 
 interface ChartData {
   labels: string[];
@@ -35,8 +35,8 @@ export default function MonthlyComparisonChart({
   }));
 
   return (
-    <div className="h-[400px] w-full">
-      <ResponsiveContainer width="100%" height="100%">
+    <div className='h-[400px] w-full'>
+      <ResponsiveContainer width='100%' height='100%'>
         <BarChart
           data={chartData}
           margin={{
@@ -46,35 +46,35 @@ export default function MonthlyComparisonChart({
             bottom: 5,
           }}
         >
-          <CartesianGrid strokeDasharray="3 3" />
+          <CartesianGrid strokeDasharray='3 3' />
           <XAxis
-            dataKey="name"
+            dataKey='name'
             tick={{ fontSize: 12 }}
-            interval={"preserveStartEnd"}
+            interval={'preserveStartEnd'}
           />
           <YAxis
             tick={{ fontSize: 12 }}
             tickFormatter={(value) => `৳${value.toLocaleString()}`}
           />
           <Tooltip
-            formatter={(value: number) => [`৳${value.toLocaleString()}`, ""]}
+            formatter={(value: number) => [`৳${value.toLocaleString()}`, '']}
             contentStyle={{
-              backgroundColor: "white",
-              border: "1px solid #ccc",
-              borderRadius: "4px",
+              backgroundColor: 'white',
+              border: '1px solid #ccc',
+              borderRadius: '4px',
             }}
           />
           <Legend />
           <Bar
-            dataKey="payments"
-            name="Payments"
-            fill="#4CAF50"
+            dataKey='payments'
+            name='Payments'
+            fill='#4CAF50'
             radius={[4, 4, 0, 0]}
           />
           <Bar
-            dataKey="refunds"
-            name="Refunds"
-            fill="#F44336"
+            dataKey='refunds'
+            name='Refunds'
+            fill='#F44336'
             radius={[4, 4, 0, 0]}
           />
         </BarChart>

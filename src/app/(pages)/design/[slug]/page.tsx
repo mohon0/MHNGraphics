@@ -1,6 +1,6 @@
-import { RemoveHtmlTags } from "@/components/helper/html/PerseHtml";
-import axios from "axios";
-import SingleDesign from "./SingleDesign";
+import axios from 'axios';
+import { RemoveHtmlTags } from '@/components/helper/html/PerseHtml';
+import SingleDesign from './SingleDesign';
 
 type Params = Promise<{ slug: string }>;
 
@@ -14,13 +14,12 @@ export async function generateMetadata(props: { params: Params }) {
   const params = await props.params;
   const name = params.slug;
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL;
-  const id = name.split("_")[1];
+  const id = name.split('_')[1];
 
   if (!siteUrl) {
-    console.error("NEXT_PUBLIC_SITE_URL is not defined");
     return {
-      title: "Configuration Error",
-      description: "Site URL is missing in environment variables.",
+      title: 'Configuration Error',
+      description: 'Site URL is missing in environment variables.',
     };
   }
 
@@ -32,9 +31,9 @@ export async function generateMetadata(props: { params: Params }) {
     );
 
     const data = response.data;
-    const title = data.name || "Blog Post";
+    const title = data.name || 'Blog Post';
     const rawDescription =
-      RemoveHtmlTags(data.description) || "Explore this amazing design";
+      RemoveHtmlTags(data.description) || 'Explore this amazing design';
     const description = truncateString(rawDescription, 160); // Limit to 160 characters
     const imageUrl = data.image || `${siteUrl}/default-image.jpg`; // Fallback for image
 
@@ -44,37 +43,37 @@ export async function generateMetadata(props: { params: Params }) {
       alternates: {
         canonical: pageUrl,
       },
-      keywords: data.tags?.length ? data.tags.join(", ") : "design, art, blog", // Comma-separated string
+      keywords: data.tags?.length ? data.tags.join(', ') : 'design, art, blog', // Comma-separated string
 
       openGraph: {
         title,
         description,
-        type: "article",
+        type: 'article',
         url: pageUrl,
-        authors: data.author?.name || "Unknown Author",
+        authors: data.author?.name || 'Unknown Author',
         publishedTime: data.createdAt || null,
         modifiedTime: data.updatedAt || null,
-        section: data.category || "Uncategorized",
+        section: data.category || 'Uncategorized',
         images: [
           {
             url: imageUrl,
             alt: title,
           },
         ],
-        locale: "en_US",
+        locale: 'en_US',
       },
       twitter: {
-        card: "summary_large_image",
+        card: 'summary_large_image',
         title,
         description,
         images: imageUrl,
       },
     };
+    // biome-ignore lint: error
   } catch (error) {
-    console.error("Error fetching design data:");
     return {
-      title: "Design Not Found",
-      description: "The requested design could not be found.",
+      title: 'Design Not Found',
+      description: 'The requested design could not be found.',
     };
   }
 }

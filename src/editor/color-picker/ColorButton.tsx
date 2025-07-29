@@ -1,3 +1,4 @@
+import { GridIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   Tooltip,
@@ -6,7 +7,6 @@ import {
   TooltipTrigger,
 } from '@/components/ui/tooltip';
 import { cn } from '@/lib/utils';
-import { GridIcon } from 'lucide-react';
 
 interface ColorButtonProps {
   color: string;
@@ -23,12 +23,12 @@ const ColorButton = ({
 }: ColorButtonProps) => {
   const buttonContent = (
     <Button
-      type="button"
-      variant="outline"
-      size="icon"
+      type='button'
+      variant='outline'
+      size='icon'
       className={cn(
         'h-5 w-5 transition-all hover:scale-110',
-        active && 'ring-2 ring-offset-2'
+        active && 'ring-2 ring-offset-2',
       )}
       style={{
         backgroundColor: color !== 'transparent' ? color : undefined,
@@ -40,9 +40,9 @@ const ColorButton = ({
       onClick={() => onClick?.(color)}
     >
       {color === 'transparent' ? (
-        <GridIcon className="h-4 w-4 text-gray-400" />
+        <GridIcon className='h-4 w-4 text-gray-400' />
       ) : (
-        <span className="sr-only">Select color: {color}</span>
+        <span className='sr-only'>Select color: {color}</span>
       )}
     </Button>
   );

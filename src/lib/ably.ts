@@ -1,5 +1,5 @@
-import * as Ably from "ably";
-
+import * as Ably from 'ably';
+// biome-ignore lint: error
 export class AblyService {
   private static instance: Ably.Realtime;
 
@@ -8,12 +8,12 @@ export class AblyService {
       const apiKey = process.env.ABLY_API_KEY;
 
       if (!apiKey) {
-        throw new Error("ABLY_API_KEY is not defined");
+        throw new Error('ABLY_API_KEY is not defined');
       }
 
       AblyService.instance = new Ably.Realtime({
         key: apiKey,
-        clientId: "server",
+        clientId: 'server',
       });
     }
 

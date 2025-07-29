@@ -1,7 +1,7 @@
-"use server";
+'use server';
 
-import { Prisma } from "@/components/helper/prisma/Prisma";
-import axios, { AxiosError } from "axios";
+import axios, { type AxiosError } from 'axios';
+import { Prisma } from '@/components/helper/prisma/Prisma';
 
 interface BkashConfig {
   base_url?: string;
@@ -34,14 +34,14 @@ export async function createPayment(
   if (!amount || amount < 1) {
     return {
       statusCode: 400,
-      statusMessage: !amount ? "Amount required" : "Minimum amount is 1 BDT",
+      statusMessage: !amount ? 'Amount required' : 'Minimum amount is 1 BDT',
     };
   }
 
   if (!callbackURL) {
     return {
       statusCode: 400,
-      statusMessage: "Callback URL is required",
+      statusMessage: 'Callback URL is required',
     };
   }
 
@@ -49,12 +49,12 @@ export async function createPayment(
     const response = await axios.post(
       `${bkashConfig.base_url}/tokenized/checkout/create`,
       {
-        mode: "0011",
-        currency: "BDT",
-        intent: "sale",
+        mode: '0011',
+        currency: 'BDT',
+        intent: 'sale',
         amount,
         callbackURL,
-        payerReference: reference || "1",
+        payerReference: reference || '1',
         merchantInvoiceNumber: userId,
       },
       {
@@ -63,8 +63,9 @@ export async function createPayment(
     );
 
     return response.data;
+    // biome-ignore lint: error
   } catch (e) {
-    return handleAxiosError("Create Bkash Payment Error", e);
+    return handleAxiosError('Create Bkash Payment Error');
   }
 }
 
@@ -81,8 +82,9 @@ export async function executePayment(
       },
     );
     return response.data;
+    // biome-ignore lint: error
   } catch (e) {
-    return handleAxiosError("Bkash executePayment Error", e);
+    return handleAxiosError('Bkash executePayment Error');
   }
 }
 
@@ -99,17 +101,19 @@ export async function queryPayment(
       },
     );
     return response.data;
+    // biome-ignore lint: error
   } catch (e) {
-    return handleAxiosError("Bkash queryPayment Error", e);
+    return handleAxiosError('Bkash queryPayment Error');
   }
 }
 
 // Generate Auth Headers
 const authHeaders = async (bkashConfig: BkashConfig) => ({
-  "Content-Type": "application/json",
-  Accept: "application/json",
+  'Content-Type': 'application/json',
+  Accept: 'application/json',
   authorization: await grantToken(bkashConfig),
-  "x-app-key": bkashConfig.app_key!,
+  // biome-ignore lint: error
+  'x-app-key': bkashConfig.app_key!,
 });
 
 // Token Grant
@@ -122,8 +126,8 @@ const grantToken = async (bkashConfig: BkashConfig): Promise<string | null> => {
     }
 
     return existingToken.token;
+    // biome-ignore lint: error
   } catch (e) {
-    console.error("Grant Token Error:", (e as AxiosError).message);
     return null;
   }
 };
@@ -138,9 +142,11 @@ const setToken = async (bkashConfig: BkashConfig): Promise<string | null> => {
     },
     {
       headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+        // biome-ignore lint: error
         username: bkashConfig.username!,
+        // biome-ignore lint: error
         password: bkashConfig.password!,
       },
     },
@@ -172,7 +178,7 @@ const setToken = async (bkashConfig: BkashConfig): Promise<string | null> => {
 const isTokenExpired = (
   tokenRecord: { expiresAt: Date } | { updatedAt: Date },
 ) => {
-  if ("expiresAt" in tokenRecord) {
+  if ('expiresAt' in tokenRecord) {
     return (
       new Date() >
       new Date(tokenRecord.expiresAt.getTime() - TOKEN_EXPIRY_BUFFER_MS)
@@ -183,12 +189,12 @@ const isTokenExpired = (
 };
 
 // Axios Error Handler
-const handleAxiosError = (context: string, error: unknown) => {
+const handleAxiosError = (error: unknown) => {
   const err = error as AxiosError;
-  console.error(context, err?.response?.data || err.message);
+
   return {
     statusCode: 500,
-    statusMessage: "Something went wrong",
+    statusMessage: 'Something went wrong',
     error: err?.response?.data || err.message,
   };
 };

@@ -1,7 +1,8 @@
-import { useEditorState } from "@tiptap/react";
-import React, { memo, useCallback, useRef, useState } from "react";
-import { BubbleMenu } from "../BubbleMenu";
-import { useTiptapContext } from "../Provider";
+import { useEditorState } from '@tiptap/react';
+import type React from 'react';
+import { memo, useCallback, useRef, useState } from 'react';
+import { BubbleMenu } from '../BubbleMenu';
+import { useTiptapContext } from '../Provider';
 
 export const LinkMenu = () => {
   const { editor, contentElement } = useTiptapContext();
@@ -13,20 +14,21 @@ export const LinkMenu = () => {
     selector: (context) => {
       mode.current = context.editor.storage.link.mode;
 
-      if (!context.editor.isActive("link")) return null;
+      if (!context.editor.isActive('link')) return null;
       const {
         state: { selection, doc },
       } = context.editor;
-      const url = context.editor.getAttributes("link").href;
+      const url = context.editor.getAttributes('link').href;
       const text = doc.textBetween(selection.from, selection.to);
 
       return { url, text };
     },
   });
 
+  // biome-ignore lint: error
   const shouldShow = useCallback(({ editor, from, to }: any) => {
-    setIsEditing(mode.current == -1);
-    return editor.isActive("link") && (mode.current == -1 || from !== to);
+    setIsEditing(mode.current === -1);
+    return editor.isActive('link') && (mode.current === -1 || from !== to);
   }, []);
 
   const applyLink = useCallback(
@@ -52,7 +54,7 @@ export const LinkMenu = () => {
   }, []);
 
   const cancelEdit = useCallback(() => {
-    if (mode.current == -1) {
+    if (mode.current === -1) {
       editor.commands.confirmEditLink();
     } else {
       setIsEditing(false);
@@ -62,12 +64,13 @@ export const LinkMenu = () => {
   return (
     <BubbleMenu
       editor={editor}
-      pluginKey="link-menu"
+      pluginKey='link-menu'
       updateDelay={100}
       shouldShow={shouldShow}
       tippyOptions={{
-        placement: "bottom-start",
+        placement: 'bottom-start',
         duration: 100,
+        // biome-ignore lint: error
         appendTo: () => contentElement.current!,
         onHidden: () => setIsEditing(false),
       }}
@@ -89,21 +92,21 @@ export const LinkMenu = () => {
 
 export default memo(LinkMenu);
 
-import { Button } from "@/components/ui/button";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
 import {
   TbCheck,
   TbCopy,
   TbEdit,
   TbExternalLink,
   TbLinkOff,
-} from "react-icons/tb";
-import useCopyToClipboard from "../hooks/useCopyToClipboard";
+} from 'react-icons/tb';
+import { Button } from '@/components/ui/button';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
+import useCopyToClipboard from '../hooks/useCopyToClipboard';
 
 interface LinkViewProps {
   url: string;
@@ -115,20 +118,20 @@ const LinkView = ({ url, onEdit, onRemove }: LinkViewProps) => {
   const { copy, isCopied } = useCopyToClipboard();
 
   const handleOpenNewTab = () => {
-    const newWindow = window.open(url, "_blank", "noopener,noreferrer");
+    const newWindow = window.open(url, '_blank', 'noopener,noreferrer');
     if (newWindow) newWindow.opener = null;
   };
 
   return (
     <TooltipProvider>
-      <div className="flex flex-wrap items-center gap-x-1 gap-y-1.5 p-1.5">
+      <div className='flex flex-wrap items-center gap-x-1 gap-y-1.5 p-1.5'>
         {onEdit && (
           <Tooltip>
             <TooltipTrigger asChild>
               <Button
-                variant="ghost"
-                type="button"
-                size="icon"
+                variant='ghost'
+                type='button'
+                size='icon'
                 onClick={onEdit}
               >
                 <TbEdit size={20} />
@@ -141,9 +144,9 @@ const LinkView = ({ url, onEdit, onRemove }: LinkViewProps) => {
         <Tooltip>
           <TooltipTrigger asChild>
             <Button
-              variant="ghost"
-              type="button"
-              size="icon"
+              variant='ghost'
+              type='button'
+              size='icon'
               onClick={handleOpenNewTab}
             >
               <TbExternalLink size={20} />
@@ -155,24 +158,24 @@ const LinkView = ({ url, onEdit, onRemove }: LinkViewProps) => {
         <Tooltip>
           <TooltipTrigger asChild>
             <Button
-              variant="ghost"
-              type="button"
-              size="icon"
+              variant='ghost'
+              type='button'
+              size='icon'
               onClick={() => copy(url)}
             >
               {isCopied ? <TbCheck size={20} /> : <TbCopy size={20} />}
             </Button>
           </TooltipTrigger>
-          <TooltipContent>{isCopied ? "Copied" : "Copy link"}</TooltipContent>
+          <TooltipContent>{isCopied ? 'Copied' : 'Copy link'}</TooltipContent>
         </Tooltip>
 
         {onRemove && (
           <Tooltip>
             <TooltipTrigger asChild>
               <Button
-                variant="ghost"
-                type="button"
-                size="icon"
+                variant='ghost'
+                type='button'
+                size='icon'
                 onClick={onRemove}
               >
                 <TbLinkOff size={20} />
@@ -186,9 +189,9 @@ const LinkView = ({ url, onEdit, onRemove }: LinkViewProps) => {
   );
 };
 
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { useEffect } from "react";
+import { useEffect } from 'react';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 
 interface LinkEditProps {
   initialUrl?: string;
@@ -205,8 +208,8 @@ const LinkEdit = ({
   onApply,
   onCancel,
 }: LinkEditProps) => {
-  const [url, setUrl] = useState(initialUrl || "");
-  const [text, setText] = useState(initialText || "");
+  const [url, setUrl] = useState(initialUrl || '');
+  const [text, setText] = useState(initialText || '');
   const [canSubmit, setCanSubmit] = useState(isCreate);
 
   // Adjust onSubmit to optionally accept an event
@@ -224,14 +227,14 @@ const LinkEdit = ({
   }, [initialText, initialUrl, isCreate, text, url]);
 
   return (
-    <div className="w-80 space-y-2 rounded border p-4">
+    <div className='w-80 space-y-2 rounded border p-4'>
       <div>
         <Label>URL</Label>
         <Input
           value={url}
           onChange={(e) => setUrl(e.target.value)}
-          placeholder="Paste link"
-          type="url"
+          placeholder='Paste link'
+          type='url'
           required
           autoFocus
         />
@@ -241,15 +244,15 @@ const LinkEdit = ({
         <Input
           value={text}
           onChange={(e) => setText(e.target.value)}
-          placeholder="Enter link text"
+          placeholder='Enter link text'
         />
       </div>
 
-      <div className="mt-3 flex items-center justify-end gap-2">
-        <Button variant="secondary" onClick={onCancel} type="button">
+      <div className='mt-3 flex items-center justify-end gap-2'>
+        <Button variant='secondary' onClick={onCancel} type='button'>
           Cancel
         </Button>
-        <Button type="button" onClick={onSubmit} disabled={!canSubmit}>
+        <Button type='button' onClick={onSubmit} disabled={!canSubmit}>
           Apply
         </Button>
       </div>

@@ -1,5 +1,5 @@
-import Footer from "@/components/layout/footer/Footer";
-import SearchHeader from "@/components/layout/Header/SearchHeader";
+import Footer from '@/components/layout/footer/Footer';
+import SearchHeader from '@/components/layout/Header/SearchHeader';
 
 export default function layout({
   children,

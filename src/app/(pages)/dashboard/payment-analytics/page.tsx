@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import { useAuth } from "@/hooks/useAuth";
-import PaymentAnalytics from "./PaymentAnalytics";
-import PaymentSkeleton from "./PaymentSkeleton";
+import { useAuth } from '@/hooks/useAuth';
+import PaymentAnalytics from './PaymentAnalytics';
+import PaymentSkeleton from './PaymentSkeleton';
 
 /**
  * Payment Analytics Page
@@ -11,8 +11,8 @@ import PaymentSkeleton from "./PaymentSkeleton";
  */
 export default function PaymentAnalyticsPage() {
   const { isLoading, isAuthenticated, hasRequiredRole } = useAuth({
-    requiredRole: "ADMIN", // Only allow admins to access
-    redirectTo: "/access-denied", // Redirect to an access-denied page if not authorized
+    requiredRole: 'ADMIN', // Only allow admins to access
+    redirectTo: '/access-denied', // Redirect to an access-denied page if not authorized
   });
 
   if (isLoading) {

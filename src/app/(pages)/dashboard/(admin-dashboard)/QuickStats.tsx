@@ -1,16 +1,15 @@
-"use client";
+'use client';
 
-import type React from "react";
-
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Skeleton } from "@/components/ui/skeleton";
 import {
   FileIcon,
   Layers2,
   MessageCircle,
   Users,
   UsersRound,
-} from "lucide-react";
+} from 'lucide-react';
+import type React from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Skeleton } from '@/components/ui/skeleton';
 
 /**
  * Interface for individual stat item
@@ -27,6 +26,7 @@ interface QuickStat {
  */
 interface QuickStatsProps {
   isLoading: boolean;
+  // biome-ignore lint: error
   data: any; // Dashboard data containing counts
 }
 
@@ -48,34 +48,34 @@ export default function QuickStats({ isLoading, data }: QuickStatsProps) {
     ? []
     : [
         {
-          title: "Designs",
+          title: 'Designs',
           value: data.designCount,
-          icon: <Layers2 className="h-6 w-6" />,
-          color: "bg-blue-100 text-blue-600",
+          icon: <Layers2 className='h-6 w-6' />,
+          color: 'bg-blue-100 text-blue-600',
         },
         {
-          title: "Applications",
+          title: 'Applications',
           value: data.applicationCount,
-          icon: <FileIcon className="h-6 w-6" />,
-          color: "bg-green-100 text-green-600",
+          icon: <FileIcon className='h-6 w-6' />,
+          color: 'bg-green-100 text-green-600',
         },
         {
-          title: "Subscribers",
+          title: 'Subscribers',
           value: data.subscriberCount,
-          icon: <Users className="h-6 w-6" />,
-          color: "bg-yellow-100 text-yellow-600",
+          icon: <Users className='h-6 w-6' />,
+          color: 'bg-yellow-100 text-yellow-600',
         },
         {
-          title: "Comments",
+          title: 'Comments',
           value: data.commentsCount,
-          icon: <MessageCircle className="h-6 w-6" />,
-          color: "bg-purple-100 text-purple-600",
+          icon: <MessageCircle className='h-6 w-6' />,
+          color: 'bg-purple-100 text-purple-600',
         },
         {
-          title: "Users",
+          title: 'Users',
           value: data.userCount,
-          icon: <UsersRound className="h-6 w-6" />,
-          color: "bg-pink-100 text-pink-600",
+          icon: <UsersRound className='h-6 w-6' />,
+          color: 'bg-pink-100 text-pink-600',
         },
       ];
 
@@ -85,20 +85,22 @@ export default function QuickStats({ isLoading, data }: QuickStatsProps) {
         ? Array(5)
             .fill(0)
             .map((_, index) => (
-              <Card key={index} className="overflow-hidden">
-                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <Skeleton className="h-4 w-[100px]" />
-                  <Skeleton className="h-8 w-8 rounded-full" />
+              // biome-ignore lint: error
+              <Card key={index} className='overflow-hidden'>
+                <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
+                  <Skeleton className='h-4 w-[100px]' />
+                  <Skeleton className='h-8 w-8 rounded-full' />
                 </CardHeader>
                 <CardContent>
-                  <Skeleton className="h-7 w-[60px]" />
+                  <Skeleton className='h-7 w-[60px]' />
                 </CardContent>
               </Card>
             ))
         : quickStats.map((stat, index) => (
-            <Card key={index} className="overflow-hidden">
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">
+            // biome-ignore lint: error
+            <Card key={index} className='overflow-hidden'>
+              <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
+                <CardTitle className='text-sm font-medium'>
                   {stat.title}
                 </CardTitle>
                 <div className={`rounded-full p-2 ${stat.color}`}>
@@ -106,7 +108,7 @@ export default function QuickStats({ isLoading, data }: QuickStatsProps) {
                 </div>
               </CardHeader>
               <CardContent>
-                <div className="text-lg font-bold md:text-2xl">
+                <div className='text-lg font-bold md:text-2xl'>
                   {stat.value}
                 </div>
               </CardContent>

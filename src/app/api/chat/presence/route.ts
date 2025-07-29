@@ -1,7 +1,7 @@
-import { authOptions } from "@/app/api/auth/[...nextauth]/Options";
-import { PresenceService } from "@/lib/presence";
-import { getServerSession } from "next-auth";
-import { type NextRequest, NextResponse } from "next/server";
+import { type NextRequest, NextResponse } from 'next/server';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/app/api/auth/[...nextauth]/Options';
+import { getUserStatus, updateUserStatus } from '@/lib/presence';
 
 interface CustomSession {
   user: {
@@ -17,21 +17,21 @@ export async function POST(req: NextRequest) {
   try {
     const session = (await getServerSession(authOptions)) as CustomSession;
     if (!session?.user?.id) {
-      return new NextResponse("Unauthorized", { status: 401 });
+      return new NextResponse('Unauthorized', { status: 401 });
     }
 
     const { isOnline } = await req.json();
 
-    if (typeof isOnline !== "boolean") {
-      return new NextResponse("Invalid status", { status: 400 });
+    if (typeof isOnline !== 'boolean') {
+      return new NextResponse('Invalid status', { status: 400 });
     }
 
-    await PresenceService.updateUserStatus(session.user.id, isOnline);
+    await updateUserStatus(session.user.id, isOnline);
 
-    return new NextResponse("Success", { status: 200 });
+    return new NextResponse('Success', { status: 200 });
+    // biome-ignore lint: error
   } catch (error) {
-    console.error("PRESENCE_UPDATE_ERROR", error);
-    return new NextResponse("Internal Error", { status: 500 });
+    return new NextResponse('Internal Error', { status: 500 });
   }
 }
 
@@ -40,25 +40,25 @@ export async function GET(req: NextRequest) {
   try {
     const session = (await getServerSession(authOptions)) as CustomSession;
     if (!session?.user?.id) {
-      return new NextResponse("Unauthorized", { status: 401 });
+      return new NextResponse('Unauthorized', { status: 401 });
     }
 
     const { searchParams } = new URL(req.url);
-    const userId = searchParams.get("userId");
+    const userId = searchParams.get('userId');
 
     if (!userId) {
-      return new NextResponse("User ID is required", { status: 400 });
+      return new NextResponse('User ID is required', { status: 400 });
     }
 
-    const status = await PresenceService.getUserStatus(userId);
+    const status = await getUserStatus(userId);
 
     if (!status) {
-      return new NextResponse("User not found", { status: 404 });
+      return new NextResponse('User not found', { status: 404 });
     }
 
     return new NextResponse(JSON.stringify(status), { status: 200 });
+    // biome-ignore lint: error
   } catch (error) {
-    console.error("PRESENCE_GET_ERROR", error);
-    return new NextResponse("Internal Error", { status: 500 });
+    return new NextResponse('Internal Error', { status: 500 });
   }
 }

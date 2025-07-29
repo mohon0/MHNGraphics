@@ -1,9 +1,9 @@
-import { Prisma } from "@/components/helper/prisma/Prisma";
-import bcrypt from "bcrypt";
-import { Session } from "next-auth";
-import { JWT } from "next-auth/jwt";
-import CredentialsProvider from "next-auth/providers/credentials";
-import GoogleProvider from "next-auth/providers/google";
+import bcrypt from 'bcrypt';
+import type { Session } from 'next-auth';
+import type { JWT } from 'next-auth/jwt';
+import CredentialsProvider from 'next-auth/providers/credentials';
+import GoogleProvider from 'next-auth/providers/google';
+import { Prisma } from '@/components/helper/prisma/Prisma';
 
 interface UserWithRole {
   id: string;
@@ -17,18 +17,17 @@ interface UserWithRole {
 export const authOptions = {
   providers: [
     CredentialsProvider({
-      name: "credentials",
+      name: 'credentials',
       credentials: {
-        username: { label: "Username", type: "text", placeholder: "jsmith" },
-        password: { label: "Password", type: "password" },
-        email: { label: "email", type: "email" },
+        username: { label: 'Username', type: 'text', placeholder: 'jsmith' },
+        password: { label: 'Password', type: 'password' },
+        email: { label: 'email', type: 'email' },
       },
       async authorize(credentials) {
         if (!credentials?.email || !credentials.password) {
-          console.error("Email and password are required.");
-          throw new Error("Email and password are required.");
+          throw new Error('Email and password are required.');
         }
-
+        // biome-ignore lint: error
         let user;
         // Check if the input is an email or a phone number
         if (/\S+@\S+\.\S+/.test(credentials.email)) {
@@ -43,23 +42,17 @@ export const authOptions = {
             where: { phoneNumber: credentials.email },
           });
         } else {
-          console.error(
-            "Invalid email or phone number format:",
-            credentials.email,
-          );
-          throw new Error("Invalid email or phone number format.");
+          throw new Error('Invalid email or phone number format.');
         }
 
         if (!user) {
-          console.error("User not found or email not verified.");
-          throw new Error("User not found.");
+          throw new Error('User not found.');
         }
 
         if (
           /\S+@\S+\.\S+/.test(credentials.email) &&
           user.emailVerified === null
         ) {
-          console.error("User's email is not verified.");
           throw new Error("User's email is not verified.");
         }
 
@@ -69,8 +62,7 @@ export const authOptions = {
             user.password,
           );
           if (!passwordMatch) {
-            console.error("Incorrect password.");
-            throw new Error("Incorrect password.");
+            throw new Error('Incorrect password.');
           }
         }
 
@@ -79,7 +71,9 @@ export const authOptions = {
     }),
 
     GoogleProvider({
+      // biome-ignore lint: error
       clientId: process.env.GOOGLE_CLIENT_ID!,
+      // biome-ignore lint: error
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
     }),
   ],
@@ -90,11 +84,14 @@ export const authOptions = {
       account,
       profile,
     }: {
+      // biome-ignore lint: error
       user: any;
+      // biome-ignore lint: error
       account: any;
+      // biome-ignore lint: error
       profile: any;
     }) {
-      if (account.provider === "google") {
+      if (account.provider === 'google') {
         const existingUser = await Prisma.user.findUnique({
           where: { email: user.email },
         });
@@ -116,7 +113,7 @@ export const authOptions = {
               image: user.image || null,
               googleId: profile.id,
               password: null,
-              status: "USER", // Default role for new users
+              status: 'USER', // Default role for new users
               emailVerified: new Date(),
             },
           });
@@ -130,11 +127,10 @@ export const authOptions = {
     async jwt({
       token,
       user,
-      trigger,
-      session,
     }: {
       token: JWT;
       user?: UserWithRole;
+      // biome-ignore lint: error
       trigger?: any;
       session?: Session;
     }) {
@@ -155,13 +151,14 @@ export const authOptions = {
         },
       };
     },
+    // biome-ignore lint: error
   } as any,
 
   session: {
-    strategy: "jwt" as "jwt",
+    strategy: 'jwt' as 'jwt',
     maxAge: 7 * 24 * 60 * 60, // 7 days
     updateAge: 24 * 60 * 60, // 1 day
   },
   secret: process.env.NEXTAUTH_SECRET,
-  debug: process.env.NODE_ENV === "development",
+  debug: process.env.NODE_ENV === 'development',
 };

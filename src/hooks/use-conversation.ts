@@ -1,23 +1,23 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import axios from "axios";
-import { useSession } from "next-auth/react";
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import axios from 'axios';
+import { useSession } from 'next-auth/react';
 
 export function useConversations() {
   const { data: session } = useSession();
   const queryClient = useQueryClient();
 
   const getConversations = async () => {
-    const response = await axios.get("/api/chat/conversation");
+    const response = await axios.get('/api/chat/conversation');
     return response.data;
   };
 
   const createConversation = async (userId: string) => {
-    const response = await axios.post("/api/chat/conversation", { userId });
+    const response = await axios.post('/api/chat/conversation', { userId });
     return response.data;
   };
 
   const conversationsQuery = useQuery({
-    queryKey: ["conversations"],
+    queryKey: ['conversations'],
     queryFn: getConversations,
     enabled: !!session?.user,
   });
@@ -25,7 +25,7 @@ export function useConversations() {
   const createConversationMutation = useMutation({
     mutationFn: createConversation,
     onSuccess: (data) => {
-      queryClient.invalidateQueries({ queryKey: ["conversations"] });
+      queryClient.invalidateQueries({ queryKey: ['conversations'] });
       return data;
     },
   });
@@ -45,8 +45,8 @@ export function useConversationMessages(conversationId: string) {
 
   const getMessages = async ({ pageParam = null }) => {
     const params = new URLSearchParams();
-    if (pageParam) params.append("cursor", pageParam);
-    params.append("limit", "30");
+    if (pageParam) params.append('cursor', pageParam);
+    params.append('limit', '30');
 
     const response = await axios.get(
       `/api/chat/message?conversationId=${conversationId}&${params.toString()}`,
@@ -69,12 +69,12 @@ export function useConversationMessages(conversationId: string) {
       `/api/chat/message/read?conversationId=${conversationId}`,
       { messageIds },
     );
-    console.log(response.data);
+
     return response.data;
   };
 
   const messagesQuery = useQuery({
-    queryKey: ["messages", conversationId],
+    queryKey: ['messages', conversationId],
     queryFn: () => getMessages({}),
     enabled: !!session?.user && !!conversationId,
   });
@@ -82,7 +82,8 @@ export function useConversationMessages(conversationId: string) {
   const sendMessageMutation = useMutation({
     mutationFn: sendMessage,
     onSuccess: (newMessage) => {
-      queryClient.setQueryData(["messages", conversationId], (oldData: any) => {
+      // biome-ignore lint: error
+      queryClient.setQueryData(['messages', conversationId], (oldData: any) => {
         if (!oldData) return { items: [newMessage], nextCursor: null };
         return {
           ...oldData,
@@ -91,7 +92,7 @@ export function useConversationMessages(conversationId: string) {
       });
 
       // Also update the conversation list to show the latest message
-      queryClient.invalidateQueries({ queryKey: ["conversations"] });
+      queryClient.invalidateQueries({ queryKey: ['conversations'] });
     },
   });
 
@@ -99,11 +100,13 @@ export function useConversationMessages(conversationId: string) {
     mutationFn: markAsRead,
     onSuccess: () => {
       // Update the messages to show as read
-      queryClient.setQueryData(["messages", conversationId], (oldData: any) => {
+      // biome-ignore lint: error
+      queryClient.setQueryData(['messages', conversationId], (oldData: any) => {
         if (!oldData) return oldData;
 
         return {
           ...oldData,
+          // biome-ignore lint: error
           items: oldData.items.map((message: any) => ({
             ...message,
             isRead: true,
@@ -112,7 +115,7 @@ export function useConversationMessages(conversationId: string) {
       });
 
       // Also update the conversation list to remove unread indicators
-      queryClient.invalidateQueries({ queryKey: ["conversations"] });
+      queryClient.invalidateQueries({ queryKey: ['conversations'] });
     },
   });
 

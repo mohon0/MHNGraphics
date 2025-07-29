@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import {
   CartesianGrid,
@@ -9,7 +9,7 @@ import {
   Tooltip,
   XAxis,
   YAxis,
-} from "recharts";
+} from 'recharts';
 
 interface ChartData {
   labels: string[];
@@ -33,8 +33,8 @@ export default function PaymentTrendChart({ data }: PaymentTrendChartProps) {
   }));
 
   return (
-    <div className="h-[400px] w-full">
-      <ResponsiveContainer width="100%" height="100%">
+    <div className='h-[400px] w-full'>
+      <ResponsiveContainer width='100%' height='100%'>
         <LineChart
           data={chartData}
           margin={{
@@ -44,41 +44,41 @@ export default function PaymentTrendChart({ data }: PaymentTrendChartProps) {
             bottom: 5,
           }}
         >
-          <CartesianGrid strokeDasharray="3 3" />
+          <CartesianGrid strokeDasharray='3 3' />
           <XAxis
-            dataKey="name"
+            dataKey='name'
             tick={{ fontSize: 12 }}
-            interval={"preserveStartEnd"}
+            interval={'preserveStartEnd'}
           />
           <YAxis
             tick={{ fontSize: 12 }}
             tickFormatter={(value) => `৳${value.toLocaleString()}`}
           />
           <Tooltip
-            formatter={(value: number) => [`৳${value.toLocaleString()}`, ""]}
+            formatter={(value: number) => [`৳${value.toLocaleString()}`, '']}
             contentStyle={{
-              backgroundColor: "white",
-              border: "1px solid #ccc",
-              borderRadius: "4px",
+              backgroundColor: 'white',
+              border: '1px solid #ccc',
+              borderRadius: '4px',
             }}
           />
           <Legend />
           <Line
-            type="monotone"
-            dataKey="payments"
-            name="Payments"
-            stroke="#4CAF50"
-            fill="#A5D6A7"
+            type='monotone'
+            dataKey='payments'
+            name='Payments'
+            stroke='#4CAF50'
+            fill='#A5D6A7'
             strokeWidth={2}
             dot={{ r: 4 }}
             activeDot={{ r: 6 }}
           />
           <Line
-            type="monotone"
-            dataKey="refunds"
-            name="Refunds"
-            stroke="#F44336"
-            fill="#FFCDD2"
+            type='monotone'
+            dataKey='refunds'
+            name='Refunds'
+            stroke='#F44336'
+            fill='#FFCDD2'
             strokeWidth={2}
             dot={{ r: 4 }}
             activeDot={{ r: 6 }}

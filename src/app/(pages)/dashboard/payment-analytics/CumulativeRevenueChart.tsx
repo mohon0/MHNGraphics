@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import {
   Area,
@@ -8,7 +8,7 @@ import {
   Tooltip,
   XAxis,
   YAxis,
-} from "recharts";
+} from 'recharts';
 
 interface ChartData {
   labels: string[];
@@ -43,8 +43,8 @@ export default function CumulativeRevenueChart({
   });
 
   return (
-    <div className="h-[400px] w-full">
-      <ResponsiveContainer width="100%" height="100%">
+    <div className='h-[400px] w-full'>
+      <ResponsiveContainer width='100%' height='100%'>
         <AreaChart
           data={chartData}
           margin={{
@@ -54,30 +54,30 @@ export default function CumulativeRevenueChart({
             bottom: 5,
           }}
         >
-          <CartesianGrid strokeDasharray="3 3" />
+          <CartesianGrid strokeDasharray='3 3' />
           <XAxis
-            dataKey="name"
+            dataKey='name'
             tick={{ fontSize: 12 }}
-            interval={"preserveStartEnd"}
+            interval={'preserveStartEnd'}
           />
           <YAxis
             tick={{ fontSize: 12 }}
             tickFormatter={(value) => `৳${value.toLocaleString()}`}
           />
           <Tooltip
-            formatter={(value: number) => [`৳${value.toLocaleString()}`, ""]}
+            formatter={(value: number) => [`৳${value.toLocaleString()}`, '']}
             contentStyle={{
-              backgroundColor: "white",
-              border: "1px solid #ccc",
-              borderRadius: "4px",
+              backgroundColor: 'white',
+              border: '1px solid #ccc',
+              borderRadius: '4px',
             }}
           />
           <Area
-            type="monotone"
-            dataKey="cumulative"
-            name="Cumulative Revenue"
-            stroke="#2196F3"
-            fill="#BBDEFB"
+            type='monotone'
+            dataKey='cumulative'
+            name='Cumulative Revenue'
+            stroke='#2196F3'
+            fill='#BBDEFB'
             strokeWidth={2}
           />
         </AreaChart>

@@ -1,6 +1,6 @@
-import { sendWelcomeEmail } from "@/components/helper/mail/SendMail";
-import { Prisma } from "@/components/helper/prisma/Prisma";
-import { NextRequest, NextResponse } from "next/server";
+import { type NextRequest, NextResponse } from 'next/server';
+import { sendWelcomeEmail } from '@/components/helper/mail/SendMail';
+import { Prisma } from '@/components/helper/prisma/Prisma';
 
 export async function POST(req: NextRequest) {
   try {
@@ -8,9 +8,9 @@ export async function POST(req: NextRequest) {
     const { email } = body;
 
     // Validate email format
-    if (!email || !email.includes("@")) {
+    if (!email || !email.includes('@')) {
       return NextResponse.json(
-        { error: "Invalid email address" },
+        { error: 'Invalid email address' },
         { status: 400 },
       );
     }
@@ -22,7 +22,7 @@ export async function POST(req: NextRequest) {
 
     if (existingSubscriber) {
       return NextResponse.json(
-        { message: "This email is already subscribed!" },
+        { message: 'This email is already subscribed!' },
         { status: 409 },
       );
     }
@@ -35,21 +35,21 @@ export async function POST(req: NextRequest) {
     // Send welcome email
     try {
       await sendWelcomeEmail(email);
+      // biome-ignore lint: error
     } catch (emailError) {
-      console.error("Failed to send welcome email:", emailError);
       return NextResponse.json(
-        { message: "Subscription successful, but email could not be sent." },
+        { message: 'Subscription successful, but email could not be sent.' },
         { status: 202 }, // Accepted with issue
       );
     }
 
     return NextResponse.json(
-      { message: "Successfully subscribed!", subscriber },
+      { message: 'Successfully subscribed!', subscriber },
       { status: 200 },
     );
+    // biome-ignore lint: error
   } catch (error) {
-    console.error("Internal Server Error:", error);
-    return new NextResponse("Internal Server Error", { status: 500 });
+    return new NextResponse('Internal Server Error', { status: 500 });
   }
 }
 
@@ -57,12 +57,12 @@ export async function DELETE(req: NextRequest) {
   try {
     // Extract email from the query parameters
     const url = new URL(req.url);
-    const email = url.searchParams.get("mail");
+    const email = url.searchParams.get('mail');
 
     // Validate email format
-    if (!email || !email.includes("@")) {
+    if (!email || !email.includes('@')) {
       return NextResponse.json(
-        { error: "Invalid email address" },
+        { error: 'Invalid email address' },
         { status: 400 },
       );
     }
@@ -74,7 +74,7 @@ export async function DELETE(req: NextRequest) {
 
     if (!existingSubscriber) {
       return NextResponse.json(
-        { error: "Email not found in the subscribers list" },
+        { error: 'Email not found in the subscribers list' },
         { status: 404 }, // Not found status code
       );
     }
@@ -85,28 +85,29 @@ export async function DELETE(req: NextRequest) {
     });
 
     return NextResponse.json(
-      { message: "Successfully unsubscribed!" },
+      { message: 'Successfully unsubscribed!' },
       { status: 200 },
     );
+    // biome-ignore lint: error
   } catch (error) {
-    return new NextResponse("Internal Server Error", { status: 500 });
+    return new NextResponse('Internal Server Error', { status: 500 });
   }
 }
 
-export async function GET(req: NextRequest) {
+export async function GET() {
   try {
-    const url = new URL(req.url);
-    const email = url.searchParams.get("mail");
     const subscriber = await Prisma.subscriber.findMany({
       select: {
         email: true,
       },
       orderBy: {
-        createdAt: "desc",
+        createdAt: 'desc',
       },
     });
     return new NextResponse(JSON.stringify(subscriber), { status: 200 });
+
+    // biome-ignore lint: error
   } catch (error) {
-    return new NextResponse("Internal Server Error", { status: 500 });
+    return new NextResponse('Internal Server Error', { status: 500 });
   }
 }

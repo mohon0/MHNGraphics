@@ -1,6 +1,6 @@
-"use client";
+'use client';
 
-import { format } from "date-fns";
+import { format } from 'date-fns';
 import {
   CheckCircle2,
   Clock,
@@ -11,9 +11,9 @@ import {
   Settings,
   TrashIcon,
   XCircle,
-} from "lucide-react";
-import Link from "next/link";
-import * as React from "react";
+} from 'lucide-react';
+import Link from 'next/link';
+import * as React from 'react';
 
 import {
   AlertDialog,
@@ -24,11 +24,11 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
+} from '@/components/ui/alert-dialog';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -41,19 +41,19 @@ import {
   DropdownMenuSubContent,
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Switch } from "@/components/ui/switch";
+} from '@/components/ui/dropdown-menu';
+import { Switch } from '@/components/ui/switch';
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "@/components/ui/tooltip";
+} from '@/components/ui/tooltip';
 import {
   useDeleteApplication,
   useUpdateApplication,
-} from "@/services/application";
-import { ApplicationSummary } from "@/utils/Interface";
+} from '@/services/application';
+import type { ApplicationSummary } from '@/utils/Interface';
 
 interface ExtendedApplicationListType extends ApplicationSummary {
   refetch: () => void;
@@ -62,26 +62,26 @@ interface ExtendedApplicationListType extends ApplicationSummary {
 const statusConfig = {
   Approved: {
     icon: CheckCircle2,
-    color: "text-green-500",
-    bgColor: "bg-green-50",
+    color: 'text-green-500',
+    bgColor: 'bg-green-50',
   },
-  Pending: { icon: Clock, color: "text-yellow-500", bgColor: "bg-yellow-50" },
-  Rejected: { icon: XCircle, color: "text-red-500", bgColor: "bg-red-50" },
-  "At Office": {
+  Pending: { icon: Clock, color: 'text-yellow-500', bgColor: 'bg-yellow-50' },
+  Rejected: { icon: XCircle, color: 'text-red-500', bgColor: 'bg-red-50' },
+  'At Office': {
     icon: FileText,
-    color: "text-blue-600",
-    bgColor: "bg-blue-50",
+    color: 'text-blue-600',
+    bgColor: 'bg-blue-50',
   },
   Received: {
     icon: CheckCircle2,
-    color: "text-green-600",
-    bgColor: "bg-green-50",
+    color: 'text-green-600',
+    bgColor: 'bg-green-50',
   },
-  Fail: { icon: XCircle, color: "text-red-600", bgColor: "bg-red-50" },
-  "Course Incomplete": {
+  Fail: { icon: XCircle, color: 'text-red-600', bgColor: 'bg-red-50' },
+  'Course Incomplete': {
     icon: Clock,
-    color: "text-yellow-600",
-    bgColor: "bg-yellow-50",
+    color: 'text-yellow-600',
+    bgColor: 'bg-yellow-50',
   },
 } as const;
 
@@ -102,7 +102,8 @@ export default function ApplicationDataCard(app: ExtendedApplicationListType) {
     try {
       await deleteApplication();
     } catch (error) {
-      console.error("Delete failed:", error);
+      // biome-ignore lint: error
+      console.error('Delete failed:', error);
     } finally {
       setIsDeleteDialogOpen(false);
     }
@@ -117,40 +118,40 @@ export default function ApplicationDataCard(app: ExtendedApplicationListType) {
 
   return (
     <TooltipProvider>
-      <Card className="relative overflow-hidden">
-        <div className="p-4">
+      <Card className='relative overflow-hidden'>
+        <div className='p-4'>
           {/* Header with Image and Actions */}
-          <div className="flex items-start justify-between">
-            <div className="flex gap-3">
-              <div className="relative h-12 w-12">
+          <div className='flex items-start justify-between'>
+            <div className='flex gap-3'>
+              <div className='relative h-12 w-12'>
                 <Avatar>
                   <AvatarImage src={app.image} />
                   <AvatarFallback>{app.studentName.slice(0, 3)}</AvatarFallback>
                 </Avatar>
                 {isUpdating && (
-                  <div className="absolute inset-0 flex items-center justify-center rounded-full bg-black/50">
-                    <Loader2 className="h-4 w-4 animate-spin text-white" />
+                  <div className='absolute inset-0 flex items-center justify-center rounded-full bg-black/50'>
+                    <Loader2 className='h-4 w-4 animate-spin text-white' />
                   </div>
                 )}
               </div>
 
-              <h3 className="font-semibold">{app.studentName}</h3>
+              <h3 className='font-semibold'>{app.studentName}</h3>
             </div>
 
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon" className="h-8 w-8">
-                  <MoreVertical className="h-4 w-4" />
+                <Button variant='ghost' size='icon' className='h-8 w-8'>
+                  <MoreVertical className='h-4 w-4' />
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-56">
+              <DropdownMenuContent align='end' className='w-56'>
                 <DropdownMenuLabel>Actions</DropdownMenuLabel>
                 <DropdownMenuGroup>
                   <DropdownMenuItem asChild>
                     <Link
                       href={`/dashboard/application-list/single-application?id=${app.id}`}
                     >
-                      <FileText className="mr-2 h-4 w-4" />
+                      <FileText className='mr-2 h-4 w-4' />
                       View Details
                     </Link>
                   </DropdownMenuItem>
@@ -158,7 +159,7 @@ export default function ApplicationDataCard(app: ExtendedApplicationListType) {
                     <Link
                       href={`/dashboard/application-list/payment-report?id=${app.id}`}
                     >
-                      <Receipt className="mr-2 h-4 w-4" />
+                      <Receipt className='mr-2 h-4 w-4' />
                       Payment Report
                     </Link>
                   </DropdownMenuItem>
@@ -166,7 +167,7 @@ export default function ApplicationDataCard(app: ExtendedApplicationListType) {
                     <Link
                       href={`/dashboard/application-list/edit-application?id=${app.id}`}
                     >
-                      <Settings className="mr-2 h-4 w-4" />
+                      <Settings className='mr-2 h-4 w-4' />
                       Edit Application
                     </Link>
                   </DropdownMenuItem>
@@ -174,12 +175,12 @@ export default function ApplicationDataCard(app: ExtendedApplicationListType) {
                 <DropdownMenuSeparator />
                 <DropdownMenuSub>
                   <DropdownMenuSubTrigger>
-                    <StatusIcon className="mr-2 h-4 w-4" />
+                    <StatusIcon className='mr-2 h-4 w-4' />
                     Update Status
                   </DropdownMenuSubTrigger>
                   <DropdownMenuPortal>
                     <DropdownMenuSubContent>
-                      {["Approved", "Pending", "Rejected"].map((status) => {
+                      {['Approved', 'Pending', 'Rejected'].map((status) => {
                         const StatusIcon =
                           statusConfig[status as StatusType].icon;
                         const disabled = isStatusDisabled(status);
@@ -190,13 +191,13 @@ export default function ApplicationDataCard(app: ExtendedApplicationListType) {
                               !disabled && updateApplicationData({ status })
                             }
                             disabled={disabled}
-                            className={disabled ? "opacity-50" : ""}
+                            className={disabled ? 'opacity-50' : ''}
                           >
                             <StatusIcon
                               className={`mr-2 h-4 w-4 ${statusConfig[status as StatusType].color}`}
                             />
                             {status}
-                            {disabled && " (Current)"}
+                            {disabled && ' (Current)'}
                           </DropdownMenuItem>
                         );
                       })}
@@ -205,17 +206,17 @@ export default function ApplicationDataCard(app: ExtendedApplicationListType) {
                 </DropdownMenuSub>
                 <DropdownMenuSub>
                   <DropdownMenuSubTrigger>
-                    <CertificateIcon className="mr-2 h-4 w-4" />
+                    <CertificateIcon className='mr-2 h-4 w-4' />
                     Update Certificate
                   </DropdownMenuSubTrigger>
                   <DropdownMenuPortal>
                     <DropdownMenuSubContent>
                       {[
-                        "At Office",
-                        "Pending",
-                        "Fail",
-                        "Received",
-                        "Course Incomplete",
+                        'At Office',
+                        'Pending',
+                        'Fail',
+                        'Received',
+                        'Course Incomplete',
                       ].map((status) => {
                         const StatusIcon =
                           statusConfig[status as StatusType].icon;
@@ -228,13 +229,13 @@ export default function ApplicationDataCard(app: ExtendedApplicationListType) {
                               updateApplicationData({ certificate: status })
                             }
                             disabled={disabled}
-                            className={disabled ? "opacity-50" : ""}
+                            className={disabled ? 'opacity-50' : ''}
                           >
                             <StatusIcon
                               className={`mr-2 h-4 w-4 ${statusConfig[status as StatusType].color}`}
                             />
                             {status}
-                            {disabled && " (Current)"}
+                            {disabled && ' (Current)'}
                           </DropdownMenuItem>
                         );
                       })}
@@ -243,10 +244,10 @@ export default function ApplicationDataCard(app: ExtendedApplicationListType) {
                 </DropdownMenuSub>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem
-                  className="text-red-600 focus:bg-red-50 focus:text-red-600"
+                  className='text-red-600 focus:bg-red-50 focus:text-red-600'
                   onClick={() => setIsDeleteDialogOpen(true)}
                 >
-                  <TrashIcon className="mr-2 h-4 w-4" />
+                  <TrashIcon className='mr-2 h-4 w-4' />
                   Delete Application
                 </DropdownMenuItem>
               </DropdownMenuContent>
@@ -254,14 +255,14 @@ export default function ApplicationDataCard(app: ExtendedApplicationListType) {
           </div>
 
           {/* Status Information */}
-          <div className="mt-4 flex items-center gap-2">
-            <Badge variant="secondary" className="h-6">
+          <div className='mt-4 flex items-center gap-2'>
+            <Badge variant='secondary' className='h-6'>
               {app.duration}
             </Badge>
             <Tooltip>
               <TooltipTrigger asChild>
                 <Badge
-                  variant="secondary"
+                  variant='secondary'
                   className={`flex items-center gap-1 ${statusConfig[app.status as StatusType]?.bgColor} border-0`}
                 >
                   <StatusIcon
@@ -275,21 +276,21 @@ export default function ApplicationDataCard(app: ExtendedApplicationListType) {
           </div>
 
           {/* Info Grid */}
-          <div className="mt-4 grid grid-cols-2 gap-2 text-sm">
-            <div className="text-muted-foreground">Mobile:</div>
+          <div className='mt-4 grid grid-cols-2 gap-2 text-sm'>
+            <div className='text-muted-foreground'>Mobile:</div>
             <div>{app.mobileNumber}</div>
-            <div className="text-muted-foreground">Applied:</div>
-            <div>{format(new Date(app.createdAt), "PPP")}</div>
-            <div className="text-muted-foreground">Certificate:</div>
-            <div className="flex items-center gap-2">
+            <div className='text-muted-foreground'>Applied:</div>
+            <div>{format(new Date(app.createdAt), 'PPP')}</div>
+            <div className='text-muted-foreground'>Certificate:</div>
+            <div className='flex items-center gap-2'>
               <CertificateIcon
                 className={`h-4 w-4 ${statusConfig[app.certificate as StatusType]?.color}`}
               />
               <span>{app.certificate}</span>
             </div>
-            <div className="text-muted-foreground">Course:</div>
+            <div className='text-muted-foreground'>Course:</div>
             <div>{app.course}</div>
-            <div className="text-muted-foreground">Editable:</div>
+            <div className='text-muted-foreground'>Editable:</div>
             <div>
               <Switch
                 checked={app.editable || false}
@@ -297,7 +298,7 @@ export default function ApplicationDataCard(app: ExtendedApplicationListType) {
                   updateApplicationData({ editable: value.toString() })
                 }
                 disabled={isUpdating}
-                className="origin-left scale-75"
+                className='origin-left scale-75'
               />
             </div>
           </div>

@@ -1,15 +1,15 @@
-"use client";
-import { Content, type Editor } from "@tiptap/react";
-import { forwardRef, useCallback } from "react";
-import { type UseTiptapEditorOptions } from "./hooks/useTiptapEditor";
-import ExtensionKit from "./kit";
-import MenuBar from "./MenuBar";
-import LinkMenu from "./menus/LinkMenu";
-import TableMenu from "./menus/TableMenu";
-import TiptapProvider from "./Provider";
-import Resizer from "./Resizer";
-import StatusBar from "./StatusBar";
-import { throttle } from "./utils/throttle";
+'use client';
+import type { Content, Editor } from '@tiptap/react';
+import { forwardRef, useCallback } from 'react';
+import type { UseTiptapEditorOptions } from './hooks/useTiptapEditor';
+import ExtensionKit from './kit';
+import MenuBar from './MenuBar';
+import LinkMenu from './menus/LinkMenu';
+import TableMenu from './menus/TableMenu';
+import TiptapProvider from './Provider';
+import Resizer from './Resizer';
+import StatusBar from './StatusBar';
+import { throttle } from './utils/throttle';
 export type TiptapEditorRef = {
   getInstance: () => Editor | null;
 };
@@ -23,7 +23,7 @@ export interface TiptapEditorProps {
     paragraph?: string;
     imageCaption?: string;
   };
-  output?: "html" | "json";
+  output?: 'html' | 'json';
   hideMenuBar?: boolean;
   hideStatusBar?: boolean;
   hideBubbleMenu?: boolean;
@@ -37,7 +37,7 @@ const TiptapEditor = forwardRef<TiptapEditorRef, TiptapEditorProps>(
   (
     {
       ssr = false,
-      output = "html",
+      output = 'html',
       readonly = false,
       disabled = false,
       initialContent,
@@ -60,9 +60,9 @@ const TiptapEditor = forwardRef<TiptapEditorRef, TiptapEditorProps>(
     const handleUpdate = useCallback(
       (editor: Editor) => {
         const content =
-          output === "html"
+          output === 'html'
             ? editor.isEmpty
-              ? ""
+              ? ''
               : editor.getHTML()
             : editor.getJSON();
         throttledUpdate(content);
@@ -83,7 +83,7 @@ const TiptapEditor = forwardRef<TiptapEditorRef, TiptapEditorProps>(
       editorProps: {
         attributes: {
           class:
-            "prose relative w-full flex-1 whitespace-pre-wrap py-7 outline-hidden dark:prose-invert *:mt-5 [&>*:first-child]:mt-0 h-96",
+            'prose relative w-full flex-1 whitespace-pre-wrap py-7 outline-hidden dark:prose-invert *:mt-5 [&>*:first-child]:mt-0 h-96',
         },
       },
     };
@@ -108,6 +108,6 @@ const TiptapEditor = forwardRef<TiptapEditorRef, TiptapEditorProps>(
   },
 );
 
-TiptapEditor.displayName = "TiptapEditor";
+TiptapEditor.displayName = 'TiptapEditor';
 
 export default TiptapEditor;

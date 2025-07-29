@@ -1,10 +1,10 @@
-import { UploadImage } from "@/components/helper/image/UploadImage";
-import { Prisma } from "@/components/helper/prisma/Prisma";
-import { bkashConfig } from "@/lib/bkash";
-import { createPayment } from "@/services/bkash";
-import cloudinary from "@/utils/cloudinary";
-import { getToken } from "next-auth/jwt";
-import { NextRequest, NextResponse } from "next/server";
+import { type NextRequest, NextResponse } from 'next/server';
+import { getToken } from 'next-auth/jwt';
+import { UploadImage } from '@/components/helper/image/UploadImage';
+import { Prisma } from '@/components/helper/prisma/Prisma';
+import { bkashConfig } from '@/lib/bkash';
+import { createPayment } from '@/services/bkash';
+import cloudinary from '@/utils/cloudinary';
 
 const myUrl = process.env.NEXT_PUBLIC_SITE_URL;
 const secret = process.env.NEXTAUTH_SECRET;
@@ -12,13 +12,13 @@ const secret = process.env.NEXTAUTH_SECRET;
 // Utility function to safely retrieve string values
 const getStringValue = (formData: FormData, key: string): string => {
   const value = formData.get(key);
-  return typeof value === "string" ? value : "";
+  return typeof value === 'string' ? value : '';
 };
 
 // Utility function to safely retrieve number values
 const getNumberValue = (formData: FormData, key: string): number | null => {
   const value = formData.get(key);
-  if (typeof value === "string" && /^\d+$/.test(value)) {
+  if (typeof value === 'string' && /^\d+$/.test(value)) {
     return parseInt(value, 10);
   }
   return null;
@@ -31,7 +31,7 @@ export async function POST(req: NextRequest) {
 
     if (!token || !userId) {
       return NextResponse.json(
-        { message: "User not logged in or userId missing" },
+        { message: 'User not logged in or userId missing' },
         { status: 401 },
       );
     }
@@ -43,7 +43,7 @@ export async function POST(req: NextRequest) {
 
     if (existingApplication) {
       return NextResponse.json(
-        { message: "User has already submitted an application" },
+        { message: 'User has already submitted an application' },
         { status: 400 },
       );
     }
@@ -52,52 +52,52 @@ export async function POST(req: NextRequest) {
     const formData = await req.formData();
 
     // Use utility functions to safely get values
-    const studentName = getStringValue(formData, "studentName");
-    const email = getStringValue(formData, "email");
-    const fatherName = getStringValue(formData, "fatherName");
-    const motherName = getStringValue(formData, "motherName");
-    const birthDay = getStringValue(formData, "birthDay");
-    const bloodGroup = getStringValue(formData, "bloodGroup");
-    const mobileNumber = getStringValue(formData, "mobileNumber");
-    const guardianNumber = getStringValue(formData, "guardianNumber");
-    const gender = getStringValue(formData, "gender");
-    const religion = getStringValue(formData, "religion");
-    const fullAddress = getStringValue(formData, "fullAddress");
-    const district = getStringValue(formData, "district");
-    const education = getStringValue(formData, "education");
-    const board = getStringValue(formData, "educationBoard");
-    const rollNumber = getStringValue(formData, "rollNumber");
-    const regNumber = getStringValue(formData, "regNumber");
-    const passingYear = getStringValue(formData, "passingYear");
-    const gpa = getStringValue(formData, "gpaCgpa");
-    const nid = getStringValue(formData, "nidBirthReg");
-    const nationality = getStringValue(formData, "nationality");
-    const course = getStringValue(formData, "course");
-    const duration = getStringValue(formData, "duration");
-    const pc = getStringValue(formData, "pc");
-    const session = getNumberValue(formData, "session");
-    const transactionId = getStringValue(formData, "trxId");
-    const fatherOccupation = getStringValue(formData, "fatherOccupation");
-    const maritalStatus = getStringValue(formData, "maritalStatus");
+    const studentName = getStringValue(formData, 'studentName');
+    const email = getStringValue(formData, 'email');
+    const fatherName = getStringValue(formData, 'fatherName');
+    const motherName = getStringValue(formData, 'motherName');
+    const birthDay = getStringValue(formData, 'birthDay');
+    const bloodGroup = getStringValue(formData, 'bloodGroup');
+    const mobileNumber = getStringValue(formData, 'mobileNumber');
+    const guardianNumber = getStringValue(formData, 'guardianNumber');
+    const gender = getStringValue(formData, 'gender');
+    const religion = getStringValue(formData, 'religion');
+    const fullAddress = getStringValue(formData, 'fullAddress');
+    const district = getStringValue(formData, 'district');
+    const education = getStringValue(formData, 'education');
+    const board = getStringValue(formData, 'educationBoard');
+    const rollNumber = getStringValue(formData, 'rollNumber');
+    const regNumber = getStringValue(formData, 'regNumber');
+    const passingYear = getStringValue(formData, 'passingYear');
+    const gpa = getStringValue(formData, 'gpaCgpa');
+    const nid = getStringValue(formData, 'nidBirthReg');
+    const nationality = getStringValue(formData, 'nationality');
+    const course = getStringValue(formData, 'course');
+    const duration = getStringValue(formData, 'duration');
+    const pc = getStringValue(formData, 'pc');
+    const session = getNumberValue(formData, 'session');
+    const transactionId = getStringValue(formData, 'trxId');
+    const fatherOccupation = getStringValue(formData, 'fatherOccupation');
+    const maritalStatus = getStringValue(formData, 'maritalStatus');
 
     if (session === null) {
       return NextResponse.json(
-        { message: "Invalid session value" },
+        { message: 'Invalid session value' },
         { status: 400 },
       );
     }
 
     // Handle file upload
-    let imageUrl = { secure_url: "", public_id: "" };
-    const imageFile = formData.get("image") as Blob;
+    let imageUrl = { secure_url: '', public_id: '' };
+    const imageFile = formData.get('image') as Blob;
 
     if (imageFile) {
       try {
-        imageUrl = await UploadImage(imageFile, "application-images/");
+        imageUrl = await UploadImage(imageFile, 'application-images/');
+        // biome-ignore lint: error
       } catch (uploadError) {
-        console.error("Image upload failed:", uploadError);
         return NextResponse.json(
-          { message: "Image upload failed" },
+          { message: 'Image upload failed' },
           { status: 500 },
         );
       }
@@ -106,7 +106,7 @@ export async function POST(req: NextRequest) {
     // Generate new roll number
     let roll = 2000;
     const lastApplication = await Prisma.application.findFirst({
-      orderBy: { createdAt: "desc" },
+      orderBy: { createdAt: 'desc' },
       select: { roll: true },
     });
 
@@ -117,9 +117,9 @@ export async function POST(req: NextRequest) {
     // Use utility function for birthDay
 
     // Validate date format
-    if (!birthDay || isNaN(Date.parse(birthDay))) {
+    if (!birthDay || Number.isNaN(Date.parse(birthDay))) {
       return NextResponse.json(
-        { message: "Invalid birth date format. Use ISO format (YYYY-MM-DD)" },
+        { message: 'Invalid birth date format. Use ISO format (YYYY-MM-DD)' },
         { status: 400 },
       );
     }
@@ -161,13 +161,13 @@ export async function POST(req: NextRequest) {
           session,
           image: imageUrl.secure_url,
           imageId: imageUrl.public_id,
-          status: "Pending",
-          certificate: "Pending",
-          applicationFee: "Pending",
+          status: 'Pending',
+          certificate: 'Pending',
+          applicationFee: 'Pending',
           applicationFeeAmount: 0,
           metadata: {
             paymentPending: true,
-            paymentMethod: "BKASH",
+            paymentMethod: 'BKASH',
           },
         },
       });
@@ -177,10 +177,10 @@ export async function POST(req: NextRequest) {
         callbackURL: `${myUrl}/api/best-computer/application/callback?applicationId=${newApplication.id}&userId=${newApplication.userId}`,
         userId: newApplication.userId,
         applicationId: newApplication.id,
-        reference: "application-fee",
+        reference: 'application-fee',
         name: newApplication.studentName,
-        email: newApplication.email ?? "",
-        phone: newApplication.mobileNumber ?? "",
+        email: newApplication.email ?? '',
+        phone: newApplication.mobileNumber ?? '',
       };
 
       const createPaymentResponse = await createPayment(
@@ -188,14 +188,15 @@ export async function POST(req: NextRequest) {
         paymentDetails,
       );
 
-      if (createPaymentResponse.statusCode !== "0000") {
+      if (createPaymentResponse.statusCode !== '0000') {
         // Update order status to FAILED
         if (newApplication.imageId) {
           const result = await cloudinary.uploader.destroy(
             newApplication.imageId,
           );
-          if (result.result !== "ok") {
-            console.error("Error deleting image from Cloudinary:", result);
+          if (result.result !== 'ok') {
+            // biome-ignore lint: error
+            console.error('Error deleting image from Cloudinary:', result);
           }
         }
 
@@ -206,20 +207,21 @@ export async function POST(req: NextRequest) {
         });
 
         return NextResponse.json({
-          message: "Payment Failed",
+          message: 'Payment Failed',
           error: createPaymentResponse.statusMessage,
-          paymentMethod: "BKASH",
+          paymentMethod: 'BKASH',
         });
       }
       // Update order with payment initiation details
 
       const currentMetadata =
+        // biome-ignore lint: error
         (newApplication.metadata as Record<string, any>) || {};
       await Prisma.application.update({
         where: { id: newApplication.id },
         data: {
           applicationFeeAmount: 100,
-          applicationFee: "Paid",
+          applicationFee: 'Paid',
           metadata: {
             ...currentMetadata,
             paymentInitiated: true,
@@ -230,20 +232,22 @@ export async function POST(req: NextRequest) {
       });
 
       return NextResponse.json({
-        message: "Payment initiated successfully",
+        message: 'Payment initiated successfully',
         url: createPaymentResponse.bkashURL,
         applicationId: newApplication.id,
-        paymentMethod: "BKASH",
+        paymentMethod: 'BKASH',
       });
+      // biome-ignore lint: error
     } catch (createError) {
       return NextResponse.json(
-        { message: "Application creation failed" },
+        { message: 'Application creation failed' },
         { status: 500 },
       );
     }
+    // biome-ignore lint: error
   } catch (error) {
     return NextResponse.json(
-      { message: "An unexpected error occurred" },
+      { message: 'An unexpected error occurred' },
       { status: 500 },
     );
   }
@@ -255,7 +259,7 @@ export async function GET(req: NextRequest) {
     const userId = token?.sub;
 
     if (!token || !userId) {
-      return new NextResponse("User not logged in or authorId missing");
+      return new NextResponse('User not logged in or authorId missing');
     }
 
     const existingApplication = await Prisma.application.findFirst({
@@ -279,13 +283,14 @@ export async function GET(req: NextRequest) {
     if (existingApplication) {
       return new NextResponse(JSON.stringify(existingApplication), {
         status: 200,
-        headers: { "Content-Type": "application/json" },
+        headers: { 'Content-Type': 'application/json' },
       });
     } else {
-      return new NextResponse("No Application Found", { status: 200 });
+      return new NextResponse('No Application Found', { status: 200 });
     }
+    // biome-ignore lint: error
   } catch (error) {
-    return new NextResponse("An error occurred", { status: 400 });
+    return new NextResponse('An error occurred', { status: 400 });
   }
 }
 
@@ -296,14 +301,14 @@ export async function DELETE(req: NextRequest) {
     const userEmail = token?.email;
 
     if (!token || (!userId && !userEmail)) {
-      return new NextResponse("User not logged in or userId/userEmail missing");
+      return new NextResponse('User not logged in or userId/userEmail missing');
     }
 
     const search = req.nextUrl.searchParams;
-    const applicationId = search.get("id");
+    const applicationId = search.get('id');
 
     if (!applicationId) {
-      return new NextResponse("Application ID not provided", { status: 400 });
+      return new NextResponse('Application ID not provided', { status: 400 });
     }
 
     const application = await Prisma.application.findUnique({
@@ -318,16 +323,16 @@ export async function DELETE(req: NextRequest) {
     });
 
     if (!application) {
-      return new NextResponse("Application not found", { status: 404 });
+      return new NextResponse('Application not found', { status: 404 });
     }
 
     // Check if the user has the right to delete the application
-    if (userId === application.userId || token.role === "ADMIN") {
+    if (userId === application.userId || token.role === 'ADMIN') {
       // Check if there’s an image to delete
       if (application.imageId) {
         const result = await cloudinary.uploader.destroy(application.imageId);
-        if (result.result !== "ok") {
-          return new NextResponse("error", { status: 400 });
+        if (result.result !== 'ok') {
+          return new NextResponse('error', { status: 400 });
         }
       }
 
@@ -337,27 +342,28 @@ export async function DELETE(req: NextRequest) {
         },
       });
 
-      return new NextResponse("Application deleted successfully", {
+      return new NextResponse('Application deleted successfully', {
         status: 200,
       });
     } else {
       // User does not have the right to delete the application
-      return new NextResponse("Unauthorized to delete this application", {
+      return new NextResponse('Unauthorized to delete this application', {
         status: 403,
       });
     }
+    // biome-ignore lint: error
   } catch (error) {
-    return new NextResponse("Error deleting application", { status: 500 });
+    return new NextResponse('Error deleting application', { status: 500 });
   }
 }
 export async function PATCH(req: NextRequest) {
   try {
     const formData = await req.formData();
-    const id = getStringValue(formData, "id");
+    const id = getStringValue(formData, 'id');
     const token = await getToken({ req, secret });
 
     if (!id || !token) {
-      return new NextResponse("Product ID and token are required", {
+      return new NextResponse('Product ID and token are required', {
         status: 400,
       });
     }
@@ -370,14 +376,14 @@ export async function PATCH(req: NextRequest) {
     });
 
     if (!currentDesign) {
-      return new NextResponse("Application not found", { status: 404 });
+      return new NextResponse('Application not found', { status: 404 });
     }
 
     // If the role is not ADMIN, make sure the user is the author and the application is editable
-    if (role !== "ADMIN") {
+    if (role !== 'ADMIN') {
       if (token.sub !== currentDesign.userId) {
         return new NextResponse(
-          "Unauthorized: You are not the author of this application",
+          'Unauthorized: You are not the author of this application',
           {
             status: 403,
           },
@@ -385,12 +391,12 @@ export async function PATCH(req: NextRequest) {
       }
 
       if (currentDesign.editable === false || currentDesign.editable === null) {
-        return new NextResponse("Application is not editable", { status: 400 });
+        return new NextResponse('Application is not editable', { status: 400 });
       }
     }
 
-    const deletedImage = getStringValue(formData, "deletedImage");
-    const imageFile = formData.get("image") as Blob;
+    const deletedImage = getStringValue(formData, 'deletedImage');
+    const imageFile = formData.get('image') as Blob;
 
     let image = currentDesign.image;
     let imageId = currentDesign.imageId;
@@ -400,16 +406,16 @@ export async function PATCH(req: NextRequest) {
       const deleteResult = await cloudinary.uploader.destroy(
         currentDesign.imageId,
       );
-      if (deleteResult.result !== "ok") {
-        return new NextResponse("Error deleting image", { status: 400 });
+      if (deleteResult.result !== 'ok') {
+        return new NextResponse('Error deleting image', { status: 400 });
       }
-      image = "";
-      imageId = "";
+      image = '';
+      imageId = '';
     }
 
     // Upload new image if provided
     if (imageFile) {
-      const imageUrl = await UploadImage(imageFile, "application-images/");
+      const imageUrl = await UploadImage(imageFile, 'application-images/');
       image = imageUrl.secure_url;
       imageId = imageUrl.public_id;
     }
@@ -419,15 +425,15 @@ export async function PATCH(req: NextRequest) {
       {};
 
     formData.forEach((value, key) => {
-      if (key !== "id" && key !== "image" && key !== "deletedImage") {
-        if (key === "session") {
+      if (key !== 'id' && key !== 'image' && key !== 'deletedImage') {
+        if (key === 'session') {
           const intValue = parseInt(value.toString(), 10);
-          if (isNaN(intValue)) {
+          if (Number.isNaN(intValue)) {
             throw new Error(`Invalid session value: ${value}`);
           }
           updatedData[key] = intValue;
-        } else if (key === "editable") {
-          updatedData[key] = value === "true";
+        } else if (key === 'editable') {
+          updatedData[key] = value === 'true';
         } else {
           updatedData[key] = value.toString();
         }
@@ -445,11 +451,11 @@ export async function PATCH(req: NextRequest) {
     });
 
     return NextResponse.json({
-      message: "Design updated successfully",
+      message: 'Design updated successfully',
       design: updatedDesign,
     });
+    // biome-ignore lint: error
   } catch (error) {
-    console.log(error);
-    return new NextResponse("Internal Server Error", { status: 500 });
+    return new NextResponse('Internal Server Error', { status: 500 });
   }
 }

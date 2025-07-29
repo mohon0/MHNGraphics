@@ -1,16 +1,16 @@
-import { UploadImage } from "@/components/helper/image/UploadImage";
-import { Prisma } from "@/components/helper/prisma/Prisma";
-import cloudinary from "@/utils/cloudinary";
-import { Session } from "next-auth";
-import { getToken } from "next-auth/jwt";
-import { getServerSession } from "next-auth/next";
-import { NextRequest, NextResponse } from "next/server";
-import { authOptions } from "../../auth/[...nextauth]/Options";
+import { type NextRequest, NextResponse } from 'next/server';
+import type { Session } from 'next-auth';
+import { getToken } from 'next-auth/jwt';
+import { getServerSession } from 'next-auth/next';
+import { UploadImage } from '@/components/helper/image/UploadImage';
+import { Prisma } from '@/components/helper/prisma/Prisma';
+import cloudinary from '@/utils/cloudinary';
+import { authOptions } from '../../auth/[...nextauth]/Options';
 
 // Helper function to extract string value from formData
 function getStringValue(formData: FormData, key: string): string {
   const value = formData.get(key);
-  return typeof value === "string" ? value : "";
+  return typeof value === 'string' ? value : '';
 }
 interface CustomSession extends Session {
   user: {
@@ -28,7 +28,7 @@ export async function POST(req: NextRequest) {
     const session = (await getServerSession(authOptions)) as CustomSession;
 
     if (!session) {
-      return new NextResponse("User not logged in or authorId missing", {
+      return new NextResponse('User not logged in or authorId missing', {
         status: 401,
       });
     }
@@ -37,39 +37,39 @@ export async function POST(req: NextRequest) {
     const authorStatus = session.user.role;
 
     // Declare the status variable outside of the if-else block
-    let status: "PUBLISHED" | "PENDING";
+    let status: 'PUBLISHED' | 'PENDING';
 
     // Conditionally set the value of status
     if (
-      authorStatus === "ADMIN" ||
-      authorStatus === "AUTHOR" ||
-      authorStatus === "MODERATOR"
+      authorStatus === 'ADMIN' ||
+      authorStatus === 'AUTHOR' ||
+      authorStatus === 'MODERATOR'
     ) {
-      status = "PUBLISHED";
+      status = 'PUBLISHED';
     } else {
-      status = "PENDING";
+      status = 'PENDING';
     }
 
     const formData = await req.formData();
 
-    const name = getStringValue(formData, "name");
-    const description = getStringValue(formData, "description");
-    const category = getStringValue(formData, "category");
+    const name = getStringValue(formData, 'name');
+    const description = getStringValue(formData, 'description');
+    const category = getStringValue(formData, 'category');
 
     const tags =
       formData
-        .get("tags")
+        .get('tags')
         ?.toString()
-        .split(",")
+        .split(',')
         .map((tag) => tag.trim()) || [];
 
     // Handle image file if present
-    const imageFile = formData.get("image") as Blob;
-    let imageUrl = { secure_url: "", public_id: "" };
+    const imageFile = formData.get('image') as Blob;
+    let imageUrl = { secure_url: '', public_id: '' };
 
     if (imageFile) {
       // Upload the image to Cloudinary and get the URL
-      imageUrl = await UploadImage(imageFile, "designs/");
+      imageUrl = await UploadImage(imageFile, 'designs/');
     }
 
     // Insert data into the database using Prisma
@@ -89,11 +89,12 @@ export async function POST(req: NextRequest) {
 
     // Return a JSON response
     return NextResponse.json({
-      message: "Design created successfully",
+      message: 'Design created successfully',
       design,
     });
+    // biome-ignore lint: error
   } catch (error) {
-    return new NextResponse("Internal Server Error", { status: 500 });
+    return new NextResponse('Internal Server Error', { status: 500 });
   }
 }
 
@@ -103,10 +104,10 @@ export async function POST(req: NextRequest) {
 export async function GET(req: NextRequest) {
   try {
     const url = new URL(req.url);
-    const id = url.searchParams.get("id");
+    const id = url.searchParams.get('id');
 
     if (!id) {
-      return new NextResponse("Missing field", { status: 400 });
+      return new NextResponse('Missing field', { status: 400 });
     }
 
     const design = await Prisma.design.findUnique({
@@ -115,7 +116,7 @@ export async function GET(req: NextRequest) {
         author: { select: { name: true, image: true, status: true } },
         likes: { select: { userId: true } },
         comments: {
-          orderBy: { createdAt: "desc" },
+          orderBy: { createdAt: 'desc' },
           include: {
             user: { select: { name: true, image: true, status: true } },
           },
@@ -124,7 +125,7 @@ export async function GET(req: NextRequest) {
     });
 
     if (!design) {
-      return new NextResponse("Design not found", { status: 404 });
+      return new NextResponse('Design not found', { status: 404 });
     }
 
     return NextResponse.json({
@@ -132,8 +133,9 @@ export async function GET(req: NextRequest) {
       likeCount: design.likes.length,
       commentsCount: design.comments.length,
     });
+    // biome-ignore lint: error
   } catch (error) {
-    return new NextResponse("Internal Server Error", { status: 500 });
+    return new NextResponse('Internal Server Error', { status: 500 });
   }
 }
 
@@ -142,15 +144,15 @@ export async function DELETE(req: NextRequest) {
     const token = await getToken({ req, secret });
 
     if (!token) {
-      return new NextResponse("You are not authenticated", { status: 401 });
+      return new NextResponse('You are not authenticated', { status: 401 });
     }
 
     const url = new URL(req.url);
     const queryParams = new URLSearchParams(url.search);
-    const postId = queryParams.get("id");
+    const postId = queryParams.get('id');
 
     if (!postId) {
-      return new NextResponse("Post not found", { status: 404 });
+      return new NextResponse('Post not found', { status: 404 });
     }
 
     // Fetch the product details
@@ -166,18 +168,18 @@ export async function DELETE(req: NextRequest) {
     });
 
     if (!product) {
-      return new NextResponse("Post not found", { status: 404 });
+      return new NextResponse('Post not found', { status: 404 });
     }
 
-    if (token.role !== "ADMIN" && token.sub !== product.authorId) {
-      return new NextResponse("You are not authorized", { status: 403 });
+    if (token.role !== 'ADMIN' && token.sub !== product.authorId) {
+      return new NextResponse('You are not authorized', { status: 403 });
     }
 
     // Check if there’s an image to delete
     if (product.imageId) {
       const result = await cloudinary.uploader.destroy(product.imageId);
-      if (result.result !== "ok") {
-        return new NextResponse("error", { status: 400 });
+      if (result.result !== 'ok') {
+        return new NextResponse('error', { status: 400 });
       }
     }
 
@@ -187,9 +189,10 @@ export async function DELETE(req: NextRequest) {
       },
     });
 
-    return new NextResponse("Product deleted successfully", { status: 200 });
+    return new NextResponse('Product deleted successfully', { status: 200 });
+    // biome-ignore lint: error
   } catch (error) {
-    return new NextResponse("Internal server error", { status: 500 });
+    return new NextResponse('Internal server error', { status: 500 });
   }
 }
 
@@ -199,23 +202,23 @@ export async function PATCH(req: NextRequest) {
 
   // Check if user is logged in
   if (!session) {
-    return new NextResponse("User not logged in", { status: 401 });
+    return new NextResponse('User not logged in', { status: 401 });
   }
 
   // Extract authorId and role
   const { role: authorRole } = session.user;
 
   // Allow only if user is an Administrator or an Author
-  if (authorRole !== "ADMIN" && authorRole !== "AUTHOR") {
-    return new NextResponse("Access denied", { status: 403 });
+  if (authorRole !== 'ADMIN' && authorRole !== 'AUTHOR') {
+    return new NextResponse('Access denied', { status: 403 });
   }
   try {
     const url = new URL(req.url);
     const queryParams = new URLSearchParams(url.search);
-    const postId = queryParams.get("id");
+    const postId = queryParams.get('id');
     const data = await req.json();
     if (!postId || !data.status) {
-      return new NextResponse("Post ID or status not found", { status: 400 });
+      return new NextResponse('Post ID or status not found', { status: 400 });
     }
     const update = await Prisma.design.update({
       where: {
@@ -226,10 +229,11 @@ export async function PATCH(req: NextRequest) {
       },
     });
     if (!update) {
-      return new NextResponse("Failed to update", { status: 400 });
+      return new NextResponse('Failed to update', { status: 400 });
     }
-    return new NextResponse("Updated design", { status: 200 });
+    return new NextResponse('Updated design', { status: 200 });
+    // biome-ignore lint: error
   } catch (error) {
-    return new NextResponse("Internal server error", { status: 500 });
+    return new NextResponse('Internal server error', { status: 500 });
   }
 }

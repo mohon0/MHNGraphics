@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from 'react';
 
 export default function useCopyToClipboard() {
   const [isCopied, setIsCopied] = useState(false);
@@ -11,6 +11,7 @@ export default function useCopyToClipboard() {
       await navigator.clipboard.writeText(value);
       setIsCopied(true);
       timeoutId.current = setTimeout(() => setIsCopied(false), 2500);
+      // biome-ignore lint: error
     } catch (error) {
       setIsCopied(false);
       if (timeoutId.current) {

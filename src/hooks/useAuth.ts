@@ -1,6 +1,6 @@
-import { signIn, useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
-import { useEffect, useMemo } from "react";
+import { useRouter } from 'next/navigation';
+import { signIn, useSession } from 'next-auth/react';
+import { useEffect, useMemo } from 'react';
 
 interface AuthOptions {
   /** Specify a required role (e.g., "ADMIN"). */
@@ -15,13 +15,13 @@ interface AuthOptions {
  */
 export function useAuth({
   requiredRole,
-  redirectTo = "/access-denied",
+  redirectTo = '/access-denied',
 }: AuthOptions = {}) {
   const { data: session, status } = useSession();
   const router = useRouter();
 
-  const isAuthenticated = status === "authenticated";
-  const isLoading = status === "loading";
+  const isAuthenticated = status === 'authenticated';
+  const isLoading = status === 'loading';
   const user = session?.user ?? null;
 
   // Memoize the role check so that it recalculates only when 'user' or 'requiredRole' changes.

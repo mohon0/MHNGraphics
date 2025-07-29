@@ -1,6 +1,6 @@
-import { Prisma } from "@/components/helper/prisma/Prisma";
-import { getToken } from "next-auth/jwt";
-import { NextRequest, NextResponse } from "next/server";
+import { type NextRequest, NextResponse } from 'next/server';
+import { getToken } from 'next-auth/jwt';
+import { Prisma } from '@/components/helper/prisma/Prisma';
 
 const secret = process.env.NEXTAUTH_SECRET;
 
@@ -9,7 +9,7 @@ export async function GET(req: NextRequest) {
     const token = await getToken({ req, secret });
 
     if (!token)
-      return NextResponse.json({ message: "Token not found" }, { status: 401 });
+      return NextResponse.json({ message: 'Token not found' }, { status: 401 });
 
     const id = token.sub;
 
@@ -40,29 +40,28 @@ export async function GET(req: NextRequest) {
         design: {
           take: 5,
           orderBy: {
-            createdAt: "desc",
+            createdAt: 'desc',
           },
         },
         comments: {
           take: 5,
-          orderBy: { createdAt: "desc" },
+          orderBy: { createdAt: 'desc' },
         },
       },
     });
 
     // Return a 404 if the user doesn't exist
     if (!userData) {
-      return NextResponse.json({ error: "User not found" }, { status: 404 });
+      return NextResponse.json({ error: 'User not found' }, { status: 404 });
     }
 
     // Return the user data
     return NextResponse.json(userData, { status: 200 });
+    // biome-ignore lint: error
   } catch (error) {
-    console.error("Error fetching user data:", error);
-
     // Return an error response
     return NextResponse.json(
-      { error: "An error occurred while fetching user data" },
+      { error: 'An error occurred while fetching user data' },
       { status: 500 },
     );
   }

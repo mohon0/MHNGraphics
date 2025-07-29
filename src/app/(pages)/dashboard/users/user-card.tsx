@@ -1,8 +1,10 @@
-import { convertDateString } from "@/components/helper/date/convertDateString";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
+import { Eye, Trash2 } from 'lucide-react';
+import Link from 'next/link';
+import { convertDateString } from '@/components/helper/date/convertDateString';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
 import {
   Dialog,
   DialogClose,
@@ -12,23 +14,21 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@/components/ui/dialog";
+} from '@/components/ui/dialog';
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from '@/components/ui/select';
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "@/components/ui/tooltip";
-import { UserProfile } from "@/utils/Interface";
-import { Eye, Trash2 } from "lucide-react";
-import Link from "next/link";
+} from '@/components/ui/tooltip';
+import type { UserProfile } from '@/utils/Interface';
 
 type UserCardProps = {
   item: UserProfile;
@@ -38,66 +38,66 @@ type UserCardProps = {
 
 export function UserCard({ item, onDelete, onStatusChange }: UserCardProps) {
   return (
-    <Card className="overflow-hidden transition-all hover:shadow-md">
-      <CardContent className="p-0">
-        <div className="flex items-start gap-4 p-4">
+    <Card className='overflow-hidden transition-all hover:shadow-md'>
+      <CardContent className='p-0'>
+        <div className='flex items-start gap-4 p-4'>
           <Link href={`/profile?id=${item.id}`}>
-            <Avatar className="h-14 w-14 border">
+            <Avatar className='h-14 w-14 border'>
               <AvatarImage src={item.image} alt={item.name} />
-              <AvatarFallback className="bg-primary/10 text-xl font-medium text-primary">
+              <AvatarFallback className='bg-primary/10 text-xl font-medium text-primary'>
                 {item.name
-                  .split(" ")
+                  .split(' ')
                   .map((n: string) => n[0])
-                  .join("")}
+                  .join('')}
               </AvatarFallback>
             </Avatar>
           </Link>
-          <div className="flex-1 space-y-2">
-            <div className="flex items-center justify-between">
+          <div className='flex-1 space-y-2'>
+            <div className='flex items-center justify-between'>
               <Link
                 href={`/profile?id=${item.id}`}
-                className="font-medium hover:text-primary"
+                className='font-medium hover:text-primary'
               >
                 {item.name}
               </Link>
-              {item.status === "ADMIN" && (
-                <Badge variant="secondary" className="ml-2">
+              {item.status === 'ADMIN' && (
+                <Badge variant='secondary' className='ml-2'>
                   Admin
                 </Badge>
               )}
             </div>
-            <div className="text-sm text-muted-foreground">{item.email}</div>
-            <div className="flex items-center gap-2 text-xs text-muted-foreground">
+            <div className='text-sm text-muted-foreground'>{item.email}</div>
+            <div className='flex items-center gap-2 text-xs text-muted-foreground'>
               <span>Joined {convertDateString(item.createdAt.toString())}</span>
             </div>
           </div>
         </div>
-        <div className="flex items-center justify-between border-t bg-muted/30 p-3">
-          {item.status === "ADMIN" ? (
+        <div className='flex items-center justify-between border-t bg-muted/30 p-3'>
+          {item.status === 'ADMIN' ? (
             <Badge>Admin</Badge>
           ) : (
             <Select
               defaultValue={item.status}
               onValueChange={(value) => onStatusChange(item.id, value)}
             >
-              <SelectTrigger className="h-8 w-32">
-                <SelectValue placeholder="Status" />
+              <SelectTrigger className='h-8 w-32'>
+                <SelectValue placeholder='Status' />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="USER">User</SelectItem>
-                <SelectItem value="AUTHOR">Author</SelectItem>
+                <SelectItem value='USER'>User</SelectItem>
+                <SelectItem value='AUTHOR'>Author</SelectItem>
               </SelectContent>
             </Select>
           )}
-          <div className="flex items-center gap-2">
+          <div className='flex items-center gap-2'>
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>
                   <Link
                     href={`/profile?id=${item.id}`}
-                    className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-primary/10 text-primary hover:bg-primary/20"
+                    className='inline-flex h-8 w-8 items-center justify-center rounded-full bg-primary/10 text-primary hover:bg-primary/20'
                   >
-                    <Eye className="h-4 w-4" />
+                    <Eye className='h-4 w-4' />
                   </Link>
                 </TooltipTrigger>
                 <TooltipContent>View Profile</TooltipContent>
@@ -110,14 +110,14 @@ export function UserCard({ item, onDelete, onStatusChange }: UserCardProps) {
                   <Dialog>
                     <DialogTrigger asChild>
                       <Button
-                        variant="ghost"
-                        size="icon"
-                        className="h-8 w-8 rounded-full text-destructive hover:bg-destructive/10 hover:text-destructive"
+                        variant='ghost'
+                        size='icon'
+                        className='h-8 w-8 rounded-full text-destructive hover:bg-destructive/10 hover:text-destructive'
                       >
-                        <Trash2 className="h-4 w-4" />
+                        <Trash2 className='h-4 w-4' />
                       </Button>
                     </DialogTrigger>
-                    <DialogContent className="sm:max-w-md">
+                    <DialogContent className='sm:max-w-md'>
                       <DialogHeader>
                         <DialogTitle>Delete User</DialogTitle>
                         <DialogDescription>
@@ -127,14 +127,14 @@ export function UserCard({ item, onDelete, onStatusChange }: UserCardProps) {
                       </DialogHeader>
                       <DialogFooter>
                         <DialogClose asChild>
-                          <Button type="button" variant="secondary">
+                          <Button type='button' variant='secondary'>
                             Cancel
                           </Button>
                         </DialogClose>
                         <DialogClose asChild>
                           <Button
-                            type="button"
-                            variant="destructive"
+                            type='button'
+                            variant='destructive'
                             onClick={() => onDelete(item.id)}
                           >
                             Delete

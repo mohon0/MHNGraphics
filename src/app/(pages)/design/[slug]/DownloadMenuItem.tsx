@@ -1,9 +1,9 @@
-import { DropdownMenuItem } from "@/components/ui/dropdown-menu";
+import { DropdownMenuItem } from '@/components/ui/dropdown-menu';
 import {
-  type ImageDimensions,
   getDynamicDimensions,
   getTransformedImageUrl,
-} from "@/utils/imageDimensions";
+  type ImageDimensions,
+} from '@/utils/imageDimensions';
 
 interface DownloadMenuItemProps {
   imageDimensions: ImageDimensions;
@@ -33,11 +33,11 @@ export default function DownloadMenuItem({
         imageDimensions.height,
         targetHeight,
       )
-    : originalImage.replace("/upload/", "/upload/fl_attachment/");
+    : originalImage.replace('/upload/', '/upload/fl_attachment/');
 
   return (
     <DropdownMenuItem asChild>
-      <a href={downloadUrl} download className="cursor-pointer">
+      <a href={downloadUrl} download className='cursor-pointer'>
         {label} ({width} × {height})
       </a>
     </DropdownMenuItem>

@@ -1,4 +1,4 @@
-import nodemailer from "nodemailer";
+import nodemailer from 'nodemailer';
 
 export default async function sendVerificationEmail(
   email: string,
@@ -6,7 +6,7 @@ export default async function sendVerificationEmail(
 ) {
   const transporter = nodemailer.createTransport({
     host: process.env.SMTP_SERVER,
-    port: parseInt(process.env.SMTP_PORT || "587"),
+    port: parseInt(process.env.SMTP_PORT || '587'),
     secure: false,
     auth: {
       user: process.env.SMTP_USER,
@@ -17,7 +17,7 @@ export default async function sendVerificationEmail(
   const mailData = {
     from: process.env.SMTP_SENDER,
     to: email,
-    subject: "User Registration Verification Code",
+    subject: 'User Registration Verification Code',
     text: `Your verification code for user registration: ${verificationCode} | Sent from: Oylkka Graphics`,
     html: `
     <div style="font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 20px;">
@@ -54,7 +54,7 @@ const siteUrl = process.env.NEXT_PUBLIC_SITE_URL;
 export async function sendWelcomeEmail(email: string) {
   const transporter = nodemailer.createTransport({
     host: process.env.SMTP_SERVER,
-    port: parseInt(process.env.SMTP_PORT || "587"),
+    port: parseInt(process.env.SMTP_PORT || '587'),
     secure: false,
     auth: {
       user: process.env.SMTP_USER,
@@ -65,7 +65,7 @@ export async function sendWelcomeEmail(email: string) {
   const mailData = {
     from: `"Oylkka Graphics" <${process.env.SMTP_SENDER}>`,
     to: email,
-    subject: "🎉 Welcome to Oylkka Graphics! Let’s Get Started!",
+    subject: '🎉 Welcome to Oylkka Graphics! Let’s Get Started!',
     text: `Thank you for subscribing to Oylkka Graphics! We're thrilled to have you with us. Stay tuned for updates, resources, and more!`,
     html: `
     <div style="font-family: Arial, sans-serif; background-color: #f9fafb; padding: 40px;">
@@ -124,7 +124,7 @@ export async function sendWelcomeEmail(email: string) {
 export async function sendRegistrationEmail(email: string) {
   const transporter = nodemailer.createTransport({
     host: process.env.SMTP_SERVER,
-    port: parseInt(process.env.SMTP_PORT || "587"),
+    port: parseInt(process.env.SMTP_PORT || '587'),
     secure: false,
     auth: {
       user: process.env.SMTP_USER,
@@ -135,7 +135,7 @@ export async function sendRegistrationEmail(email: string) {
   const mailData = {
     from: `"Oylkka Graphics" <${process.env.SMTP_SENDER}>`,
     to: email,
-    subject: "🎉 Welcome to Oylkka Graphics! Let’s Get Started!",
+    subject: '🎉 Welcome to Oylkka Graphics! Let’s Get Started!',
     text: `Thank you for joining Oylkka Graphics! We're thrilled to have you with us. Stay tuned for updates, resources, and more!`,
     html: `
     <div style="font-family: Arial, sans-serif; background-color: #f9fafb; padding: 40px;">

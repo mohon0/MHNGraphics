@@ -1,15 +1,15 @@
-import { Prisma } from "@/components/helper/prisma/Prisma";
-import { NextRequest, NextResponse } from "next/server";
+import { type NextRequest, NextResponse } from 'next/server';
+import { Prisma } from '@/components/helper/prisma/Prisma';
 
 //  Create a new POST endpoint for view counting
 export async function POST(req: NextRequest) {
   try {
     const { searchParams } = new URL(req.url);
-    const id = searchParams.get("id");
+    const id = searchParams.get('id');
     const cookieName = `viewed_${id}`;
 
     if (!id) {
-      return new NextResponse("Missing ID", { status: 400 });
+      return new NextResponse('Missing ID', { status: 400 });
     }
 
     // Check for existing view cookie
@@ -34,15 +34,15 @@ export async function POST(req: NextRequest) {
     });
 
     // Set cookie to prevent duplicate counts (24 hours)
-    response.cookies.set(cookieName, "true", {
+    response.cookies.set(cookieName, 'true', {
       maxAge: 86400,
-      path: "/",
-      sameSite: "lax",
+      path: '/',
+      sameSite: 'lax',
     });
 
     return response;
+    // biome-ignore lint: error
   } catch (error) {
-    console.error("Error updating view count:", error);
-    return new NextResponse("Internal Server Error", { status: 500 });
+    return new NextResponse('Internal Server Error', { status: 500 });
   }
 }

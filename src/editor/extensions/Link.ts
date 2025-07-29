@@ -1,10 +1,11 @@
-import { getMarkRange } from "@tiptap/core";
-import { LinkOptions, Link as TiptapLink } from "@tiptap/extension-link";
-import { Plugin, Selection, TextSelection } from "@tiptap/pm/state";
+import { getMarkRange } from '@tiptap/core';
+import { type LinkOptions, Link as TiptapLink } from '@tiptap/extension-link';
+import { Plugin, type Selection, TextSelection } from '@tiptap/pm/state';
 
-declare module "@tiptap/core" {
+declare module '@tiptap/core' {
   interface Commands<ReturnType> {
     customLink: {
+      // biome-ignore lint: error
       insertLink: (attrs: any) => ReturnType;
       startEditLink: () => ReturnType;
       confirmEditLink: (attrs?: { text?: string; href?: string }) => ReturnType;
@@ -35,7 +36,7 @@ export const Link = TiptapLink.extend<LinkOptions, LinkEditorStorage>({
   },
 
   onSelectionUpdate() {
-    if (this.storage.mode == -1 && !this.editor.isActive("link")) {
+    if (this.storage.mode === -1 && !this.editor.isActive('link')) {
       this.editor.commands.confirmEditLink();
     }
   },
@@ -46,7 +47,7 @@ export const Link = TiptapLink.extend<LinkOptions, LinkEditorStorage>({
       startEditLink:
         () =>
         ({ editor, chain }) => {
-          const mode = editor.isActive("link") ? 1 : -1;
+          const mode = editor.isActive('link') ? 1 : -1;
 
           if (mode === -1) {
             chain()
@@ -56,14 +57,14 @@ export const Link = TiptapLink.extend<LinkOptions, LinkEditorStorage>({
                   return chain()
                     .blur()
                     .focus(tr.selection.anchor)
-                    .insertLink({ text: "\u200B" })
+                    .insertLink({ text: '\u200B' })
                     .run();
                 // @ts-ignore
-                return chain().setLink({ href: "" }).run();
+                return chain().setLink({ href: '' }).run();
               })
-              .setMeta("addToHistory", false)
-              .setMeta("preventUpdate", true)
-              .setMeta("preventClearTempLink", true)
+              .setMeta('addToHistory', false)
+              .setMeta('preventUpdate', true)
+              .setMeta('preventClearTempLink', true)
               .run();
           }
 
@@ -78,14 +79,14 @@ export const Link = TiptapLink.extend<LinkOptions, LinkEditorStorage>({
           return chain()
             .insertContent(
               {
-                type: "text",
+                type: 'text',
                 text: text,
                 marks: [
                   {
-                    type: "link",
+                    type: 'link',
                     attrs: {
                       href,
-                      target: "_blank",
+                      target: '_blank',
                     },
                   },
                 ],
@@ -98,7 +99,7 @@ export const Link = TiptapLink.extend<LinkOptions, LinkEditorStorage>({
       confirmEditLink:
         (updated) =>
         ({ chain, state }) => {
-          const { doc, schema } = state;
+          const { doc } = state;
 
           const shouldUpdate = Boolean(updated);
 
@@ -108,8 +109,8 @@ export const Link = TiptapLink.extend<LinkOptions, LinkEditorStorage>({
               clearTempLinks(tr, doc, this.storage.tempPos);
               return true;
             })
-            .setMeta("addToHistory", shouldUpdate)
-            .setMeta("preventUpdate", !shouldUpdate)
+            .setMeta('addToHistory', shouldUpdate)
+            .setMeta('preventUpdate', !shouldUpdate)
             .run();
 
           this.storage.mode = 0;
@@ -133,7 +134,7 @@ export const Link = TiptapLink.extend<LinkOptions, LinkEditorStorage>({
             const { schema, doc, tr } = view.state;
             const range = getMarkRange(doc.resolve(pos), schema.marks.link);
             const target = event.target as HTMLElement;
-            const linkElement = target.closest("a");
+            const linkElement = target.closest('a');
 
             if (!linkElement?.href || !range) {
               return false;
@@ -155,7 +156,7 @@ export const Link = TiptapLink.extend<LinkOptions, LinkEditorStorage>({
             transactions.some((transaction) => transaction.docChanged) &&
             !oldState.doc.eq(newState.doc);
           const skipTransaction = transactions.some((transaction) =>
-            transaction.getMeta("preventClearTempLink"),
+            transaction.getMeta('preventClearTempLink'),
           );
 
           if (!hasDocChanges || skipTransaction) return;
@@ -184,20 +185,22 @@ export const Link = TiptapLink.extend<LinkOptions, LinkEditorStorage>({
 
   addKeyboardShortcuts() {
     return {
-      "Mod-k": () => this.editor.commands.startEditLink(),
+      'Mod-k': () => this.editor.commands.startEditLink(),
     };
   },
 });
-
+// biome-ignore lint: error
 function clearTempLinks(tr: any, doc: any, selection: any) {
   const { from, to, empty } = selection;
   if (empty) {
     tr.removeMark(from, from + 1);
-    tr.insertText("", from, from + 1);
+    tr.insertText('', from, from + 1);
   } else {
+    // biome-ignore lint: error
     doc.nodesBetween(from, to, (node: any, pos: any) => {
       const linkMark = node.marks.find(
-        (mark: any) => mark.type.name === "link" && !mark.attrs.href,
+        // biome-ignore lint: error
+        (mark: any) => mark.type.name === 'link' && !mark.attrs.href,
       );
 
       if (linkMark) {

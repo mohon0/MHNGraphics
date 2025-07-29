@@ -1,19 +1,19 @@
-import { QUERY_KEYS } from "@/constant/QueryKeys";
-import { useDebounce } from "@/hooks/useDebounce";
-import { NewDesignSchemaType } from "@/lib/Schemas";
-import { Design } from "@/utils/Interface";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import axios from "axios";
-import { toast } from "sonner";
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import axios from 'axios';
+import { toast } from 'sonner';
+import { QUERY_KEYS } from '@/constant/QueryKeys';
+import { useDebounce } from '@/hooks/useDebounce';
+import type { NewDesignSchemaType } from '@/lib/Schemas';
+import type { Design } from '@/utils/Interface';
 
 // Common fetch function
 async function fetchDesignData(url: string, params: object) {
   try {
     const response = await axios.get(url, { params });
     return response.data;
+    // biome-ignore lint: error
   } catch (error) {
-    console.error("Error fetching design data:", error);
-    throw new Error("Failed to fetch data");
+    throw new Error('Failed to fetch data');
   }
 }
 
@@ -42,7 +42,7 @@ export function useFetchUserDesign({
       tag,
     ],
     queryFn: () =>
-      fetchDesignData("/api/design/user-design", {
+      fetchDesignData('/api/design/user-design', {
         page,
         category,
         searchQuery: debouncedSearchQuery,
@@ -65,7 +65,7 @@ export function useFetchAllDesign({ page, category, searchQuery, tag }: Props) {
       tag,
     ],
     queryFn: () =>
-      fetchDesignData("/api/design/all-design", {
+      fetchDesignData('/api/design/all-design', {
         page,
         category,
         searchQuery: debouncedSearchQuery,
@@ -79,19 +79,20 @@ export const useCreateDesign = (resetForm: () => void) => {
   return useMutation({
     mutationFn: async (formData: FormData) => {
       // Create the axios promise.
-      const apiPromise = axios.post("/api/design/single-design", formData, {
-        headers: { "Content-Type": "multipart/form-data" },
+      const apiPromise = axios.post('/api/design/single-design', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
       });
       // Use toast.promise to show loading, success, and error notifications.
       toast.promise(apiPromise, {
-        loading: "Uploading, please wait...",
-        success: "Design successfully added",
-        error: (err: any) => err?.message || "Failed to add Design",
+        loading: 'Uploading, please wait...',
+        success: 'Design successfully added',
+        // biome-ignore lint: error
+        error: (err: any) => err?.message || 'Failed to add Design',
       });
       // Return the axios promise with a chained then.
       return apiPromise.then((response) => {
         if (response.status !== 200) {
-          throw new Error("Server error");
+          throw new Error('Server error');
         }
         return response.data;
       });
@@ -101,9 +102,6 @@ export const useCreateDesign = (resetForm: () => void) => {
       // Invalidate queries so that the data refetches.
       queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.ALL_DESIGN] });
       queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.USER_DESIGN] });
-    },
-    onError: (error: any) => {
-      console.error("Failed to add article:", error);
     },
   });
 };
@@ -118,16 +116,16 @@ export const useDeleteDesign = () => {
         .then((res) => res.data); // Unwrap response before passing to toast
 
       return toast.promise(deletePromise, {
-        loading: "Deleting design...",
+        loading: 'Deleting design...',
         success: (data) => {
           queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.ALL_DESIGN] });
           queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.USER_DESIGN] });
-          return data.message || "Design deleted successfully ✅";
+          return data.message || 'Design deleted successfully ✅';
         },
         error: (error) =>
           axios.isAxiosError(error)
-            ? error.response?.data?.message || "Failed to delete design ❌"
-            : "Something went wrong. Please try again.",
+            ? error.response?.data?.message || 'Failed to delete design ❌'
+            : 'Something went wrong. Please try again.',
       });
     },
   });
@@ -145,16 +143,16 @@ export const useUpdateDesignStatus = () => {
         .then((res) => res.data); // Unwrap response before passing to toast
 
       return toast.promise(updatePromise, {
-        loading: "Updating design status...",
+        loading: 'Updating design status...',
         success: (data) => {
           queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.ALL_DESIGN] });
           queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.USER_DESIGN] });
-          return data.message || "Design updated successfully 🎉";
+          return data.message || 'Design updated successfully 🎉';
         },
         error: (error) =>
           axios.isAxiosError(error)
-            ? error.response?.data?.message || "Failed to update design ❌"
-            : "Something went wrong. Please try again.",
+            ? error.response?.data?.message || 'Failed to update design ❌'
+            : 'Something went wrong. Please try again.',
       });
     },
   });
@@ -209,7 +207,7 @@ export function useUpdateDesign({ designId, imageFile }: UseUpdateDesignProps) {
   const updateDesignMutation = useMutation({
     mutationFn: async (formData: NewDesignSchemaType) => {
       if (!designId) {
-        throw new Error("Design ID is missing");
+        throw new Error('Design ID is missing');
       }
 
       const submissionData = new FormData();
@@ -221,18 +219,18 @@ export function useUpdateDesign({ designId, imageFile }: UseUpdateDesignProps) {
         }
       });
 
-      submissionData.append("productId", designId);
+      submissionData.append('productId', designId);
 
       if (imageFile) {
-        submissionData.append("image", imageFile);
+        submissionData.append('image', imageFile);
       }
 
       const response = await axios.patch(
-        "/api/design/edit-design",
+        '/api/design/edit-design',
         submissionData,
         {
           headers: {
-            "Content-Type": "multipart/form-data",
+            'Content-Type': 'multipart/form-data',
           },
         },
       );
@@ -249,10 +247,10 @@ export function useUpdateDesign({ designId, imageFile }: UseUpdateDesignProps) {
 
   const submitDesignUpdate = (formData: NewDesignSchemaType) => {
     return toast.promise(updateDesignMutation.mutateAsync(formData), {
-      loading: "Updating design...",
-      success: "Design successfully updated",
+      loading: 'Updating design...',
+      success: 'Design successfully updated',
       error: (err) =>
-        `Error: ${err instanceof Error ? err.message : "Failed to update design"}`,
+        `Error: ${err instanceof Error ? err.message : 'Failed to update design'}`,
     });
   };
 
@@ -285,18 +283,18 @@ export function useUpdateDesignLike() {
         .then((res) => res.data);
 
       return toast.promise(updatePromise, {
-        loading: "Updating like status...",
+        loading: 'Updating like status...',
         success: (data) => {
           // Invalidate the queries related to design so it will refetch and update the UI
           queryClient.invalidateQueries({
             queryKey: [QUERY_KEYS.SINGLE_DESIGN, postId],
           });
-          return data.message || "Like status updated successfully 🎉";
+          return data.message || 'Like status updated successfully 🎉';
         },
         error: (error) =>
           axios.isAxiosError(error)
-            ? error.response?.data?.message || "Failed to update like status ❌"
-            : "Something went wrong. Please try again.",
+            ? error.response?.data?.message || 'Failed to update like status ❌'
+            : 'Something went wrong. Please try again.',
       });
     },
   });

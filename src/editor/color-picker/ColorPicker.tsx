@@ -1,15 +1,15 @@
-"use client";
+'use client';
 
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { PopoverClose } from "@radix-ui/react-popover";
-import { PaletteIcon } from "lucide-react";
-import { useState } from "react";
-import { HexColorPicker } from "react-colorful";
-import { COLORS, MORE_COLORS } from "./color";
-import ColorButton from "./ColorButton";
+import { PopoverClose } from '@radix-ui/react-popover';
+import { PaletteIcon } from 'lucide-react';
+import { useState } from 'react';
+import { HexColorPicker } from 'react-colorful';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import ColorButton from './ColorButton';
+import { COLORS, MORE_COLORS } from './color';
 
 interface ColorPickerProps {
   color: string;
@@ -25,7 +25,7 @@ const ColorPicker = ({
   const [color, setColor] = useState(initialColor);
 
   const normalizeColor = (color: string): string => {
-    const normalized = color.startsWith("#") ? color : `#${color}`;
+    const normalized = color.startsWith('#') ? color : `#${color}`;
     return normalized.length === 4
       ? `${normalized}${normalized.slice(1)}`
       : normalized;
@@ -46,9 +46,9 @@ const ColorPicker = ({
   };
 
   const renderColorList = (colors: string[], label: string) => (
-    <div className="space-y-2">
+    <div className='space-y-2'>
       <Label>{label}</Label>
-      <div className="flex flex-wrap gap-2">
+      <div className='flex flex-wrap gap-2'>
         {colors.map((item) => (
           <ColorButton
             key={item}
@@ -62,27 +62,27 @@ const ColorPicker = ({
   );
 
   return (
-    <div className="w-72 space-y-4 p-4">
-      <Tabs defaultValue="swatches" className="w-full">
-        <TabsList className="grid w-full grid-cols-2">
-          <TabsTrigger value="swatches">Swatches</TabsTrigger>
-          <TabsTrigger value="custom">Custom</TabsTrigger>
+    <div className='w-72 space-y-4 p-4'>
+      <Tabs defaultValue='swatches' className='w-full'>
+        <TabsList className='grid w-full grid-cols-2'>
+          <TabsTrigger value='swatches'>Swatches</TabsTrigger>
+          <TabsTrigger value='custom'>Custom</TabsTrigger>
         </TabsList>
-        <TabsContent value="swatches" className="mt-4 space-y-4">
-          {renderColorList(COLORS, "Default Colors")}
-          {renderColorList(MORE_COLORS, "More Colors")}
+        <TabsContent value='swatches' className='mt-4 space-y-4'>
+          {renderColorList(COLORS, 'Default Colors')}
+          {renderColorList(MORE_COLORS, 'More Colors')}
         </TabsContent>
-        <TabsContent value="custom" className="mt-4 space-y-4">
+        <TabsContent value='custom' className='mt-4 space-y-4'>
           <HexColorPicker
             color={color}
             onChange={handleColorChange}
-            className="w-full"
+            className='w-full'
           />
-          <div className="flex items-center space-x-2">
+          <div className='flex items-center space-x-2'>
             <ColorButton color={color} tooltip={false} />
             <Input
               value={color}
-              className="uppercase"
+              className='uppercase'
               onChange={(e) => handleColorChange(e.target.value)}
               autoFocus
             />
@@ -91,11 +91,11 @@ const ColorPicker = ({
       </Tabs>
 
       <PopoverClose asChild>
-        <div className="flex space-x-2">
-          <Button variant="outline" size="icon" onClick={onReset}>
-            <PaletteIcon className="h-4 w-4" />
+        <div className='flex space-x-2'>
+          <Button variant='outline' size='icon' onClick={onReset}>
+            <PaletteIcon className='h-4 w-4' />
           </Button>
-          <Button className="w-full" onClick={handleApply}>
+          <Button className='w-full' onClick={handleApply}>
             Apply
           </Button>
         </div>

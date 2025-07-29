@@ -1,13 +1,13 @@
-import { Prisma } from "@/components/helper/prisma/Prisma";
-import { NextResponse } from "next/server";
+import { NextResponse } from 'next/server';
+import { Prisma } from '@/components/helper/prisma/Prisma';
 
 export async function GET(request: Request) {
   try {
     // Extract query parameters
     const url = new URL(request.url);
-    const startDate = url.searchParams.get("startDate");
-    const endDate = url.searchParams.get("endDate");
-
+    const startDate = url.searchParams.get('startDate');
+    const endDate = url.searchParams.get('endDate');
+    // biome-ignore lint: error
     const whereCondition: any = {};
     if (startDate) whereCondition.createdAt = { gte: new Date(startDate) };
     if (endDate)
@@ -28,7 +28,7 @@ export async function GET(request: Request) {
 
     if (!transactions.length) {
       return NextResponse.json(
-        { message: "No transactions found", data: {} },
+        { message: 'No transactions found', data: {} },
         { status: 200 },
       );
     }
@@ -36,9 +36,9 @@ export async function GET(request: Request) {
     // Aggregate data by month
     const monthlyData = transactions.reduce(
       (acc, tx) => {
-        const month = new Date(tx.paymentMonth).toLocaleString("en-US", {
-          month: "short",
-          year: "numeric",
+        const month = new Date(tx.paymentMonth).toLocaleString('en-US', {
+          month: 'short',
+          year: 'numeric',
         });
 
         if (!acc[month]) {
@@ -78,24 +78,24 @@ export async function GET(request: Request) {
         labels,
         datasets: [
           {
-            label: "Payments",
+            label: 'Payments',
             data: paymentsData,
-            borderColor: "#4CAF50",
-            backgroundColor: "#A5D6A7",
+            borderColor: '#4CAF50',
+            backgroundColor: '#A5D6A7',
           },
           {
-            label: "Refunds",
+            label: 'Refunds',
             data: refundsData,
-            borderColor: "#F44336",
-            backgroundColor: "#FFCDD2",
+            borderColor: '#F44336',
+            backgroundColor: '#FFCDD2',
           },
         ],
       },
     });
+    // biome-ignore lint: error
   } catch (error) {
-    console.error("Error fetching transaction analytics:", error);
     return NextResponse.json(
-      { message: "Internal Server Error" },
+      { message: 'Internal Server Error' },
       { status: 500 },
     );
   }

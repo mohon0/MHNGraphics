@@ -1,5 +1,5 @@
-import { Button } from "@/components/ui/button";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 interface CommentPaginationProps {
   currentPage: number;
@@ -47,7 +47,7 @@ export function CommentPagination({
 
       // Add ellipsis if needed
       if (start > 2) {
-        pages.push("ellipsis");
+        pages.push('ellipsis');
       }
 
       // Add middle pages
@@ -57,7 +57,7 @@ export function CommentPagination({
 
       // Add ellipsis if needed
       if (end < totalPages - 1) {
-        pages.push("ellipsis");
+        pages.push('ellipsis');
       }
 
       // Always show last page
@@ -68,32 +68,33 @@ export function CommentPagination({
   };
 
   return (
-    <div className="flex items-center justify-center gap-1">
+    <div className='flex items-center justify-center gap-1'>
       <Button
-        variant="outline"
-        size="icon"
+        variant='outline'
+        size='icon'
         onClick={() => onPageChange(currentPage - 1)}
         disabled={disabled || currentPage === 1}
       >
-        <ChevronLeft className="h-4 w-4" />
-        <span className="sr-only">Previous page</span>
+        <ChevronLeft className='h-4 w-4' />
+        <span className='sr-only'>Previous page</span>
       </Button>
 
       {getPageNumbers().map((page, index) => (
+        // biome-ignore lint: error
         <div key={index}>
-          {page === "ellipsis" ? (
+          {page === 'ellipsis' ? (
             <Button
-              variant="ghost"
-              size="icon"
+              variant='ghost'
+              size='icon'
               disabled
-              className="cursor-default"
+              className='cursor-default'
             >
               ...
             </Button>
           ) : (
             <Button
-              variant={currentPage === page ? "default" : "outline"}
-              size="icon"
+              variant={currentPage === page ? 'default' : 'outline'}
+              size='icon'
               onClick={() => onPageChange(page as number)}
               disabled={disabled}
             >
@@ -104,13 +105,13 @@ export function CommentPagination({
       ))}
 
       <Button
-        variant="outline"
-        size="icon"
+        variant='outline'
+        size='icon'
         onClick={() => onPageChange(currentPage + 1)}
         disabled={disabled || currentPage === totalPages}
       >
-        <ChevronRight className="h-4 w-4" />
-        <span className="sr-only">Next page</span>
+        <ChevronRight className='h-4 w-4' />
+        <span className='sr-only'>Next page</span>
       </Button>
     </div>
   );

@@ -1,7 +1,7 @@
-import { authOptions } from "@/app/api/auth/[...nextauth]/Options";
-import Prisma from "@/lib/prisma";
-import { getServerSession } from "next-auth";
-import { type NextRequest, NextResponse } from "next/server";
+import { type NextRequest, NextResponse } from 'next/server';
+import { getServerSession } from 'next-auth';
+import { authOptions } from '@/app/api/auth/[...nextauth]/Options';
+import Prisma from '@/lib/prisma';
 
 interface CustomSession {
   user: {
@@ -17,20 +17,20 @@ export async function POST(req: NextRequest) {
   try {
     const session = (await getServerSession(authOptions)) as CustomSession;
     if (!session?.user?.id) {
-      return new NextResponse("Unauthorized", { status: 401 });
+      return new NextResponse('Unauthorized', { status: 401 });
     }
 
     const { searchParams } = new URL(req.url);
-    const conversationId = searchParams.get("conversationId");
+    const conversationId = searchParams.get('conversationId');
 
     if (!conversationId) {
-      return new NextResponse("Conversation ID is required", { status: 400 });
+      return new NextResponse('Conversation ID is required', { status: 400 });
     }
 
     const { messageIds } = await req.json();
 
     if (!Array.isArray(messageIds) || messageIds.length === 0) {
-      return new NextResponse("Message IDs are required", { status: 400 });
+      return new NextResponse('Message IDs are required', { status: 400 });
     }
 
     // Verify the user is a participant in this conversation
@@ -42,7 +42,7 @@ export async function POST(req: NextRequest) {
     });
 
     if (!isParticipant) {
-      return new NextResponse("Forbidden", { status: 403 });
+      return new NextResponse('Forbidden', { status: 403 });
     }
 
     // Mark messages as read
@@ -63,8 +63,8 @@ export async function POST(req: NextRequest) {
       success: true,
       updatedCount: result.count,
     });
+    // biome-ignore lint: error
   } catch (error) {
-    console.error("MESSAGE_READ_ERROR", error);
-    return new NextResponse("Internal Error", { status: 500 });
+    return new NextResponse('Internal Error', { status: 500 });
   }
 }

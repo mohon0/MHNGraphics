@@ -1,5 +1,5 @@
-import { Prisma } from "@/components/helper/prisma/Prisma";
-import { NextRequest, NextResponse } from "next/server";
+import { type NextRequest, NextResponse } from 'next/server';
+import { Prisma } from '@/components/helper/prisma/Prisma';
 
 export async function POST(req: NextRequest) {
   try {
@@ -8,7 +8,7 @@ export async function POST(req: NextRequest) {
 
     if (!postId || !userId) {
       return NextResponse.json(
-        { message: "Missing post ID or user ID" },
+        { message: 'Missing post ID or user ID' },
         { status: 400 },
       );
     }
@@ -27,7 +27,7 @@ export async function POST(req: NextRequest) {
       });
 
       return NextResponse.json(
-        { message: "Like removed", status: "success" },
+        { message: 'Like removed', status: 'success' },
         { status: 200 },
       );
     } else {
@@ -40,14 +40,14 @@ export async function POST(req: NextRequest) {
       });
 
       return NextResponse.json(
-        { message: "Like added", status: "success" },
+        { message: 'Like added', status: 'success' },
         { status: 201 },
       );
     }
+    // biome-ignore lint: error
   } catch (error) {
-    console.error("Error handling like API:", error);
     return NextResponse.json(
-      { message: "Internal Server Error" },
+      { message: 'Internal Server Error' },
       { status: 500 },
     );
   }

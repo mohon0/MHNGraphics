@@ -1,12 +1,19 @@
-import { createSlug } from "@/components/helper/slug/CreateSlug";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
+import { formatDistanceToNow } from 'date-fns/formatDistanceToNow';
+import { Edit, MoreVertical, Trash2 } from 'lucide-react';
+import Image from 'next/image';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { useSession } from 'next-auth/react';
+import { useState } from 'react';
+import { createSlug } from '@/components/helper/slug/CreateSlug';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Button } from '@/components/ui/button';
 import {
   Card,
   CardContent,
   CardFooter,
   CardHeader,
-} from "@/components/ui/card";
+} from '@/components/ui/card';
 import {
   Dialog,
   DialogContent,
@@ -14,28 +21,21 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog";
+} from '@/components/ui/dialog';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+} from '@/components/ui/dropdown-menu';
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "@/components/ui/tooltip";
-import { useDeleteDesign, useUpdateDesignStatus } from "@/services/design";
-import { Design } from "@/utils/Interface";
-import { formatDistanceToNow } from "date-fns/formatDistanceToNow";
-import { Edit, MoreVertical, Trash2 } from "lucide-react";
-import { useSession } from "next-auth/react";
-import Image from "next/image";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
+} from '@/components/ui/tooltip';
+import { useDeleteDesign, useUpdateDesignStatus } from '@/services/design';
+import type { Design } from '@/utils/Interface';
 
 export default function DesignCard({
   design,
@@ -77,28 +77,28 @@ export default function DesignCard({
     <>
       <Card
         key={design.id}
-        className="group overflow-hidden bg-card transition-all duration-300 hover:shadow-lg"
+        className='group overflow-hidden bg-card transition-all duration-300 hover:shadow-lg'
       >
-        <CardHeader className="p-0">
-          <div className="relative aspect-video overflow-hidden">
+        <CardHeader className='p-0'>
+          <div className='relative aspect-video overflow-hidden'>
             <Image
-              src={design.image || "/placeholder.svg"}
+              src={design.image || '/placeholder.svg'}
               alt={design.name}
               height={400}
               width={400}
-              className="object-cover transition-transform duration-300 group-hover:scale-105"
+              className='object-cover transition-transform duration-300 group-hover:scale-105'
             />
 
             <Link
               href={createSlug({ id: design.id, name: design.name })}
-              className="absolute inset-0 z-0 bg-linear-to-t from-black/60 via-black/0 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+              className='absolute inset-0 z-0 bg-linear-to-t from-black/60 via-black/0 opacity-0 transition-opacity duration-300 group-hover:opacity-100'
             />
-            <div className="absolute right-2 top-2 flex gap-2 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+            <div className='absolute right-2 top-2 flex gap-2 opacity-0 transition-opacity duration-300 group-hover:opacity-100'>
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <Button size="icon" onClick={() => handleEdit(design.id)}>
-                      <Edit className="h-4 w-4" />
+                    <Button size='icon' onClick={() => handleEdit(design.id)}>
+                      <Edit className='h-4 w-4' />
                     </Button>
                   </TooltipTrigger>
                   <TooltipContent>Edit design</TooltipContent>
@@ -107,11 +107,11 @@ export default function DesignCard({
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Button
-                      variant="destructive"
-                      size="icon"
+                      variant='destructive'
+                      size='icon'
                       onClick={() => handleDelete(design.id)}
                     >
-                      <Trash2 className="h-4 w-4" />
+                      <Trash2 className='h-4 w-4' />
                     </Button>
                   </TooltipTrigger>
                   <TooltipContent>Delete design</TooltipContent>
@@ -120,19 +120,19 @@ export default function DesignCard({
             </div>
           </div>
         </CardHeader>
-        <CardContent className="mt-4">
-          <div className="flex items-start justify-between space-x-4">
-            <div className="min-w-0 flex-1">
+        <CardContent className='mt-4'>
+          <div className='flex items-start justify-between space-x-4'>
+            <div className='min-w-0 flex-1'>
               <Link href={createSlug({ id: design.id, name: design.name })}>
-                <h3 className="mb-1 truncate text-lg font-semibold leading-tight">
+                <h3 className='mb-1 truncate text-lg font-semibold leading-tight'>
                   {design.name}
                 </h3>
               </Link>
-              <div className="mb-2 flex items-center gap-2">
-                <div className="flex items-center gap-1 text-muted-foreground">
-                  <span className="text-sm">{design.category}</span>
+              <div className='mb-2 flex items-center gap-2'>
+                <div className='flex items-center gap-1 text-muted-foreground'>
+                  <span className='text-sm'>{design.category}</span>
                 </div>
-                <span className="text-muted-foreground">•</span>
+                <span className='text-muted-foreground'>•</span>
                 <div
                   className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${getStatusColor(design.status)}`}
                 >
@@ -140,23 +140,23 @@ export default function DesignCard({
                 </div>
               </div>
             </div>
-            {session?.user?.role === "ADMIN" && (
+            {session?.user?.role === 'ADMIN' && (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="icon" className="-mt-1 h-8 w-8">
-                    <MoreVertical className="h-4 w-4" />
+                  <Button variant='ghost' size='icon' className='-mt-1 h-8 w-8'>
+                    <MoreVertical className='h-4 w-4' />
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent align="end" className="w-[160px]">
+                <DropdownMenuContent align='end' className='w-[160px]'>
                   <DropdownMenuItem
-                    onClick={() => handleStatusChange(design.id, "PUBLISHED")}
-                    disabled={design.status === "PUBLISHED" ? true : false}
+                    onClick={() => handleStatusChange(design.id, 'PUBLISHED')}
+                    disabled={design.status === 'PUBLISHED'}
                   >
                     Set as Published
                   </DropdownMenuItem>
                   <DropdownMenuItem
-                    onClick={() => handleStatusChange(design.id, "PENDING")}
-                    disabled={design.status === "PENDING" ? true : false}
+                    onClick={() => handleStatusChange(design.id, 'PENDING')}
+                    disabled={design.status === 'PENDING'}
                   >
                     Set as Pending
                   </DropdownMenuItem>
@@ -165,17 +165,17 @@ export default function DesignCard({
             )}
           </div>
         </CardContent>
-        <CardFooter className="flex items-center gap-4">
-          <div className="flex min-w-0 items-center gap-2">
+        <CardFooter className='flex items-center gap-4'>
+          <div className='flex min-w-0 items-center gap-2'>
             <Avatar>
               <AvatarImage src={design.author.image} alt={design.author.name} />
               <AvatarFallback>{design.author.name.slice(0, 2)}</AvatarFallback>
             </Avatar>
-            <div className="min-w-0">
-              <p className="truncate text-sm font-medium">
+            <div className='min-w-0'>
+              <p className='truncate text-sm font-medium'>
                 {design.author.name}
               </p>
-              <p className="text-xs text-muted-foreground">
+              <p className='text-xs text-muted-foreground'>
                 {formatDistanceToNow(new Date(design.createdAt), {
                   addSuffix: true,
                 })}
@@ -195,12 +195,12 @@ export default function DesignCard({
           </DialogHeader>
           <DialogFooter>
             <Button
-              variant="outline"
+              variant='outline'
               onClick={() => setDeleteDialogOpen(false)}
             >
               Cancel
             </Button>
-            <Button variant="destructive" onClick={confirmDelete}>
+            <Button variant='destructive' onClick={confirmDelete}>
               Delete
             </Button>
           </DialogFooter>
@@ -212,11 +212,11 @@ export default function DesignCard({
 
 const getStatusColor = (status: string) => {
   switch (status.toLowerCase()) {
-    case "published":
-      return "text-green-700 bg-green-50 ring-1 ring-green-300/50";
-    case "pending":
-      return "text-yellow-700 bg-yellow-50 ring-1 ring-yellow-300/50";
+    case 'published':
+      return 'text-green-700 bg-green-50 ring-1 ring-green-300/50';
+    case 'pending':
+      return 'text-yellow-700 bg-yellow-50 ring-1 ring-yellow-300/50';
     default:
-      return "text-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-950/50 ring-1 ring-gray-300/50";
+      return 'text-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-950/50 ring-1 ring-gray-300/50';
   }
 };

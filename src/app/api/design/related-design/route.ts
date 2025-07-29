@@ -1,5 +1,5 @@
-import { Prisma } from "@/components/helper/prisma/Prisma";
-import { NextRequest, NextResponse } from "next/server";
+import { type NextRequest, NextResponse } from 'next/server';
+import { Prisma } from '@/components/helper/prisma/Prisma';
 
 const SCORE_WEIGHTS = {
   TAG_MATCH: 3,
@@ -12,14 +12,14 @@ export async function GET(req: NextRequest) {
   try {
     const url = new URL(req.url);
     const queryParams = new URLSearchParams(url.search);
-    const id = queryParams.get("id");
-    const limit = Math.min(Number(queryParams.get("limit")) || 10, 50);
+    const id = queryParams.get('id');
+    const limit = Math.min(Number(queryParams.get('limit')) || 10, 50);
 
     // Validate ID
     if (!id || !/^[0-9a-fA-F]{24}$/.test(id)) {
-      return new NextResponse(JSON.stringify({ error: "Invalid ID format" }), {
+      return new NextResponse(JSON.stringify({ error: 'Invalid ID format' }), {
         status: 400,
-        headers: { "Content-Type": "application/json" },
+        headers: { 'Content-Type': 'application/json' },
       });
     }
 
@@ -29,16 +29,16 @@ export async function GET(req: NextRequest) {
     });
 
     if (!design) {
-      return new NextResponse(JSON.stringify({ error: "Design not found" }), {
+      return new NextResponse(JSON.stringify({ error: 'Design not found' }), {
         status: 404,
-        headers: { "Content-Type": "application/json" },
+        headers: { 'Content-Type': 'application/json' },
       });
     }
 
     // Create name conditions by splitting the design name into keywords (ignoring short words)
     const designNameWords = design.name
       .toLowerCase()
-      .split(" ")
+      .split(' ')
       .filter((word) => word.length > 2);
     const nameConditions = designNameWords.map((word) => ({
       name: { contains: word },
@@ -48,7 +48,7 @@ export async function GET(req: NextRequest) {
     const potentialDesigns = await Prisma.design.findMany({
       where: {
         id: { not: design.id },
-        status: "PUBLISHED",
+        status: 'PUBLISHED',
         OR: [
           { tags: { hasSome: design.tags } },
           { category: design.category },
@@ -67,7 +67,7 @@ export async function GET(req: NextRequest) {
 
       // Name matching score using word intersections
       const candidateNameWords = d.name
-        .split(" ")
+        .split(' ')
         .filter((word) => word.length > 2);
       const commonNameWords = candidateNameWords.filter((word) =>
         designNameWords.some(
@@ -102,18 +102,18 @@ export async function GET(req: NextRequest) {
     });
 
     response.headers.set(
-      "Cache-Control",
-      "public, s-maxage=3600, stale-while-revalidate=1800",
+      'Cache-Control',
+      'public, s-maxage=3600, stale-while-revalidate=1800',
     );
 
     return response;
+    // biome-ignore lint: error
   } catch (error) {
-    console.error("Error fetching related designs:", error);
     return new NextResponse(
-      JSON.stringify({ error: "Internal Server Error" }),
+      JSON.stringify({ error: 'Internal Server Error' }),
       {
         status: 500,
-        headers: { "Content-Type": "application/json" },
+        headers: { 'Content-Type': 'application/json' },
       },
     );
   }

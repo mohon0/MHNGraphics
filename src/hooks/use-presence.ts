@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import axios from "axios";
-import { useSession } from "next-auth/react";
-import { useEffect, useState } from "react";
-import { useAbly } from "./useAbly";
+import axios from 'axios';
+import { useSession } from 'next-auth/react';
+import { useEffect, useState } from 'react';
+import { useAbly } from './useAbly';
 
 export interface UserStatus {
   userId: string;
@@ -25,9 +25,10 @@ export function usePresence() {
     // Set user as online when component mounts
     const setOnline = async () => {
       try {
-        await axios.post("/api/chat/presence", { isOnline: true });
+        await axios.post('/api/chat/presence', { isOnline: true });
       } catch (error) {
-        console.error("Failed to set online status:", error);
+        // biome-ignore lint: error
+        console.error('Failed to set online status:', error);
       }
     };
 
@@ -36,20 +37,18 @@ export function usePresence() {
     // Set user as offline when component unmounts or tab is closed
     const handleBeforeUnload = () => {
       navigator.sendBeacon(
-        "/api/chat/presence",
+        '/api/chat/presence',
         JSON.stringify({ isOnline: false }),
       );
     };
 
-    window.addEventListener("beforeunload", handleBeforeUnload);
+    window.addEventListener('beforeunload', handleBeforeUnload);
 
     return () => {
-      window.removeEventListener("beforeunload", handleBeforeUnload);
+      window.removeEventListener('beforeunload', handleBeforeUnload);
 
       // Also set offline when component unmounts (e.g., logout)
-      axios
-        .post("/api/chat/presence", { isOnline: false })
-        .catch(console.error);
+      axios.post('/api/chat/presence', { isOnline: false });
     };
   }, [session?.user?.id]);
 
@@ -57,8 +56,8 @@ export function usePresence() {
   useEffect(() => {
     if (!ably) return;
 
-    const presenceChannel = ably.channels.get("presence");
-
+    const presenceChannel = ably.channels.get('presence');
+    // biome-ignore lint: error
     const handleStatusChange = (message: any) => {
       const { userId, isOnline, timestamp } = message.data;
 
@@ -72,10 +71,10 @@ export function usePresence() {
       }));
     };
 
-    presenceChannel.subscribe("status-change", handleStatusChange);
+    presenceChannel.subscribe('status-change', handleStatusChange);
 
     return () => {
-      presenceChannel.unsubscribe("status-change", handleStatusChange);
+      presenceChannel.unsubscribe('status-change', handleStatusChange);
     };
   }, [ably]);
 
@@ -107,7 +106,8 @@ export function usePresence() {
         lastSeen: status.lastSeen ? new Date(status.lastSeen) : null,
       };
     } catch (error) {
-      console.error("Failed to get user status:", error);
+      // biome-ignore lint: error
+      console.error('Failed to get user status:', error);
       return null;
     }
   };

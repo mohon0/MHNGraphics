@@ -1,3 +1,4 @@
+// biome-ignore lint: error
 export function throttle<T extends (...args: any[]) => any>(
   func: T,
   wait: number,

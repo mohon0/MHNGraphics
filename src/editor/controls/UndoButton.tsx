@@ -1,13 +1,13 @@
-import { Button } from "@/components/ui/button";
+import { useEditorState } from '@tiptap/react';
+import { TbArrowBackUp } from 'react-icons/tb';
+import { Button } from '@/components/ui/button';
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "@/components/ui/tooltip";
-import { useEditorState } from "@tiptap/react";
-import { TbArrowBackUp } from "react-icons/tb";
-import { useTiptapContext } from "../Provider";
+} from '@/components/ui/tooltip';
+import { useTiptapContext } from '../Provider';
 
 const UndoButton = () => {
   const { editor } = useTiptapContext();
@@ -24,11 +24,11 @@ const UndoButton = () => {
       <Tooltip>
         <TooltipTrigger asChild>
           <Button
-            variant="ghost"
+            variant='ghost'
             disabled={state.disabled}
             onClick={() => editor.chain().focus().undo().run()}
-            type="button"
-            size="icon"
+            type='button'
+            size='icon'
           >
             <TbArrowBackUp size={20} />
           </Button>

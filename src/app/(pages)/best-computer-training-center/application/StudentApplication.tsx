@@ -1,14 +1,19 @@
-"use client";
+'use client';
 
-import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
+import { zodResolver } from '@hookform/resolvers/zod';
+import { format } from 'date-fns';
+import { CalendarIcon, Upload } from 'lucide-react';
+import Image from 'next/image';
+import { useCallback, useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { Calendar } from '@/components/ui/calendar';
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
+} from '@/components/ui/card';
 import {
   Form,
   FormControl,
@@ -17,14 +22,14 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+} from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover";
+} from '@/components/ui/popover';
 import {
   Select,
   SelectContent,
@@ -33,32 +38,26 @@ import {
   SelectLabel,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Separator } from "@/components/ui/separator";
-import { bangladeshDistricts } from "@/constant/District";
-import { ApplicationSchema } from "@/lib/Schemas";
-import { cn } from "@/lib/utils";
-import { useFetchDuration } from "@/services/admin";
-import { useSubmitApplication } from "@/services/application";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { format } from "date-fns";
-import { CalendarIcon, Upload } from "lucide-react";
-import Image from "next/image";
-import Link from "next/link";
-import { useCallback, useState } from "react";
-import "react-datepicker/dist/react-datepicker.css";
-import { useForm } from "react-hook-form";
-import { toast } from "sonner";
-import * as z from "zod";
-import Preview from "./ApplicationPreview";
+} from '@/components/ui/select';
+import { Separator } from '@/components/ui/separator';
+import { bangladeshDistricts } from '@/constant/District';
+import { ApplicationSchema } from '@/lib/Schemas';
+import { cn } from '@/lib/utils';
+import { useFetchDuration } from '@/services/admin';
+import { useSubmitApplication } from '@/services/application';
+import 'react-datepicker/dist/react-datepicker.css';
+import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
+import type * as z from 'zod';
+import Preview from './ApplicationPreview';
 
 const currentYear = new Date().getFullYear();
 const MAX_FILE_SIZE = 300000;
 const ACCEPTED_IMAGE_TYPES = [
-  "image/jpeg",
-  "image/jpg",
-  "image/png",
-  "image/webp",
+  'image/jpeg',
+  'image/jpg',
+  'image/png',
+  'image/webp',
 ];
 
 const generateSessionOptions = (): string[] => {
@@ -78,42 +77,38 @@ export function StudentApplicationForm() {
   const form = useForm<z.infer<typeof ApplicationSchema>>({
     resolver: zodResolver(ApplicationSchema),
     defaultValues: {
-      studentName: "",
-      fatherName: "",
-      motherName: "",
-      fatherOccupation: "",
+      studentName: '',
+      fatherName: '',
+      motherName: '',
+      fatherOccupation: '',
       birthDay: undefined,
-      mobileNumber: "",
-      guardianNumber: "",
+      mobileNumber: '',
+      guardianNumber: '',
       gender: undefined,
       maritalStatus: undefined,
-      bloodGroup: "",
-      religion: "",
-      nationality: "Bangladeshi",
-      nidBirthReg: "",
+      bloodGroup: '',
+      religion: '',
+      nationality: 'Bangladeshi',
+      nidBirthReg: '',
       email: undefined,
-      fullAddress: "",
-      district: "",
-      education: "",
-      educationBoard: "",
-      rollNumber: "",
-      regNumber: "",
+      fullAddress: '',
+      district: '',
+      education: '',
+      educationBoard: '',
+      rollNumber: '',
+      regNumber: '',
       passingYear: currentYear,
-      gpaCgpa: "",
-      course: "",
-      session: "",
-      duration: "",
+      gpaCgpa: '',
+      course: '',
+      session: '',
+      duration: '',
       pc: undefined,
       image: null,
     },
   });
 
   const onSubmit = async (values: z.infer<typeof ApplicationSchema>) => {
-    try {
-      await submitApplication(values);
-    } catch (error) {
-      console.error("Error during submission:", error);
-    }
+    await submitApplication(values);
   };
 
   const onImageChange = useCallback(
@@ -121,15 +116,15 @@ export function StudentApplicationForm() {
       const file = e.target.files?.[0];
       if (file) {
         if (file.size > MAX_FILE_SIZE) {
-          toast.error("File size exceeds 500KB limit");
-          e.target.value = "";
+          toast.error('File size exceeds 500KB limit');
+          e.target.value = '';
           return;
         }
         if (!ACCEPTED_IMAGE_TYPES.includes(file.type)) {
           toast.error(
-            "Invalid file type. Only .jpg, .jpeg, .png and .webp are allowed.",
+            'Invalid file type. Only .jpg, .jpeg, .png and .webp are allowed.',
           );
-          e.target.value = "";
+          e.target.value = '';
           return;
         }
         const reader = new FileReader();
@@ -143,10 +138,10 @@ export function StudentApplicationForm() {
   );
 
   return (
-    <div className="container mx-auto py-10">
-      <Card className="mx-auto w-full max-w-4xl">
-        <CardHeader className="flex items-center justify-center">
-          <CardTitle className="text-3xl font-bold">
+    <div className='container mx-auto py-10'>
+      <Card className='mx-auto w-full max-w-4xl'>
+        <CardHeader className='flex items-center justify-center'>
+          <CardTitle className='text-3xl font-bold'>
             Student Application Form
           </CardTitle>
           <CardDescription>
@@ -155,62 +150,62 @@ export function StudentApplicationForm() {
         </CardHeader>
         <CardContent>
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-              <div className="space-y-6">
+            <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-8'>
+              <div className='space-y-6'>
                 <div>
-                  <h2 className="mb-2 text-xl font-semibold">
+                  <h2 className='mb-2 text-xl font-semibold'>
                     Personal Information
                   </h2>
-                  <Separator className="mb-4" />
-                  <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-                    <div className="md:col-span-2">
+                  <Separator className='mb-4' />
+                  <div className='grid grid-cols-1 gap-4 md:grid-cols-3'>
+                    <div className='md:col-span-2'>
                       <FormField
                         control={form.control}
-                        name="studentName"
+                        name='studentName'
                         render={({ field }) => (
                           <FormItem>
                             <FormLabel>Student full Name</FormLabel>
                             <FormControl>
-                              <Input placeholder="Md Mohon" {...field} />
+                              <Input placeholder='Md Mohon' {...field} />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
                         )}
                       />
                     </div>
-                    <div className="md:row-span-3">
+                    <div className='md:row-span-3'>
                       <FormField
                         control={form.control}
-                        name="image"
+                        name='image'
                         render={({ field: { onChange, value, ...rest } }) => (
                           <FormItem>
                             <FormLabel>Profile Picture</FormLabel>
                             <FormControl>
                               <div>
-                                <Label htmlFor="image-upload">
-                                  <div className="h-40 w-40 cursor-pointer overflow-hidden rounded-lg border-2 border-dashed border-gray-300 transition-colors duration-200 hover:border-gray-400">
+                                <Label htmlFor='image-upload'>
+                                  <div className='h-40 w-40 cursor-pointer overflow-hidden rounded-lg border-2 border-dashed border-gray-300 transition-colors duration-200 hover:border-gray-400'>
                                     {imagePreview ? (
                                       <Image
                                         src={imagePreview}
-                                        alt="Preview"
+                                        alt='Preview'
                                         width={128}
                                         height={128}
-                                        objectFit="cover"
-                                        layout="responsive"
+                                        objectFit='cover'
+                                        layout='responsive'
                                       />
                                     ) : (
-                                      <div className="flex h-full flex-col items-center justify-center text-gray-400">
-                                        <Upload className="mb-2 h-8 w-8" />
+                                      <div className='flex h-full flex-col items-center justify-center text-gray-400'>
+                                        <Upload className='mb-2 h-8 w-8' />
                                         <span>Upload</span>
                                       </div>
                                     )}
                                   </div>
                                 </Label>
                                 <Input
-                                  id="image-upload"
-                                  type="file"
-                                  accept={ACCEPTED_IMAGE_TYPES.join(",")}
-                                  className="hidden"
+                                  id='image-upload'
+                                  type='file'
+                                  accept={ACCEPTED_IMAGE_TYPES.join(',')}
+                                  className='hidden'
                                   onChange={(e) => {
                                     const files = e.target.files;
                                     if (files) {
@@ -233,12 +228,12 @@ export function StudentApplicationForm() {
                     </div>
                     <FormField
                       control={form.control}
-                      name="fatherName"
+                      name='fatherName'
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>Father&#39;s Name</FormLabel>
                           <FormControl>
-                            <Input placeholder="Father name" {...field} />
+                            <Input placeholder='Father name' {...field} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -246,12 +241,12 @@ export function StudentApplicationForm() {
                     />
                     <FormField
                       control={form.control}
-                      name="motherName"
+                      name='motherName'
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>Mother&#39;s Name</FormLabel>
                           <FormControl>
-                            <Input placeholder="Mother name" {...field} />
+                            <Input placeholder='Mother name' {...field} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -259,7 +254,7 @@ export function StudentApplicationForm() {
                     />
                     <FormField
                       control={form.control}
-                      name="fatherOccupation"
+                      name='fatherOccupation'
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>Father&#39;s Occupation</FormLabel>
@@ -275,42 +270,42 @@ export function StudentApplicationForm() {
                     />
                     <FormField
                       control={form.control}
-                      name="birthDay"
+                      name='birthDay'
                       render={({ field }) => (
-                        <FormItem className="flex flex-col">
+                        <FormItem className='flex flex-col'>
                           <FormLabel>Date of birth</FormLabel>
                           <Popover>
                             <PopoverTrigger asChild>
                               <FormControl>
                                 <Button
-                                  variant={"outline"}
+                                  variant={'outline'}
                                   className={cn(
-                                    "w-[240px] pl-3 text-left font-normal",
-                                    !field.value && "text-muted-foreground",
+                                    'w-[240px] pl-3 text-left font-normal',
+                                    !field.value && 'text-muted-foreground',
                                   )}
                                 >
                                   {field.value ? (
-                                    format(field.value, "PPP")
+                                    format(field.value, 'PPP')
                                   ) : (
                                     <span>Pick a date</span>
                                   )}
-                                  <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                                  <CalendarIcon className='ml-auto h-4 w-4 opacity-50' />
                                 </Button>
                               </FormControl>
                             </PopoverTrigger>
                             <PopoverContent
-                              className="w-auto p-0"
-                              align="start"
+                              className='w-auto p-0'
+                              align='start'
                             >
                               <Calendar
-                                mode="single"
+                                mode='single'
                                 selected={field.value}
                                 onSelect={field.onChange}
                                 disabled={(date) =>
                                   date > new Date() ||
-                                  date < new Date("1900-01-01")
+                                  date < new Date('1900-01-01')
                                 }
-                                captionLayout="dropdown"
+                                captionLayout='dropdown'
                               />
                             </PopoverContent>
                           </Popover>
@@ -320,7 +315,7 @@ export function StudentApplicationForm() {
                     />
                     <FormField
                       control={form.control}
-                      name="gender"
+                      name='gender'
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>Gender</FormLabel>
@@ -330,13 +325,13 @@ export function StudentApplicationForm() {
                           >
                             <FormControl>
                               <SelectTrigger>
-                                <SelectValue placeholder="Select your gender" />
+                                <SelectValue placeholder='Select your gender' />
                               </SelectTrigger>
                             </FormControl>
                             <SelectContent>
-                              <SelectItem value="male">Male</SelectItem>
-                              <SelectItem value="female">Female</SelectItem>
-                              <SelectItem value="other">Other</SelectItem>
+                              <SelectItem value='male'>Male</SelectItem>
+                              <SelectItem value='female'>Female</SelectItem>
+                              <SelectItem value='other'>Other</SelectItem>
                             </SelectContent>
                           </Select>
                           <FormMessage />
@@ -345,7 +340,7 @@ export function StudentApplicationForm() {
                     />
                     <FormField
                       control={form.control}
-                      name="maritalStatus"
+                      name='maritalStatus'
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>Marital Status</FormLabel>
@@ -355,17 +350,17 @@ export function StudentApplicationForm() {
                           >
                             <FormControl>
                               <SelectTrigger>
-                                <SelectValue placeholder="Select" />
+                                <SelectValue placeholder='Select' />
                               </SelectTrigger>
                             </FormControl>
                             <SelectContent>
                               <SelectGroup>
                                 <SelectLabel>Marital Status</SelectLabel>
 
-                                <SelectItem value="Single">Single</SelectItem>
-                                <SelectItem value="Married">Married</SelectItem>
-                                <SelectItem value="Widowed">Widowed</SelectItem>
-                                <SelectItem value="Divorced">
+                                <SelectItem value='Single'>Single</SelectItem>
+                                <SelectItem value='Married'>Married</SelectItem>
+                                <SelectItem value='Widowed'>Widowed</SelectItem>
+                                <SelectItem value='Divorced'>
                                   Divorced
                                 </SelectItem>
                               </SelectGroup>
@@ -377,7 +372,7 @@ export function StudentApplicationForm() {
                     />
                     <FormField
                       control={form.control}
-                      name="bloodGroup"
+                      name='bloodGroup'
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>Blood Group</FormLabel>
@@ -387,18 +382,18 @@ export function StudentApplicationForm() {
                           >
                             <FormControl>
                               <SelectTrigger>
-                                <SelectValue placeholder="Select Your Blood Group" />
+                                <SelectValue placeholder='Select Your Blood Group' />
                               </SelectTrigger>
                             </FormControl>
                             <SelectContent>
-                              <SelectItem value="A+">A+</SelectItem>
-                              <SelectItem value="A-">A-</SelectItem>
-                              <SelectItem value="B+">B+</SelectItem>
-                              <SelectItem value="B-">B-</SelectItem>
-                              <SelectItem value="O+">O+</SelectItem>
-                              <SelectItem value="O-">O-</SelectItem>
-                              <SelectItem value="AB+">AB+</SelectItem>
-                              <SelectItem value="AB-">AB-</SelectItem>
+                              <SelectItem value='A+'>A+</SelectItem>
+                              <SelectItem value='A-'>A-</SelectItem>
+                              <SelectItem value='B+'>B+</SelectItem>
+                              <SelectItem value='B-'>B-</SelectItem>
+                              <SelectItem value='O+'>O+</SelectItem>
+                              <SelectItem value='O-'>O-</SelectItem>
+                              <SelectItem value='AB+'>AB+</SelectItem>
+                              <SelectItem value='AB-'>AB-</SelectItem>
                             </SelectContent>
                           </Select>
                           <FormMessage />
@@ -407,7 +402,7 @@ export function StudentApplicationForm() {
                     />
                     <FormField
                       control={form.control}
-                      name="religion"
+                      name='religion'
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>Religion</FormLabel>
@@ -417,24 +412,24 @@ export function StudentApplicationForm() {
                           >
                             <FormControl>
                               <SelectTrigger>
-                                <SelectValue placeholder="Select Your Religion" />
+                                <SelectValue placeholder='Select Your Religion' />
                               </SelectTrigger>
                             </FormControl>
                             <SelectContent>
-                              <SelectItem value="Islam">Islam</SelectItem>
-                              <SelectItem value="Hinduism">Hinduism</SelectItem>
-                              <SelectItem value="Christianity">
+                              <SelectItem value='Islam'>Islam</SelectItem>
+                              <SelectItem value='Hinduism'>Hinduism</SelectItem>
+                              <SelectItem value='Christianity'>
                                 Christianity
                               </SelectItem>
-                              <SelectItem value="Buddhism">Buddhism</SelectItem>
-                              <SelectItem value="Judaism">Judaism</SelectItem>
-                              <SelectItem value="Sikhism">Sikhism</SelectItem>
-                              <SelectItem value="Jainism">Jainism</SelectItem>
+                              <SelectItem value='Buddhism'>Buddhism</SelectItem>
+                              <SelectItem value='Judaism'>Judaism</SelectItem>
+                              <SelectItem value='Sikhism'>Sikhism</SelectItem>
+                              <SelectItem value='Jainism'>Jainism</SelectItem>
                               <SelectItem value="Bahá'í Faith">
                                 Bahá&#39;í Faith
                               </SelectItem>
-                              <SelectItem value="Shinto">Shinto</SelectItem>
-                              <SelectItem value="Others">Other</SelectItem>
+                              <SelectItem value='Shinto'>Shinto</SelectItem>
+                              <SelectItem value='Others'>Other</SelectItem>
                             </SelectContent>
                           </Select>
                           <FormMessage />
@@ -443,12 +438,12 @@ export function StudentApplicationForm() {
                     />
                     <FormField
                       control={form.control}
-                      name="nationality"
+                      name='nationality'
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>Nationality</FormLabel>
                           <FormControl>
-                            <Input placeholder="Bangladeshi" {...field} />
+                            <Input placeholder='Bangladeshi' {...field} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -456,12 +451,12 @@ export function StudentApplicationForm() {
                     />
                     <FormField
                       control={form.control}
-                      name="nidBirthReg"
+                      name='nidBirthReg'
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>NID/Birth Reg.</FormLabel>
                           <FormControl>
-                            <Input placeholder="NID/Birth Reg." {...field} />
+                            <Input placeholder='NID/Birth Reg.' {...field} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -471,19 +466,19 @@ export function StudentApplicationForm() {
                 </div>
 
                 <div>
-                  <h2 className="mb-2 text-xl font-semibold">
+                  <h2 className='mb-2 text-xl font-semibold'>
                     Contact Information
                   </h2>
-                  <Separator className="mb-4" />
-                  <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                  <Separator className='mb-4' />
+                  <div className='grid grid-cols-1 gap-4 md:grid-cols-2'>
                     <FormField
                       control={form.control}
-                      name="mobileNumber"
+                      name='mobileNumber'
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>Mobile Number</FormLabel>
                           <FormControl>
-                            <Input placeholder="Mobile Number" {...field} />
+                            <Input placeholder='Mobile Number' {...field} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -491,12 +486,12 @@ export function StudentApplicationForm() {
                     />
                     <FormField
                       control={form.control}
-                      name="guardianNumber"
+                      name='guardianNumber'
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>Guardian Number</FormLabel>
                           <FormControl>
-                            <Input placeholder="Guardian Number" {...field} />
+                            <Input placeholder='Guardian Number' {...field} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -504,14 +499,14 @@ export function StudentApplicationForm() {
                     />
                     <FormField
                       control={form.control}
-                      name="email"
+                      name='email'
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>Email (Optional)</FormLabel>
                           <FormControl>
                             <Input
-                              placeholder="your.email@example.com"
-                              type="email"
+                              placeholder='your.email@example.com'
+                              type='email'
                               {...field}
                             />
                           </FormControl>
@@ -521,12 +516,12 @@ export function StudentApplicationForm() {
                     />
                     <FormField
                       control={form.control}
-                      name="fullAddress"
+                      name='fullAddress'
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>Full Address</FormLabel>
                           <FormControl>
-                            <Input placeholder="Full Address" {...field} />
+                            <Input placeholder='Full Address' {...field} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -534,7 +529,7 @@ export function StudentApplicationForm() {
                     />
                     <FormField
                       control={form.control}
-                      name="district"
+                      name='district'
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>District</FormLabel>
@@ -544,7 +539,7 @@ export function StudentApplicationForm() {
                           >
                             <FormControl>
                               <SelectTrigger>
-                                <SelectValue placeholder="Select Your District" />
+                                <SelectValue placeholder='Select Your District' />
                               </SelectTrigger>
                             </FormControl>
                             <SelectContent>
@@ -563,14 +558,14 @@ export function StudentApplicationForm() {
                 </div>
 
                 <div>
-                  <h2 className="mb-2 text-xl font-semibold">
+                  <h2 className='mb-2 text-xl font-semibold'>
                     Educational Information
                   </h2>
-                  <Separator className="mb-4" />
-                  <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                  <Separator className='mb-4' />
+                  <div className='grid grid-cols-1 gap-4 md:grid-cols-2'>
                     <FormField
                       control={form.control}
-                      name="education"
+                      name='education'
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>Education</FormLabel>
@@ -580,15 +575,15 @@ export function StudentApplicationForm() {
                           >
                             <FormControl>
                               <SelectTrigger>
-                                <SelectValue placeholder="Select Your Education" />
+                                <SelectValue placeholder='Select Your Education' />
                               </SelectTrigger>
                             </FormControl>
                             <SelectContent>
-                              <SelectItem value="jsc">JSC</SelectItem>
-                              <SelectItem value="ssc">SSC</SelectItem>
-                              <SelectItem value="hsc">HSC</SelectItem>
-                              <SelectItem value="bachelor">Bachelor</SelectItem>
-                              <SelectItem value="masters">Masters</SelectItem>
+                              <SelectItem value='jsc'>JSC</SelectItem>
+                              <SelectItem value='ssc'>SSC</SelectItem>
+                              <SelectItem value='hsc'>HSC</SelectItem>
+                              <SelectItem value='bachelor'>Bachelor</SelectItem>
+                              <SelectItem value='masters'>Masters</SelectItem>
                             </SelectContent>
                           </Select>
                           <FormMessage />
@@ -597,7 +592,7 @@ export function StudentApplicationForm() {
                     />
                     <FormField
                       control={form.control}
-                      name="educationBoard"
+                      name='educationBoard'
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>Education Board</FormLabel>
@@ -607,22 +602,22 @@ export function StudentApplicationForm() {
                           >
                             <FormControl>
                               <SelectTrigger>
-                                <SelectValue placeholder="Select Your Education Board" />
+                                <SelectValue placeholder='Select Your Education Board' />
                               </SelectTrigger>
                             </FormControl>
                             <SelectContent>
-                              <SelectItem value="Dhaka">Dhaka</SelectItem>
-                              <SelectItem value="Chittagong">
+                              <SelectItem value='Dhaka'>Dhaka</SelectItem>
+                              <SelectItem value='Chittagong'>
                                 Chittagong
                               </SelectItem>
-                              <SelectItem value="Rajshahi">Rajshahi</SelectItem>
-                              <SelectItem value="Jessore">Jessore</SelectItem>
-                              <SelectItem value="Comilla">Comilla</SelectItem>
-                              <SelectItem value="Sylhet">Sylhet</SelectItem>
-                              <SelectItem value="Dinajpur">Dinajpur</SelectItem>
-                              <SelectItem value="Barishal">Barishal</SelectItem>
-                              <SelectItem value="Madrasah">Madrasah</SelectItem>
-                              <SelectItem value="Technical">
+                              <SelectItem value='Rajshahi'>Rajshahi</SelectItem>
+                              <SelectItem value='Jessore'>Jessore</SelectItem>
+                              <SelectItem value='Comilla'>Comilla</SelectItem>
+                              <SelectItem value='Sylhet'>Sylhet</SelectItem>
+                              <SelectItem value='Dinajpur'>Dinajpur</SelectItem>
+                              <SelectItem value='Barishal'>Barishal</SelectItem>
+                              <SelectItem value='Madrasah'>Madrasah</SelectItem>
+                              <SelectItem value='Technical'>
                                 Technical
                               </SelectItem>
                             </SelectContent>
@@ -633,12 +628,12 @@ export function StudentApplicationForm() {
                     />
                     <FormField
                       control={form.control}
-                      name="rollNumber"
+                      name='rollNumber'
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>Roll Number</FormLabel>
                           <FormControl>
-                            <Input placeholder="Roll Number" {...field} />
+                            <Input placeholder='Roll Number' {...field} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -646,13 +641,13 @@ export function StudentApplicationForm() {
                     />
                     <FormField
                       control={form.control}
-                      name="regNumber"
+                      name='regNumber'
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>Reg. Number</FormLabel>
                           <FormControl>
                             <Input
-                              placeholder="Registration Number"
+                              placeholder='Registration Number'
                               {...field}
                             />
                           </FormControl>
@@ -662,18 +657,18 @@ export function StudentApplicationForm() {
                     />
                     <FormField
                       control={form.control}
-                      name="passingYear"
+                      name='passingYear'
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>Passing Year</FormLabel>
                           <FormControl>
                             <Input
-                              placeholder="Passing Year"
-                              type="number"
+                              placeholder='Passing Year'
+                              type='number'
                               {...field}
                               onChange={(e) =>
                                 field.onChange(
-                                  parseInt(e.target.value, 10) || "",
+                                  parseInt(e.target.value, 10) || '',
                                 )
                               }
                             />
@@ -684,12 +679,12 @@ export function StudentApplicationForm() {
                     />
                     <FormField
                       control={form.control}
-                      name="gpaCgpa"
+                      name='gpaCgpa'
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>GPA/CGPA</FormLabel>
                           <FormControl>
-                            <Input placeholder="GPA/CGPA" {...field} />
+                            <Input placeholder='GPA/CGPA' {...field} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -699,14 +694,14 @@ export function StudentApplicationForm() {
                 </div>
 
                 <div>
-                  <h2 className="mb-2 text-xl font-semibold">
+                  <h2 className='mb-2 text-xl font-semibold'>
                     Course Information
                   </h2>
-                  <Separator className="mb-4" />
-                  <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                  <Separator className='mb-4' />
+                  <div className='grid grid-cols-1 gap-4 md:grid-cols-2'>
                     <FormField
                       control={form.control}
-                      name="course"
+                      name='course'
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>Course</FormLabel>
@@ -716,31 +711,31 @@ export function StudentApplicationForm() {
                           >
                             <FormControl>
                               <SelectTrigger>
-                                <SelectValue placeholder="Select Your Course" />
+                                <SelectValue placeholder='Select Your Course' />
                               </SelectTrigger>
                             </FormControl>
                             <SelectContent>
                               <SelectGroup>
                                 <SelectLabel>Course</SelectLabel>
-                                <SelectItem value="office application">
+                                <SelectItem value='office application'>
                                   Office Application
                                 </SelectItem>
-                                <SelectItem value="database programming">
+                                <SelectItem value='database programming'>
                                   Database Programming
                                 </SelectItem>
-                                <SelectItem value="digital marketing">
+                                <SelectItem value='digital marketing'>
                                   Digital Marketing
                                 </SelectItem>
-                                <SelectItem value="graphics design">
+                                <SelectItem value='graphics design'>
                                   Graphics Design
                                 </SelectItem>
-                                <SelectItem value="web development">
+                                <SelectItem value='web development'>
                                   Web Design & Development
                                 </SelectItem>
-                                <SelectItem value="video editing">
+                                <SelectItem value='video editing'>
                                   Video Editing
                                 </SelectItem>
-                                <SelectItem value="ethical hacking">
+                                <SelectItem value='ethical hacking'>
                                   Ethical Hacking
                                 </SelectItem>
                               </SelectGroup>
@@ -752,7 +747,7 @@ export function StudentApplicationForm() {
                     />
                     <FormField
                       control={form.control}
-                      name="session"
+                      name='session'
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>Session</FormLabel>
@@ -762,19 +757,17 @@ export function StudentApplicationForm() {
                           >
                             <FormControl>
                               <SelectTrigger>
-                                <SelectValue placeholder="Select your session" />
+                                <SelectValue placeholder='Select your session' />
                               </SelectTrigger>
                             </FormControl>
                             <SelectContent>
                               <SelectGroup>
                                 <SelectLabel>Session</SelectLabel>
-                                {generateSessionOptions().map(
-                                  (option, index) => (
-                                    <SelectItem key={index} value={option}>
-                                      {option}
-                                    </SelectItem>
-                                  ),
-                                )}
+                                {generateSessionOptions().map((option) => (
+                                  <SelectItem key={option} value={option}>
+                                    {option}
+                                  </SelectItem>
+                                ))}
                               </SelectGroup>
                             </SelectContent>
                           </Select>
@@ -784,16 +777,16 @@ export function StudentApplicationForm() {
                     />
                     <FormField
                       control={form.control}
-                      name="duration"
+                      name='duration'
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>Duration</FormLabel>
                           {isLoading ? (
-                            <div className="text-sm text-gray-500">
+                            <div className='text-sm text-gray-500'>
                               Loading options...
                             </div>
                           ) : isError ? (
-                            <div className="text-sm text-red-500">
+                            <div className='text-sm text-red-500'>
                               Failed to load options
                             </div>
                           ) : (
@@ -803,28 +796,28 @@ export function StudentApplicationForm() {
                             >
                               <FormControl>
                                 <SelectTrigger>
-                                  <SelectValue placeholder="Course Duration" />
+                                  <SelectValue placeholder='Course Duration' />
                                 </SelectTrigger>
                               </FormControl>
                               <SelectContent>
                                 <SelectGroup>
                                   <SelectLabel>Course Duration</SelectLabel>
 
-                                  {data.button === "On" && (
-                                    <SelectItem value="free">
+                                  {data.button === 'On' && (
+                                    <SelectItem value='free'>
                                       Free (conditions apply)
                                     </SelectItem>
                                   )}
-                                  <SelectItem value="1 month">
+                                  <SelectItem value='1 month'>
                                     1 Month
                                   </SelectItem>
-                                  <SelectItem value="3 month">
+                                  <SelectItem value='3 month'>
                                     3 Month
                                   </SelectItem>
-                                  <SelectItem value="6 month">
+                                  <SelectItem value='6 month'>
                                     6 Month
                                   </SelectItem>
-                                  <SelectItem value="1 year">1 Year</SelectItem>
+                                  <SelectItem value='1 year'>1 Year</SelectItem>
                                 </SelectGroup>
                               </SelectContent>
                             </Select>
@@ -836,7 +829,7 @@ export function StudentApplicationForm() {
 
                     <FormField
                       control={form.control}
-                      name="pc"
+                      name='pc'
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>Do you have computer?</FormLabel>
@@ -846,13 +839,13 @@ export function StudentApplicationForm() {
                           >
                             <FormControl>
                               <SelectTrigger>
-                                <SelectValue placeholder="Select" />
+                                <SelectValue placeholder='Select' />
                               </SelectTrigger>
                             </FormControl>
                             <SelectContent>
-                              <SelectItem value="laptop">Laptop</SelectItem>
-                              <SelectItem value="pc">pc</SelectItem>
-                              <SelectItem value="no">No</SelectItem>
+                              <SelectItem value='laptop'>Laptop</SelectItem>
+                              <SelectItem value='pc'>pc</SelectItem>
+                              <SelectItem value='no'>No</SelectItem>
                             </SelectContent>
                           </Select>
                           <FormMessage />
@@ -862,33 +855,33 @@ export function StudentApplicationForm() {
                   </div>
                 </div>
                 <div>
-                  <h2 className="mb-2 text-xl font-semibold">
+                  <h2 className='mb-2 text-xl font-semibold'>
                     Payment Information
                   </h2>
-                  <Separator className="mb-4" />
+                  <Separator className='mb-4' />
                 </div>
               </div>
-              <div className="border-primary rounded-sm border p-2">
-                <p className="text-muted-foreground text-sm">
-                  <span className="text-primary font-semibold">Note:</span> You
+              <div className='border-primary rounded-sm border p-2'>
+                <p className='text-muted-foreground text-sm'>
+                  <span className='text-primary font-semibold'>Note:</span> You
                   will be redirected to the payment gateway to complete your
-                  payment of{" "}
-                  <span className="text-foreground font-semibold">৳100</span>.{" "}
+                  payment of{' '}
+                  <span className='text-foreground font-semibold'>৳100</span>.{' '}
                   <br />
-                  <span className="font-medium text-red-600">
+                  <span className='font-medium text-red-600'>
                     Application fees are non-refundable.
                   </span>
                 </p>
               </div>
 
-              <div className="flex flex-col gap-4 md:flex-row md:gap-10">
+              <div className='flex flex-col gap-4 md:flex-row md:gap-10'>
                 <Preview />
                 <Button
-                  type="submit"
-                  className="w-full"
+                  type='submit'
+                  className='w-full'
                   disabled={isSubmitting}
                 >
-                  {isSubmitting ? "Submitting..." : "Submit Application"}
+                  {isSubmitting ? 'Submitting...' : 'Submit Application'}
                 </Button>
               </div>
             </form>

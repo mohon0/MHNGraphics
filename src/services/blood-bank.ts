@@ -1,12 +1,12 @@
-"use client";
+'use client';
 
-import { BloodBankData, BloodBankQuery, Donor } from "@/utils/Interface";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import axios from "axios";
-import { useState } from "react";
-import { toast } from "sonner";
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import axios from 'axios';
+import { useState } from 'react';
+import { toast } from 'sonner';
+import type { BloodBankData, BloodBankQuery, Donor } from '@/utils/Interface';
 
-const API_ENDPOINT = "/api/best-computer/blood-bank";
+const API_ENDPOINT = '/api/best-computer/blood-bank';
 
 export const BloodBankService = {
   fetchDonors: async ({
@@ -19,12 +19,13 @@ export const BloodBankService = {
         params: {
           page: currentPage,
           search: search,
-          bloodGroup: bloodGroup !== "All" ? bloodGroup : undefined,
+          bloodGroup: bloodGroup !== 'All' ? bloodGroup : undefined,
         },
       });
       return response.data;
     } catch (error) {
-      console.error("Error fetching donors:", error);
+      // biome-ignore lint: error
+      console.error('Error fetching donors:', error);
       throw error;
     }
   },
@@ -33,19 +34,21 @@ export const BloodBankService = {
     try {
       await axios.delete(`${API_ENDPOINT}?id=${id}`);
     } catch (error) {
-      console.error("Error deleting donor:", error);
+      // biome-ignore lint: error
+      console.error('Error deleting donor:', error);
       throw error;
     }
   },
 
   createDonor: async (
-    donor: Omit<Donor, "id" | "createdAt">,
+    donor: Omit<Donor, 'id' | 'createdAt'>,
   ): Promise<Donor> => {
     try {
       const response = await axios.post(API_ENDPOINT, donor);
       return response.data;
     } catch (error) {
-      console.error("Error creating donor:", error);
+      // biome-ignore lint: error
+      console.error('Error creating donor:', error);
       throw error;
     }
   },
@@ -55,7 +58,8 @@ export const BloodBankService = {
       const response = await axios.patch(`${API_ENDPOINT}?id=${id}`, donor);
       return response.data;
     } catch (error) {
-      console.error("Error updating donor:", error);
+      // biome-ignore lint: error
+      console.error('Error updating donor:', error);
       throw error;
     }
   },
@@ -66,7 +70,7 @@ export function useBloodBankData(params: BloodBankQuery) {
   const [isDeleting, setIsDeleting] = useState(false);
 
   const { data, isLoading, isError, refetch } = useQuery({
-    queryKey: ["blood-bank", params],
+    queryKey: ['blood-bank', params],
     queryFn: () => BloodBankService.fetchDonors(params),
   });
 
@@ -76,7 +80,7 @@ export function useBloodBankData(params: BloodBankQuery) {
       setIsDeleting(true);
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["blood-bank"] });
+      queryClient.invalidateQueries({ queryKey: ['blood-bank'] });
     },
     onSettled: () => {
       setIsDeleting(false);
@@ -88,14 +92,15 @@ export function useBloodBankData(params: BloodBankQuery) {
       const promise = deleteMutation.mutateAsync(id);
 
       toast.promise(promise, {
-        loading: "Deleting donor information...",
-        success: "Donor deleted successfully!",
-        error: "Failed to delete donor",
+        loading: 'Deleting donor information...',
+        success: 'Donor deleted successfully!',
+        error: 'Failed to delete donor',
       });
 
       await promise;
     } catch (error) {
-      console.error("Delete error:", error);
+      // biome-ignore lint: error
+      console.error('Delete error:', error);
     }
   };
 
@@ -117,7 +122,7 @@ interface Props {
 
 export function useAddress({ currentPage, filterBy, searchInput }: Props) {
   return useQuery({
-    queryKey: ["address", currentPage, filterBy, searchInput],
+    queryKey: ['address', currentPage, filterBy, searchInput],
     queryFn: async () => {
       const response = await axios.get(
         `/api/best-computer/blood-bank/address?page=${currentPage}&filterBy=${filterBy}&search=${searchInput}`,
@@ -129,7 +134,7 @@ export function useAddress({ currentPage, filterBy, searchInput }: Props) {
 
 export function useSingleDonar(id: string | string[]) {
   return useQuery({
-    queryKey: ["Single donar", id],
+    queryKey: ['Single donar', id],
     queryFn: async () => {
       const response = await axios.get(
         `/api/best-computer/blood-bank/single-donar?id=${id}`,

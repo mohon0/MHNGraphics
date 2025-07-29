@@ -1,8 +1,8 @@
-import { SignUpSchema } from "@/lib/Schemas";
-import { useMutation } from "@tanstack/react-query";
-import axios from "axios";
-import { toast } from "sonner";
-import type { z } from "zod";
+import { useMutation } from '@tanstack/react-query';
+import axios from 'axios';
+import { toast } from 'sonner';
+import type { z } from 'zod';
+import type { SignUpSchema } from '@/lib/Schemas';
 
 interface VerifyCodePayload {
   userId: string;
@@ -14,16 +14,16 @@ export function useRegisterMutation() {
     mutationFn: async (values: z.infer<typeof SignUpSchema>) => {
       return toast
         .promise(
-          axios.post("/api/signup", values).catch((error) => {
-            throw new Error(error.response?.data || "An error occurred");
+          axios.post('/api/signup', values).catch((error) => {
+            throw new Error(error.response?.data || 'An error occurred');
           }),
           {
-            loading: "Processing registration...",
-            success: (response) => {
+            loading: 'Processing registration...',
+            success: () => {
               const isEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(values.email);
               return isEmail
-                ? "Email sent successfully 👌"
-                : "Registration successful 👌";
+                ? 'Email sent successfully 👌'
+                : 'Registration successful 👌';
             },
             error: (err) => err.message,
           },
@@ -38,13 +38,13 @@ export function useVerifyCodeMutation() {
     mutationFn: async (data: VerifyCodePayload) => {
       return toast
         .promise(
-          axios.put("/api/signup", data).catch((error) => {
-            throw new Error(error.response?.data || "An error occurred");
+          axios.put('/api/signup', data).catch((error) => {
+            throw new Error(error.response?.data || 'An error occurred');
           }),
           {
-            loading: "Verifying the code",
-            success: "Code verified successfully 👍",
-            error: "Invalid code. Please try again 🤯",
+            loading: 'Verifying the code',
+            success: 'Code verified successfully 👍',
+            error: 'Invalid code. Please try again 🤯',
           },
         )
         .unwrap();

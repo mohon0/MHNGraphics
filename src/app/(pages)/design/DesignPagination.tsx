@@ -1,21 +1,21 @@
-"use client";
+'use client';
 
-import { Button } from "@/components/ui/button";
+import {
+  ChevronLeft,
+  ChevronRight,
+  ChevronsLeft,
+  ChevronsRight,
+} from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { useCallback } from 'react';
+import { Button } from '@/components/ui/button';
 import {
   Pagination,
   PaginationContent,
   PaginationEllipsis,
   PaginationItem,
   PaginationLink,
-} from "@/components/ui/pagination";
-import {
-  ChevronLeft,
-  ChevronRight,
-  ChevronsLeft,
-  ChevronsRight,
-} from "lucide-react";
-import { useRouter } from "next/navigation";
-import { useCallback } from "react";
+} from '@/components/ui/pagination';
 
 interface PaginationUiProps {
   totalPages: number;
@@ -28,9 +28,9 @@ interface PaginationUiProps {
 export default function DesignPagination({
   totalPages,
   currentPage,
-  category = "All",
-  query = "",
-  tag = "",
+  category = 'All',
+  query = '',
+  tag = '',
 }: PaginationUiProps) {
   const router = useRouter();
 
@@ -39,19 +39,19 @@ export default function DesignPagination({
     (pageNumber: number) => {
       const params = new URLSearchParams();
 
-      if (category !== "All") {
-        params.set("category", category);
+      if (category !== 'All') {
+        params.set('category', category);
       }
 
       if (query) {
-        params.set("query", query);
+        params.set('query', query);
       }
 
       if (tag) {
-        params.set("tag", tag);
+        params.set('tag', tag);
       }
 
-      params.set("page", pageNumber.toString());
+      params.set('page', pageNumber.toString());
 
       return `/design?${params.toString()}`;
     },
@@ -107,21 +107,21 @@ export default function DesignPagination({
   const visiblePages = getVisiblePages();
 
   return (
-    <div className="flex flex-col items-center space-y-4">
+    <div className='flex flex-col items-center space-y-4'>
       <Pagination>
-        <PaginationContent className="flex flex-wrap justify-center gap-2">
+        <PaginationContent className='flex flex-wrap justify-center gap-2'>
           {/* First Page Button */}
           {totalPages > 7 && (
             <PaginationItem>
               <Button
-                variant="outline"
-                size="icon"
-                className="h-9 w-9 rounded-full"
+                variant='outline'
+                size='icon'
+                className='h-9 w-9 rounded-full'
                 onClick={() => navigateToPage(1)}
                 disabled={currentPage === 1}
-                aria-label="Go to first page"
+                aria-label='Go to first page'
               >
-                <ChevronsLeft className="h-4 w-4" />
+                <ChevronsLeft className='h-4 w-4' />
               </Button>
             </PaginationItem>
           )}
@@ -129,19 +129,19 @@ export default function DesignPagination({
           {/* Previous Button */}
           <PaginationItem>
             <Button
-              variant="outline"
-              size="icon"
-              className="h-9 w-9 rounded-full"
+              variant='outline'
+              size='icon'
+              className='h-9 w-9 rounded-full'
               onClick={() => navigateToPage(currentPage - 1)}
               disabled={currentPage === 1}
-              aria-label="Go to previous page"
+              aria-label='Go to previous page'
             >
-              <ChevronLeft className="h-4 w-4" />
+              <ChevronLeft className='h-4 w-4' />
             </Button>
           </PaginationItem>
 
           {/* Page Numbers */}
-          {visiblePages.map((page, index) => {
+          {visiblePages.map((page) => {
             if (page < 0) {
               // Render ellipsis
               return (
@@ -158,11 +158,11 @@ export default function DesignPagination({
                   isActive={page === currentPage}
                   className={`h-9 w-9 rounded-full p-0 ${
                     page === currentPage
-                      ? "bg-primary text-primary-foreground hover:bg-primary/90 hover:text-primary-foreground"
-                      : "hover:bg-muted"
+                      ? 'bg-primary text-primary-foreground hover:bg-primary/90 hover:text-primary-foreground'
+                      : 'hover:bg-muted'
                   }`}
                 >
-                  <span className="flex h-full w-full items-center justify-center">
+                  <span className='flex h-full w-full items-center justify-center'>
                     {page}
                   </span>
                 </PaginationLink>
@@ -173,14 +173,14 @@ export default function DesignPagination({
           {/* Next Button */}
           <PaginationItem>
             <Button
-              variant="outline"
-              size="icon"
-              className="h-9 w-9 rounded-full"
+              variant='outline'
+              size='icon'
+              className='h-9 w-9 rounded-full'
               onClick={() => navigateToPage(currentPage + 1)}
               disabled={currentPage === totalPages}
-              aria-label="Go to next page"
+              aria-label='Go to next page'
             >
-              <ChevronRight className="h-4 w-4" />
+              <ChevronRight className='h-4 w-4' />
             </Button>
           </PaginationItem>
 
@@ -188,21 +188,21 @@ export default function DesignPagination({
           {totalPages > 7 && (
             <PaginationItem>
               <Button
-                variant="outline"
-                size="icon"
-                className="h-9 w-9 rounded-full"
+                variant='outline'
+                size='icon'
+                className='h-9 w-9 rounded-full'
                 onClick={() => navigateToPage(totalPages)}
                 disabled={currentPage === totalPages}
-                aria-label="Go to last page"
+                aria-label='Go to last page'
               >
-                <ChevronsRight className="h-4 w-4" />
+                <ChevronsRight className='h-4 w-4' />
               </Button>
             </PaginationItem>
           )}
         </PaginationContent>
       </Pagination>
 
-      <div className="text-sm text-muted-foreground">
+      <div className='text-sm text-muted-foreground'>
         Page {currentPage} of {totalPages}
       </div>
     </div>

@@ -1,10 +1,10 @@
-import generateCode from "@/components/helper/mail/GenerateCode";
+import bcrypt from 'bcrypt';
+import { type NextRequest, NextResponse } from 'next/server';
+import generateCode from '@/components/helper/mail/GenerateCode';
 import sendVerificationEmail, {
   sendRegistrationEmail,
-} from "@/components/helper/mail/SendMail";
-import { Prisma } from "@/components/helper/prisma/Prisma";
-import bcrypt from "bcrypt";
-import { NextRequest, NextResponse } from "next/server";
+} from '@/components/helper/mail/SendMail';
+import { Prisma } from '@/components/helper/prisma/Prisma';
 
 export async function POST(req: NextRequest) {
   try {
@@ -13,7 +13,7 @@ export async function POST(req: NextRequest) {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     if (!name || !email || !password) {
-      return new NextResponse("Missing name, email, or password", {
+      return new NextResponse('Missing name, email, or password', {
         status: 400,
       });
     }
@@ -22,7 +22,7 @@ export async function POST(req: NextRequest) {
     const isPhone = /^(\+?[1-9]\d{1,14}|0\d{9,15})$/.test(email);
 
     if (!isEmail && !isPhone) {
-      return new NextResponse("Invalid email or phone number format", {
+      return new NextResponse('Invalid email or phone number format', {
         status: 400,
       });
     }
@@ -34,7 +34,7 @@ export async function POST(req: NextRequest) {
     });
 
     if (existingUser?.emailVerified) {
-      return new NextResponse("User is already registered", { status: 409 });
+      return new NextResponse('User is already registered', { status: 409 });
     } else if (existingUser) {
       const updatedUser = await Prisma.user.update({
         where: queryCondition,
@@ -58,14 +58,14 @@ export async function POST(req: NextRequest) {
       return new NextResponse(
         JSON.stringify({
           message: isEmail
-            ? "Verification code sent successfully"
-            : "User registered successfully",
+            ? 'Verification code sent successfully'
+            : 'User registered successfully',
           userId: updatedUser.id,
         }),
         {
           status: 200,
           headers: {
-            "Content-Type": "application/json",
+            'Content-Type': 'application/json',
           },
         },
       );
@@ -75,7 +75,7 @@ export async function POST(req: NextRequest) {
           name,
           email: isEmail ? email : null,
           phoneNumber: isPhone ? email : null,
-          status: "USER",
+          status: 'USER',
           password: hashedPassword,
           emailVerified: isEmail ? null : new Date(),
           verificationCode: null,
@@ -94,20 +94,21 @@ export async function POST(req: NextRequest) {
       return new NextResponse(
         JSON.stringify({
           message: isEmail
-            ? "Verification code sent successfully"
-            : "User registered successfully",
+            ? 'Verification code sent successfully'
+            : 'User registered successfully',
           userId: user.id,
         }),
         {
           status: 200,
           headers: {
-            "Content-Type": "application/json",
+            'Content-Type': 'application/json',
           },
         },
       );
     }
+    // biome-ignore lint: error
   } catch (error) {
-    return new NextResponse("Internal server error", { status: 500 });
+    return new NextResponse('Internal server error', { status: 500 });
   } finally {
     await Prisma.$disconnect();
   }
@@ -123,7 +124,7 @@ export async function PUT(req: NextRequest) {
     });
 
     if (!user) {
-      return new NextResponse("User not found", { status: 404 });
+      return new NextResponse('User not found', { status: 404 });
     }
 
     const verificationCode = code.toString();
@@ -154,23 +155,25 @@ export async function PUT(req: NextRequest) {
         // Send welcome email
         try {
           await sendRegistrationEmail(updatedUser.email);
+          // biome-ignore lint: error
         } catch (emailError) {
           return NextResponse.json(
             {
               message:
-                "Registration successful, but welcome email could not be sent.",
+                'Registration successful, but welcome email could not be sent.',
             },
             { status: 202 },
           );
         }
       }
 
-      return new NextResponse("User verified successfully", { status: 200 });
+      return new NextResponse('User verified successfully', { status: 200 });
     } else {
-      return new NextResponse("Invalid verification code", { status: 400 });
+      return new NextResponse('Invalid verification code', { status: 400 });
     }
+    // biome-ignore lint: error
   } catch (error) {
-    return new NextResponse("Internal server error", { status: 500 });
+    return new NextResponse('Internal server error', { status: 500 });
   } finally {
     await Prisma.$disconnect();
   }

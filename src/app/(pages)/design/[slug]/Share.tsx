@@ -1,21 +1,9 @@
-"use client";
+'use client';
 
-import type React from "react";
-
-import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Textarea } from "@/components/ui/textarea";
-import { Check, Copy, Instagram, QrCode, Share2 } from "lucide-react";
-import { QRCodeSVG } from "qrcode.react";
-import { useState } from "react";
+import { Check, Copy, Instagram, QrCode, Share2 } from 'lucide-react';
+import { QRCodeSVG } from 'qrcode.react';
+import type React from 'react';
+import { useState } from 'react';
 import {
   EmailIcon,
   EmailShareButton,
@@ -37,7 +25,18 @@ import {
   ViberShareButton,
   WhatsappIcon,
   WhatsappShareButton,
-} from "react-share";
+} from 'react-share';
+import { Button } from '@/components/ui/button';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Textarea } from '@/components/ui/textarea';
 
 interface PageProps {
   params: { slug: string };
@@ -59,16 +58,16 @@ export default function Share({ params }: PageProps) {
   };
 
   const handleInstagramShare = () => {
-    window.open("https://www.instagram.com/", "_blank");
+    window.open('https://www.instagram.com/', '_blank');
     handleCopy();
   };
 
   const handleQRCodeCopy = () => {
-    const svg = document.querySelector(".qr-code svg");
+    const svg = document.querySelector('.qr-code svg');
     if (svg) {
       const svgData = new XMLSerializer().serializeToString(svg);
-      const canvas = document.createElement("canvas");
-      const ctx = canvas.getContext("2d");
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
       const img = new Image();
       img.onload = () => {
         canvas.width = img.width;
@@ -77,17 +76,17 @@ export default function Share({ params }: PageProps) {
         canvas.toBlob((blob) => {
           if (blob) {
             navigator.clipboard.write([
-              new ClipboardItem({ "image/png": blob }),
+              new ClipboardItem({ 'image/png': blob }),
             ]);
           }
         });
       };
-      img.src = "data:image/svg+xml;base64," + btoa(svgData);
+      img.src = `data:image/svg+xml;base64,${btoa(svgData)}`;
     }
   };
 
   const ShareButton = ({ children }: { children: React.ReactNode }) => (
-    <div className="flex h-12 w-12 items-center justify-center rounded-full bg-muted transition-colors hover:bg-muted/80">
+    <div className='flex h-12 w-12 items-center justify-center rounded-full bg-muted transition-colors hover:bg-muted/80'>
       {children}
     </div>
   );
@@ -96,28 +95,28 @@ export default function Share({ params }: PageProps) {
     <Dialog>
       <DialogTrigger asChild>
         <Button
-          variant="outline"
-          className="flex w-full items-center justify-center gap-2 rounded-lg border-muted bg-background hover:bg-muted/20"
+          variant='outline'
+          className='flex w-full items-center justify-center gap-2 rounded-lg border-muted bg-background hover:bg-muted/20'
         >
-          <Share2 className="h-5 w-5" />
+          <Share2 className='h-5 w-5' />
           <span>Share</span>
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-md">
+      <DialogContent className='sm:max-w-md'>
         <DialogHeader>
           <DialogTitle>Share This Design</DialogTitle>
           <DialogDescription>
             Share this design on your favorite platform or copy the link.
           </DialogDescription>
         </DialogHeader>
-        <Tabs defaultValue="social" className="w-full">
-          <TabsList className="grid w-full grid-cols-3">
-            <TabsTrigger value="social">Social</TabsTrigger>
-            <TabsTrigger value="link">Link</TabsTrigger>
-            <TabsTrigger value="qr">QR Code</TabsTrigger>
+        <Tabs defaultValue='social' className='w-full'>
+          <TabsList className='grid w-full grid-cols-3'>
+            <TabsTrigger value='social'>Social</TabsTrigger>
+            <TabsTrigger value='link'>Link</TabsTrigger>
+            <TabsTrigger value='qr'>QR Code</TabsTrigger>
           </TabsList>
-          <TabsContent value="social">
-            <div className="grid grid-cols-5 gap-4 py-4">
+          <TabsContent value='social'>
+            <div className='grid grid-cols-5 gap-4 py-4'>
               <ShareButton>
                 <FacebookShareButton url={postlink} title={title}>
                   <FacebookIcon size={24} round />
@@ -152,7 +151,7 @@ export default function Share({ params }: PageProps) {
                 <EmailShareButton
                   url={postlink}
                   subject={title}
-                  body="I thought you might be interested in this design:"
+                  body='I thought you might be interested in this design:'
                 >
                   <EmailIcon size={24} round />
                 </EmailShareButton>
@@ -178,8 +177,8 @@ export default function Share({ params }: PageProps) {
               </ShareButton>
               <ShareButton>
                 <Button
-                  variant="ghost"
-                  className="h-full w-full rounded-full p-0"
+                  variant='ghost'
+                  className='h-full w-full rounded-full p-0'
                   onClick={handleInstagramShare}
                 >
                   <Instagram size={24} />
@@ -187,33 +186,33 @@ export default function Share({ params }: PageProps) {
               </ShareButton>
             </div>
           </TabsContent>
-          <TabsContent value="link">
-            <div className="flex flex-col space-y-2 py-4">
+          <TabsContent value='link'>
+            <div className='flex flex-col space-y-2 py-4'>
               <Textarea
                 value={postlink}
                 readOnly
-                className="min-h-[80px] resize-none"
+                className='min-h-[80px] resize-none'
               />
-              <Button onClick={handleCopy} className="w-full">
+              <Button onClick={handleCopy} className='w-full'>
                 {copied ? (
                   <>
-                    <Check className="mr-2 h-4 w-4" /> Copied
+                    <Check className='mr-2 h-4 w-4' /> Copied
                   </>
                 ) : (
                   <>
-                    <Copy className="mr-2 h-4 w-4" /> Copy Link
+                    <Copy className='mr-2 h-4 w-4' /> Copy Link
                   </>
                 )}
               </Button>
             </div>
           </TabsContent>
-          <TabsContent value="qr">
-            <div className="flex flex-col items-center justify-center py-4">
-              <div className="qr-code rounded-lg bg-white p-4">
+          <TabsContent value='qr'>
+            <div className='flex flex-col items-center justify-center py-4'>
+              <div className='qr-code rounded-lg bg-white p-4'>
                 <QRCodeSVG value={postlink} size={200} />
               </div>
-              <Button onClick={handleQRCodeCopy} className="mt-4">
-                <QrCode className="mr-2 h-4 w-4" /> Copy QR Code
+              <Button onClick={handleQRCodeCopy} className='mt-4'>
+                <QrCode className='mr-2 h-4 w-4' /> Copy QR Code
               </Button>
             </div>
           </TabsContent>

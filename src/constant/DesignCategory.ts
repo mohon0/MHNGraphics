@@ -5,55 +5,55 @@ export type designCategory = {
 
 export const designCategories: designCategory[] = [
   {
-    value: "illustrations",
-    label: "Illustrations",
+    value: 'illustrations',
+    label: 'Illustrations',
   },
   {
-    value: "photos",
-    label: "Photos",
+    value: 'photos',
+    label: 'Photos',
   },
   {
-    value: "icons",
-    label: "Icons",
+    value: 'icons',
+    label: 'Icons',
   },
   {
-    value: "templates",
-    label: "Templates",
+    value: 'templates',
+    label: 'Templates',
   },
   {
-    value: "fonts",
-    label: "Fonts",
+    value: 'fonts',
+    label: 'Fonts',
   },
   {
-    value: "3d-models",
-    label: "3D Models",
+    value: '3d-models',
+    label: '3D Models',
   },
   {
-    value: "textures",
-    label: "Textures",
+    value: 'textures',
+    label: 'Textures',
   },
   {
-    value: "patterns",
-    label: "Patterns",
+    value: 'patterns',
+    label: 'Patterns',
   },
   {
-    value: "animations",
-    label: "Animations",
+    value: 'animations',
+    label: 'Animations',
   },
   {
-    value: "mockups",
-    label: "Mockups",
+    value: 'mockups',
+    label: 'Mockups',
   },
   {
-    value: "sports",
-    label: "Sports",
+    value: 'sports',
+    label: 'Sports',
   },
   {
-    value: "wallpapers",
-    label: "Wallpapers",
+    value: 'wallpapers',
+    label: 'Wallpapers',
   },
   {
-    value: "people",
-    label: "People",
+    value: 'people',
+    label: 'People',
   },
 ];

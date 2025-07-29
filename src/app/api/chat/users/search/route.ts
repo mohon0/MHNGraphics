@@ -1,21 +1,21 @@
-import { authOptions } from "@/app/api/auth/[...nextauth]/Options";
-import { CustomSession } from "@/app/api/profile/route";
-import Prisma from "@/lib/prisma";
-import { getServerSession } from "next-auth/next";
-import { NextResponse } from "next/server";
+import { NextResponse } from 'next/server';
+import { getServerSession } from 'next-auth/next';
+import { authOptions } from '@/app/api/auth/[...nextauth]/Options';
+import type { CustomSession } from '@/app/api/profile/route';
+import Prisma from '@/lib/prisma';
 
 export async function GET(req: Request) {
   try {
     const session = (await getServerSession(authOptions)) as CustomSession;
     if (!session?.user?.id) {
-      return new NextResponse("Unauthorized", { status: 401 });
+      return new NextResponse('Unauthorized', { status: 401 });
     }
 
     const { searchParams } = new URL(req.url);
-    const query = searchParams.get("query");
+    const query = searchParams.get('query');
 
     if (!query) {
-      return new NextResponse("Query parameter is required", { status: 400 });
+      return new NextResponse('Query parameter is required', { status: 400 });
     }
 
     const currentUser = await Prisma.user.findUnique({
@@ -23,7 +23,7 @@ export async function GET(req: Request) {
     });
 
     if (!currentUser) {
-      return new NextResponse("Unauthorized", { status: 401 });
+      return new NextResponse('Unauthorized', { status: 401 });
     }
 
     // Search for users by name or email
@@ -33,13 +33,13 @@ export async function GET(req: Request) {
           {
             name: {
               contains: query,
-              mode: "insensitive",
+              mode: 'insensitive',
             },
           },
           {
             email: {
               contains: query,
-              mode: "insensitive",
+              mode: 'insensitive',
             },
           },
         ],
@@ -57,8 +57,8 @@ export async function GET(req: Request) {
     });
 
     return NextResponse.json(users);
+    // biome-ignore lint: error
   } catch (error) {
-    console.error("USERS_SEARCH", error);
-    return new NextResponse("Internal Error", { status: 500 });
+    return new NextResponse('Internal Error', { status: 500 });
   }
 }

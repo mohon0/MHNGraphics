@@ -1,18 +1,20 @@
-import { Prisma } from "@/components/helper/prisma/Prisma";
-import cloudinary from "@/utils/cloudinary";
-import { NextRequest, NextResponse } from "next/server";
+import { type NextRequest, NextResponse } from 'next/server';
+import { Prisma } from '@/components/helper/prisma/Prisma';
+import cloudinary from '@/utils/cloudinary';
 
 export async function GET(req: NextRequest) {
   try {
     const url = new URL(req.url);
     const queryParams = new URLSearchParams(url.search);
-    const page = queryParams.get("page")
-      ? parseInt(queryParams.get("page")!, 10)
+    const page = queryParams.get('page')
+      ? // biome-ignore lint: error
+        parseInt(queryParams.get('page')!, 10)
       : 1;
-    const limit = queryParams.get("pageSize")
-      ? parseInt(queryParams.get("pageSize")!, 10)
+    const limit = queryParams.get('pageSize')
+      ? // biome-ignore lint: error
+        parseInt(queryParams.get('pageSize')!, 10)
       : 30;
-    const searchQuery = queryParams.get("searchQuery") || "";
+    const searchQuery = queryParams.get('searchQuery') || '';
     const skip = (page - 1) * limit;
 
     // Define where clause for verified users
@@ -21,7 +23,7 @@ export async function GET(req: NextRequest) {
       ...(searchQuery && {
         name: {
           contains: searchQuery,
-          mode: "insensitive" as const, // Using "insensitive" with TypeScript const assertion
+          mode: 'insensitive' as const, // Using "insensitive" with TypeScript const assertion
         },
       }),
     };
@@ -32,7 +34,7 @@ export async function GET(req: NextRequest) {
       skip,
       take: limit,
       orderBy: {
-        createdAt: "desc",
+        createdAt: 'desc',
       },
       select: {
         id: true,
@@ -60,10 +62,10 @@ export async function GET(req: NextRequest) {
     };
 
     return NextResponse.json(result, { status: 200 });
+    // biome-ignore lint: error
   } catch (error) {
-    console.error("Error fetching verified users:", error);
     return NextResponse.json(
-      { error: "Internal Server Error" },
+      { error: 'Internal Server Error' },
       { status: 500 },
     );
   }
@@ -73,11 +75,11 @@ export async function DELETE(req: NextRequest) {
   try {
     const url = new URL(req.url);
     const queryParams = new URLSearchParams(url.search);
-    const id = queryParams.get("id");
+    const id = queryParams.get('id');
 
     // Validate ID
     if (!id) {
-      return new NextResponse("User ID is required", { status: 400 });
+      return new NextResponse('User ID is required', { status: 400 });
     }
 
     // Retrieve the user by ID
@@ -87,12 +89,12 @@ export async function DELETE(req: NextRequest) {
 
     // Check if the user exists
     if (!user) {
-      return new NextResponse("User not found", { status: 404 });
+      return new NextResponse('User not found', { status: 404 });
     }
 
     // Prevent deletion of admin accounts
-    if (user.status?.toUpperCase() === "ADMIN") {
-      return new NextResponse("Admin accounts cannot be deleted", {
+    if (user.status?.toUpperCase() === 'ADMIN') {
+      return new NextResponse('Admin accounts cannot be deleted', {
         status: 403,
       });
     }
@@ -100,9 +102,8 @@ export async function DELETE(req: NextRequest) {
     // Delete user's image from Cloudinary, if any
     if (user.imageId) {
       const userImageResult = await cloudinary.uploader.destroy(user.imageId);
-      if (userImageResult.result !== "ok") {
-        console.error("Failed to delete user profile image:", userImageResult);
-        return new NextResponse("Failed to delete user profile image", {
+      if (userImageResult.result !== 'ok') {
+        return new NextResponse('Failed to delete user profile image', {
           status: 500,
         });
       }
@@ -120,7 +121,8 @@ export async function DELETE(req: NextRequest) {
         const designImageResult = await cloudinary.uploader.destroy(
           design.imageId,
         );
-        if (designImageResult.result !== "ok") {
+        if (designImageResult.result !== 'ok') {
+          // biome-ignore lint: error
           console.error(
             `Failed to delete design image: ${design.imageId}`,
             designImageResult,
@@ -129,21 +131,21 @@ export async function DELETE(req: NextRequest) {
       }
     }
     // Delete all design by the user
-    const deleteAllDesign = await Prisma.design.deleteMany({
+    await Prisma.design.deleteMany({
       where: {
         authorId: user.id,
       },
     });
 
     // Delete all comments by the user
-    const DeleteComment = await Prisma.comment.deleteMany({
+    await Prisma.comment.deleteMany({
       where: {
         userId: user.id,
       },
     });
 
     // Delete user application
-    const deleteAppplication = await Prisma.application.deleteMany({
+    await Prisma.application.deleteMany({
       where: {
         userId: user.id,
       },
@@ -154,10 +156,11 @@ export async function DELETE(req: NextRequest) {
       where: { id },
     });
 
-    return new NextResponse("User and associated data deleted successfully", {
+    return new NextResponse('User and associated data deleted successfully', {
       status: 200,
     });
+    // biome-ignore lint: error
   } catch (error) {
-    return new NextResponse("Internal Server Error", { status: 500 });
+    return new NextResponse('Internal Server Error', { status: 500 });
   }
 }

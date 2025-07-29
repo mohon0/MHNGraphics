@@ -1,27 +1,27 @@
-"use client";
+'use client';
 
-import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from "recharts";
+import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from 'recharts';
 
 const PAYMENT_METHODS_DATA = [
-  { name: "bKash", value: 45, color: "#E2136E" },
-  { name: "Nagad", value: 30, color: "#F9772B" },
-  { name: "Rocket", value: 15, color: "#8C3494" },
-  { name: "Card", value: 10, color: "#4CAF50" },
+  { name: 'bKash', value: 45, color: '#E2136E' },
+  { name: 'Nagad', value: 30, color: '#F9772B' },
+  { name: 'Rocket', value: 15, color: '#8C3494' },
+  { name: 'Card', value: 10, color: '#4CAF50' },
 ];
 
 export default function PaymentMethodChart() {
   return (
-    <div className="h-[400px] w-full">
-      <ResponsiveContainer width="100%" height="100%">
+    <div className='h-[400px] w-full'>
+      <ResponsiveContainer width='100%' height='100%'>
         <PieChart>
           <Pie
             data={PAYMENT_METHODS_DATA}
-            cx="50%"
-            cy="50%"
+            cx='50%'
+            cy='50%'
             labelLine={false}
             outerRadius={150}
-            fill="#8884d8"
-            dataKey="value"
+            fill='#8884d8'
+            dataKey='value'
             label={({
               cx,
               cy,
@@ -41,8 +41,8 @@ export default function PaymentMethodChart() {
                   x={x}
                   y={y}
                   fill={PAYMENT_METHODS_DATA[index].color}
-                  textAnchor={x > cx ? "start" : "end"}
-                  dominantBaseline="central"
+                  textAnchor={x > cx ? 'start' : 'end'}
+                  dominantBaseline='central'
                 >
                   {`${PAYMENT_METHODS_DATA[index].name} (${value}%)`}
                 </text>
@@ -50,15 +50,16 @@ export default function PaymentMethodChart() {
             }}
           >
             {PAYMENT_METHODS_DATA.map((entry, index) => (
+              // biome-ignore lint: error
               <Cell key={`cell-${index}`} fill={entry.color} />
             ))}
           </Pie>
           <Tooltip
-            formatter={(value: number) => [`${value}%`, "Percentage"]}
+            formatter={(value: number) => [`${value}%`, 'Percentage']}
             contentStyle={{
-              backgroundColor: "white",
-              border: "1px solid #ccc",
-              borderRadius: "4px",
+              backgroundColor: 'white',
+              border: '1px solid #ccc',
+              borderRadius: '4px',
             }}
           />
         </PieChart>

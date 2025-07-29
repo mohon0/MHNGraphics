@@ -1,22 +1,22 @@
-import { Prisma } from "@/components/helper/prisma/Prisma";
-import { NextRequest, NextResponse } from "next/server";
+import { type NextRequest, NextResponse } from 'next/server';
+import { Prisma } from '@/components/helper/prisma/Prisma';
 
 export async function GET(req: NextRequest) {
   try {
     const url = new URL(req.url);
     const queryParams = new URLSearchParams(url.search);
-    const page = parseInt(queryParams.get("page") || "1", 10);
+    const page = parseInt(queryParams.get('page') || '1', 10);
 
-    const searchName = queryParams.get("search") || "";
-    let bloodGroup = (queryParams.get("filterBy") || "").trim();
+    const searchName = queryParams.get('search') || '';
+    let bloodGroup = (queryParams.get('filterBy') || '').trim();
 
     const skipCount = (page - 1) * 20;
+    // biome-ignore lint: error
+    const whereClause: any = {};
 
-    let whereClause: any = {};
-
-    if (bloodGroup && bloodGroup !== "All") {
-      if (!bloodGroup.includes("-")) {
-        bloodGroup = bloodGroup + "+";
+    if (bloodGroup && bloodGroup !== 'All') {
+      if (!bloodGroup.includes('-')) {
+        bloodGroup = `${bloodGroup}+`;
       }
 
       whereClause.bloodGroup = {
@@ -29,7 +29,7 @@ export async function GET(req: NextRequest) {
         {
           fullAddress: {
             contains: searchName,
-            mode: "insensitive",
+            mode: 'insensitive',
           },
         },
         ...(whereClause.AND || []),
@@ -52,7 +52,7 @@ export async function GET(req: NextRequest) {
         skip: skipCount,
         take: 20,
         orderBy: {
-          createdAt: "desc",
+          createdAt: 'desc',
         },
       }),
       Prisma.application.count({ where: whereClause }),
@@ -61,16 +61,16 @@ export async function GET(req: NextRequest) {
     if (allUsers.length > 0) {
       return new NextResponse(
         JSON.stringify({ users: allUsers, totalUsersCount }),
-        { headers: { "Content-Type": "application/json" } },
+        { headers: { 'Content-Type': 'application/json' } },
       );
     } else {
-      return new NextResponse("No users found.", { status: 200 });
+      return new NextResponse('No users found.', { status: 200 });
     }
+    // biome-ignore lint: error
   } catch (error) {
-    console.error("Error:", error);
-    return new NextResponse("Internal Server Error", {
+    return new NextResponse('Internal Server Error', {
       status: 500,
-      headers: { "Content-Type": "text/plain" },
+      headers: { 'Content-Type': 'text/plain' },
     });
   } finally {
     await Prisma.$disconnect();

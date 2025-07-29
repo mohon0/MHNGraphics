@@ -1,16 +1,16 @@
-"use client";
+'use client';
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import axios from "axios";
-import { format } from "date-fns";
-import { CalendarIcon, Loader2 } from "lucide-react";
-import * as React from "react";
-import { useForm } from "react-hook-form";
-import { toast } from "sonner";
+import { zodResolver } from '@hookform/resolvers/zod';
+import axios from 'axios';
+import { format } from 'date-fns';
+import { CalendarIcon, Loader2 } from 'lucide-react';
+import * as React from 'react';
+import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
 
-import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from '@/components/ui/button';
+import { Calendar } from '@/components/ui/calendar';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import {
   Form,
   FormControl,
@@ -18,16 +18,16 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+} from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover";
-import { PaymentFormSchema, PaymentFormSchemaType } from "@/lib/Schemas";
-import { cn } from "@/lib/utils";
-import { useFetchPaymentReport } from "@/services/payment";
+} from '@/components/ui/popover';
+import { PaymentFormSchema, type PaymentFormSchemaType } from '@/lib/Schemas';
+import { cn } from '@/lib/utils';
+import { useFetchPaymentReport } from '@/services/payment';
 
 interface PaymentFormProps {
   id: string; // applicationId is required
@@ -41,8 +41,8 @@ export default function PaymentForm({ id, onSuccess }: PaymentFormProps) {
   const form = useForm<PaymentFormSchemaType>({
     resolver: zodResolver(PaymentFormSchema),
     defaultValues: {
-      comment: "",
-      amount: "",
+      comment: '',
+      amount: '',
     },
   });
 
@@ -63,14 +63,14 @@ export default function PaymentForm({ id, onSuccess }: PaymentFormProps) {
         formattedData,
       ),
       {
-        loading: "Submitting payment...",
+        loading: 'Submitting payment...',
         success: () => {
           form.reset();
           onSuccess?.();
           refetch();
-          return "Payment added successfully!";
+          return 'Payment added successfully!';
         },
-        error: "Failed to add payment. Please try again.",
+        error: 'Failed to add payment. Please try again.',
       },
     );
 
@@ -80,40 +80,40 @@ export default function PaymentForm({ id, onSuccess }: PaymentFormProps) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-lg font-medium">Add Payment</CardTitle>
+        <CardTitle className='text-lg font-medium'>Add Payment</CardTitle>
       </CardHeader>
       <CardContent>
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+          <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-4'>
             {/* Payment Receive Date */}
             <FormField
               control={form.control}
-              name="receiveDate"
+              name='receiveDate'
               render={({ field }) => (
-                <FormItem className="flex flex-col">
+                <FormItem className='flex flex-col'>
                   <FormLabel>Payment Receive Date</FormLabel>
                   <Popover>
                     <PopoverTrigger asChild>
                       <FormControl>
                         <Button
-                          variant="outline"
+                          variant='outline'
                           className={cn(
-                            "w-full pl-3 text-left font-normal",
-                            !field.value && "text-muted-foreground",
+                            'w-full pl-3 text-left font-normal',
+                            !field.value && 'text-muted-foreground',
                           )}
                         >
                           {field.value ? (
-                            format(field.value, "PPP")
+                            format(field.value, 'PPP')
                           ) : (
                             <span>Pick a date</span>
                           )}
-                          <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                          <CalendarIcon className='ml-auto h-4 w-4 opacity-50' />
                         </Button>
                       </FormControl>
                     </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0" align="start">
+                    <PopoverContent className='w-auto p-0' align='start'>
                       <Calendar
-                        mode="single"
+                        mode='single'
                         selected={field.value}
                         onSelect={field.onChange}
                         initialFocus
@@ -128,32 +128,32 @@ export default function PaymentForm({ id, onSuccess }: PaymentFormProps) {
             {/* Payment Month */}
             <FormField
               control={form.control}
-              name="paymentMonth"
+              name='paymentMonth'
               render={({ field }) => (
-                <FormItem className="flex flex-col">
+                <FormItem className='flex flex-col'>
                   <FormLabel>Payment Month</FormLabel>
                   <Popover>
                     <PopoverTrigger asChild>
                       <FormControl>
                         <Button
-                          variant="outline"
+                          variant='outline'
                           className={cn(
-                            "w-full pl-3 text-left font-normal",
-                            !field.value && "text-muted-foreground",
+                            'w-full pl-3 text-left font-normal',
+                            !field.value && 'text-muted-foreground',
                           )}
                         >
                           {field.value ? (
-                            format(field.value, "MMMM yyyy")
+                            format(field.value, 'MMMM yyyy')
                           ) : (
                             <span>Select month</span>
                           )}
-                          <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                          <CalendarIcon className='ml-auto h-4 w-4 opacity-50' />
                         </Button>
                       </FormControl>
                     </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0" align="start">
+                    <PopoverContent className='w-auto p-0' align='start'>
                       <Calendar
-                        mode="single"
+                        mode='single'
                         selected={field.value}
                         onSelect={field.onChange}
                         initialFocus
@@ -168,14 +168,14 @@ export default function PaymentForm({ id, onSuccess }: PaymentFormProps) {
             {/* Amount */}
             <FormField
               control={form.control}
-              name="amount"
+              name='amount'
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Amount</FormLabel>
                   <FormControl>
                     <Input
-                      type="number"
-                      placeholder="Enter amount"
+                      type='number'
+                      placeholder='Enter amount'
                       {...field}
                       onChange={(e) => field.onChange(e.target.value)}
                     />
@@ -188,12 +188,12 @@ export default function PaymentForm({ id, onSuccess }: PaymentFormProps) {
             {/* Comment */}
             <FormField
               control={form.control}
-              name="comment"
+              name='comment'
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Comment</FormLabel>
                   <FormControl>
-                    <Input placeholder="Add a comment" {...field} />
+                    <Input placeholder='Add a comment' {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -201,14 +201,14 @@ export default function PaymentForm({ id, onSuccess }: PaymentFormProps) {
             />
 
             {/* Submit Button */}
-            <Button type="submit" className="w-full" disabled={isSubmitting}>
+            <Button type='submit' className='w-full' disabled={isSubmitting}>
               {isSubmitting ? (
                 <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  <Loader2 className='mr-2 h-4 w-4 animate-spin' />
                   Adding Payment...
                 </>
               ) : (
-                "Add Payment"
+                'Add Payment'
               )}
             </Button>
           </form>

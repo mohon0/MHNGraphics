@@ -1,12 +1,12 @@
-"use client";
+'use client';
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
-import { usePresence } from "@/hooks/use-presence";
-import { cn } from "@/lib/utils";
-import { formatDistanceToNow } from "date-fns";
-import { useSession } from "next-auth/react";
-import { useEffect, useState } from "react";
+import { formatDistanceToNow } from 'date-fns';
+import { useSession } from 'next-auth/react';
+import { useEffect, useState } from 'react';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Badge } from '@/components/ui/badge';
+import { usePresence } from '@/hooks/use-presence';
+import { cn } from '@/lib/utils';
 
 interface ConversationItemProps {
   conversation: {
@@ -69,61 +69,62 @@ export function ConversationItem({
 
   return (
     <button
+      type='button'
       className={cn(
-        "flex w-full items-center gap-3 rounded-lg p-3 text-left transition-colors",
-        isActive ? "bg-accent text-accent-foreground" : "hover:bg-accent/50",
-        isUnread && "font-medium",
+        'flex w-full items-center gap-3 rounded-lg p-3 text-left transition-colors',
+        isActive ? 'bg-accent text-accent-foreground' : 'hover:bg-accent/50',
+        isUnread && 'font-medium',
       )}
       onClick={onClick}
     >
-      <div className="relative">
-        <Avatar className="h-12 w-12 border shadow-xs">
-          <AvatarImage src={otherUser.image || ""} alt={otherUser.name || ""} />
-          <AvatarFallback className="bg-primary/10 text-primary">
-            {otherUser.name?.charAt(0).toUpperCase() || "U"}
+      <div className='relative'>
+        <Avatar className='h-12 w-12 border shadow-xs'>
+          <AvatarImage src={otherUser.image || ''} alt={otherUser.name || ''} />
+          <AvatarFallback className='bg-primary/10 text-primary'>
+            {otherUser.name?.charAt(0).toUpperCase() || 'U'}
           </AvatarFallback>
         </Avatar>
         {isOnline && (
-          <span className="absolute bottom-0 right-0 h-3 w-3 rounded-full border-2 border-background bg-emerald-500"></span>
+          <span className='absolute bottom-0 right-0 h-3 w-3 rounded-full border-2 border-background bg-emerald-500'></span>
         )}
       </div>
 
-      <div className="flex-1 overflow-hidden">
-        <div className="flex justify-between">
-          <span className={cn("truncate", isUnread && "font-semibold")}>
+      <div className='flex-1 overflow-hidden'>
+        <div className='flex justify-between'>
+          <span className={cn('truncate', isUnread && 'font-semibold')}>
             {otherUser.name}
           </span>
           <span
             className={cn(
-              "shrink-0 text-xs",
-              isUnread ? "text-foreground" : "text-muted-foreground",
+              'shrink-0 text-xs',
+              isUnread ? 'text-foreground' : 'text-muted-foreground',
             )}
           >
             {lastMessage?.createdAt
               ? formatDistanceToNow(new Date(lastMessage.createdAt), {
                   addSuffix: false,
                 })
-              : ""}
+              : ''}
           </span>
         </div>
-        <div className="flex items-center justify-between">
+        <div className='flex items-center justify-between'>
           <p
             className={cn(
-              "truncate text-sm",
-              isUnread ? "text-foreground" : "text-muted-foreground",
-              "max-w-[180px] sm:max-w-[140px]", // Wider on mobile
+              'truncate text-sm',
+              isUnread ? 'text-foreground' : 'text-muted-foreground',
+              'max-w-[180px] sm:max-w-[140px]', // Wider on mobile
             )}
           >
             {lastMessage
-              ? `${session?.user?.id === lastMessage.senderId ? "You: " : ""}${lastMessage.content}`
+              ? `${session?.user?.id === lastMessage.senderId ? 'You: ' : ''}${lastMessage.content}`
               : !isOnline && lastSeen
                 ? `Last seen ${formatDistanceToNow(lastSeen, { addSuffix: true })}`
-                : "No messages yet"}
+                : 'No messages yet'}
           </p>
           {isUnread && (
             <Badge
-              variant="default"
-              className="h-5 min-w-[20px] rounded-full px-1.5"
+              variant='default'
+              className='h-5 min-w-[20px] rounded-full px-1.5'
             >
               1
             </Badge>

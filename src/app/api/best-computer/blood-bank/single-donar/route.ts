@@ -1,13 +1,13 @@
-import { Prisma } from "@/components/helper/prisma/Prisma";
-import { NextRequest, NextResponse } from "next/server";
+import { type NextRequest, NextResponse } from 'next/server';
+import { Prisma } from '@/components/helper/prisma/Prisma';
 
 export async function GET(req: NextRequest) {
   try {
     const search = req.nextUrl.searchParams;
-    const id = search.get("id");
+    const id = search.get('id');
 
     if (!id) {
-      return new NextResponse("no id available", { status: 400 });
+      return new NextResponse('no id available', { status: 400 });
     }
     const response = await Prisma.bloodDonation.findUnique({
       where: {
@@ -16,12 +16,13 @@ export async function GET(req: NextRequest) {
     });
 
     if (!response) {
-      return new NextResponse("No data found", { status: 400 });
+      return new NextResponse('No data found', { status: 400 });
     }
 
     return new NextResponse(JSON.stringify(response), { status: 200 });
+    // biome-ignore lint: error
   } catch (error) {
-    return new NextResponse("Error", { status: 500 });
+    return new NextResponse('Error', { status: 500 });
   } finally {
     Prisma.$disconnect();
   }

@@ -1,21 +1,9 @@
-"use client";
+'use client';
 
-import type React from "react";
-
-import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Textarea } from "@/components/ui/textarea";
-import { Check, Copy, Instagram, QrCode, Share2 } from "lucide-react";
-import { QRCodeSVG } from "qrcode.react";
-import { useState } from "react";
+import { Check, Copy, Instagram, QrCode, Share2 } from 'lucide-react';
+import { QRCodeSVG } from 'qrcode.react';
+import type React from 'react';
+import { useState } from 'react';
 import {
   EmailIcon,
   EmailShareButton,
@@ -37,16 +25,27 @@ import {
   ViberShareButton,
   WhatsappIcon,
   WhatsappShareButton,
-} from "react-share";
-import { toast } from "sonner";
+} from 'react-share';
+import { toast } from 'sonner';
+import { Button } from '@/components/ui/button';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from '@/components/ui/dialog';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Textarea } from '@/components/ui/textarea';
 
 interface ShareDialogProps {
   title: string;
   description: string;
   url: string;
   imageUrl?: string;
-  variant?: "default" | "outline" | "ghost";
-  size?: "default" | "sm" | "lg" | "icon";
+  variant?: 'default' | 'outline' | 'ghost';
+  size?: 'default' | 'sm' | 'lg' | 'icon';
   className?: string;
 }
 
@@ -54,10 +53,10 @@ export default function ShareDialog({
   title,
   description,
   url,
-  imageUrl = "/og-image.jpg",
-  variant = "outline",
-  size = "default",
-  className = "",
+  imageUrl = '/og-image.jpg',
+  variant = 'outline',
+  size = 'default',
+  className = '',
 }: ShareDialogProps) {
   const [copied, setCopied] = useState(false);
   const [open, setOpen] = useState(false);
@@ -65,22 +64,22 @@ export default function ShareDialog({
   const handleCopy = async () => {
     await navigator.clipboard.writeText(url);
     setCopied(true);
-    toast.success("Link copied to clipboard");
+    toast.success('Link copied to clipboard');
     setTimeout(() => setCopied(false), 2000);
   };
 
   const handleInstagramShare = () => {
-    window.open("https://www.instagram.com/", "_blank");
+    window.open('https://www.instagram.com/', '_blank');
     handleCopy();
-    toast.success("Link copied for Instagram sharing");
+    toast.success('Link copied for Instagram sharing');
   };
 
   const handleQRCodeCopy = () => {
-    const svg = document.querySelector(".qr-code svg");
+    const svg = document.querySelector('.qr-code svg');
     if (svg) {
       const svgData = new XMLSerializer().serializeToString(svg);
-      const canvas = document.createElement("canvas");
-      const ctx = canvas.getContext("2d");
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
       const img = new Image();
       img.onload = () => {
         canvas.width = img.width;
@@ -89,18 +88,19 @@ export default function ShareDialog({
         canvas.toBlob((blob) => {
           if (blob) {
             navigator.clipboard.write([
-              new ClipboardItem({ "image/png": blob }),
+              new ClipboardItem({ 'image/png': blob }),
             ]);
-            toast.success("QR code copied to clipboard");
+            toast.success('QR code copied to clipboard');
           }
         });
       };
-      img.src = "data:image/svg+xml;base64," + btoa(svgData);
+      // biome-ignore lint: error
+      img.src = 'data:image/svg+xml;base64,' + btoa(svgData);
     }
   };
 
   const ShareButton = ({ children }: { children: React.ReactNode }) => (
-    <div className="bg-muted hover:bg-muted/80 flex h-12 w-12 items-center justify-center rounded-full transition-all duration-300 hover:scale-110">
+    <div className='bg-muted hover:bg-muted/80 flex h-12 w-12 items-center justify-center rounded-full transition-all duration-300 hover:scale-110'>
       {children}
     </div>
   );
@@ -113,30 +113,30 @@ export default function ShareDialog({
           size={size}
           className={`gap-1.5 transition-all duration-300 hover:scale-105 ${className}`}
         >
-          <Share2 className="h-4 w-4" />
+          <Share2 className='h-4 w-4' />
           <span>Share</span>
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-md">
+      <DialogContent className='sm:max-w-md'>
         <DialogHeader>
           <DialogTitle>{title}</DialogTitle>
           <DialogDescription>
             Share on your favorite platform or copy the link.
           </DialogDescription>
         </DialogHeader>
-        <Tabs defaultValue="social" className="w-full">
-          <TabsList className="grid w-full grid-cols-3">
-            <TabsTrigger value="social">Social</TabsTrigger>
-            <TabsTrigger value="link">Link</TabsTrigger>
-            <TabsTrigger value="qr">QR Code</TabsTrigger>
+        <Tabs defaultValue='social' className='w-full'>
+          <TabsList className='grid w-full grid-cols-3'>
+            <TabsTrigger value='social'>Social</TabsTrigger>
+            <TabsTrigger value='link'>Link</TabsTrigger>
+            <TabsTrigger value='qr'>QR Code</TabsTrigger>
           </TabsList>
-          <TabsContent value="social">
-            <div className="grid grid-cols-5 gap-4 py-4">
+          <TabsContent value='social'>
+            <div className='grid grid-cols-5 gap-4 py-4'>
               <ShareButton>
                 <FacebookShareButton
                   url={url}
                   title={description}
-                  onClick={() => toast.success("Shared on Facebook")}
+                  onClick={() => toast.success('Shared on Facebook')}
                 >
                   <FacebookIcon size={24} round />
                 </FacebookShareButton>
@@ -145,7 +145,7 @@ export default function ShareDialog({
                 <TwitterShareButton
                   url={url}
                   title={description}
-                  onClick={() => toast.success("Shared on Twitter")}
+                  onClick={() => toast.success('Shared on Twitter')}
                 >
                   <TwitterIcon size={24} round />
                 </TwitterShareButton>
@@ -154,7 +154,7 @@ export default function ShareDialog({
                 <LinkedinShareButton
                   url={url}
                   title={description}
-                  onClick={() => toast.success("Shared on LinkedIn")}
+                  onClick={() => toast.success('Shared on LinkedIn')}
                 >
                   <LinkedinIcon size={24} round />
                 </LinkedinShareButton>
@@ -163,7 +163,7 @@ export default function ShareDialog({
                 <WhatsappShareButton
                   url={url}
                   title={description}
-                  onClick={() => toast.success("Shared on WhatsApp")}
+                  onClick={() => toast.success('Shared on WhatsApp')}
                 >
                   <WhatsappIcon size={24} round />
                 </WhatsappShareButton>
@@ -172,7 +172,7 @@ export default function ShareDialog({
                 <RedditShareButton
                   url={url}
                   title={description}
-                  onClick={() => toast.success("Shared on Reddit")}
+                  onClick={() => toast.success('Shared on Reddit')}
                 >
                   <RedditIcon size={24} round />
                 </RedditShareButton>
@@ -181,7 +181,7 @@ export default function ShareDialog({
                 <TelegramShareButton
                   url={url}
                   title={description}
-                  onClick={() => toast.success("Shared on Telegram")}
+                  onClick={() => toast.success('Shared on Telegram')}
                 >
                   <TelegramIcon size={24} round />
                 </TelegramShareButton>
@@ -191,7 +191,7 @@ export default function ShareDialog({
                   url={url}
                   subject={title}
                   body={`I thought you might be interested in this: ${description}`}
-                  onClick={() => toast.success("Shared via Email")}
+                  onClick={() => toast.success('Shared via Email')}
                 >
                   <EmailIcon size={24} round />
                 </EmailShareButton>
@@ -201,7 +201,7 @@ export default function ShareDialog({
                   url={url}
                   media={imageUrl}
                   description={description}
-                  onClick={() => toast.success("Shared on Pinterest")}
+                  onClick={() => toast.success('Shared on Pinterest')}
                 >
                   <PinterestIcon size={24} round />
                 </PinterestShareButton>
@@ -210,7 +210,7 @@ export default function ShareDialog({
                 <TumblrShareButton
                   url={url}
                   title={description}
-                  onClick={() => toast.success("Shared on Tumblr")}
+                  onClick={() => toast.success('Shared on Tumblr')}
                 >
                   <TumblrIcon size={24} round />
                 </TumblrShareButton>
@@ -219,15 +219,15 @@ export default function ShareDialog({
                 <ViberShareButton
                   url={url}
                   title={description}
-                  onClick={() => toast.success("Shared on Viber")}
+                  onClick={() => toast.success('Shared on Viber')}
                 >
                   <ViberIcon size={24} round />
                 </ViberShareButton>
               </ShareButton>
               <ShareButton>
                 <Button
-                  variant="ghost"
-                  className="h-full w-full rounded-full p-0"
+                  variant='ghost'
+                  className='h-full w-full rounded-full p-0'
                   onClick={handleInstagramShare}
                 >
                   <Instagram size={24} />
@@ -235,33 +235,33 @@ export default function ShareDialog({
               </ShareButton>
             </div>
           </TabsContent>
-          <TabsContent value="link">
-            <div className="flex flex-col space-y-2 py-4">
+          <TabsContent value='link'>
+            <div className='flex flex-col space-y-2 py-4'>
               <Textarea
                 value={url}
                 readOnly
-                className="min-h-[80px] resize-none"
+                className='min-h-[80px] resize-none'
               />
-              <Button onClick={handleCopy} className="w-full">
+              <Button onClick={handleCopy} className='w-full'>
                 {copied ? (
                   <>
-                    <Check className="mr-2 h-4 w-4" /> Copied
+                    <Check className='mr-2 h-4 w-4' /> Copied
                   </>
                 ) : (
                   <>
-                    <Copy className="mr-2 h-4 w-4" /> Copy Link
+                    <Copy className='mr-2 h-4 w-4' /> Copy Link
                   </>
                 )}
               </Button>
             </div>
           </TabsContent>
-          <TabsContent value="qr">
-            <div className="flex flex-col items-center justify-center py-4">
-              <div className="qr-code rounded-lg bg-white p-4 shadow-md">
+          <TabsContent value='qr'>
+            <div className='flex flex-col items-center justify-center py-4'>
+              <div className='qr-code rounded-lg bg-white p-4 shadow-md'>
                 <QRCodeSVG value={url} size={200} />
               </div>
-              <Button onClick={handleQRCodeCopy} className="mt-4">
-                <QrCode className="mr-2 h-4 w-4" /> Copy QR Code
+              <Button onClick={handleQRCodeCopy} className='mt-4'>
+                <QrCode className='mr-2 h-4 w-4' /> Copy QR Code
               </Button>
             </div>
           </TabsContent>
