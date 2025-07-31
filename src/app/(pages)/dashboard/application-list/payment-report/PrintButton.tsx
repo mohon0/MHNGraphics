@@ -16,6 +16,7 @@ interface PrintButtonProps {
     fullAddress?: string;
     mobileNumber?: string;
     email?: string;
+    duration?: string;
     image?: string;
   };
   paymentsData: PaymentReport[];
@@ -49,64 +50,108 @@ const PrintablePaymentReport = forwardRef<
   return (
     <div
       ref={ref}
-      className='print:p-6 print:text-black print:bg-white print:font-sans print:text-sm print:leading-relaxed'
+      className='print:p-6 print:text-black print:bg-white print:font-sans print:text-sm print:leading-normal print:max-w-none'
     >
       {/* Header */}
-      <div className='print:text-center print:border-b-2 print:border-gray-800 print:pb-5 print:mb-8'>
-        <h1 className='print:text-3xl print:font-bold print:mb-2 print:text-gray-800'>
+      <div className='print:text-center print:border-b-2 print:border-gray-800 print:pb-4 print:mb-6'>
+        <h1 className='print:text-2xl print:font-bold print:mb-1 print:text-gray-800'>
           Best Computer Training Center
         </h1>
-        <h2 className='print:text-2xl print:font-bold print:mb-2 print:text-gray-800'>
+        <h2 className='print:text-lg print:font-semibold print:mb-2 print:text-gray-700'>
           Payment Report
         </h2>
-        <p className='print:text-sm print:text-gray-600'>
+        <p className='print:text-xs print:text-gray-600'>
           Generated on {format(new Date(), 'MMMM dd, yyyy')}
         </p>
       </div>
 
       {/* Student Information */}
-      <div className='print:bg-gray-50 print:border print:border-gray-300 print:rounded-lg print:p-5 print:mb-8'>
-        <h2 className='print:text-lg print:font-bold print:text-gray-800 print:mb-4 print:pb-2 print:border-b print:border-gray-300'>
+      <div className='print:border print:border-gray-300 print:rounded print:p-4 print:mb-6'>
+        <h3 className='print:text-sm print:font-bold print:text-gray-800 print:mb-3 print:border-b print:border-gray-200 print:pb-1'>
           Student Information
-        </h2>
-        <div className='print:flex print:gap-5 print:items-start'>
+        </h3>
+
+        <div className='print:flex print:gap-4 print:items-start'>
+          {/* Student Image */}
           {studentData.image && (
-            <Image
-              src={studentData.image || '/placeholder.svg'}
-              alt={studentData.studentName || 'Student'}
-              width={80}
-              height={80}
-              className='print:w-20 print:h-20 print:rounded-lg print:border-2 print:border-gray-300 print:object-cover print:flex-shrink-0'
-            />
+            <div className='print:flex-shrink-0'>
+              <Image
+                src={studentData.image || '/placeholder.svg'}
+                alt={studentData.studentName || 'Student'}
+                width={70}
+                height={70}
+                priority={true}
+                unoptimized={true}
+                className='print:w-16 print:h-16 print:rounded print:border print:border-gray-300 print:object-cover'
+                style={{
+                  width: '64px',
+                  height: '64px',
+                  objectFit: 'cover',
+                }}
+              />
+            </div>
           )}
+
+          {/* Student Details */}
           <div className='print:flex-1'>
             {studentData.studentName && (
-              <h3 className='print:text-lg print:font-bold print:mb-1 print:text-gray-800'>
+              <h4 className='print:text-base print:font-bold print:mb-2 print:text-gray-800'>
                 {studentData.studentName}
-              </h3>
+              </h4>
             )}
-            {studentData.course && (
-              <p className='print:text-sm print:text-gray-600 print:mb-4'>
-                {studentData.course}
-              </p>
-            )}
-            <div className='print:space-y-2'>
+
+            <div className='print:grid print:grid-cols-2 print:gap-x-4 print:gap-y-1 print:text-xs'>
               {studentData.fullAddress && (
-                <div className='print:text-xs print:text-gray-700'>
-                  <span className='print:font-semibold'>Address:</span>{' '}
-                  {studentData.fullAddress}
+                <div className='print:col-span-1 print:mt-1'>
+                  <span className='print:font-semibold print:text-gray-600'>
+                    Address:
+                  </span>{' '}
+                  <span className='print:text-gray-800'>
+                    {studentData.fullAddress}
+                  </span>
                 </div>
               )}
+              {studentData.course && (
+                <div>
+                  <span className='print:font-semibold print:text-gray-600'>
+                    Course:
+                  </span>{' '}
+                  <span className='print:text-gray-800'>
+                    {studentData.course}
+                  </span>
+                </div>
+              )}
+
+              {studentData.duration && (
+                <div>
+                  <span className='print:font-semibold print:text-gray-600'>
+                    Duration:
+                  </span>{' '}
+                  <span className='print:text-gray-800'>
+                    {studentData.duration}
+                  </span>
+                </div>
+              )}
+
               {studentData.mobileNumber && (
-                <div className='print:text-xs print:text-gray-700'>
-                  <span className='print:font-semibold'>Phone:</span>{' '}
-                  {studentData.mobileNumber}
+                <div>
+                  <span className='print:font-semibold print:text-gray-600'>
+                    Phone:
+                  </span>{' '}
+                  <span className='print:text-gray-800'>
+                    {studentData.mobileNumber}
+                  </span>
                 </div>
               )}
+
               {studentData.email && (
-                <div className='print:text-xs print:text-gray-700'>
-                  <span className='print:font-semibold'>Email:</span>{' '}
-                  {studentData.email}
+                <div>
+                  <span className='print:font-semibold print:text-gray-600'>
+                    Email:
+                  </span>{' '}
+                  <span className='print:text-gray-800'>
+                    {studentData.email}
+                  </span>
                 </div>
               )}
             </div>
@@ -115,128 +160,143 @@ const PrintablePaymentReport = forwardRef<
       </div>
 
       {/* Payment Summary */}
-      <h2 className='print:text-lg print:font-bold print:text-gray-800 print:mb-4 print:pb-2 print:border-b print:border-gray-300'>
-        Payment Summary
-      </h2>
-      <div className='print:grid print:grid-cols-3 print:gap-5 print:mb-8'>
-        <div className='print:bg-white print:border print:border-gray-300 print:rounded-md print:p-4 print:text-center'>
-          <div className='print:text-xs print:text-gray-600 print:mb-2 print:font-bold print:uppercase'>
-            Total Balance
+      <div className='print:mb-6'>
+        <h3 className='print:text-sm print:font-bold print:text-gray-800 print:mb-3 print:border-b print:border-gray-200 print:pb-1'>
+          Payment Summary
+        </h3>
+
+        <div className='print:grid print:grid-cols-3 print:gap-4'>
+          <div className='print:border print:border-gray-300 print:rounded print:p-3 print:text-center'>
+            <div className='print:text-xs print:text-gray-600 print:mb-1 print:font-semibold'>
+              Total Balance
+            </div>
+            <div
+              className={cn(
+                'print:text-lg print:font-bold',
+                totalAmount >= 0
+                  ? 'print:text-green-600'
+                  : 'print:text-red-600',
+              )}
+            >
+              ৳ {totalAmount.toLocaleString()}
+            </div>
+            <div className='print:text-xs print:text-gray-500'>
+              {paymentsData.length} transactions
+            </div>
           </div>
-          <div
-            className={cn(
-              'print:text-xl print:font-bold print:mb-1',
-              totalAmount >= 0 ? 'print:text-green-600' : 'print:text-red-600',
-            )}
-          >
-            ৳ {totalAmount.toLocaleString()}
+
+          <div className='print:border print:border-gray-300 print:rounded print:p-3 print:text-center'>
+            <div className='print:text-xs print:text-gray-600 print:mb-1 print:font-semibold'>
+              Total Received
+            </div>
+            <div className='print:text-lg print:font-bold print:text-green-600'>
+              ৳ {totalPositive.toLocaleString()}
+            </div>
+            <div className='print:text-xs print:text-gray-500'>
+              {positivePayments.length} payments
+            </div>
           </div>
-          <div className='print:text-xs print:text-gray-500'>
-            {paymentsData.length} transactions
-          </div>
-        </div>
-        <div className='print:bg-white print:border print:border-gray-300 print:rounded-md print:p-4 print:text-center'>
-          <div className='print:text-xs print:text-gray-600 print:mb-2 print:font-bold print:uppercase'>
-            Total Received
-          </div>
-          <div className='print:text-xl print:font-bold print:mb-1 print:text-green-600'>
-            ৳ {totalPositive.toLocaleString()}
-          </div>
-          <div className='print:text-xs print:text-gray-500'>
-            {positivePayments.length} payments
-          </div>
-        </div>
-        <div className='print:bg-white print:border print:border-gray-300 print:rounded-md print:p-4 print:text-center'>
-          <div className='print:text-xs print:text-gray-600 print:mb-2 print:font-bold print:uppercase'>
-            Total Refunded
-          </div>
-          <div className='print:text-xl print:font-bold print:mb-1 print:text-red-600'>
-            ৳ {Math.abs(totalNegative).toLocaleString()}
-          </div>
-          <div className='print:text-xs print:text-gray-500'>
-            {negativePayments.length} refunds
+
+          <div className='print:border print:border-gray-300 print:rounded print:p-3 print:text-center'>
+            <div className='print:text-xs print:text-gray-600 print:mb-1 print:font-semibold'>
+              Total Refunded
+            </div>
+            <div className='print:text-lg print:font-bold print:text-red-600'>
+              ৳ {Math.abs(totalNegative).toLocaleString()}
+            </div>
+            <div className='print:text-xs print:text-gray-500'>
+              {negativePayments.length} refunds
+            </div>
           </div>
         </div>
       </div>
 
       {/* Payment History */}
-      <h2 className='print:text-lg print:font-bold print:text-gray-800 print:mb-4 print:pb-2 print:border-b print:border-gray-300'>
-        Payment History
-      </h2>
-      <div className='print:border print:border-gray-300 print:rounded-lg print:overflow-hidden'>
-        <table className='print:w-full print:border-collapse'>
-          <thead>
-            <tr className='print:bg-gray-100'>
-              <th className='print:border print:border-gray-300 print:p-3 print:text-left print:font-bold print:text-xs print:text-gray-800'>
-                Date
-              </th>
-              <th className='print:border print:border-gray-300 print:p-3 print:text-left print:font-bold print:text-xs print:text-gray-800'>
-                Month
-              </th>
-              <th className='print:border print:border-gray-300 print:p-3 print:text-left print:font-bold print:text-xs print:text-gray-800'>
-                Comment
-              </th>
-              <th className='print:border print:border-gray-300 print:p-3 print:text-right print:font-bold print:text-xs print:text-gray-800'>
-                Amount
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {sortedPayments.map((payment, index) => (
-              <tr
-                key={payment.id}
-                className={
-                  index % 2 === 0 ? 'print:bg-white' : 'print:bg-gray-50'
-                }
-              >
-                <td className='print:border print:border-gray-300 print:p-3 print:text-xs print:text-gray-800'>
-                  {format(new Date(payment.paymentReceiveDate), 'dd/MM/yyyy')}
-                </td>
-                <td className='print:border print:border-gray-300 print:p-3 print:text-xs print:text-gray-800'>
-                  {format(new Date(payment.paymentMonth), 'MMM yyyy')}
-                </td>
-                <td className='print:border print:border-gray-300 print:p-3 print:text-xs print:text-gray-800'>
-                  {payment.comment}
+      <div className='print:mb-6'>
+        <h3 className='print:text-sm print:font-bold print:text-gray-800 print:mb-3 print:border-b print:border-gray-200 print:pb-1'>
+          Payment History
+        </h3>
+
+        <div className='print:border print:border-gray-300 print:rounded print:overflow-hidden'>
+          <table className='print:w-full print:border-collapse print:text-xs'>
+            <thead>
+              <tr className='print:bg-gray-100'>
+                <th className='print:border-b print:border-gray-300 print:p-2 print:text-left print:font-semibold print:text-gray-800'>
+                  Date
+                </th>
+                <th className='print:border-b print:border-gray-300 print:p-2 print:text-left print:font-semibold print:text-gray-800'>
+                  Month
+                </th>
+                <th className='print:border-b print:border-gray-300 print:p-2 print:text-left print:font-semibold print:text-gray-800'>
+                  Comment
+                </th>
+                <th className='print:border-b print:border-gray-300 print:p-2 print:text-right print:font-semibold print:text-gray-800'>
+                  Amount
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {sortedPayments.map((payment, index) => (
+                <tr
+                  key={payment.id}
+                  className={
+                    index % 2 === 0 ? 'print:bg-white' : 'print:bg-gray-50'
+                  }
+                >
+                  <td className='print:border-b print:border-gray-200 print:p-2 print:text-gray-800'>
+                    {format(new Date(payment.paymentReceiveDate), 'dd/MM/yyyy')}
+                  </td>
+                  <td className='print:border-b print:border-gray-200 print:p-2 print:text-gray-800'>
+                    {format(new Date(payment.paymentMonth), 'MMM yyyy')}
+                  </td>
+                  <td className='print:border-b print:border-gray-200 print:p-2 print:text-gray-800'>
+                    {payment.comment}
+                  </td>
+                  <td
+                    className={cn(
+                      'print:border-b print:border-gray-200 print:p-2 print:text-right print:font-semibold',
+                      payment.amount > 0
+                        ? 'print:text-green-600'
+                        : 'print:text-red-600',
+                    )}
+                  >
+                    ৳ {payment.amount.toLocaleString()}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+            <tfoot>
+              <tr className='print:bg-gray-200'>
+                <td
+                  colSpan={3}
+                  className='print:border-t print:border-gray-400 print:p-2 print:font-bold print:text-gray-800'
+                >
+                  Total Balance
                 </td>
                 <td
                   className={cn(
-                    'print:border print:border-gray-300 print:p-3 print:text-right print:text-xs print:font-bold',
-                    payment.amount > 0
+                    'print:border-t print:border-gray-400 print:p-2 print:text-right print:font-bold',
+                    totalAmount > 0
                       ? 'print:text-green-600'
                       : 'print:text-red-600',
                   )}
                 >
-                  ৳ {payment.amount.toLocaleString()}
+                  ৳ {totalAmount.toLocaleString()}
                 </td>
               </tr>
-            ))}
-          </tbody>
-          <tfoot>
-            <tr className='print:bg-gray-200'>
-              <td
-                colSpan={3}
-                className='print:border print:border-gray-300 print:p-3 print:font-bold print:text-xs print:text-gray-800'
-              >
-                Total Balance
-              </td>
-              <td
-                className={cn(
-                  'print:border print:border-gray-300 print:p-3 print:text-right print:font-bold print:text-xs',
-                  totalAmount > 0
-                    ? 'print:text-green-600'
-                    : 'print:text-red-600',
-                )}
-              >
-                ৳ {totalAmount.toLocaleString()}
-              </td>
-            </tr>
-          </tfoot>
-        </table>
+            </tfoot>
+          </table>
+        </div>
       </div>
 
       {/* Footer */}
-      <div className='print:mt-10 print:pt-5 print:border-t print:border-gray-300 print:text-center print:text-xs print:text-gray-600'>
-        <p>This is a computer-generated payment report.</p>
+      <div className='print:mt-8 print:pt-4 print:border-t print:border-gray-300 print:flex print:justify-end'>
+        <div className='print:text-right print:text-xs print:text-gray-800'>
+          <div className='print:mb-12'>{/* Space for signature */}</div>
+          <div className='print:border-t print:border-gray-400 print:pt-2 print:px-6'>
+            <p className='print:font-semibold'>Director's Signature</p>
+          </div>
+        </div>
       </div>
     </div>
   );
@@ -254,6 +314,14 @@ export default function PrintButton({
   const handlePrint = useReactToPrint({
     contentRef: printRef,
     documentTitle: `Payment Report - ${studentData.studentName || 'Student'}`,
+    onBeforePrint: () => {
+      // Small delay to ensure images are loaded
+      return new Promise((resolve) => {
+        setTimeout(() => {
+          resolve();
+        }, 500);
+      });
+    },
   });
 
   return (

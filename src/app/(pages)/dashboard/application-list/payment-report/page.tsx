@@ -50,6 +50,7 @@ function PaymentPage() {
             mobileNumber: paymentData?.mobileNumber,
             email: paymentData?.email,
             image: paymentData?.image,
+            duration: paymentData?.duration,
           }}
           paymentsData={paymentData?.payments || []}
           disabled={isPaymentLoading || !paymentData?.payments?.length}
