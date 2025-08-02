@@ -6,7 +6,7 @@
     "useIgnoreFile": true
   },
   "files": {
-    "ignoreUnknown": true
+    "ignoreUnknown": false
   },
   "formatter": {
     "enabled": true,
@@ -27,14 +27,13 @@
       "jsxQuoteStyle": "single"
     }
   },
-  "json": {
-    "parser": {
-      "allowComments": true
-    }
-  },
-  "css": {
-    "formatter": {
-      "enabled": true
+  "assist": {
+    "enabled": true,
+    "actions": {
+      "source": {
+        "organizeImports": "on"
+      }
     }
   }
 }
+
