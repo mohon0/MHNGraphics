@@ -74,11 +74,17 @@ export async function executePayment(
   paymentID: string,
 ) {
   try {
+    const token = await grantToken(bkashConfig);
     const response = await axios.post(
       `${bkashConfig.base_url}/tokenized/checkout/execute`,
       { paymentID },
       {
-        headers: await authHeaders(bkashConfig),
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+          authorization: token,
+          'x-app-key': bkashConfig.app_key,
+        },
       },
     );
     return response.data;
@@ -93,11 +99,17 @@ export async function queryPayment(
   paymentID: string,
 ) {
   try {
+    const token = await grantToken(bkashConfig);
     const response = await axios.post(
       `${bkashConfig.base_url}/tokenized/checkout/payment/status`,
       { paymentID },
       {
-        headers: await authHeaders(bkashConfig),
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+          authorization: token,
+          'x-app-key': bkashConfig.app_key,
+        },
       },
     );
     return response.data;

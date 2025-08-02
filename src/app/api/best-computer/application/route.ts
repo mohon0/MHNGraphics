@@ -103,19 +103,6 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    // Generate new roll number
-    let roll = 2000;
-    const lastApplication = await Prisma.application.findFirst({
-      orderBy: { createdAt: 'desc' },
-      select: { roll: true },
-    });
-
-    if (lastApplication?.roll) {
-      roll = lastApplication.roll + 1;
-    }
-
-    // Use utility function for birthDay
-
     // Validate date format
     if (!birthDay || Number.isNaN(Date.parse(birthDay))) {
       return NextResponse.json(
@@ -128,7 +115,7 @@ export async function POST(req: NextRequest) {
     const birthDate = new Date(birthDay);
     // Create a new application
     try {
-      const newApplication = await Prisma.application.create({
+      const newApplication = await Prisma.pendingApplication.create({
         data: {
           studentName,
           fatherName,
@@ -154,17 +141,12 @@ export async function POST(req: NextRequest) {
           email,
           pc,
           userId,
-          roll,
           transactionId,
           fatherOccupation,
           maritalStatus,
           session,
           image: imageUrl.secure_url,
           imageId: imageUrl.public_id,
-          status: 'Pending',
-          certificate: 'Pending',
-          applicationFee: 'Pending',
-          applicationFeeAmount: 0,
           metadata: {
             paymentPending: true,
             paymentMethod: 'BKASH',
@@ -200,7 +182,7 @@ export async function POST(req: NextRequest) {
           }
         }
 
-        await Prisma.application.delete({
+        await Prisma.pendingApplication.delete({
           where: {
             id: newApplication.id,
           },
@@ -217,11 +199,9 @@ export async function POST(req: NextRequest) {
       const currentMetadata =
         // biome-ignore lint: error
         (newApplication.metadata as Record<string, any>) || {};
-      await Prisma.application.update({
+      await Prisma.pendingApplication.update({
         where: { id: newApplication.id },
         data: {
-          applicationFeeAmount: 100,
-          applicationFee: 'Paid',
           metadata: {
             ...currentMetadata,
             paymentInitiated: true,

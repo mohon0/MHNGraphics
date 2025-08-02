@@ -171,6 +171,42 @@ model Application {
   
 }
 
+model PendingApplication {
+  id               String    @id @default(auto()) @map("_id") @db.ObjectId
+  studentName      String
+  session          Int
+  fatherName       String
+  motherName       String
+  birthDay         DateTime
+  bloodGroup       String
+  mobileNumber     String
+  guardianNumber   String
+  gender           String
+  religion         String
+  fullAddress      String
+  district         String
+  education        String
+  board            String
+  rollNumber       String
+  regNumber        String
+  passingYear      String
+  gpa              String
+  nid              String
+  nationality      String
+  course           String
+  duration         String
+  image            String
+  imageId          String?
+  email            String
+  pc               String
+  transactionId    String?
+  fatherOccupation String?
+  maritalStatus    String?
+  createdAt        DateTime  @default(now())
+  userId           String    @db.ObjectId
+  metadata         Json?
+}
+
 model Transaction {
   id                 String      @id @default(auto()) @map("_id") @db.ObjectId
   comment            String
