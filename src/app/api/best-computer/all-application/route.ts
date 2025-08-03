@@ -1,5 +1,6 @@
 import { Prisma, PrismaClient } from '@prisma/client';
 import { type NextRequest, NextResponse } from 'next/server';
+import { cleanupAllPendingApplications } from '@/utils/applicationCleanup';
 
 const prisma = new PrismaClient();
 
@@ -22,8 +23,15 @@ export async function GET(req: NextRequest) {
     const pageSize = 20; // Number of items per page
     const skipCount = (page - 1) * pageSize;
 
+    await cleanupAllPendingApplications(3);
+
     // Build the `where` condition for Prisma query
     const where: Prisma.ApplicationWhereInput = {
+      OR: [
+        { applicationFee: { not: 'Pending' } },
+        { applicationFee: { isSet: false } }, // Field doesn't exist
+        { applicationFee: null }, // Field is null
+      ],
       ...(status && status !== 'All' ? { status } : {}),
       ...(search
         ? {

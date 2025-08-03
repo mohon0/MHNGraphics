@@ -1,10 +1,19 @@
 import { NextResponse } from 'next/server';
 import { Prisma } from '@/components/helper/prisma/Prisma';
+import { cleanupAllPendingApplications } from '@/utils/applicationCleanup';
 
 export async function GET() {
   try {
     // Fetch the latest 5 applications from the database
+    cleanupAllPendingApplications(5);
     const applications = await Prisma.application.findMany({
+      where: {
+        OR: [
+          { applicationFee: { not: 'Pending' } },
+          { applicationFee: { isSet: false } }, // Field doesn't exist
+          { applicationFee: null }, // Field is null
+        ],
+      },
       orderBy: {
         createdAt: 'desc',
       },

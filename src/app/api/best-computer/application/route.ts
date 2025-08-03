@@ -4,6 +4,7 @@ import { UploadImage } from '@/components/helper/image/UploadImage';
 import { Prisma } from '@/components/helper/prisma/Prisma';
 import { bkashConfig } from '@/lib/bkash';
 import { createPayment } from '@/services/bkash';
+import { cleanupUserPendingApplications } from '@/utils/applicationCleanup';
 import cloudinary from '@/utils/cloudinary';
 
 const myUrl = process.env.NEXT_PUBLIC_SITE_URL;
@@ -221,7 +222,6 @@ export async function POST(req: NextRequest) {
         where: { id: newApplication.id },
         data: {
           applicationFeeAmount: 100,
-          applicationFee: 'Paid',
           metadata: {
             ...currentMetadata,
             paymentInitiated: true,
@@ -260,6 +260,18 @@ export async function GET(req: NextRequest) {
 
     if (!token || !userId) {
       return new NextResponse('User not logged in or authorId missing');
+    }
+
+    const existingPendingApplication = await Prisma.application.findFirst({
+      where: {
+        userId: userId,
+        applicationFee: 'Pending',
+      },
+    });
+
+    if (existingPendingApplication) {
+      // ADD AWAIT HERE!
+      await cleanupUserPendingApplications(userId); // Use the correct function
     }
 
     const existingApplication = await Prisma.application.findFirst({
