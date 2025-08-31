@@ -99,7 +99,7 @@ export default function Contact() {
                     className='rounded'
                   />
                 </div>
-                <h3 className='mt-4 text-xl font-bold'>Oylkka Graphics</h3>
+                <h3 className='mt-4 text-xl font-bold'>Oylkka IT</h3>
                 <p className='mt-2 text-sm text-muted-foreground'>
                   Transforming ideas into visual masterpieces. Your vision, our
                   expertise.
@@ -139,7 +139,7 @@ export default function Contact() {
                   <div>
                     <p className='font-medium'>Email Address</p>
                     <p className='text-sm text-muted-foreground'>
-                      contact@freelancermohon.com
+                      contact@oylkka.com
                     </p>
                   </div>
                 </div>

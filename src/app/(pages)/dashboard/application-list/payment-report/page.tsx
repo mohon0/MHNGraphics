@@ -58,7 +58,7 @@ function PaymentPage() {
       </div>
 
       {/* Main Content Grid */}
-      <div className='w-full max-w-7xl md:grid md:grid-cols-12 md:gap-8 space-y-8 md:space-y-0 px-4'>
+      <div className='w-full print:hidden max-w-7xl md:grid md:grid-cols-12 md:gap-8 space-y-8 md:space-y-0 px-4'>
         <div className='col-span-5 space-y-8'>
           <StudentInfo id={id} />
           <PaymentForm id={id || ''} />

@@ -37,15 +37,9 @@ export default function DesktopMenu({
                 fixed ? 'pl-2 text-sm text-white' : 'pl-2 text-sm text-black'
               }
             >
-              Oylkka Shop
+              Oylkka Graphics
             </NavigationMenuLink>
           </Link>
-          <Badge
-            variant='secondary'
-            className='ml-1 animate-bounce px-1 py-0 text-[10px] text-black'
-          >
-            Soon
-          </Badge>
         </NavigationMenuItem>
         <NavigationMenuItem>
           <Link href='/mhn-it' legacyBehavior passHref>

@@ -4,14 +4,14 @@ import Contact from '../contact/Contact';
 import Hero from './Hero';
 import ImageSlider from './ImageSlider';
 import { Slider } from './Slider';
-import State from './State';
+import Services from './services';
 
 export default function Home() {
   return (
     <>
       <Header fixed />
       <Hero />
-      <State />
+      <Services />
       <Slider />
       <ImageSlider />
       <Contact />

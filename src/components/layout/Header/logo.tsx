@@ -37,12 +37,7 @@ export default function Logo({ fixed = false, className = '' }: LogoProps) {
         <span
           className={`text-lg font-bold leading-tight sm:text-xl md:text-xl ${fixed ? 'text-white' : 'text-gray-900'} transition-all duration-300`}
         >
-          Oylkka
-        </span>
-        <span
-          className={`text-xs leading-tight sm:text-sm md:text-sm ${fixed ? 'text-gray-300' : 'text-gray-600'} transition-all duration-300`}
-        >
-          Graphics
+          Oylkka IT
         </span>
       </div>
     </Link>

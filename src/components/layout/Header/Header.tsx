@@ -36,7 +36,7 @@ export default function Header({
           <div className='hidden lg:block'>
             <DesktopMenu fixed={fixed} best={best} />
           </div>
-          {best ? (
+          {best && (
             <Link
               href='/best-computer-training-center/application'
               className='hidden md:block'
@@ -45,14 +45,6 @@ export default function Header({
                 className={`${fixed ? 'border bg-transparent hover:bg-transparent' : 'border border-primary bg-secondary text-primary hover:bg-secondary'}`}
               >
                 Apply Now
-              </Button>
-            </Link>
-          ) : (
-            <Link href='/company/pricing' className='hidden md:block'>
-              <Button
-                className={`${fixed ? 'border bg-transparent hover:bg-transparent' : 'border border-primary bg-secondary text-primary hover:bg-secondary'}`}
-              >
-                Pricing
               </Button>
             </Link>
           )}

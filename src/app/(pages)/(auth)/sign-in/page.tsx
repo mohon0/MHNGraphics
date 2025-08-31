@@ -163,7 +163,7 @@ export default function Login() {
                 <div className='text-center md:hidden'>
                   <p>Don&#39;t have an account?</p>
                   <Link href='/sign-up' className='font-semibold text-primary'>
-                    Sign Up
+                    Create an account
                   </Link>
                 </div>
               </section>
