@@ -282,8 +282,7 @@ export default function Footer() {
 
             <div className='flex flex-col items-center justify-between gap-4 md:flex-row'>
               <p className='text-xs text-gray-500'>
-                © {new Date().getFullYear()} Oylkka Graphics. All rights
-                reserved.
+                © {new Date().getFullYear()} Oylkka IT. All rights reserved.
               </p>
               <nav className='flex flex-wrap justify-center gap-x-6 gap-y-2'>
                 {['Privacy Policy', 'Terms of Service', 'Cookie Policy'].map(
