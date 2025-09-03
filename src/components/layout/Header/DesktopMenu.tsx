@@ -2,7 +2,6 @@
 
 import Link from 'next/link';
 import React from 'react';
-import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
   NavigationMenu,
@@ -31,13 +30,29 @@ export default function DesktopMenu({
           </Link>
         </NavigationMenuItem>
         <NavigationMenuItem>
-          <Link href='/shop' legacyBehavior passHref>
+          <Link href='/' legacyBehavior passHref>
             <NavigationMenuLink
               className={
                 fixed ? 'pl-2 text-sm text-white' : 'pl-2 text-sm text-black'
               }
             >
               Oylkka Graphics
+            </NavigationMenuLink>
+          </Link>
+        </NavigationMenuItem>
+        <NavigationMenuItem>
+          <Link
+            href='https://oylkka.com'
+            target='_blank'
+            legacyBehavior
+            passHref
+          >
+            <NavigationMenuLink
+              className={
+                fixed ? 'pl-2 text-sm text-white' : 'pl-2 text-sm text-black'
+              }
+            >
+              Oylkka Shop
             </NavigationMenuLink>
           </Link>
         </NavigationMenuItem>
@@ -51,12 +66,12 @@ export default function DesktopMenu({
               Oylkka IT Agency
             </NavigationMenuLink>
           </Link>
-          <Badge
+          {/* <Badge
             variant='secondary'
             className='ml-1 animate-bounce px-1 py-0 text-[10px] text-black delay-75'
           >
             Soon
-          </Badge>
+          </Badge> */}
         </NavigationMenuItem>
 
         <NavigationMenuItem>

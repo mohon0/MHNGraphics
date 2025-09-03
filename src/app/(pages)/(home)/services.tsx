@@ -48,7 +48,7 @@ const services: Service[] = [
     icon: <Palette className='w-8 h-8' />,
     badge: 'Creative',
     gradient: 'from-purple-500 to-pink-500',
-    link: '/mhn-graphics',
+    link: '/',
   },
   {
     id: 'ecommerce',

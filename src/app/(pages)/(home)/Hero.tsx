@@ -9,33 +9,44 @@ import type React from 'react';
 import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import img1 from '@/images/hero/1.jpg';
-import img2 from '@/images/hero/2.jpg';
-import img3 from '@/images/hero/3.jpg';
+import img1 from '@/images/hero/best-computer.webp';
+import img5 from '@/images/hero/oylkka-blood-bank.webp';
+import img2 from '@/images/hero/oylkka-e-commerc.webp';
+import img4 from '@/images/hero/oylkka-graphics.webp';
+import img3 from '@/images/hero/oylkka-it-agency.webp';
 import { cn } from '@/lib/utils';
 import HeroSkeleton from './skeleton';
 
 const heroData = [
   {
-    image: img2,
-    title: 'Design Smarter',
-    subtitle: 'Create Better',
-    description:
-      'Premium resources to craft outstanding designs with ease and speed.',
+    image: img1, // best computer training
+    title: 'Learn Smarter',
+    subtitle: 'Grow Faster',
+    description: 'Master the skills you need for a high-tech career.',
   },
   {
-    image: img1,
-    title: 'Unleash Creativity',
-    subtitle: 'Without Limits',
-    description:
-      'Access thousands of professional assets for your next project.',
+    image: img2, // oylkka e commerce
+    title: 'Shop Your Way',
+    subtitle: 'The Easy Way',
+    description: 'Your favorite products delivered with ease.',
   },
   {
-    image: img3,
-    title: 'Elevate Your',
+    image: img3, // oylkka it agency
+    title: 'Innovate Your',
+    subtitle: 'Business Now',
+    description: 'Cutting-edge IT solutions for modern success.',
+  },
+  {
+    image: img4, // oylkka graphics
+    title: 'Design Your',
     subtitle: 'Visual Story',
-    description:
-      'Turn ideas into stunning visuals with our premium collection.',
+    description: 'Transform your ideas into stunning visuals.',
+  },
+  {
+    image: img5, // oylkka blood bank
+    title: 'Give the Gift',
+    subtitle: 'Of Life',
+    description: 'Your donation can save a life today.',
   },
 ];
 

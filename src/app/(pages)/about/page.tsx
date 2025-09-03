@@ -6,7 +6,7 @@ import Image from 'next/image';
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import img from '@/images/hero/2.jpg';
+import img from '@/images/hero/best-computer.webp';
 import Services from './Services';
 import Testimonials from './Testimonials';
 import ToolsSkills from './ToolsSkills';

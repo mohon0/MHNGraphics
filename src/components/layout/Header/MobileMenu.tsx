@@ -3,8 +3,6 @@
 import { Menu } from 'lucide-react';
 import Link from 'next/link';
 import { useState } from 'react';
-
-import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import {
   Sheet,
@@ -24,35 +22,25 @@ export default function MobileMenu({ fixed = false }: { fixed?: boolean }) {
       </SheetTrigger>
       <SheetContent side='left' className='w-[300px] p-0 sm:w-[400px]'>
         <SheetHeader className='border-b p-6 text-left'>
-          <SheetTitle className='text-2xl font-bold'>
-            Oylkka Graphics
-          </SheetTitle>
+          <SheetTitle className='text-2xl font-bold'>Oylkka IT</SheetTitle>
         </SheetHeader>
         <ScrollArea className='h-[calc(100vh-5rem)]'>
           <nav className='flex flex-col gap-3 p-6'>
             <Link href='/'>Home</Link>
 
-            <Link href='/shop' legacyBehavior passHref>
-              <div>
-                Oylkka Shop
-                <Badge
-                  variant='secondary'
-                  className='ml-1 animate-bounce px-1 py-0 text-[10px] text-black delay-75'
-                >
-                  Soon
-                </Badge>
-              </div>
+            <Link
+              href='https://oylkka.com'
+              target='_blank'
+              legacyBehavior
+              passHref
+            >
+              Oylkka Shop
             </Link>
             <Link href='/mhn-it' legacyBehavior passHref>
-              <div>
-                Oylkka IT Agency
-                <Badge
-                  variant='secondary'
-                  className='ml-1 animate-bounce px-1 py-0 text-[10px] text-black delay-75'
-                >
-                  Soon
-                </Badge>
-              </div>
+              Oylkka IT Agency
+            </Link>
+            <Link href='/' legacyBehavior passHref>
+              Oylkka graphics
             </Link>
             <Link href='/best-computer-training-center/blood-donate'>
               Blood Donate
@@ -60,7 +48,6 @@ export default function MobileMenu({ fixed = false }: { fixed?: boolean }) {
             <Link href='/best-computer-training-center'>
               Best Computer T.C.
             </Link>
-            <Link href='/pricing'>Pricing</Link>
           </nav>
         </ScrollArea>
       </SheetContent>
