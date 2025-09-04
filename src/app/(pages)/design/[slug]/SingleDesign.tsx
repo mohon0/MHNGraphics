@@ -29,6 +29,7 @@ export default function SingleDesign(props: { params: Params }) {
   const [dragStart, setDragStart] = useState({ x: 0, y: 0 });
   const [controlsVisible, setControlsVisible] = useState(true);
   const [showInfo, setShowInfo] = useState(false);
+  const [isPng, setIsPng] = useState(false);
 
   const controlsTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -44,6 +45,7 @@ export default function SingleDesign(props: { params: Params }) {
 
   useEffect(() => {
     if (data?.image) {
+      setIsPng(data.image.toLowerCase().endsWith('.png'));
       getImageDimensions(data.image)
         .then((dimensions) => setImageDimensions(dimensions))
         .catch((error) =>
@@ -192,7 +194,9 @@ export default function SingleDesign(props: { params: Params }) {
           >
             {data?.image && (
               <div
-                className='absolute inset-0 flex items-center justify-center overflow-hidden'
+                className={`absolute inset-0 flex items-center justify-center overflow-hidden ${
+                  isPng ? 'checkerboard' : ''
+                }`}
                 style={{
                   cursor:
                     zoomLevel > 1
@@ -309,7 +313,11 @@ export default function SingleDesign(props: { params: Params }) {
                         Full Screen
                       </Button>
                     </div>
-                    <div className='flex items-center justify-center bg-secondary p-4 md:h-152'>
+                    <div
+                      className={`flex items-center justify-center bg-secondary p-4 md:h-152 ${
+                        isPng ? 'checkerboard' : ''
+                      }`}
+                    >
                       <Image
                         onContextMenu={(e) => e.preventDefault()}
                         src={image || '/placeholder.svg'}

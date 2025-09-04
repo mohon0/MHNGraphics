@@ -19,6 +19,9 @@ export function getDynamicDimensions(
   originalHeight: number,
   targetHeight: number,
 ): ImageDimensions {
+  if (targetHeight > originalHeight) {
+    return { width: originalWidth, height: originalHeight };
+  }
   const aspectRatio = originalWidth / originalHeight;
   const width = Math.round(targetHeight * aspectRatio);
   return { width, height: targetHeight };
@@ -53,7 +56,7 @@ export function getTransformedImageUrl(
   );
   return originalUrl.replace(
     '/upload/',
-    `/upload/h_${height},w_${width},c_fill,fl_attachment/w_180,o_30,l_watermark,g_center/`,
+    `/upload/h_${height},w_${width},c_limit,fl_attachment/w_180,o_30,l_watermark,g_center/`,
   );
 }
 

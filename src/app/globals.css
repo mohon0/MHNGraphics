@@ -88,6 +88,16 @@
 }
 
 @layer utilities {
+  .checkerboard {
+    background-image: conic-gradient(
+      #ccc 0.25turn,
+      #fff 0.25turn 0.5turn,
+      #ccc 0.5turn 0.75turn,
+      #fff 0.75turn
+    );
+    background-size: 20px 20px;
+  }
+
   /* Gradient Border Animation */
   .nav-gradient-border {
     position: relative;
