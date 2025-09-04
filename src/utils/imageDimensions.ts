@@ -53,7 +53,7 @@ export function getTransformedImageUrl(
   );
   return originalUrl.replace(
     '/upload/',
-    `/upload/h_${height},w_${width},f_jpg,c_fill,fl_attachment/w_180,o_30,l_watermark,g_center/`,
+    `/upload/h_${height},w_${width},c_fill,fl_attachment/w_180,o_30,l_watermark,g_center/`,
   );
 }
 
