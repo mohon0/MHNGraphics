@@ -29,8 +29,8 @@ export interface Donor {
   image: string;
   bloodGroup: string;
   district: string;
-  phone: string;
-  altPhone?: string;
+  number: string;
+  number2?: string;
   birthDate?: string;
   donatedBefore: string;
   diseases: string;

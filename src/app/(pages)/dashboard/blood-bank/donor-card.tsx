@@ -65,12 +65,12 @@ export function DonorCard({
         <div className='grid gap-2 text-sm'>
           <div className='flex items-center gap-2'>
             <PhoneIcon className='h-3.5 w-3.5 text-muted-foreground' />
-            <span>{donor.phone}</span>
+            <span>{donor.number}</span>
           </div>
-          {donor.altPhone && (
+          {donor.number2 && (
             <div className='flex items-center gap-2'>
               <PhoneIcon className='h-3.5 w-3.5 text-muted-foreground' />
-              <span>{donor.altPhone}</span>
+              <span>{donor.number2}</span>
             </div>
           )}
           {donor.birthDate && (
