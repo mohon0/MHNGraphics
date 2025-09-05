@@ -72,6 +72,7 @@ export function DashboardSidebar({
       title: 'Application',
       url: '#',
       icon: FileUser,
+      isActive: true,
       items: [
         {
           title: 'View All',
