@@ -1,16 +1,16 @@
 'use client';
-import { format } from 'date-fns';
-import Image from 'next/image';
-import { useSearchParams } from 'next/navigation';
-import { Suspense, useRef } from 'react';
-import { IoMdPrint } from 'react-icons/io';
-import { useReactToPrint } from 'react-to-print';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import logo2 from '@/images/hero/logo2.png';
 import logo from '@/images/hero/logo3.png';
 import { useSingleApplication } from '@/services/application';
 import type { UserApplication } from '@/utils/Interface';
+import { format } from 'date-fns';
+import Image from 'next/image';
+import { useSearchParams } from 'next/navigation';
+import { Suspense, useRef } from 'react';
+import { IoMdPrint } from 'react-icons/io';
+import { useReactToPrint } from 'react-to-print';
 
 function Loading() {
   return (
@@ -69,17 +69,16 @@ function SingleApplication({ application }: { application: UserApplication }) {
           </div>
           <div className='flex w-11/12 flex-col items-center justify-center text-center md:w-8/12 print:w-8/12'>
             <div className='text-center text-3xl font-bold text-black'>
-              Best Computer Training Center
+              Oylkka It & Training Center
             </div>
             <div className='text-gray-900'>
-              Rofi Tower, 4th Floor, Paira chattor, Jhenaidah
+              Rofi Tower, 5th Floor, Paira chattor, Jhenaidah
             </div>
             <div className='text-gray-900'>
               <span className='font-bold'>Mobile: </span> 01989491248
             </div>
             <div className='text-gray-900'>
-              <span className='font-bold'>Email: </span>{' '}
-              bestcomputer.jhenaidah@gmail.com
+              <span className='font-bold'>Email: </span> contact@oylkka.com
             </div>
           </div>
           <div className='md:w-2/12 print:w-2/12'>

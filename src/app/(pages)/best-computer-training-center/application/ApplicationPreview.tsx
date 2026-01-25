@@ -1,6 +1,3 @@
-import { format } from 'date-fns';
-import Image from 'next/image';
-import { useFormContext } from 'react-hook-form';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -11,6 +8,9 @@ import {
 } from '@/components/ui/dialog';
 import logo from '@/images/hero/logo3.png';
 import type { ApplicationDetail } from '@/utils/Interface';
+import { format } from 'date-fns';
+import Image from 'next/image';
+import { useFormContext } from 'react-hook-form';
 import { InfoRow } from './Model';
 
 export default function Preview() {
@@ -35,22 +35,21 @@ export default function Preview() {
               <div className='w-4/12 md:w-2/12 print:w-2/12'>
                 <Image
                   src={logo || '/placeholder.svg'}
-                  alt='Best Computer Training Center Logo'
+                  alt='Oylkka IT & Training Center Logo'
                 />
               </div>
               <div className='flex w-11/12 flex-col items-center justify-center text-center md:w-8/12 print:w-8/12'>
                 <h1 className='text-center text-3xl font-bold text-black'>
-                  Best Computer Training Center
+                  Oylkka IT & Training Center
                 </h1>
                 <p className='text-gray-900'>
-                  Rofi Tower, 4th Floor, Paira chattor, Jhenaidah
+                  Rofi Tower, 5th Floor, Paira chattor, Jhenaidah
                 </p>
                 <p className='text-gray-900'>
                   <span className='font-bold'>Mobile: </span> 01989491248
                 </p>
                 <p className='text-gray-900'>
-                  <span className='font-bold'>Email: </span>{' '}
-                  bestcomputer.jhenaidah@gmail.com
+                  <span className='font-bold'>Email: </span> contact@oylkka.com
                 </p>
               </div>
               <div className='border md:w-2/12 print:w-2/12'>

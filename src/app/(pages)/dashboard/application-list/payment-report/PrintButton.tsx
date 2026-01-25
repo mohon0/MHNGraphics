@@ -1,13 +1,13 @@
 'use client';
 
+import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
+import type { PaymentReport } from '@/utils/Interface';
 import { format } from 'date-fns';
 import { Printer } from 'lucide-react';
 import Image from 'next/image';
 import { forwardRef, useRef } from 'react';
 import { useReactToPrint } from 'react-to-print';
-import { Button } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
-import type { PaymentReport } from '@/utils/Interface';
 
 interface PrintButtonProps {
   studentData: {
@@ -55,7 +55,7 @@ const PrintablePaymentReport = forwardRef<
       {/* Header */}
       <div className='print:text-center print:border-b-2 print:border-gray-800 print:pb-4 print:mb-6'>
         <h1 className='print:text-2xl print:font-bold print:mb-1 print:text-gray-800'>
-          Best Computer Training Center
+          Oylkka IT & Training Center
         </h1>
         <h2 className='print:text-lg print:font-semibold print:mb-2 print:text-gray-700'>
           Payment Report
