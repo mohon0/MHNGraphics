@@ -115,6 +115,7 @@
     "@types/nodemailer": "^6.4.16",
     "@types/react": "19.0.12",
     "@types/react-dom": "19.0.4",
+    "knip": "^5.82.1",
     "postcss": "^8",
     "prisma": "6.2.1",
     "tailwindcss": "^4.1.11",
