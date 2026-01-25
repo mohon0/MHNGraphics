@@ -19,6 +19,12 @@ enum DesignStatus {
   PENDING
 }
 
+enum QuizDifficulty {
+  EASY
+  MEDIUM
+  HARD
+}
+
 model Account {
   id                String  @id @default(auto()) @map("_id") @db.ObjectId
   userId            String  @db.ObjectId
@@ -49,8 +55,8 @@ model Session {
 model User {
   id                       String                    @id @default(auto()) @map("_id") @db.ObjectId
   name                     String?
-  email                    String?                   @unique
-  phoneNumber              String?                   @unique
+  email                    String?                  
+  phoneNumber              String?                
   googleId                 String?
   password                 String?
   emailVerified            DateTime?
@@ -69,6 +75,7 @@ model User {
   conversationParticipants ConversationParticipant[]
   sentMessages             Message[]                 @relation("SentMessages")
   receivedMessages         Message[]                 @relation("ReceivedMessages")
+  quizResults              QuizResult[]
   isOnline                 Boolean                   @default(false)
   lastSeen                 DateTime?
 
@@ -126,49 +133,48 @@ model Comment {
 }
 
 model Application {
-  id               String        @id @default(auto()) @map("_id") @db.ObjectId
-  studentName      String
-  session          Int
-  fatherName       String
-  motherName       String
-  birthDay         DateTime
-  bloodGroup       String
-  mobileNumber     String
-  guardianNumber   String
-  gender           String
-  religion         String
-  fullAddress      String
-  district         String
-  education        String
-  board            String
-  rollNumber       String
-  regNumber        String
-  passingYear      String
-  gpa              String
-  nid              String
-  nationality      String
-  course           String
-  duration         String
-  status           String
-  image            String
-  imageId          String?
-  email            String
-  pc               String
-  transactionId    String?
-  fatherOccupation String?
-  maritalStatus    String?
-  roll             Int?
-  certificate      String?
-  createdAt        DateTime      @default(now())
-  updatedAt        DateTime      @updatedAt
-  userId           String        @unique @db.ObjectId
-  user             User          @relation(fields: [userId], references: [id])
-  payments         Transaction[]
-  editable         Boolean?      @default(false)
-  applicationFee   String?
+  id                   String        @id @default(auto()) @map("_id") @db.ObjectId
+  studentName          String
+  session              Int
+  fatherName           String
+  motherName           String
+  birthDay             DateTime
+  bloodGroup           String
+  mobileNumber         String
+  guardianNumber       String
+  gender               String
+  religion             String
+  fullAddress          String
+  district             String
+  education            String
+  board                String
+  rollNumber           String
+  regNumber            String
+  passingYear          String
+  gpa                  String
+  nid                  String
+  nationality          String
+  course               String
+  duration             String
+  status               String
+  image                String
+  imageId              String?
+  email                String
+  pc                   String
+  transactionId        String?
+  fatherOccupation     String?
+  maritalStatus        String?
+  roll                 Int?
+  certificate          String?
+  createdAt            DateTime      @default(now())
+  updatedAt            DateTime      @updatedAt
+  userId               String        @unique @db.ObjectId
+  user                 User          @relation(fields: [userId], references: [id])
+  payments             Transaction[]
+  editable             Boolean?      @default(false)
+  applicationFee       String?
   applicationFeeAmount Int?
-   metadata    Json?
-  
+  metadata             Json?
 }
 
 model Transaction {
@@ -223,8 +229,8 @@ model Conversation {
 
 model ConversationParticipant {
   id             String       @id @default(auto()) @map("_id") @db.ObjectId
-  userId         String       @db.ObjectId // Add this annotation
-  conversationId String       @db.ObjectId // Add this annotation
+  userId         String       @db.ObjectId
+  conversationId String       @db.ObjectId
   joinedAt       DateTime     @default(now())
   user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
   conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
@@ -237,9 +243,9 @@ model Message {
   content        String
   createdAt      DateTime     @default(now())
   updatedAt      DateTime     @updatedAt
-  senderId       String       @db.ObjectId // Add this annotation
-  receiverId     String       @db.ObjectId // Add this annotation
-  conversationId String       @db.ObjectId // You should add this too for consistency
+  senderId       String       @db.ObjectId
+  receiverId     String       @db.ObjectId
+  conversationId String       @db.ObjectId
   isRead         Boolean      @default(false)
   readAt         DateTime?
   isDeleted      Boolean      @default(false)
@@ -248,11 +254,80 @@ model Message {
   conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
 }
 
-
 model BkashToken {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
   token     String
   expiresAt DateTime
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+// ============================================
+// QUIZ MODELS
+// ============================================
+
+model Quiz {
+  id           String          @id @default(auto()) @map("_id") @db.ObjectId
+  title        String
+  description  String?
+  category     String?
+  difficulty   QuizDifficulty? @default(MEDIUM)
+  image        String?
+  imageId      String?
+  tags         String[]
+  questions    Question[]
+  results      QuizResult[]
+  published    Boolean         @default(false)
+  publishedAt  DateTime?
+  timeLimit    Int?            // Time limit in minutes (optional)
+  passingScore Int?            // Minimum score to pass (optional)
+  createdAt    DateTime        @default(now())
+  updatedAt    DateTime        @updatedAt
+
+  @@index([category])
+  @@index([published, publishedAt])
+}
+
+model Question {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  text      String
+  image     String?  // Optional image for the question
+  imageId   String?
+  order     Int      // Display order
+  quizId    String   @db.ObjectId
+  quiz      Quiz     @relation(fields: [quizId], references: [id], onDelete: Cascade)
+  options   Option[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([quizId, order])
+}
+
+model Option {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  text        String
+  isCorrect   Boolean  @default(false)
+  explanation String?  // Optional explanation for learning
+  questionId  String   @db.ObjectId
+  question    Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model QuizResult {
+  id             String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId         String   @db.ObjectId
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  quizId         String   @db.ObjectId
+  quiz           Quiz     @relation(fields: [quizId], references: [id], onDelete: Cascade)
+  score          Int
+  totalQuestions Int      // Store total for historical accuracy
+  answers        Json     // Store user's answers for review
+  timeSpent      Int?     // Time taken in seconds
+  passed         Boolean? // Whether the user passed (based on passingScore)
+  attemptNumber  Int      @default(1)
+  completedAt    DateTime @default(now())
+
+  @@unique([userId, quizId, attemptNumber])
+  @@index([userId, quizId])
 }
