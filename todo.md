@@ -1,119 +1,70 @@
-# Todo: Implementing a Quiz Section
+# MHNGraphics Project TODO
 
-This document outlines the steps to implement a quiz section in the MHNGraphics project.
+This document outlines the development tasks for the MHNGraphics project.
 
-## 1. Database Schema (Prisma)
+---
 
-First, we need to define the data models for the quizzes in `prisma/schema.prisma`. We'll add fields for scheduling, time limits, scoring, and detailed results.
+### 📝 Quiz Feature Implementation Plan
 
-```prisma
-// In prisma/schema.prisma
+This is the implementation plan for the new quiz feature, based on the models defined in `prisma/schema.prisma`.
 
-// Model for a Quiz
-model Quiz {
-  id           String     @id @default(cuid())
-  title        String
-  description  String?
-  questions    Question[]
-  published    Boolean    @default(false)
-  publishedAt  DateTime?  // For scheduling the quiz publication
-  timeLimit    Int?       // Optional: Time limit in minutes
-  passingScore Int?       // Optional: Minimum score to pass
-  createdAt    DateTime   @default(now())
-  updatedAt    DateTime   @updatedAt
-}
+**1. Backend API & Services**
 
-// Model for a Question in a Quiz
-model Question {
-  id        String   @id @default(cuid())
-  text      String
-  order     Int      // To control the sequence of questions
-  quizId    String
-  quiz      Quiz     @relation(fields: [quizId], references: [id], onDelete: Cascade)
-  options   Option[]
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
+*   `[ ]` **Create Quiz Service**: Create a new service file at `src/services/quiz.ts` to contain all business logic for interacting with the quiz models.
+*   `[ ]` **Create API Routes Directory**: Create a new directory `src/app/api/quizzes/` for all quiz-related API endpoints.
+*   `[ ]` **Endpoint: List Quizzes (`GET /api/quizzes`)**
+    *   Create route `src/app/api/quizzes/route.ts`.
+    *   Implement logic in `src/services/quiz.ts` to fetch all `published` quizzes.
+    *   Support filtering by `category` and `difficulty`.
+    *   Implement pagination.
+*   `[ ]` **Endpoint: Get Single Quiz (`GET /api/quizzes/[quizId]`)**
+    *   Create route `src/app/api/quizzes/[quizId]/route.ts`.
+    *   Implement logic in `src/services/quiz.ts` to fetch a single quiz by its ID.
+    *   The response **must** include `questions` and their `options`, but **exclude** the `isCorrect` field from the `Option` model to prevent cheating.
+*   `[ ]` **Endpoint: Submit Quiz (`POST /api/quizzes/[quizId]/submit`)**
+    *   Create route `src/app/api/quizzes/[quizId]/submit/route.ts`.
+    *   This endpoint must be protected, requiring user authentication via `next-auth`.
+    *   It will accept a payload of user answers, e.g., `[{ "questionId": "...", "selectedOptionId": "..." }]`.
+    *   In `src/services/quiz.ts`, implement the submission logic:
+        1.  Fetch the correct answers for the quiz from the database.
+        2.  Compare the user's answers against the correct ones to calculate the `score`.
+        3.  Determine if the user `passed` based on the quiz's `passingScore`.
+        4.  Create a new `QuizResult` record in the database, saving the user's `score`, the answers JSON, `timeSpent`, etc.
+        5.  Return the ID of the newly created `QuizResult` object.
+*   `[ ]` **Endpoint: Get Quiz Result (`GET /api/quizzes/result/[resultId]`)**
+    *   Create route `src/app/api/quizzes/result/[resultId]/route.ts`.
+    *   Implement logic in `src/services/quiz.ts` to fetch a `QuizResult` by its ID.
+    *   **Security**: Ensure the currently authenticated user is the owner of the result (or is an `ADMIN`).
+    *   The response should include all data needed for a detailed review: the user's score, their answers, and the correct answers for each question.
 
-// Model for an Option in a Question
-model Option {
-  id         String   @id @default(cuid())
-  text       String
-  isCorrect  Boolean  @default(false)
-  questionId String
-  question   Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
-  createdAt  DateTime @default(now())
-  updatedAt  DateTime @updatedAt
-}
+**2. Frontend UI & Logic**
 
-// Model to store user's quiz results
-model QuizResult {
-  id             String   @id @default(cuid())
-  userId         String
-  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  quizId         String
-  score          Int
-  totalQuestions Int      // Store total questions for historical accuracy
-  answers        Json     // Store user's answers for review { questionId: selectedOptionId }
-  timeSpent      Int?     // Time taken in seconds
-  completedAt    DateTime @default(now())
+*   `[ ]` **Create Component Directory**: Create `src/components/quiz/` to store all new quiz-related React components.
+*   `[ ]` **Page: Quiz Listing (`/quizzes`)**
+    *   Create a new route at `src/app/(pages)/quizzes/page.tsx`.
+    *   Use Tanstack Query to fetch the list of quizzes from `/api/quizzes`.
+    *   Create a `QuizCard.tsx` component in `src/components/quiz/` to display each quiz's title, description, image, and difficulty.
+    *   Each card should link to the quiz-taking page, e.g., `/quizzes/[quizId]`.
+*   `[ ]` **Page: Take Quiz (`/quizzes/[quizId]`)**
+    *   Create a new dynamic route at `src/app/(pages)/quizzes/[quizId]/page.tsx`.
+    *   Fetch the specific quiz data using its ID from `/api/quizzes/[quizId]`.
+    *   Create a primary component `QuizTaker.tsx` in `src/components/quiz/` to manage the quiz-taking state (current question, selected answers, timer).
+    *   On submit, call the `POST /api/quizzes/[quizId]/submit` endpoint.
+    *   After a successful submission, redirect the user to the result page using the returned `resultId`.
+*   `[ ]` **Page: Quiz Result (`/quizzes/result/[resultId]`)**
+    *   Create a new dynamic route at `src/app/(pages)/quizzes/result/[resultId]/page.tsx`.
+    *   Fetch the result data from `/api/quizzes/result/[resultId]`.
+    *   Create a `QuizResultDetails.tsx` component in `src/components/quiz/` to render the results, including the score, passed/failed status, and a detailed answer review.
 
-  @@unique([userId, quizId])
-}
-```
+**3. State Management & Data Fetching**
 
-After updating the schema, run `npx prisma db push` and `npx prisma generate` to apply the changes.
+*   `[ ]` **Update Query Keys**: Add new keys for `quizzes`, `quiz`, and `quizResult` to `src/constant/QueryKeys.ts` for use with Tanstack Query.
+*   `[ ]` **Create Custom Hooks**: To streamline data fetching, create `useQuizzes.ts` and `useQuizResult.ts` in the `src/hooks/` directory. These hooks will abstract the `useQuery` logic for their respective features.
 
-## 2. API Endpoints
+**4. (Future Enhancement) Admin Quiz Management**
 
-We'll need several API endpoints to handle quizzes.
-
--   **`POST /api/quiz/create`** (Admin only): Create a quiz, including `timeLimit`, `passingScore`, and question `order`.
--   **`GET /api/quiz`**: Fetch published quizzes that are past their `publishedAt` date.
--   **`GET /api/quiz/[id]`**: Fetch a single quiz, ordered by the `order` of questions.
--   **`POST /api/quiz/[id]/submit`**: Submit answers. The endpoint will store the `answers` JSON, `timeSpent`, and `totalQuestions`.
--   **`GET /api/quiz/result/[id]`**: Fetch a user's result, including their `answers` for review.
-
-## 3. Scheduled Publishing Logic
-
-To handle the `publishedAt` field, we have two main options:
-
-1.  **API-level Filtering (Simpler):** The `GET /api/quiz` endpoint will filter out quizzes whose `publishedAt` date is in the future.
-2.  **Scheduled Task / Cron Job (More Advanced):** A background job updates the `published` flag for quizzes whose `publishedAt` time has passed.
-
-## 4. Frontend Pages and Components
-
-We'll create new pages and components in `src/app/(pages)/quiz/` and `src/components/`.
-
--   **/quiz**: Page to display available quizzes.
--   **/quiz/[id]**: The main quiz page.
--   **/quiz/[id]/review**: (New) A page for users to review their answers before submission.
--   **/quiz/[id]/result**: Page to show the user's score and a link to review their answers.
-
-## 5. State Management (Client-side)
-
-Use `useState`, `useContext`, or Zustand to manage:
-
--   `currentQuestionIndex`, `answers`, `quizData`, `score`, `isLoading`.
--   `startTime`: To calculate `timeSpent`.
--   User's answers should be auto-saved to `localStorage` to prevent data loss on refresh.
-
-## 6. UX Improvements
-
-The following features should be implemented for a better user experience:
-
--   **Progress Indicator**: Show the user's progress (e.g., "Question 5 of 20").
--   **Timer Display**: If `timeLimit` is set, display a countdown timer. Auto-submit when the timer runs out.
--   **Review Before Submit**: A dedicated screen (`/quiz/[id]/review`) that shows all questions and the user's selected answers, allowing them to navigate back and change them before final submission.
--   **Auto-save Progress**: As the user answers questions, save their progress to the browser's `localStorage`. If they accidentally close the tab, their answers can be restored.
--   **Accessibility**:
-    -   Ensure full keyboard navigation (e.g., using `Tab` to move between options and `Space` or `Enter` to select).
-    -   Use proper ARIA attributes for screen readers.
-
-## 7. (Optional) Admin Interface for Quiz Management
-
--   **`/admin/quizzes`**: A page to list, edit, or delete quizzes.
--   **`/admin/quizzes/new`** & **`/admin/quizzes/edit/[id]`**: Forms to create/edit a quiz. Should include fields for:
-    -   `publishedAt` (date/time picker).
-    -   `timeLimit` and `passingScore`.
-    -   An interface to re-order questions (e.g., drag-and-drop).
+*   `[x]` **Admin Sidebar Options**: Added "Quiz" options to the admin sidebar (`DashboardSidebar.tsx`) for "Add New" and "View All" quizzes.
+*   `[ ]` **Admin Section**: Create a new area under `/admin/quizzes` for managing quizzes.
+*   `[ ]` **CRUD Interface**: Build pages and forms for creating, updating, and deleting quizzes, questions, and options.
+*   `[ ]` **Publishing**: Add a UI to toggle the `published` status of a quiz and set the `publishedAt` date.
+*   `[ ]` **Analytics**: Allow admins to view results and basic analytics for each quiz.

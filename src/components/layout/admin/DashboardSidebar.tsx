@@ -1,7 +1,19 @@
 'use client';
+import { NavMain } from '@/components/layout/admin/nav-main';
+import { NavProjects } from '@/components/layout/admin/nav-projects';
+import { NavUser } from '@/components/layout/admin/nav-user';
+import { TeamSwitcher } from '@/components/layout/admin/team-switcher';
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarFooter,
+  SidebarHeader,
+  SidebarRail,
+} from '@/components/ui/sidebar';
 import {
   BadgeCheck,
   ChartNoAxesCombined,
+  ClipboardList,
   FileUser,
   GalleryHorizontal,
   HeartPulse,
@@ -14,17 +26,6 @@ import {
 } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import type * as React from 'react';
-import { NavMain } from '@/components/layout/admin/nav-main';
-import { NavProjects } from '@/components/layout/admin/nav-projects';
-import { NavUser } from '@/components/layout/admin/nav-user';
-import { TeamSwitcher } from '@/components/layout/admin/team-switcher';
-import {
-  Sidebar,
-  SidebarContent,
-  SidebarFooter,
-  SidebarHeader,
-  SidebarRail,
-} from '@/components/ui/sidebar';
 
 export function DashboardSidebar({
   ...props
@@ -111,6 +112,21 @@ export function DashboardSidebar({
         {
           title: 'View all',
           url: '/best-computer-training-center/notice',
+        },
+      ],
+    },
+    {
+      title: 'Quiz',
+      url: '#',
+      icon: ClipboardList,
+      items: [
+        {
+          title: 'Add new',
+          url: '/dashboard/quiz/add-new',
+        },
+        {
+          title: 'View all',
+          url: '/dashboard/all-quiz',
         },
       ],
     },

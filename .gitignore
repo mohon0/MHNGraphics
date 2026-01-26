@@ -48,3 +48,4 @@ next-env.d.ts
 /prisma/dev.db
 /prisma/generated/
 prisma/migrations/  # Optional if you don't want to track migrations
+todo.md
