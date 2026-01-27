@@ -1,16 +1,16 @@
 'use client';
-import { Button } from '@/components/ui/button';
-import { Skeleton } from '@/components/ui/skeleton';
-import logo2 from '@/images/hero/logo2.png';
-import logo from '@/images/hero/logo3.png';
-import { useSingleApplication } from '@/services/application';
-import type { UserApplication } from '@/utils/Interface';
 import { format } from 'date-fns';
 import Image from 'next/image';
 import { useSearchParams } from 'next/navigation';
 import { Suspense, useRef } from 'react';
 import { IoMdPrint } from 'react-icons/io';
 import { useReactToPrint } from 'react-to-print';
+import { Button } from '@/components/ui/button';
+import { Skeleton } from '@/components/ui/skeleton';
+import logo2 from '@/images/hero/logo2.png';
+import logo from '@/images/hero/logo3.png';
+import { useSingleApplication } from '@/services/application';
+import type { UserApplication } from '@/utils/Interface';
 
 function Loading() {
   return (

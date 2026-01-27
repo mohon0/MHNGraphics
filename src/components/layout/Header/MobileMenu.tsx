@@ -1,5 +1,8 @@
 'use client';
 
+import { Menu } from 'lucide-react';
+import Link from 'next/link';
+import { useState } from 'react';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import {
   Sheet,
@@ -8,9 +11,6 @@ import {
   SheetTitle,
   SheetTrigger,
 } from '@/components/ui/sheet';
-import { Menu } from 'lucide-react';
-import Link from 'next/link';
-import { useState } from 'react';
 
 export default function MobileMenu({ fixed = false }: { fixed?: boolean }) {
   const [open, setOpen] = useState(false);

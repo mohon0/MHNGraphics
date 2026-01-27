@@ -1,5 +1,12 @@
 'use client';
 
+import { zodResolver } from '@hookform/resolvers/zod';
+import { format } from 'date-fns';
+import { CalendarIcon, Clock, GripVertical, X } from 'lucide-react';
+import type React from 'react';
+import { useEffect, useState } from 'react';
+import { Controller, useForm } from 'react-hook-form';
+import { z } from 'zod';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Calendar } from '@/components/ui/calendar';
@@ -32,13 +39,6 @@ import {
 } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import { useCreateQuiz } from '@/services/admin';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { format } from 'date-fns';
-import { CalendarIcon, Clock, GripVertical, X } from 'lucide-react';
-import type React from 'react';
-import { useEffect, useState } from 'react';
-import { Controller, useForm } from 'react-hook-form';
-import { z } from 'zod';
 
 // Zod Schema Definitions
 const OptionSchema = z.object({
@@ -155,6 +155,7 @@ export function QuizForm() {
     }
   }, [formData.status, setValue]);
 
+  // biome-ignore lint/suspicious/noExplicitAny: this is fine
   const updateFormField = (field: keyof QuizFormData, value: any) => {
     setValue(field, value, { shouldValidate: true });
   };

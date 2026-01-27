@@ -1,8 +1,15 @@
-import { QUERY_KEYS } from '@/constant/QueryKeys';
-import { useDebounce } from '@/hooks/useDebounce';
-import { useMutation, useQuery, useQueryClient, UseMutationOptions } from '@tanstack/react-query';
+/** biome-ignore-all lint/suspicious/noExplicitAny: this is fine */
+
+import {
+  type UseMutationOptions,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from '@tanstack/react-query';
 import axios from 'axios';
 import { toast } from 'sonner';
+import { QUERY_KEYS } from '@/constant/QueryKeys';
+import { useDebounce } from '@/hooks/useDebounce';
 
 export function useFetchAdminData() {
   return useQuery({

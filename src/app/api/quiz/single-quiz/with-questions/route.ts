@@ -27,6 +27,20 @@ export async function GET(req: Request) {
             questions: true,
           },
         },
+
+        questions: {
+          select: {
+            id: true,
+            text: true,
+            order: true,
+            options: {
+              select: {
+                id: true,
+                text: true,
+              },
+            },
+          },
+        },
       },
     });
 

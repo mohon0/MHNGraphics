@@ -1,21 +1,6 @@
 /** biome-ignore-all lint/suspicious/noArrayIndexKey: this is fine*/
 'use client';
 
-import Footer from '@/components/layout/footer/Footer';
-import Header from '@/components/layout/Header/Header';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
-import { Skeleton } from '@/components/ui/skeleton';
-import { type QuizDifficulty, useQuizzes } from '@/services/quiz';
 import {
   BookOpen,
   ChevronRight,
@@ -29,6 +14,19 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import type React from 'react';
 import { Suspense, useEffect, useState } from 'react';
 import { useDebounce } from 'use-debounce';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
+import { Input } from '@/components/ui/input';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { Skeleton } from '@/components/ui/skeleton';
+import { type QuizDifficulty, useQuizzes } from '@/services/quiz';
 
 interface Datum {
   id: string;
@@ -231,7 +229,7 @@ function QuizzesContent() {
             quizzes.map((quiz: Datum) => (
               <Card
                 key={quiz.id}
-                onClick={() => router.push(`/quiz/${quiz.id}`)}
+                onClick={() => router.push(`/quiz/quiz-test/${quiz.id}`)}
                 className='overflow-hidden rounded-xl shadow-sm hover:shadow-md transition-all duration-300 hover:border-accent/50 group cursor-pointer'
               >
                 <div className='h-40 bg-gradient-to-br from-primary/20 to-accent/20 relative overflow-hidden'>
@@ -346,9 +344,7 @@ function QuizzesPageLoading() {
 export default function QuizzesPage() {
   return (
     <Suspense fallback={<QuizzesPageLoading />}>
-      <Header />
       <QuizzesContent />
-      <Footer />
     </Suspense>
   );
 }

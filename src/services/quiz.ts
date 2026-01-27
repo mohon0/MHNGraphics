@@ -1,5 +1,7 @@
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
+import { useRouter } from 'next/navigation';
+import { toast } from 'sonner';
 
 export type QuizDifficulty = 'EASY' | 'MEDIUM' | 'HARD';
 
@@ -30,9 +32,9 @@ export function useQuizzes(searchParams: SearchParams) {
   });
 }
 
-export function useQuiz(id: string) {
+export function useQuizInfo(id: string) {
   return useQuery({
-    queryKey: ['quiz', id],
+    queryKey: ['quizinfo', id],
     queryFn: async () => {
       const response = await axios.get(`/api/quiz/single-quiz?id=${id}`);
       return response.data;
@@ -41,20 +43,51 @@ export function useQuiz(id: string) {
   });
 }
 
+export function useSingleQuiz(id: string) {
+  return useQuery({
+    queryKey: ['quizwithquestions', id],
+    queryFn: async () => {
+      const response = await axios.get(
+        `/api/quiz/single-quiz/with-questions?id=${id}`,
+      );
+      return response.data;
+    },
+    enabled: !!id,
+  });
+}
+
 export function useSubmitQuiz() {
+  const router = useRouter();
+  const queryClient = useQueryClient();
+
   return useMutation({
     mutationFn: async ({
       quizId,
       answers,
+      timeSpent,
     }: {
       quizId: string;
       answers: Record<string, string>;
+      timeSpent: number;
     }) => {
       const response = await axios.post(`/api/quiz/submit`, {
         quizId,
         answers,
+        timeSpent,
       });
       return response.data;
+    },
+    onSuccess: (data) => {
+      // 1. Invalidate queries to refresh data
+      queryClient.invalidateQueries({ queryKey: ['quizzes'] });
+
+      // 2. Redirect the user to the results page
+      router.push(`/quiz/results/${data.quizResult.id}`);
+      toast.success('Quiz submitted successfully!');
+    },
+    onError: (_error) => {
+      // Handle global error logic here (e.g., logging)
+      toast.error('Failed to submit quiz. Please try again.');
     },
   });
 }

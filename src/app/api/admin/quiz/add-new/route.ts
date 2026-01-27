@@ -1,6 +1,6 @@
-import Prisma from '@/lib/prisma';
 import { NextResponse } from 'next/server';
 import { z } from 'zod';
+import Prisma from '@/lib/prisma';
 
 const OptionSchema = z.object({
   text: z.string().min(1, 'Option text is required'),

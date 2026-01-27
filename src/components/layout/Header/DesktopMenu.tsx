@@ -1,5 +1,7 @@
 'use client';
 
+import Link from 'next/link';
+import React from 'react';
 import { Button } from '@/components/ui/button';
 import {
   NavigationMenu,
@@ -8,8 +10,6 @@ import {
   NavigationMenuList,
 } from '@/components/ui/navigation-menu';
 import { cn } from '@/lib/utils';
-import Link from 'next/link';
-import React from 'react';
 
 export default function DesktopMenu({
   fixed = false,

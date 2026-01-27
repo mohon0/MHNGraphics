@@ -1,5 +1,12 @@
 'use client';
 
+import { AnimatePresence, motion } from 'framer-motion';
+import { ArrowRight, ChevronRight, Search } from 'lucide-react';
+import Image from 'next/image';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import type React from 'react';
+import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import img1 from '@/images/hero/best-computer.webp';
@@ -8,13 +15,6 @@ import img2 from '@/images/hero/oylkka-e-commerc.webp';
 import img4 from '@/images/hero/oylkka-graphics.webp';
 import img3 from '@/images/hero/oylkka-it-agency.webp';
 import { cn } from '@/lib/utils';
-import { AnimatePresence, motion } from 'framer-motion';
-import { ArrowRight, ChevronRight, Search } from 'lucide-react';
-import Image from 'next/image';
-import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import type React from 'react';
-import { useEffect, useState } from 'react';
 import HeroSkeleton from './skeleton';
 
 const heroData = [

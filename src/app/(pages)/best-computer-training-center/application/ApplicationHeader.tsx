@@ -1,5 +1,5 @@
-import logo from '@/images/hero/logo2.png';
 import Image from 'next/image';
+import logo from '@/images/hero/logo2.png';
 
 export default function ApplicationHeader() {
   return (
