@@ -2,7 +2,6 @@
 import { FaUsers } from 'react-icons/fa';
 import img2 from '@/images/best-computer/mahbub.jpg';
 import img1 from '@/images/best-computer/mohon.jpg';
-import img from '@/images/best-computer/shohidur.jpg';
 import MembersModel from './MembersModel';
 import SectionHeader from './SectionHeader';
 
@@ -17,9 +16,8 @@ export default function Members() {
       />
 
       <div className='grid gap-10 md:grid-cols-3'>
-        <MembersModel name='মোঃ শাহিদুর রহমান' title='পরিচালক' img={img} />
-        <MembersModel name='মোঃ মোহন' title='সিনিয়র ইন্সট্রাক্টর' img={img1} />
-        <MembersModel name='মোঃ মাহবুব' title='অফিস সহকারি' img={img2} />
+        <MembersModel name='মোঃ মোহন' title='পরিচালক' img={img1} />
+        <MembersModel name='মোঃ মাহবুব' title='শিক্ষক' img={img2} />
       </div>
     </div>
   );

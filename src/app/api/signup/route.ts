@@ -1,10 +1,10 @@
-import bcrypt from 'bcrypt';
-import { type NextRequest, NextResponse } from 'next/server';
 import generateCode from '@/components/helper/mail/GenerateCode';
 import sendVerificationEmail, {
   sendRegistrationEmail,
 } from '@/components/helper/mail/SendMail';
 import { Prisma } from '@/components/helper/prisma/Prisma';
+import bcrypt from 'bcrypt';
+import { type NextRequest, NextResponse } from 'next/server';
 
 export async function POST(req: NextRequest) {
   try {
@@ -27,9 +27,9 @@ export async function POST(req: NextRequest) {
       });
     }
 
-    const queryCondition = isEmail ? { email: email } : { phoneNumber: email };
+    const queryCondition = isEmail ? { id: email } : { id: email };
 
-    const existingUser = await Prisma.user.findUnique({
+    const existingUser = await Prisma.user.findFirst({
       where: queryCondition,
     });
 

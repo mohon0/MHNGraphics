@@ -79,7 +79,7 @@ model User {
   isOnline                 Boolean                   @default(false)
   lastSeen                 DateTime?
 
-  @@index([email, phoneNumber], name: "unique_email_phone_number")
+  @@index([email, phoneNumber])
 }
 
 model Design {

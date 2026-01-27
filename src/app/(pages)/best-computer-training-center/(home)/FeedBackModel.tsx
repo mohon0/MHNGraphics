@@ -4,9 +4,10 @@ interface props {
   img: StaticImageData;
   name: string;
   des: string;
+  type: string;
 }
 
-export default function FeedBackModel({ img, name, des }: props) {
+export default function FeedBackModel({ img, name, des, type }: props) {
   return (
     <div className='relative flex w-full max-w-104 flex-col rounded-xl bg-transparent bg-clip-border text-gray-700 shadow-none'>
       <div className='relative mx-0 mt-4 flex items-center gap-4 overflow-hidden rounded-xl bg-transparent bg-clip-border pb-8 pt-0 text-gray-700 shadow-none'>
@@ -22,7 +23,7 @@ export default function FeedBackModel({ img, name, des }: props) {
             </h5>
           </div>
           <p className='text-blue-gray-900 block font-sans text-base font-light leading-relaxed antialiased'>
-            ছাত্র
+            {type}
           </p>
         </div>
       </div>

@@ -1,9 +1,9 @@
+import { Prisma } from '@/components/helper/prisma/Prisma';
 import bcrypt from 'bcrypt';
 import type { Session } from 'next-auth';
 import type { JWT } from 'next-auth/jwt';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import GoogleProvider from 'next-auth/providers/google';
-import { Prisma } from '@/components/helper/prisma/Prisma';
 
 interface UserWithRole {
   id: string;
@@ -32,13 +32,13 @@ export const authOptions = {
         // Check if the input is an email or a phone number
         if (/\S+@\S+\.\S+/.test(credentials.email)) {
           // If it's an email, search by email
-          user = await Prisma.user.findUnique({
+          user = await Prisma.user.findFirst({
             where: { email: credentials.email },
           });
         } else if (/^01[0-9]{9}$/.test(credentials.email)) {
           // If it's a phone number, search by phone number directly
 
-          user = await Prisma.user.findUnique({
+          user = await Prisma.user.findFirst({
             where: { phoneNumber: credentials.email },
           });
         } else {
@@ -92,14 +92,14 @@ export const authOptions = {
       profile: any;
     }) {
       if (account.provider === 'google') {
-        const existingUser = await Prisma.user.findUnique({
+        const existingUser = await Prisma.user.findFirst({
           where: { email: user.email },
         });
 
         if (existingUser) {
           if (!existingUser.googleId) {
             await Prisma.user.update({
-              where: { email: user.email },
+              where: { id: existingUser.id },
               data: { googleId: profile.id },
             });
           }
