@@ -12,4 +12,5 @@ export const QUERY_KEYS = {
   RELATED_DESIGN: 'Related Design',
   ALL_APPLICATION: 'All Applications',
   PROFILE_DESIGN: 'Profile Design',
+  QUIZZES: 'Quizzes',
 };

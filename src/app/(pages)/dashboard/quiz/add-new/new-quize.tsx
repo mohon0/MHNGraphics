@@ -31,11 +31,12 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
+import { useCreateQuiz } from '@/services/admin';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { format } from 'date-fns';
 import { CalendarIcon, Clock, GripVertical, X } from 'lucide-react';
 import type React from 'react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { z } from 'zod';
 
@@ -112,6 +113,7 @@ export function QuizForm() {
     setValue,
     control,
     formState: { errors },
+    reset,
   } = useForm<QuizFormData>({
     resolver: zodResolver(QuizFormSchema),
     mode: 'onChange',
@@ -132,10 +134,29 @@ export function QuizForm() {
     },
   });
 
+  const { mutate: createQuiz, isPending } = useCreateQuiz({
+    onSuccess: () => {
+      reset(); // Reset form fields to default values
+      setTagInput('');
+      setNewQuestionText('');
+      setNewAnswerText('');
+      setExpandedQuestion(null);
+      setDraggedQuestionId(null);
+      setDragOverIndex(null);
+    },
+  });
+
   const formData = watch();
 
+  // New useEffect for Issue 2
+  useEffect(() => {
+    if (formData.status !== 'SCHEDULED') {
+      setValue('scheduledFor', undefined);
+    }
+  }, [formData.status, setValue]);
+
   const updateFormField = (field: keyof QuizFormData, value: any) => {
-    setValue(field, value);
+    setValue(field, value, { shouldValidate: true });
   };
 
   const addTag = () => {
@@ -301,7 +322,7 @@ export function QuizForm() {
   };
 
   const onSubmit = (data: QuizFormData) => {
-    console.log('[v0] Quiz Form Submitted:', data);
+    createQuiz(data);
   };
 
   return (
@@ -930,15 +951,14 @@ export function QuizForm() {
 
       {/* Action Buttons */}
       <div className='flex gap-3 justify-end pt-4 border-t'>
-        <Button type='button' variant='outline'>
-          Save as Draft
-        </Button>
-        <Button type='submit'>
-          {formData.status === 'SCHEDULED'
-            ? 'Schedule Quiz'
-            : formData.status === 'PUBLISHED'
-              ? 'Publish Quiz'
-              : 'Save Draft'}
+        <Button type='submit' disabled={isPending}>
+          {isPending
+            ? 'Submitting...'
+            : formData.status === 'SCHEDULED'
+              ? 'Schedule Quiz'
+              : formData.status === 'PUBLISHED'
+                ? 'Publish Quiz'
+                : 'Save Draft'}
         </Button>
       </div>
     </form>

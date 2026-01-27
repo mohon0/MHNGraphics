@@ -1,8 +1,8 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import axios from 'axios';
-import { toast } from 'sonner';
 import { QUERY_KEYS } from '@/constant/QueryKeys';
 import { useDebounce } from '@/hooks/useDebounce';
+import { useMutation, useQuery, useQueryClient, UseMutationOptions } from '@tanstack/react-query';
+import axios from 'axios';
+import { toast } from 'sonner';
 
 export function useFetchAdminData() {
   return useQuery({
@@ -231,5 +231,31 @@ export function usePaymentAnalytics() {
       const response = await axios.get(`/api/admin/payment`);
       return response.data;
     },
+  });
+}
+
+export function useCreateQuiz(
+  options?: UseMutationOptions<any, Error, any, any>,
+) {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (quizData: any) => {
+      const createPromise = axios
+        .post('/api/admin/quiz/add-new', quizData)
+        .then((res) => res.data);
+
+      return toast.promise(createPromise, {
+        loading: 'Creating quiz...',
+        success: (data) => {
+          queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.QUIZZES] });
+          return data.message || 'Quiz created successfully! 🎉';
+        },
+        error: (error) =>
+          axios.isAxiosError(error)
+            ? error.response?.data?.message || 'Failed to create quiz ❌'
+            : 'Something went wrong. Please try again.',
+      });
+    },
+    ...options,
   });
 }

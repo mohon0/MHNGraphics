@@ -55,8 +55,8 @@ model Session {
 model User {
   id                       String                    @id @default(auto()) @map("_id") @db.ObjectId
   name                     String?
-  email                    String?                  
-  phoneNumber              String?                
+  email                    String?
+  phoneNumber              String?
   googleId                 String?
   password                 String?
   emailVerified            DateTime?
@@ -277,23 +277,23 @@ model Quiz {
   tags         String[]
   questions    Question[]
   results      QuizResult[]
-  published    Boolean         @default(false)
-  publishedAt  DateTime?
-  timeLimit    Int?            // Time limit in minutes (optional)
-  passingScore Int?            // Minimum score to pass (optional)
+  status       String          @default("DRAFT")
+  scheduledFor DateTime?
+  timeLimit    Int? // Time limit in minutes (optional)
+  passingScore Int? // Minimum score to pass (optional)
   createdAt    DateTime        @default(now())
   updatedAt    DateTime        @updatedAt
 
   @@index([category])
-  @@index([published, publishedAt])
+  @@index([status, scheduledFor])
 }
 
 model Question {
   id        String   @id @default(auto()) @map("_id") @db.ObjectId
   text      String
-  image     String?  // Optional image for the question
+  image     String? // Optional image for the question
   imageId   String?
-  order     Int      // Display order
+  order     Int // Display order
   quizId    String   @db.ObjectId
   quiz      Quiz     @relation(fields: [quizId], references: [id], onDelete: Cascade)
   options   Option[]
@@ -307,7 +307,7 @@ model Option {
   id          String   @id @default(auto()) @map("_id") @db.ObjectId
   text        String
   isCorrect   Boolean  @default(false)
-  explanation String?  // Optional explanation for learning
+  explanation String? // Optional explanation for learning
   questionId  String   @db.ObjectId
   question    Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
   createdAt   DateTime @default(now())
@@ -321,9 +321,9 @@ model QuizResult {
   quizId         String   @db.ObjectId
   quiz           Quiz     @relation(fields: [quizId], references: [id], onDelete: Cascade)
   score          Int
-  totalQuestions Int      // Store total for historical accuracy
-  answers        Json     // Store user's answers for review
-  timeSpent      Int?     // Time taken in seconds
+  totalQuestions Int // Store total for historical accuracy
+  answers        Json // Store user's answers for review
+  timeSpent      Int? // Time taken in seconds
   passed         Boolean? // Whether the user passed (based on passingScore)
   attemptNumber  Int      @default(1)
   completedAt    DateTime @default(now())
