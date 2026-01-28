@@ -82,12 +82,34 @@ export function useSubmitQuiz() {
       queryClient.invalidateQueries({ queryKey: ['quizzes'] });
 
       // 2. Redirect the user to the results page
-      router.push(`/quiz/results/${data.quizResult.id}`);
+      router.push(`/quiz/quiz-result/stats/${data.quizResult.id}`);
       toast.success('Quiz submitted successfully!');
     },
     onError: (_error) => {
       // Handle global error logic here (e.g., logging)
       toast.error('Failed to submit quiz. Please try again.');
+    },
+  });
+}
+
+export function useSingleQuizResult(id: string) {
+  return useQuery({
+    queryKey: ['quiz-result', id],
+    queryFn: async () => {
+      const response = await axios.get(`/api/quiz/quiz-result?id=${id}`);
+      return response.data;
+    },
+  });
+}
+
+export function useSingleQuizResultReview(id: string) {
+  return useQuery({
+    queryKey: ['quiz-result-review', id],
+    queryFn: async () => {
+      const response = await axios.get(
+        `/api/quiz/quiz-result/review-result?id=${id}`,
+      );
+      return response.data;
     },
   });
 }

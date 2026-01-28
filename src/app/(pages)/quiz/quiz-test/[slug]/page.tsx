@@ -7,9 +7,11 @@ import {
   Target,
   XCircle,
 } from 'lucide-react';
+import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { useState } from 'react';
+
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -20,11 +22,12 @@ export default function QuizPage() {
   const params = useParams();
   const slug = params.slug as string;
 
+  const { status: sessionStatus } = useSession();
   const { data: quiz, isLoading, isError, refetch } = useQuizInfo(slug);
   const [acceptedRules, setAcceptedRules] = useState(false);
 
   /* -------------------- Loading Skeleton -------------------- */
-  if (isLoading) {
+  if (isLoading || sessionStatus === 'loading') {
     return (
       <div className='p-4 md:p-8'>
         <Card className='max-w-2xl mx-auto p-8 space-y-8'>
@@ -164,7 +167,10 @@ export default function QuizPage() {
         </div>
 
         {/* CTA */}
-        <Link href={`/quiz/quiz-start/${quiz.id}`}>
+
+        <Link
+          href={`${sessionStatus === 'unauthenticated' ? '/login' : `/quiz/quiz-start/${quiz.id}`}`}
+        >
           <Button size='lg' className='w-full' disabled={!acceptedRules}>
             Start Quiz
           </Button>
