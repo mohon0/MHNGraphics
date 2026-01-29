@@ -1,10 +1,5 @@
 'use client';
 
-import { zodResolver } from '@hookform/resolvers/zod';
-import { format } from 'date-fns';
-import { CalendarIcon, Upload } from 'lucide-react';
-import Image from 'next/image';
-import { useCallback, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Calendar } from '@/components/ui/calendar';
 import {
@@ -45,6 +40,11 @@ import { ApplicationSchema } from '@/lib/Schemas';
 import { cn } from '@/lib/utils';
 import { useFetchDuration } from '@/services/admin';
 import { useSubmitApplication } from '@/services/application';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { format } from 'date-fns';
+import { CalendarIcon, Upload } from 'lucide-react';
+import Image from 'next/image';
+import { useCallback, useState } from 'react';
 import 'react-datepicker/dist/react-datepicker.css';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
@@ -166,7 +166,7 @@ export function StudentApplicationForm() {
                           <FormItem>
                             <FormLabel>Student full Name</FormLabel>
                             <FormControl>
-                              <Input placeholder='Md Mohon' {...field} />
+                              <Input placeholder='Your Name' {...field} />
                             </FormControl>
                             <FormMessage />
                           </FormItem>

@@ -17,13 +17,13 @@ const siteurl = process.env.NEXT_PUBLIC_SITE_URL;
 export const metadata: Metadata = {
   metadataBase: new URL(`${siteurl}`),
   title: {
-    default: 'Oylkka it',
-    template: '%s - Oylkka it',
+    default: 'Oylkka IT',
+    template: '%s - Oylkka IT',
   },
   description:
-    'Oylkka it is an image-sharing platform built for designers to share, showcase, and discover creative work.',
+    'Oylkka IT is an image-sharing platform built for designers to share, showcase, and discover creative work.',
   generator: 'Next.js',
-  applicationName: 'Oylkka it',
+  applicationName: 'Oylkka IT',
   keywords: [
     'image sharing for designers',
     'graphic design showcase',
@@ -34,26 +34,26 @@ export const metadata: Metadata = {
     'freelance designer platform',
     'visual design community',
     'graphic portfolio site',
-    'Oylkka it',
+    'Oylkka IT',
     'mdmohon',
     'freelancermohon',
     'best graphic design Bangladesh',
   ],
-  authors: [{ name: 'Oylkka it', url: 'https://www.it.oylkka.com' }],
+  authors: [{ name: 'Oylkka IT', url: 'https://www.it.oylkka.com' }],
   creator: 'Sejar Parvez',
   openGraph: {
-    title: 'Oylkka it',
+    title: 'Oylkka IT',
     description:
-      'Oylkka it is a platform for designers to share and explore stunning graphics, logos, and creative content.',
+      'Oylkka IT is a platform for designers to share and explore stunning graphics, logos, and creative content.',
     url: 'https://www.it.oylkka.com',
-    siteName: 'Oylkka it',
+    siteName: 'Oylkka IT',
     type: 'website',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Oylkka it',
+    title: 'Oylkka IT',
     description:
-      'Join Oylkka it — an image-sharing site for designers to showcase and explore creative design work.',
+      'Join Oylkka IT — an image-sharing site for designers to showcase and explore creative design work.',
     creator: '@sejarparvez',
   },
 };
