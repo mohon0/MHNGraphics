@@ -1,8 +1,8 @@
 'use client';
-import { Skeleton } from '@/components/ui/skeleton';
-import { useSingleQuizResult } from '@/services/quiz';
 import { useRouter } from 'next/navigation';
 import { use } from 'react';
+import { Skeleton } from '@/components/ui/skeleton';
+import { useSingleQuizResult } from '@/services/quiz';
 import { ActionButtons } from './action-buttons';
 import { ScoreCard } from './score-card';
 import { StatsGrid } from './stats-grid';

@@ -9,7 +9,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import logo from '@/images/hero/logo3.png';
+import logo from '@/images/oylkka-logo.png';
 import type { ApplicationDetail } from '@/utils/Interface';
 import { InfoRow } from './Model';
 
@@ -138,16 +138,39 @@ export default function Preview() {
                     </td>
                   </tr>
                   <InfoRow
-                    item1='Course Name'
-                    item2='Duration'
-                    value1={values.course}
-                    value2={values.duration}
+                    item1='Education'
+                    item2='Board'
+                    value1={values.education}
+                    value2={values.board}
                   />
                   <InfoRow
-                    item1='Transaction Id'
+                    item1='Roll'
+                    item2='Registration'
+                    value1={values.rollNumber}
+                    value2={values.regNumber}
+                  />
+                  <tr className='flex flex-col md:flex-row print:flex-row'>
+                    <td className='w-full border p-1 px-2 md:w-1/2 print:w-1/2'>
+                      <span className='font-bold'>Passing Year: </span>
+                      <span className='pl-3'>{values.passingYear}</span>
+                    </td>
+                    <td className='w-full border p-1 px-2 md:w-1/2 print:w-1/2'>
+                      <span className='font-bold'>GPA/CGPA: </span>
+                      <span className='pl-3'>{values.gpa}</span>
+                    </td>
+                  </tr>
+
+                  <InfoRow
+                    item1='Birth Reg/NID'
                     item2='Nationality'
-                    value1={values.trxId}
+                    value1={values.nid}
                     value2={values.nationality}
+                  />
+                  <InfoRow
+                    item1='Course Name'
+                    item2='Duration'
+                    value1={values.courseName}
+                    value2={values.course}
                   />
                 </tbody>
               </table>

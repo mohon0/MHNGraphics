@@ -7,8 +7,8 @@ import { IoMdPrint } from 'react-icons/io';
 import { useReactToPrint } from 'react-to-print';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
-import logo2 from '@/images/hero/logo2.png';
-import logo from '@/images/hero/logo3.png';
+import logo from '@/images/oylkka-logo.png';
+import logo2 from '@/images/oylkka-logo-black.png';
 import { useSingleApplication } from '@/services/application';
 import type { UserApplication } from '@/utils/Interface';
 
@@ -69,7 +69,7 @@ function SingleApplication({ application }: { application: UserApplication }) {
           </div>
           <div className='flex w-11/12 flex-col items-center justify-center text-center md:w-8/12 print:w-8/12'>
             <div className='text-center text-3xl font-bold text-black'>
-              Oylkka It & Training Center
+              Oylkka IT & Training Center
             </div>
             <div className='text-gray-900'>
               Rofi Tower, 5th Floor, Paira chattor, Jhenaidah
@@ -254,7 +254,7 @@ function SingleApplication({ application }: { application: UserApplication }) {
           </div>
         </div>
         <div className='fixed bottom-0 hidden w-full bg-cyan-600 p-2 text-center text-white print:block'>
-          <p>www.bestcomputerjhe.online</p>
+          <p>www.training.oylkka.com</p>
         </div>
 
         <Image

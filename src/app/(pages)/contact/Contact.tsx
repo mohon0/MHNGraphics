@@ -28,7 +28,7 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
-import logo from '@/images/hero/logo3.png';
+import logo from '@/images/oylkka-logo.png';
 
 const FormSchema = z.object({
   username: z
@@ -114,7 +114,7 @@ export default function Contact() {
                   <div>
                     <p className='font-medium'>Our Location</p>
                     <p className='text-sm text-muted-foreground'>
-                      Rofi Tower 4th Floor, Paira Chattra, Jhenaidah, Dhaka,
+                      Rofi Tower 5th Floor, Paira Chattra, Jhenaidah, Dhaka,
                       Bangladesh
                     </p>
                   </div>

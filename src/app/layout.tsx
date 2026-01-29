@@ -1,8 +1,8 @@
-import { Toaster } from '@/components/ui/sonner';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import type { ReactNode } from 'react';
+import { Toaster } from '@/components/ui/sonner';
 import SessionWrapper from '../../context/SessionProvider';
 import ReactQueryProvider from '../../context/TanstackQueryProvider';
 import './globals.css';

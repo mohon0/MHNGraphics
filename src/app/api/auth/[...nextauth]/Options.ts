@@ -1,9 +1,9 @@
-import { Prisma } from '@/components/helper/prisma/Prisma';
 import bcrypt from 'bcrypt';
 import type { Session } from 'next-auth';
 import type { JWT } from 'next-auth/jwt';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import GoogleProvider from 'next-auth/providers/google';
+import { Prisma } from '@/components/helper/prisma/Prisma';
 
 interface UserWithRole {
   id: string;

@@ -1,5 +1,5 @@
-import logo from '@/images/oylkka-logo-black.png';
 import Image from 'next/image';
+import logo from '@/images/oylkka-logo-black.png';
 
 export default function ApplicationHeader() {
   return (
