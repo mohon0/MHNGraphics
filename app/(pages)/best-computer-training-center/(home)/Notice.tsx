@@ -1,11 +1,5 @@
 'use client';
 
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Skeleton } from '@/components/ui/skeleton';
-import { useNotice } from '@/services/notice';
 import { format, formatDistanceToNow, isToday, isYesterday } from 'date-fns';
 import {
   ArrowRight,
@@ -21,6 +15,12 @@ import {
   Users,
 } from 'lucide-react';
 import Link from 'next/link';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Skeleton } from '@/components/ui/skeleton';
+import { useNotice } from '@/services/notice';
 
 interface Notice {
   id: string;
