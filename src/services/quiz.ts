@@ -154,3 +154,17 @@ export function useDeleteQuiz({
     },
   });
 }
+
+export function useDuplicateQuiz() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (id: string) => {
+      const response = await axios.post('/api/quiz/admin/duplicate', { id });
+      return response.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['admin-quiz-list'] });
+    },
+  });
+}

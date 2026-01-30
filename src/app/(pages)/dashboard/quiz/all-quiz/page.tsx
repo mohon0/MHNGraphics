@@ -8,7 +8,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { useAdminQuizList, useDeleteQuiz } from '@/services/quiz';
+import {
+  useAdminQuizList,
+  useDeleteQuiz,
+  useDuplicateQuiz,
+} from '@/services/quiz';
 import { Search } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useMemo, useState } from 'react';
@@ -36,6 +40,7 @@ export default function AdminQuizList() {
 
   const router = useRouter();
   const { mutateAsync: deleteQuiz } = useDeleteQuiz();
+  const { mutateAsync: duplicateQuiz } = useDuplicateQuiz();
 
   const filteredQuizzes = useMemo(() => {
     return quizzes.filter((quiz: Quiz) => {
@@ -64,8 +69,11 @@ export default function AdminQuizList() {
   };
 
   const handleDuplicate = (id: string) => {
-    console.log('Duplicate quiz:', id);
-    // TODO: Implement duplicate functionality
+    toast.promise(duplicateQuiz(id), {
+      loading: 'Duplicating quiz...',
+      success: 'Quiz duplicated successfully!',
+      error: 'Failed to duplicate quiz. Please try again.',
+    });
   };
 
   const handleDelete = (id: string) => {
