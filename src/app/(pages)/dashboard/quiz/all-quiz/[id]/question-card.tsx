@@ -1,10 +1,10 @@
 'use client';
 
+import { CheckCircle2, Circle } from 'lucide-react';
+import type { JSX } from 'react'; // Added import for JSX
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
 import type { QuizQuestion } from '@/types/quiz-type';
-import { CheckCircle2, Circle } from 'lucide-react';
-import type { JSX } from 'react'; // Added import for JSX
 
 interface QuestionCardProps {
   question: QuizQuestion;

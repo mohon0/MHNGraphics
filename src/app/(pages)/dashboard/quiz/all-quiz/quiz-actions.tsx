@@ -1,5 +1,6 @@
 'use client';
 
+import { Copy, Edit, Eye, MoreHorizontal, Trash2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -8,7 +9,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Copy, Edit, Eye, MoreHorizontal, Trash2 } from 'lucide-react';
 
 interface QuizActionsProps {
   quizId: string;

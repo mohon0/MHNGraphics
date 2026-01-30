@@ -1,5 +1,8 @@
 'use client';
 
+import { Calendar, Clock, Tag, Target } from 'lucide-react';
+import Link from 'next/link';
+import type { JSX } from 'react'; // Import JSX to declare the type
 import { Badge } from '@/components/ui/badge';
 import {
   Card,
@@ -8,9 +11,6 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { Calendar, Clock, Tag, Target } from 'lucide-react';
-import Link from 'next/link';
-import type { JSX } from 'react'; // Import JSX to declare the type
 import { DifficultyBadge } from './difficulty-badge';
 import { QuizActions } from './quiz-actions';
 import { StatusBadge } from './status-badge';

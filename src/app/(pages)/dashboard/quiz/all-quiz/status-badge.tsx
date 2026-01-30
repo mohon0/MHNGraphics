@@ -1,5 +1,5 @@
-import { Badge } from '@/components/ui/badge'; // Ensure Badge is imported
 import type { JSX } from 'react';
+import { Badge } from '@/components/ui/badge'; // Ensure Badge is imported
 
 type QuizStatus = 'DRAFT' | 'PUBLISHED' | 'SCHEDULED' | 'ARCHIVED';
 

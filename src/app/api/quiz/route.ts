@@ -1,5 +1,5 @@
-import Prisma from '@/lib/prisma';
 import { NextResponse } from 'next/server';
+import Prisma from '@/lib/prisma';
 
 const ALLOWED_DIFFICULTIES = ['EASY', 'MEDIUM', 'HARD'] as const;
 

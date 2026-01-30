@@ -1,10 +1,10 @@
 'use client';
 
+import { Copy, Edit2, Trash2 } from 'lucide-react';
+import type { JSX } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import type { AdminQuiz } from '@/types/quiz-type';
-import { Copy, Edit2, Trash2 } from 'lucide-react';
-import type { JSX } from 'react';
 import { DifficultyBadge } from '../difficulty-badge';
 import { StatusBadge } from '../status-badge';
 

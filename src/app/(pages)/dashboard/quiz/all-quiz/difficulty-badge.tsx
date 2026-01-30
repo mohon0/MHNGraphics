@@ -1,5 +1,5 @@
-import { Badge } from '@/components/ui/badge';
 import type { JSX } from 'react';
+import { Badge } from '@/components/ui/badge';
 
 type Difficulty = 'EASY' | 'MEDIUM' | 'HARD';
 

@@ -1,15 +1,15 @@
 'use client';
 
+import { AlertCircle } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { type JSX, use, useCallback } from 'react';
+import { toast } from 'sonner';
 import { Skeleton } from '@/components/ui/skeleton';
 import {
   useDeleteQuiz,
   useDuplicateQuiz,
   useSingleAdminQuiz,
 } from '@/services/quiz';
-import { AlertCircle } from 'lucide-react';
-import { useRouter } from 'next/navigation';
-import { type JSX, use, useCallback } from 'react';
-import { toast } from 'sonner';
 import { QuizHeader } from './quiz-header';
 import { QuizQuestions } from './quiz-questions';
 

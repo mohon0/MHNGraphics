@@ -169,6 +169,24 @@ export function useDuplicateQuiz() {
   });
 }
 
+export function useUpdateQuiz() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    // biome-ignore lint/suspicious/noExplicitAny: this is fine
+    mutationFn: async (quizData: any) => {
+      const response = await axios.put('/api/quiz/admin', quizData);
+      return response.data;
+    },
+    onSuccess: (_data, variables) => {
+      queryClient.invalidateQueries({ queryKey: ['admin-quiz-list'] });
+      queryClient.invalidateQueries({
+        queryKey: ['quizwithquestions', variables.id],
+      });
+    },
+  });
+}
+
 export function useSingleAdminQuiz(id: string) {
   return useQuery({
     queryKey: ['single-admin-quiz', id],
