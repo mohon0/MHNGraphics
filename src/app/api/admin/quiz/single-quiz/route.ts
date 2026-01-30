@@ -22,6 +22,10 @@ export async function GET(req: Request) {
         description: true,
         timeLimit: true,
         passingScore: true,
+        status: true,
+        difficulty: true,
+        category: true,
+        tags: true,
         _count: {
           select: {
             questions: true,
@@ -37,6 +41,8 @@ export async function GET(req: Request) {
               select: {
                 id: true,
                 text: true,
+                isCorrect: true,
+                explanation: true,
               },
             },
           },

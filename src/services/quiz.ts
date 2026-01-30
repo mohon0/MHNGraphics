@@ -168,3 +168,14 @@ export function useDuplicateQuiz() {
     },
   });
 }
+
+export function useSingleAdminQuiz(id: string) {
+  return useQuery({
+    queryKey: ['single-admin-quiz', id],
+    queryFn: async () => {
+      const response = await axios.get(`/api/admin/quiz/single-quiz?id=${id}`);
+      return response.data;
+    },
+    enabled: !!id,
+  });
+}

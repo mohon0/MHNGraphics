@@ -9,6 +9,7 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { Calendar, Clock, Tag, Target } from 'lucide-react';
+import Link from 'next/link';
 import type { JSX } from 'react'; // Import JSX to declare the type
 import { DifficultyBadge } from './difficulty-badge';
 import { QuizActions } from './quiz-actions';
@@ -63,9 +64,11 @@ export function QuizCard({
       <CardHeader className='pb-3'>
         <div className='flex items-start justify-between gap-2'>
           <div className='flex-1 min-w-0'>
-            <CardTitle className='text-lg font-bold text-balance line-clamp-2 mb-1 group-hover:text-primary transition-colors'>
-              {quiz.title}
-            </CardTitle>
+            <Link href={`/dashboard/quiz/all-quiz/${quiz.id}`}>
+              <CardTitle className='text-lg font-bold text-balance line-clamp-2 mb-1 group-hover:text-primary transition-colors'>
+                {quiz.title}
+              </CardTitle>
+            </Link>
             <CardDescription className='line-clamp-2 text-sm'>
               {quiz.description}
             </CardDescription>
