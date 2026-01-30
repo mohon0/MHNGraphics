@@ -1,5 +1,11 @@
 'use client';
 
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Skeleton } from '@/components/ui/skeleton';
+import { useNotice } from '@/services/notice';
 import { format, formatDistanceToNow, isToday, isYesterday } from 'date-fns';
 import {
   ArrowRight,
@@ -15,12 +21,6 @@ import {
   Users,
 } from 'lucide-react';
 import Link from 'next/link';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Skeleton } from '@/components/ui/skeleton';
-import { useNotice } from '@/services/notice';
 
 interface Notice {
   id: string;
@@ -183,15 +183,15 @@ export default function ModernNoticeBoard() {
           <div className='space-y-8 p-2'>
             {/* Application Button Card */}
             <Card className='relative overflow-hidden border-0 bg-linear-to-br from-emerald-500 via-blue-600 to-purple-700 p-1 shadow-2xl'>
-              <div className='rounded-2xl bg-white/95 p-8 backdrop-blur-xs'>
+              <div className='rounded-2xl bg-white/95 p-6 backdrop-blur-xs'>
                 <div className='text-center'>
-                  <div className='mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-linear-to-br from-emerald-400 to-blue-600 shadow-xl'>
-                    <Users className='h-10 w-10 text-white' />
+                  <div className='mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-linear-to-br from-emerald-400 to-blue-600 shadow-xl'>
+                    <Users className='h-8 w-8 text-white' />
                   </div>
                   <h3 className='mb-4 bg-linear-to-r from-slate-800 to-blue-800 bg-clip-text text-2xl font-bold text-transparent'>
                     আজই যোগ দিন
                   </h3>
-                  <p className='mb-8 text-slate-600'>
+                  <p className='mb-6 text-slate-600'>
                     আপনার ভবিষ্যৎ গড়ুন আমাদের সাথে
                   </p>
                   <Link href='/best-computer-training-center/application'>
@@ -201,6 +201,31 @@ export default function ModernNoticeBoard() {
                         <div className='h-3 w-3 animate-pulse rounded-full bg-white/80' />
                       </span>
                       <div className='absolute inset-0 bg-linear-to-r from-emerald-600 via-blue-700 to-purple-700 opacity-0 transition-opacity duration-300 group-hover:opacity-100' />
+                    </Button>
+                  </Link>
+                </div>
+              </div>
+            </Card>
+
+            <Card className='relative overflow-hidden border-0 bg-gradient-to-br from-yellow-500 via-orange-600 to-orange-700 p-1 shadow-2xl'>
+              <div className='rounded-2xl bg-white/95 p-6 backdrop-blur-sm'>
+                <div className='text-center'>
+                  <div className='mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-emerald-400 to-blue-600 shadow-xl'>
+                    <Sparkles className='h-8 w-8 text-white' />
+                  </div>
+                  <h3 className='mb-4 bg-gradient-to-r from-slate-800 to-blue-800 bg-clip-text text-2xl font-bold text-transparent'>
+                    কুইজ শুরু করুন
+                  </h3>
+                  <p className='mb-6 text-slate-600'>
+                    আপনার জ্ঞান পরীক্ষা করুন এবং নতুন কিছু শিখুন
+                  </p>
+                  <Link href='/quiz'>
+                    <Button className='group relative overflow-hidden bg-gradient-to-r from-emerald-500 via-blue-600 to-purple-600 px-8 py-4 text-lg font-semibold text-white shadow-xl transition-all duration-300 hover:scale-105 hover:shadow-2xl'>
+                      <span className='relative z-10 flex items-center gap-3'>
+                        কুইজ খেলুন
+                        <div className='h-3 w-3 animate-pulse rounded-full bg-white/80' />
+                      </span>
+                      <div className='absolute inset-0 bg-gradient-to-r from-emerald-600 via-blue-700 to-purple-700 opacity-0 transition-opacity duration-300 group-hover:opacity-100' />
                     </Button>
                   </Link>
                 </div>
