@@ -113,3 +113,44 @@ export function useSingleQuizResultReview(id: string) {
     },
   });
 }
+
+export function useAdminQuizList() {
+  return useQuery({
+    queryKey: ['admin-quiz-list'],
+    queryFn: async () => {
+      const response = await axios.get(`/api/quiz/admin/quiz-list`);
+      return response.data;
+    },
+  });
+}
+
+interface UseDeleteQuizOptions {
+  onSuccess?: () => void;
+  onError?: (error: Error) => void;
+}
+
+export function useDeleteQuiz({
+  onSuccess,
+  onError,
+}: UseDeleteQuizOptions = {}) {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (id: string) => {
+      const response = await axios.delete('/api/quiz/admin', {
+        params: { id },
+      });
+      return response.data;
+    },
+    onSuccess: () => {
+      // Invalidate and refetch notices query to update the UI
+      queryClient.invalidateQueries({
+        queryKey: ['admin-quiz-list', 'quizzes'],
+      });
+      onSuccess?.();
+    },
+    onError: (error: Error) => {
+      onError?.(error);
+    },
+  });
+}

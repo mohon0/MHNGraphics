@@ -1,7 +1,5 @@
 /** biome-ignore-all lint/suspicious/noExplicitAny: this is fine */
 'use client';
-import { Award, CheckCircle2, Clock, Info, XCircle } from 'lucide-react';
-import { use } from 'react';
 import { Badge } from '@/components/ui/badge';
 import {
   Card,
@@ -12,6 +10,8 @@ import {
 } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
 import { useSingleQuizResultReview } from '@/services/quiz';
+import { Award, CheckCircle2, Clock, Info, XCircle } from 'lucide-react';
+import { use } from 'react';
 
 export default function ReviewResult({
   params,
