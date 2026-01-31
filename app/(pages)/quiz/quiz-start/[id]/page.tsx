@@ -12,7 +12,7 @@ import {
   Sparkles,
 } from 'lucide-react';
 
-import { use, useEffect, useMemo, useRef, useState } from 'react';
+import { use, useEffect, useMemo, useState } from 'react';
 
 import { useForm } from 'react-hook-form';
 
@@ -66,7 +66,9 @@ export default function QuizStart({
   const [showValidationAlert, setShowValidationAlert] = useState(false);
   const [showCelebration, setShowCelebration] = useState(false);
   const [startTime, setStartTime] = useState<number | null>(null);
-  const formInitialized = useRef(false);
+
+  // Track answers in local state as backup
+  const [answers, setAnswers] = useState<Record<string, string>>({});
 
   // Create dynamic schema based on quiz questions with useMemo
   const quizSchema = useMemo(() => {
@@ -93,21 +95,17 @@ export default function QuizStart({
   const form = useForm<QuizFormValues>({
     resolver: zodResolver(quizSchema),
     mode: 'onChange',
-    defaultValues: {} as QuizFormValues,
   });
 
-  // Reset form when data is loaded
+  // Initialize form and answers when data loads
   useEffect(() => {
-    if (data?.questions && !formInitialized.current) {
-      const initialValues = data.questions.reduce(
-        (acc: Record<string, string>, question: { id: string | number }) => {
-          acc[String(question.id)] = '';
-          return acc;
-        },
-        {} as Record<string, string>,
-      );
+    if (data?.questions) {
+      const initialValues: Record<string, string> = {};
+      data.questions.forEach((question: { id: string | number }) => {
+        initialValues[String(question.id)] = '';
+      });
+      setAnswers(initialValues);
       form.reset(initialValues as QuizFormValues);
-      formInitialized.current = true;
     }
   }, [data, form]);
 
@@ -121,12 +119,8 @@ export default function QuizStart({
     }
   }, [data, startTime]);
 
-  // Get unanswered questions and calculate progress
-  const formValues = form.watch();
-  const formValuesRecord = formValues as Record<string, string>;
-  const answeredCount = formValuesRecord
-    ? Object.values(formValuesRecord).filter(Boolean).length
-    : 0;
+  // Calculate progress from answers state
+  const answeredCount = Object.values(answers).filter(Boolean).length;
   const totalQuestions = data?._count.questions || 0;
   const allAnswered = answeredCount === totalQuestions && totalQuestions > 0;
 
@@ -173,17 +167,16 @@ export default function QuizStart({
 
   const currentQuestion = data.questions[currentQuestionIndex];
   const isLastQuestion = currentQuestionIndex === data._count.questions - 1;
-  const currentAnswer = form.watch(currentQuestion.id);
+  const currentAnswer = answers[currentQuestion.id];
   const isAnswered = !!currentAnswer;
 
   // Calculate unanswered questions
   const unansweredQuestions = data.questions
     // biome-ignore lint/suspicious/noExplicitAny: this is fine
     .map((q: any, idx: any) => ({ question: q, index: idx }))
-    .filter(({ question }: { question: QuestionType }) => {
-      const value = formValuesRecord?.[question.id];
-      return !value;
-    });
+    .filter(
+      ({ question }: { question: QuestionType }) => !answers[question.id],
+    );
 
   // Dynamic progress based on answered questions
   const progress = (answeredCount / totalQuestions) * 100;
@@ -202,34 +195,48 @@ export default function QuizStart({
     }
   };
 
-  const handleSubmit = form.handleSubmit(
-    (data) => {
-      const endTime = Date.now();
-      const timeSpentSeconds = startTime
-        ? Math.floor((endTime - startTime) / 1000)
-        : 0;
-      // Trigger the mutation
-      submitQuiz({
-        quizId: id,
-        answers: data,
-        timeSpent: timeSpentSeconds,
-      });
-    },
-    (_errors) => {
-      setShowValidationAlert(true);
+  const handleAnswerChange = (questionId: string, value: string) => {
+    // Update both form and local state
+    setAnswers((prev) => ({
+      ...prev,
+      [questionId]: value,
+    }));
+    // biome-ignore lint/suspicious/noExplicitAny: =this is fine
+    form.setValue(questionId as any, value);
+  };
 
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+
+    // Check if all questions are answered
+    const allQuestionsAnswered = data.questions.every(
+      (q: { id: string | number }) => answers[q.id],
+    );
+
+    if (!allQuestionsAnswered) {
+      setShowValidationAlert(true);
       // Navigate to first unanswered question
       const firstUnansweredIndex = data.questions.findIndex(
-        (q: { id: string | number }) => {
-          const value = formValuesRecord?.[q.id];
-          return !value;
-        },
+        (q: { id: string | number }) => !answers[q.id],
       );
       if (firstUnansweredIndex !== -1) {
         setCurrentQuestionIndex(firstUnansweredIndex);
       }
-    },
-  );
+      return;
+    }
+
+    const endTime = Date.now();
+    const timeSpentSeconds = startTime
+      ? Math.floor((endTime - startTime) / 1000)
+      : 0;
+
+    // Submit with answers from state
+    submitQuiz({
+      quizId: id,
+      answers: answers,
+      timeSpent: timeSpentSeconds,
+    });
+  };
 
   const goToQuestion = (index: number) => {
     setCurrentQuestionIndex(index);
@@ -341,148 +348,156 @@ export default function QuizStart({
 
         {/* Question Card */}
         <Form {...form}>
-          <Card className='mb-6 sm:mb-8 border-border/50 shadow-lg'>
-            <CardContent className='pt-5 sm:pt-6 lg:pt-8 pb-5 sm:pb-6 lg:pb-8 px-4 sm:px-6'>
-              <div className='mb-6 sm:mb-8'>
-                <h2 className='text-lg sm:text-xl lg:text-2xl font-bold text-foreground leading-relaxed'>
-                  {currentQuestion.text}
-                </h2>
-              </div>
+          <form onSubmit={handleSubmit}>
+            <Card className='mb-6 sm:mb-8 border-border/50 shadow-lg'>
+              <CardContent className='pt-5 sm:pt-6 lg:pt-8 pb-5 sm:pb-6 lg:pb-8 px-4 sm:px-6'>
+                <div className='mb-6 sm:mb-8'>
+                  <h2 className='text-lg sm:text-xl lg:text-2xl font-bold text-foreground leading-relaxed'>
+                    {currentQuestion.text}
+                  </h2>
+                </div>
 
-              {/* Options */}
-              <FormField
-                control={form.control}
-                name={currentQuestion.id}
-                render={({ field }) => (
-                  <FormItem>
-                    <FormControl>
-                      <RadioGroup
-                        onValueChange={field.onChange}
-                        value={field.value}
-                      >
-                        <div className='space-y-2.5 sm:space-y-3'>
-                          {(currentQuestion.options || []).map(
-                            (option: OptionType) => {
-                              const isSelected = field.value === option.id;
-                              return (
-                                <div key={option.id} className='group relative'>
-                                  <Label
-                                    htmlFor={option.id}
-                                    className={`flex items-start gap-3 sm:gap-4 p-3.5 sm:p-4 lg:p-5 rounded-lg sm:rounded-xl border-2 transition-all duration-200 cursor-pointer ${
-                                      isSelected
-                                        ? 'border-primary bg-primary/10 shadow-md shadow-primary/20'
-                                        : 'border-border/40 bg-card/50 hover:border-primary/40 hover:bg-primary/5 shadow-sm hover:shadow-md'
-                                    }`}
+                {/* Options */}
+                <FormField
+                  control={form.control}
+                  name={currentQuestion.id}
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormControl>
+                        <RadioGroup
+                          onValueChange={(value) => {
+                            field.onChange(value);
+                            handleAnswerChange(currentQuestion.id, value);
+                          }}
+                          value={answers[currentQuestion.id] || ''}
+                        >
+                          <div className='space-y-2.5 sm:space-y-3'>
+                            {(currentQuestion.options || []).map(
+                              (option: OptionType) => {
+                                const isSelected =
+                                  answers[currentQuestion.id] === option.id;
+                                return (
+                                  <div
+                                    key={option.id}
+                                    className='group relative'
                                   >
-                                    <div className='pt-0.5 flex-shrink-0'>
-                                      <div
-                                        className={`relative w-5 h-5 sm:w-6 sm:h-6 rounded-full border-2 flex items-center justify-center transition-all ${
-                                          isSelected
-                                            ? 'border-primary bg-primary'
-                                            : 'border-border group-hover:border-primary/60'
-                                        }`}
-                                      >
-                                        {isSelected && (
-                                          <div className='w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-primary-foreground' />
-                                        )}
+                                    <Label
+                                      htmlFor={option.id}
+                                      className={`flex items-start gap-3 sm:gap-4 p-3.5 sm:p-4 lg:p-5 rounded-lg sm:rounded-xl border-2 transition-all duration-200 cursor-pointer ${
+                                        isSelected
+                                          ? 'border-primary bg-primary/10 shadow-md shadow-primary/20'
+                                          : 'border-border/40 bg-card/50 hover:border-primary/40 hover:bg-primary/5 shadow-sm hover:shadow-md'
+                                      }`}
+                                    >
+                                      <div className='pt-0.5 flex-shrink-0'>
+                                        <div
+                                          className={`relative w-5 h-5 sm:w-6 sm:h-6 rounded-full border-2 flex items-center justify-center transition-all ${
+                                            isSelected
+                                              ? 'border-primary bg-primary'
+                                              : 'border-border group-hover:border-primary/60'
+                                          }`}
+                                        >
+                                          {isSelected && (
+                                            <div className='w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-primary-foreground' />
+                                          )}
+                                        </div>
+                                        <RadioGroupItem
+                                          value={option.id}
+                                          id={option.id}
+                                          className='sr-only'
+                                        />
                                       </div>
-                                      <RadioGroupItem
-                                        value={option.id}
-                                        id={option.id}
-                                        className='sr-only'
-                                      />
-                                    </div>
-                                    <div className='flex-1 min-w-0'>
-                                      <span
-                                        className={`text-sm sm:text-base leading-relaxed block transition-colors break-words ${
-                                          isSelected
-                                            ? 'text-foreground font-semibold'
-                                            : 'text-foreground/80 group-hover:text-foreground'
-                                        }`}
-                                      >
-                                        {option.text}
-                                      </span>
-                                    </div>
-                                    {isSelected && (
-                                      <div className='flex-shrink-0 mt-0.5'>
-                                        <CheckCircle2 className='w-5 h-5 sm:w-6 sm:h-6 text-primary animate-in fade-in scale-in duration-200' />
+                                      <div className='flex-1 min-w-0'>
+                                        <span
+                                          className={`text-sm sm:text-base leading-relaxed block transition-colors break-words ${
+                                            isSelected
+                                              ? 'text-foreground font-semibold'
+                                              : 'text-foreground/80 group-hover:text-foreground'
+                                          }`}
+                                        >
+                                          {option.text}
+                                        </span>
                                       </div>
-                                    )}
-                                  </Label>
-                                </div>
-                              );
-                            },
-                          )}
-                        </div>
-                      </RadioGroup>
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </CardContent>
-          </Card>
-
-          {/* Navigation - Responsive layout */}
-          <div className='flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 sm:gap-4'>
-            <Button
-              type='button'
-              variant='outline'
-              onClick={handlePrev}
-              disabled={currentQuestionIndex === 0}
-              className='gap-2 w-full sm:w-auto order-2 sm:order-1'
-              size='lg'
-            >
-              <ChevronLeft className='w-4 h-4' />
-              Previous
-            </Button>
-
-            <div className='flex items-center gap-2 sm:gap-3 order-1 sm:order-2'>
-              {!isLastQuestion && (
-                <Button
-                  type='button'
-                  onClick={handleNext}
-                  size='lg'
-                  className='gap-2 flex-1 sm:flex-none sm:px-8'
-                >
-                  Next
-                  <ChevronRight className='w-4 h-4' />
-                </Button>
-              )}
-
-              {/* Show submit button when all answered OR on last question */}
-              {(allAnswered || isLastQuestion) && (
-                <Button
-                  type='button'
-                  disabled={isSubmitting}
-                  onClick={handleSubmit}
-                  size='lg'
-                  variant={allAnswered ? 'default' : 'secondary'}
-                  className={`gap-2 flex-1 sm:flex-none sm:px-8 transition-all relative ${
-                    allAnswered
-                      ? 'bg-green-600 hover:bg-green-700 text-white shadow-lg shadow-green-600/30'
-                      : ''
-                  }`}
-                >
-                  {allAnswered ? (
-                    <Sparkles className='w-4 h-4' />
-                  ) : (
-                    <CheckCircle2 className='w-4 h-4' />
+                                      {isSelected && (
+                                        <div className='flex-shrink-0 mt-0.5'>
+                                          <CheckCircle2 className='w-5 h-5 sm:w-6 sm:h-6 text-primary animate-in fade-in scale-in duration-200' />
+                                        </div>
+                                      )}
+                                    </Label>
+                                  </div>
+                                );
+                              },
+                            )}
+                          </div>
+                        </RadioGroup>
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
                   )}
-                  <span className='hidden sm:inline'>
-                    {allAnswered
-                      ? 'Submit Quiz'
-                      : `Submit (${answeredCount}/${totalQuestions})`}
-                  </span>
-                  <span className='sm:hidden'>
-                    {allAnswered
-                      ? 'Submit'
-                      : `Submit (${answeredCount}/${totalQuestions})`}
-                  </span>
-                </Button>
-              )}
+                />
+              </CardContent>
+            </Card>
+
+            {/* Navigation - Responsive layout */}
+            <div className='flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 sm:gap-4'>
+              <Button
+                type='button'
+                variant='outline'
+                onClick={handlePrev}
+                disabled={currentQuestionIndex === 0}
+                className='gap-2 w-full sm:w-auto order-2 sm:order-1'
+                size='lg'
+              >
+                <ChevronLeft className='w-4 h-4' />
+                Previous
+              </Button>
+
+              <div className='flex items-center gap-2 sm:gap-3 order-1 sm:order-2'>
+                {!isLastQuestion && (
+                  <Button
+                    type='button'
+                    onClick={handleNext}
+                    size='lg'
+                    className='gap-2 flex-1 sm:flex-none sm:px-8'
+                  >
+                    Next
+                    <ChevronRight className='w-4 h-4' />
+                  </Button>
+                )}
+
+                {/* Show submit button when all answered OR on last question */}
+                {(allAnswered || isLastQuestion) && (
+                  <Button
+                    type='submit'
+                    disabled={isSubmitting}
+                    size='lg'
+                    variant={allAnswered ? 'default' : 'secondary'}
+                    className={`gap-2 flex-1 sm:flex-none sm:px-8 transition-all relative ${
+                      allAnswered
+                        ? 'bg-green-600 hover:bg-green-700 text-white shadow-lg shadow-green-600/30'
+                        : ''
+                    }`}
+                  >
+                    {allAnswered ? (
+                      <Sparkles className='w-4 h-4' />
+                    ) : (
+                      <CheckCircle2 className='w-4 h-4' />
+                    )}
+                    <span className='hidden sm:inline'>
+                      {allAnswered
+                        ? 'Submit Quiz'
+                        : `Submit (${answeredCount}/${totalQuestions})`}
+                    </span>
+                    <span className='sm:hidden'>
+                      {allAnswered
+                        ? 'Submit'
+                        : `Submit (${answeredCount}/${totalQuestions})`}
+                    </span>
+                  </Button>
+                )}
+              </div>
             </div>
-          </div>
+          </form>
         </Form>
 
         {/* Footer Info */}
@@ -525,7 +540,7 @@ export default function QuizStart({
             </p>
             <div className='flex flex-wrap gap-1.5 sm:gap-2'>
               {data.questions.map((question: QuestionType, index: number) => {
-                const answered = !!form.watch(question.id);
+                const answered = !!answers[question.id];
                 const isCurrent = index === currentQuestionIndex;
                 return (
                   <Button
