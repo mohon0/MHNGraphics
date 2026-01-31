@@ -12,7 +12,7 @@ import {
   Sparkles,
 } from 'lucide-react';
 
-import { use, useEffect, useMemo, useState } from 'react';
+import { use, useEffect, useMemo, useRef, useState } from 'react';
 
 import { useForm } from 'react-hook-form';
 
@@ -66,6 +66,7 @@ export default function QuizStart({
   const [showValidationAlert, setShowValidationAlert] = useState(false);
   const [showCelebration, setShowCelebration] = useState(false);
   const [startTime, setStartTime] = useState<number | null>(null);
+  const formInitialized = useRef(false);
 
   // Create dynamic schema based on quiz questions with useMemo
   const quizSchema = useMemo(() => {
@@ -97,7 +98,7 @@ export default function QuizStart({
 
   // Reset form when data is loaded
   useEffect(() => {
-    if (data?.questions) {
+    if (data?.questions && !formInitialized.current) {
       const initialValues = data.questions.reduce(
         (acc: Record<string, string>, question: { id: string | number }) => {
           acc[String(question.id)] = '';
@@ -106,6 +107,7 @@ export default function QuizStart({
         {} as Record<string, string>,
       );
       form.reset(initialValues as QuizFormValues);
+      formInitialized.current = true;
     }
   }, [data, form]);
 
