@@ -1,5 +1,7 @@
 'use client';
+
 import { zodResolver } from '@hookform/resolvers/zod';
+
 import {
   AlertCircle,
   AlertTriangle,
@@ -9,13 +11,21 @@ import {
   Clock,
   Sparkles,
 } from 'lucide-react';
-import { use, useEffect, useState } from 'react';
+
+import { use, useEffect, useMemo, useState } from 'react';
+
 import { useForm } from 'react-hook-form';
+
 import * as z from 'zod';
+
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+
 import { Button } from '@/components/ui/button';
+
 import { Card, CardContent } from '@/components/ui/card';
+
 import { FlipClock } from '@/components/ui/flip-clock';
+
 import {
   Form,
   FormControl,
@@ -23,9 +33,13 @@ import {
   FormItem,
   FormMessage,
 } from '@/components/ui/form';
+
 import { Label } from '@/components/ui/label';
+
 import { Progress } from '@/components/ui/progress';
+
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+
 import { useSingleQuiz, useSubmitQuiz } from '@/services/quiz';
 
 interface OptionType {
@@ -53,43 +67,60 @@ export default function QuizStart({
   const [showCelebration, setShowCelebration] = useState(false);
   const [startTime, setStartTime] = useState<number | null>(null);
 
-  // Create dynamic schema based on quiz questions
-  const quizSchema = z.object(
-    data?.questions.reduce(
-      (
-        acc: { [x: string]: z.ZodString },
-        question: { id: string | number },
-      ) => {
-        acc[question.id] = z.string().min(1, 'Please select an answer');
-        return acc;
-      },
-      {} as Record<string, z.ZodString>,
-    ) || {},
-  );
+  // Create dynamic schema based on quiz questions with useMemo
+  const quizSchema = useMemo(() => {
+    if (!data?.questions) return z.object({});
+
+    return z.object(
+      data.questions.reduce(
+        (
+          acc: { [x: string]: z.ZodString },
+          question: { id: string | number },
+        ) => {
+          acc[question.id] = z.string().min(1, 'Please select an answer');
+          return acc;
+        },
+        {} as Record<string, z.ZodString>,
+      ),
+    );
+  }, [data?.questions]);
 
   type QuizFormValues = z.infer<typeof quizSchema>;
 
   const form = useForm<QuizFormValues>({
     resolver: zodResolver(quizSchema),
     mode: 'onChange',
-    defaultValues:
-      data?.questions.reduce(
+    defaultValues: {},
+  });
+
+  // Reset form when data is loaded
+  useEffect(() => {
+    if (data?.questions) {
+      const initialValues = data.questions.reduce(
         (acc: { [x: string]: string }, question: { id: string | number }) => {
           acc[question.id] = '';
           return acc;
         },
         {} as Record<string, string>,
-      ) || {},
-  });
+      );
+      form.reset(initialValues);
+    }
+  }, [data, form]);
 
   useEffect(() => {
     if (!data) return;
     setTargetTime(new Date(Date.now() + data.timeLimit * 60 * 1000));
-  }, [data]);
 
-  // Get unanswered questions and calculate progress (moved here before useEffect)
-  const formValues = form.getValues();
-  const answeredCount = Object.values(formValues).filter(Boolean).length;
+    // Set the start time once when data arrives
+    if (!startTime) {
+      setStartTime(Date.now());
+    }
+  }, [data, startTime]);
+
+  // Get unanswered questions and calculate progress
+
+  const formValues = form.watch() as Record<string, string>;
+  const answeredCount = Object.values(formValues || {}).filter(Boolean).length;
   const totalQuestions = data?._count.questions || 0;
   const allAnswered = answeredCount === totalQuestions && totalQuestions > 0;
 
@@ -100,15 +131,6 @@ export default function QuizStart({
       setTimeout(() => setShowCelebration(false), 3000);
     }
   }, [allAnswered, showCelebration]);
-  useEffect(() => {
-    if (!data) return;
-    setTargetTime(new Date(Date.now() + data.timeLimit * 60 * 1000));
-
-    // 2. Set the start time once when data arrives
-    if (!startTime) {
-      setStartTime(Date.now());
-    }
-  }, [data, startTime]);
 
   if (isPending || !targetTime) {
     return (
@@ -190,8 +212,9 @@ export default function QuizStart({
       setShowValidationAlert(true);
 
       // Navigate to first unanswered question
+
       const firstUnansweredIndex = data.questions.findIndex(
-        (q: { id: string | number }) => !formValues[q.id],
+        (q: { id: string | number }) => !formValues?.[q.id],
       );
       if (firstUnansweredIndex !== -1) {
         setCurrentQuestionIndex(firstUnansweredIndex);
