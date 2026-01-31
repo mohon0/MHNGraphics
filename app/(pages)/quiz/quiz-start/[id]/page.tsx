@@ -74,10 +74,12 @@ export default function QuizStart({
     return z.object(
       data.questions.reduce(
         (
-          acc: { [x: string]: z.ZodString },
+          acc: Record<string, z.ZodString>,
           question: { id: string | number },
         ) => {
-          acc[question.id] = z.string().min(1, 'Please select an answer');
+          acc[String(question.id)] = z
+            .string()
+            .min(1, 'Please select an answer');
           return acc;
         },
         {} as Record<string, z.ZodString>,
@@ -90,20 +92,20 @@ export default function QuizStart({
   const form = useForm<QuizFormValues>({
     resolver: zodResolver(quizSchema),
     mode: 'onChange',
-    defaultValues: {},
+    defaultValues: {} as QuizFormValues,
   });
 
   // Reset form when data is loaded
   useEffect(() => {
     if (data?.questions) {
       const initialValues = data.questions.reduce(
-        (acc: { [x: string]: string }, question: { id: string | number }) => {
-          acc[question.id] = '';
+        (acc: Record<string, string>, question: { id: string | number }) => {
+          acc[String(question.id)] = '';
           return acc;
         },
         {} as Record<string, string>,
       );
-      form.reset(initialValues);
+      form.reset(initialValues as QuizFormValues);
     }
   }, [data, form]);
 
@@ -118,9 +120,11 @@ export default function QuizStart({
   }, [data, startTime]);
 
   // Get unanswered questions and calculate progress
-
-  const formValues = form.watch() as Record<string, string>;
-  const answeredCount = Object.values(formValues || {}).filter(Boolean).length;
+  const formValues = form.watch();
+  const formValuesRecord = formValues as Record<string, string>;
+  const answeredCount = formValuesRecord
+    ? Object.values(formValuesRecord).filter(Boolean).length
+    : 0;
   const totalQuestions = data?._count.questions || 0;
   const allAnswered = answeredCount === totalQuestions && totalQuestions > 0;
 
@@ -174,9 +178,10 @@ export default function QuizStart({
   const unansweredQuestions = data.questions
     // biome-ignore lint/suspicious/noExplicitAny: this is fine
     .map((q: any, idx: any) => ({ question: q, index: idx }))
-    .filter(
-      ({ question }: { question: QuestionType }) => !formValues[question.id],
-    );
+    .filter(({ question }: { question: QuestionType }) => {
+      const value = formValuesRecord?.[question.id];
+      return !value;
+    });
 
   // Dynamic progress based on answered questions
   const progress = (answeredCount / totalQuestions) * 100;
@@ -212,9 +217,11 @@ export default function QuizStart({
       setShowValidationAlert(true);
 
       // Navigate to first unanswered question
-
       const firstUnansweredIndex = data.questions.findIndex(
-        (q: { id: string | number }) => !formValues?.[q.id],
+        (q: { id: string | number }) => {
+          const value = formValuesRecord?.[q.id];
+          return !value;
+        },
       );
       if (firstUnansweredIndex !== -1) {
         setCurrentQuestionIndex(firstUnansweredIndex);
