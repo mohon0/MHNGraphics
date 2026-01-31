@@ -169,7 +169,7 @@ export default function QuizPage() {
         {/* CTA */}
 
         <Link
-          href={`${sessionStatus === 'unauthenticated' ? '/login' : `/quiz/quiz-start/${quiz.id}`}`}
+          href={`${sessionStatus === 'unauthenticated' ? '/sign-in' : `/quiz/quiz-start/${quiz.id}`}`}
         >
           <Button size='lg' className='w-full' disabled={!acceptedRules}>
             Start Quiz

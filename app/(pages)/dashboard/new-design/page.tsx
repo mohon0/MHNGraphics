@@ -31,7 +31,7 @@ export default function NewDesign() {
   // Handle loading and unauthenticated states
   if (status === 'loading') return <DesignSkeleton />;
   if (status === 'unauthenticated') {
-    router.push('/login');
+    router.push('/sign-in');
     return null;
   }
 

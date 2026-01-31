@@ -128,12 +128,12 @@ function SearchHeaderComponent({ fixed = false }: { fixed?: boolean }) {
                 <Link
                   href='/'
                   className={`space-x-2 font-extrabold ${
-                    fixed ? 'text-white' : 'text-black'
+                    fixed ? 'text-white' : 'text-foreground'
                   }`}
                 >
                   <div className='font-philosopher ml-2 flex items-end gap-2 md:ml-0'>
                     <span className='text-2xl'>Oylkka</span>
-                    <span className='hidden text-xl md:block'>Graphics</span>
+                    <span className='hidden text-xl md:block'>it</span>
                   </div>
                 </Link>
               </motion.div>
@@ -144,7 +144,7 @@ function SearchHeaderComponent({ fixed = false }: { fixed?: boolean }) {
               >
                 <SelectTrigger
                   className={`bg-background ${
-                    isScrolled ? 'md:ml-10' : 'md:-ml-44'
+                    isScrolled ? 'md:ml-10' : 'md:-ml-30'
                   } -ml-20 transition-all duration-200 md:min-w-32`}
                 >
                   <SelectValue placeholder='Category' />

@@ -39,9 +39,6 @@ export default function MobileMenu({ fixed = false }: { fixed?: boolean }) {
             <Link href='/mhn-it' legacyBehavior passHref>
               Oylkka IT Agency
             </Link>
-            <Link href='/' legacyBehavior passHref>
-              Oylkka graphics
-            </Link>
             <Link href='/best-computer-training-center/blood-donate'>
               Blood Donate
             </Link>

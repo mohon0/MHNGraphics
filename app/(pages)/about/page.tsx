@@ -33,7 +33,7 @@ export default function AboutPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
             >
-              About Oylkka Graphics
+              About Oylkka IT
             </motion.h1>
             <motion.p
               className='mx-auto max-w-2xl text-xl text-white'

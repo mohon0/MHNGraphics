@@ -41,11 +41,7 @@ export default function Header({
               href='/best-computer-training-center/application'
               className='hidden md:block'
             >
-              <Button
-                className={`${fixed ? 'border bg-transparent hover:bg-transparent' : 'border border-primary bg-secondary text-primary hover:bg-secondary'}`}
-              >
-                Apply Now
-              </Button>
+              <Button variant='secondary'>Apply Now</Button>
             </Link>
           )}
           <User fixed={fixed} />

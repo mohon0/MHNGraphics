@@ -55,7 +55,7 @@ export default function Contact() {
   });
 
   async function onSubmit(data: z.infer<typeof FormSchema>) {
-    await toast.promise(axios.post('/api/email/contact', data), {
+    toast.promise(axios.post('/api/email/contact', data), {
       loading: 'Sending your message...',
       success: () => {
         form.reset();
@@ -176,7 +176,7 @@ export default function Contact() {
                               <User className='absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground' />
                               <Input
                                 className='pl-10'
-                                placeholder='John Doe'
+                                placeholder='Your Full Name'
                                 {...field}
                               />
                             </div>
@@ -197,7 +197,7 @@ export default function Contact() {
                               <Phone className='absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground' />
                               <Input
                                 className='pl-10'
-                                placeholder='+1 (555) 000-0000'
+                                placeholder='+8801XXXXXXXXX'
                                 {...field}
                               />
                             </div>

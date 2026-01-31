@@ -13,6 +13,7 @@ import { cn } from '@/lib/utils';
 
 export default function DesktopMenu({
   fixed = false,
+  best = false,
 }: {
   fixed?: boolean;
   best?: boolean;
@@ -23,33 +24,25 @@ export default function DesktopMenu({
         <NavigationMenuItem>
           <Link href='/' legacyBehavior passHref>
             <NavigationMenuLink
-              className={fixed ? 'pl-2 text-white' : 'pl-2 text-black'}
+              className={fixed ? 'pl-2 text-white' : 'pl-2 text-foreground'}
             >
               Home
             </NavigationMenuLink>
           </Link>
         </NavigationMenuItem>
-        <NavigationMenuItem>
-          <Link href='/' legacyBehavior passHref>
-            <NavigationMenuLink
-              className={
-                fixed ? 'pl-2 text-sm text-white' : 'pl-2 text-sm text-black'
-              }
-            >
-              Oylkka Graphics
-            </NavigationMenuLink>
-          </Link>
-        </NavigationMenuItem>
+
         <NavigationMenuItem>
           <Link
-            href='https://oylkka.com'
+            href='https://www.oylkka.com'
             target='_blank'
             legacyBehavior
             passHref
           >
             <NavigationMenuLink
               className={
-                fixed ? 'pl-2 text-sm text-white' : 'pl-2 text-sm text-black'
+                fixed
+                  ? 'pl-2 text-sm text-white'
+                  : 'pl-2 text-sm text-foreground'
               }
             >
               Oylkka Shop
@@ -60,18 +53,14 @@ export default function DesktopMenu({
           <Link href='/mhn-it' legacyBehavior passHref>
             <NavigationMenuLink
               className={
-                fixed ? 'pl-2 text-sm text-white' : 'pl-2 text-sm text-black'
+                fixed
+                  ? 'pl-2 text-sm text-white'
+                  : 'pl-2 text-sm text-foreground'
               }
             >
               Oylkka IT Agency
             </NavigationMenuLink>
           </Link>
-          {/* <Badge
-            variant='secondary'
-            className='ml-1 animate-bounce px-1 py-0 text-[10px] text-black delay-75'
-          >
-            Soon
-          </Badge> */}
         </NavigationMenuItem>
 
         <NavigationMenuItem>
@@ -81,40 +70,33 @@ export default function DesktopMenu({
             passHref
           >
             <NavigationMenuLink
-              className={fixed ? 'pl-2 text-white' : 'pl-2 text-black'}
+              className={fixed ? 'pl-2 text-white' : 'pl-2 text-foreground'}
             >
               Blood Donate
             </NavigationMenuLink>
           </Link>
         </NavigationMenuItem>
 
-        <NavigationMenuItem>
-          <Link
-            href='/best-computer-training-center'
-            className='overflow-hidden'
-            legacyBehavior
-            passHref
-          >
-            <NavigationMenuLink
-              className={
-                fixed
-                  ? 'overflow-hidden text-white'
-                  : 'overflow-hidden text-black'
-              }
+        {!best && (
+          <NavigationMenuItem>
+            <Link
+              href='/best-computer-training-center'
+              className='overflow-hidden'
+              legacyBehavior
+              passHref
             >
-              <Button
-                variant='ghost'
-                className={`nav-gradient-border relative cursor-pointer overflow-hidden px-5 py-2.5 font-semibold ${
+              <NavigationMenuLink
+                className={
                   fixed
-                    ? 'text-white hover:text-white'
-                    : 'text-black hover:text-black'
-                } bg-transparent hover:bg-transparent`}
+                    ? 'overflow-hidden text-white'
+                    : 'overflow-hidden text-black'
+                }
               >
-                Oylkka IT & Training Center
-              </Button>
-            </NavigationMenuLink>
-          </Link>
-        </NavigationMenuItem>
+                <Button variant='secondary'>Oylkka IT & Training Center</Button>
+              </NavigationMenuLink>
+            </Link>
+          </NavigationMenuItem>
+        )}
       </NavigationMenuList>
     </NavigationMenu>
   );

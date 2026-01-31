@@ -1,7 +1,7 @@
 'use client';
 
 import { AnimatePresence, motion } from 'framer-motion';
-import { ArrowRight, ChevronRight, Search } from 'lucide-react';
+import { ChevronRight, Search } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -9,11 +9,11 @@ import type React from 'react';
 import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import img1 from '@/images/hero/best-computer.webp';
 import img5 from '@/images/hero/oylkka-blood-bank.webp';
 import img2 from '@/images/hero/oylkka-e-commerc.webp';
 import img4 from '@/images/hero/oylkka-graphics.webp';
 import img3 from '@/images/hero/oylkka-it-agency.webp';
+import img1 from '@/images/services/brand10.jpg';
 import { cn } from '@/lib/utils';
 import HeroSkeleton from './skeleton';
 
@@ -37,7 +37,7 @@ const heroData = [
     description: 'Cutting-edge IT solutions for modern success.',
   },
   {
-    image: img4, // oylkka graphics
+    image: img4,
     title: 'Design Your',
     subtitle: 'Visual Story',
     description: 'Transform your ideas into stunning visuals.',
@@ -135,18 +135,11 @@ export default function HeroImmersiveEnhanced() {
             transition={{ duration: 0.8 }}
             className='max-w-4xl text-center'
           >
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.2, duration: 0.8 }}
-              className='mb-2 inline-block rounded-full bg-secondary/10 px-4 py-1.5 text-sm font-medium text-white shadow-xs backdrop-blur-xs'
-            >
-              Premium Design Resources
-            </motion.div>
-
-            <h1 className='mb-6 text-4xl font-bold tracking-tight text-white drop-shadow-xs sm:text-5xl md:text-6xl lg:text-7xl'>
-              <span className='block'>{heroData[currentIndex].title}</span>
-              <span className='mt-2 block bg-linear-to-r from-gray-600 to-muted bg-clip-text text-transparent drop-shadow-sm'>
+            <h1 className='mb-6 text-4xl font-bold tracking-tight  drop-shadow-xs sm:text-5xl md:text-6xl lg:text-7xl'>
+              <span className='block text-primary'>
+                {heroData[currentIndex].title}
+              </span>
+              <span className='mt-2 block text-white drop-shadow-sm'>
                 {heroData[currentIndex].subtitle}
               </span>
             </h1>
@@ -182,8 +175,8 @@ export default function HeroImmersiveEnhanced() {
                 className='absolute right-2 rounded-full px-6 py-2 shadow-md'
                 aria-label='Submit search'
               >
+                <Search className='h-4 w-4' />
                 <span className='mr-2'>Search</span>
-                <ArrowRight className='h-4 w-4' />
               </Button>
             </div>
           </form>

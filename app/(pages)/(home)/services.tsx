@@ -2,13 +2,13 @@
 import { motion } from 'framer-motion';
 import {
   ArrowRight,
-  Building2,
   GraduationCap,
   Heart,
   Palette,
   ShoppingCart,
 } from 'lucide-react';
 import Link from 'next/link';
+import type React from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
@@ -18,10 +18,11 @@ interface Service {
   title: string;
   icon: React.ReactNode;
   badge: string;
-  gradient: string;
   link: string;
   showApplyButton?: boolean;
   soon?: boolean;
+  accentClass?: string;
+  borderClass?: string;
 }
 
 const services: Service[] = [
@@ -30,51 +31,52 @@ const services: Service[] = [
     title: 'Oylkka IT & Computer Training Center',
     icon: <GraduationCap className='w-8 h-8' />,
     badge: 'Education',
-    gradient: 'from-orange-500 to-yellow-500',
     link: '/best-computer-training-center',
     showApplyButton: true,
+    accentClass:
+      'bg-blue-50 dark:bg-blue-950/30 text-blue-600 dark:text-blue-400',
+    borderClass: 'hover:border-blue-200 dark:hover:border-blue-800',
   },
+
   {
     id: 'it-agency',
     title: 'Oylkka IT Agency',
-    icon: <Building2 className='w-8 h-8' />,
-    badge: 'Technology',
-    gradient: 'from-blue-500 to-cyan-500',
-    link: '/mhn-it',
-  },
-  {
-    id: 'graphics',
-    title: 'Oylkka Graphics',
     icon: <Palette className='w-8 h-8' />,
     badge: 'Creative',
-    gradient: 'from-purple-500 to-pink-500',
     link: '/',
+    accentClass:
+      'bg-pink-50 dark:bg-pink-950/30 text-pink-600 dark:text-pink-400',
+    borderClass: 'hover:border-pink-200 dark:hover:border-pink-800',
   },
   {
     id: 'ecommerce',
     title: 'Oylkka E-Commerce',
     icon: <ShoppingCart className='w-8 h-8' />,
     badge: 'Commerce',
-    gradient: 'from-green-500 to-emerald-500',
     link: 'https://www.oylkka.com',
+    accentClass:
+      'bg-green-50 dark:bg-green-950/30 text-green-600 dark:text-green-400',
+    borderClass: 'hover:border-green-200 dark:hover:border-green-800',
   },
   {
     id: 'blood-bank',
     title: 'Oylkka Blood Bank',
     icon: <Heart className='w-8 h-8' />,
     badge: 'Healthcare',
-    gradient: 'from-red-500 to-rose-500',
     link: '/best-computer-training-center/blood-donate',
+    accentClass: 'bg-red-50 dark:bg-red-950/30 text-red-600 dark:text-red-400',
+    borderClass: 'hover:border-red-200 dark:hover:border-red-800',
   },
-  // ✅ New "Oylkka Foundation" card with coming soon effect
   {
     id: 'foundation',
     title: 'Oylkka Foundation',
     icon: <Heart className='w-8 h-8' />,
     badge: 'Non-Profit',
-    gradient: 'from-indigo-500 to-purple-500',
     link: '#',
     soon: true,
+    accentClass:
+      'bg-amber-50 dark:bg-amber-950/30 text-amber-600 dark:text-amber-400',
+    borderClass: 'hover:border-amber-200 dark:hover:border-amber-800',
   },
 ];
 
@@ -107,8 +109,9 @@ const ServiceCard: React.FC<{ service: Service }> = ({ service }) => {
 
   const LearnMoreButton = () => (
     <Button
-      className={`w-full text-white font-semibold rounded-xl bg-gradient-to-r ${service.gradient} ${isSoon ? 'cursor-not-allowed opacity-50' : 'hover:opacity-90'} transition-opacity`}
+      className={`w-full font-semibold rounded-lg ${isSoon ? 'cursor-not-allowed opacity-50' : ''}`}
       disabled={isSoon}
+      variant='secondary'
     >
       {isSoon ? 'Coming Soon' : 'Learn More'}
       {!isSoon && (
@@ -118,12 +121,7 @@ const ServiceCard: React.FC<{ service: Service }> = ({ service }) => {
   );
 
   const ApplyButton = () => (
-    <Button
-      variant='ghost'
-      className='w-full mt-0 nav-gradient-border relative cursor-pointer overflow-hidden px-5 py-2.5 font-semibold text-black hover:text-black bg-transparent hover:bg-transparent border-2 border-gradient-to-r border-orange-500 rounded-xl'
-    >
-      Apply Now
-    </Button>
+    <Button className='w-full font-semibold rounded-lg'>Apply Now</Button>
   );
 
   return (
@@ -131,29 +129,32 @@ const ServiceCard: React.FC<{ service: Service }> = ({ service }) => {
       variants={cardVariants}
       whileHover={{
         scale: isSoon ? 1 : 1.05,
-        y: isSoon ? 0 : -1,
+        y: isSoon ? 0 : -2,
       }}
       transition={{ type: 'spring', stiffness: 300, damping: 20 }}
       className={`h-full ${isSoon ? 'cursor-not-allowed' : ''}`}
     >
       <Card
-        className={`group relative flex h-full flex-col overflow-hidden rounded-3xl border-2 border-gray-100 transition-all duration-500 ${isSoon ? 'opacity-80' : 'hover:border-transparent'}`}
+        className={`group relative flex h-full flex-col overflow-hidden rounded-2xl border transition-all duration-500 ${isSoon ? 'opacity-60' : `hover:shadow-lg ${service.borderClass}`}`}
       >
         <div
-          className={`absolute inset-0 rounded-3xl bg-gradient-to-br ${service.gradient} opacity-0 transition-opacity duration-500 ${isSoon ? '' : 'group-hover:opacity-10'}`}
+          className={`absolute inset-0 rounded-2xl opacity-0 transition-opacity duration-500 ${isSoon ? '' : 'group-hover:opacity-100'}`}
+          style={{
+            background: `linear-gradient(to bottom right, var(--color-accent-light), transparent)`,
+          }}
         />
         <CardHeader className='relative z-10 flex-grow p-6 sm:p-8'>
           <div className='flex items-center justify-between mb-4'>
             <motion.div
-              className={`p-4 rounded-full bg-gradient-to-br ${service.gradient} text-white shadow-lg`}
-              whileHover={{ scale: isSoon ? 1 : 1.15, rotate: isSoon ? 0 : 15 }}
+              className={`p-3 rounded-lg ${service.accentClass}`}
+              whileHover={{ scale: isSoon ? 1 : 1.1, rotate: isSoon ? 0 : 5 }}
               transition={{ type: 'spring', stiffness: 400, damping: 10 }}
             >
               {service.icon}
             </motion.div>
-            <Badge>{service.badge}</Badge>
+            <Badge variant='secondary'>{service.badge}</Badge>
           </div>
-          <CardTitle className='text-2xl font-bold text-gray-900 dark:text-white transition-colors duration-500'>
+          <CardTitle className='text-xl font-bold text-foreground transition-colors duration-500'>
             {service.title}
           </CardTitle>
         </CardHeader>
@@ -197,13 +198,13 @@ const ServiceCard: React.FC<{ service: Service }> = ({ service }) => {
 
 const ServicesSection: React.FC = () => {
   return (
-    <section className='py-20 px-4 sm:px-6 lg:px-8 bg-gray-50 dark:bg-gray-900'>
+    <section className='py-20 px-4 sm:px-6 lg:px-8 bg-background'>
       <div className='max-w-7xl mx-auto'>
         <div className='text-center mb-16'>
-          <h2 className='text-4xl md:text-5xl font-extrabold text-gray-900 dark:text-white mb-4 leading-tight'>
+          <h2 className='text-4xl md:text-5xl font-extrabold text-foreground mb-4 leading-tight'>
             Explore Our Services
           </h2>
-          <p className='text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto'>
+          <p className='text-lg text-muted-foreground max-w-2xl mx-auto'>
             From digital strategy to creative design, we've got you covered.
           </p>
         </div>

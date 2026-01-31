@@ -234,7 +234,7 @@ export default function UserDropdown({
   // Unauthenticated state
   return (
     <Link href='/sign-in'>
-      <Button variant={fixed ? 'secondary' : 'default'} className='gap-2'>
+      <Button className='gap-2'>
         <UserIcon className='h-4 w-4' />
         Sign In
       </Button>

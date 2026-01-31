@@ -1,8 +1,9 @@
-import { Toaster } from '@/components/ui/sonner';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import type { ReactNode } from 'react';
+import { Toaster } from '@/components/ui/sonner';
+import { ThemeProvider } from '@/context/theme-provider';
 import SessionWrapper from '../context/SessionProvider';
 import ReactQueryProvider from '../context/TanstackQueryProvider';
 import './globals.css';
@@ -65,9 +66,16 @@ interface RootLayoutProps {
 export default function RootLayout({ children }: RootLayoutProps) {
   return (
     <ReactQueryProvider>
-      <html lang='en'>
+      <html lang='en' suppressHydrationWarning>
         <body className={inter.className}>
-          <SessionWrapper>{children}</SessionWrapper>
+          <ThemeProvider
+            attribute='class'
+            defaultTheme='light'
+            enableSystem
+            disableTransitionOnChange
+          >
+            <SessionWrapper>{children}</SessionWrapper>
+          </ThemeProvider>
           <ReactQueryDevtools initialIsOpen={false} />
           <Toaster position='top-right' richColors />
         </body>
