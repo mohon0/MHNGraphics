@@ -21,7 +21,7 @@ export default function AdminDashboard() {
   const { isLoading, data } = useFetchAdminData();
 
   return (
-    <div className='min-h-screen bg-gray-50'>
+    <div className='min-h-screen'>
       <div className='mt-6 grid grid-cols-2 gap-2 md:gap-6 lg:grid-cols-4'>
         <QuickStats isLoading={isLoading} data={data} />
         <DurationToggle />

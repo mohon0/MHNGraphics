@@ -38,10 +38,10 @@ export default function TopPerformingDesigns() {
   }, [data]);
 
   return (
-    <Card className='overflow-hidden bg-linear-to-br from-white to-gray-50 shadow-lg'>
-      <CardHeader className='border-b border-gray-100 bg-white pb-4'>
+    <Card className='overflow-hidden'>
+      <CardHeader className='border-b pb-4'>
         <div className='flex items-center justify-between'>
-          <CardTitle className='text-lg font-bold text-gray-800 md:text-2xl'>
+          <CardTitle className='text-lg font-bold  md:text-2xl'>
             Recent Designs
           </CardTitle>
           <Link href='/dashboard/all-design?category=all&query=&page=1'>
@@ -59,12 +59,12 @@ export default function TopPerformingDesigns() {
             Error loading recent designs.
           </div>
         ) : designs.length > 0 ? (
-          <ul className='divide-y divide-gray-100'>
+          <ul className='divide-y'>
             {designs.map((design) => (
               <li key={design.id} className='group relative overflow-hidden'>
                 <Link
                   href={`${createSlug({ id: design.id, name: design.name })}`}
-                  className='flex items-center space-x-4 p-4 transition-all duration-200 ease-in-out group-hover:bg-blue-50'
+                  className='flex items-center space-x-4 p-4'
                 >
                   <div className='relative h-16 w-16 overflow-hidden rounded-md shadow-xs transition-transform duration-200 ease-in-out group-hover:scale-105'>
                     {design.image ? (
@@ -76,17 +76,15 @@ export default function TopPerformingDesigns() {
                         className='transition-opacity duration-200 group-hover:opacity-80'
                       />
                     ) : (
-                      <div className='flex h-full w-full items-center justify-center bg-gray-200'>
-                        <ImageIcon className='h-8 w-8 text-gray-400' />
+                      <div className='flex h-full w-full items-center justify-center'>
+                        <ImageIcon className='h-8 w-8 text-muted-foreground' />
                       </div>
                     )}
                   </div>
                   <div className='flex-1 space-y-1'>
-                    <p className='line-clamp-1 font-semibold text-gray-800'>
-                      {design.name}
-                    </p>
+                    <p className='line-clamp-1 font-semibold '>{design.name}</p>
                     <div className='flex items-center space-x-2'>
-                      <span className='text-xs text-gray-500'>
+                      <span className='text-xs text-muted-foreground'>
                         {formatDistanceToNow(new Date(design.createdAt), {
                           addSuffix: true,
                         })}
@@ -106,7 +104,7 @@ export default function TopPerformingDesigns() {
             ))}
           </ul>
         ) : (
-          <div className='p-6 text-center text-gray-500'>
+          <div className='p-6 text-center text-muted-foreground'>
             No top performing designs found.
           </div>
         )}
@@ -125,7 +123,7 @@ import { Skeleton } from '@/components/ui/skeleton';
  */
 function TopPerformingDesignsSkeleton() {
   return (
-    <div className='divide-y divide-gray-100'>
+    <div className='divide-y '>
       {Array(5)
         .fill(0)
         .map((_, index) => (

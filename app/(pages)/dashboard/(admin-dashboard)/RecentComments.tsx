@@ -24,10 +24,10 @@ export default function RecentComments() {
   });
 
   return (
-    <Card className='overflow-hidden bg-linear-to-br from-white to-gray-50 shadow-lg'>
-      <CardHeader className='border-b border-gray-100 bg-white pb-4'>
+    <Card className='overflow-hidden'>
+      <CardHeader className='border-b pb-4'>
         <div className='flex items-center justify-between'>
-          <CardTitle className='text-lg font-bold text-gray-800 md:text-2xl'>
+          <CardTitle className='text-lg font-bold  md:text-2xl'>
             Recent Comments
           </CardTitle>
           <Link href='/dashboard/comments?filter=All&page=1&sort=newest'>
@@ -45,7 +45,7 @@ export default function RecentComments() {
             Error loading recent comments.
           </div>
         ) : data.data.length > 0 ? (
-          <ul className='divide-y divide-gray-100'>
+          <ul className='divide-y '>
             {data.data.map((comment: Comment) => (
               <li key={comment.id} className='group relative overflow-hidden'>
                 <Link
@@ -53,33 +53,31 @@ export default function RecentComments() {
                     id: comment.design.id,
                     name: comment.design.name,
                   })}
-                  className='flex items-start space-x-4 p-4 transition-all duration-200 ease-in-out group-hover:bg-blue-50'
+                  className='flex items-start space-x-4 p-4'
                 >
-                  <Avatar className='h-10 w-10 rounded-full border-2 border-white shadow-xs transition-transform duration-200 ease-in-out group-hover:scale-110'>
+                  <Avatar className='h-10 w-10 rounded-full border-2  shadow-xs transition-transform duration-200 ease-in-out group-hover:scale-110'>
                     <AvatarImage
                       src={comment.user.image}
                       alt={comment.user.name}
                     />
                     <AvatarFallback>
-                      <User className='h-5 w-5 text-gray-400' />
+                      <User className='h-5 w-5' />
                     </AvatarFallback>
                   </Avatar>
                   <div className='flex-1 space-y-1'>
                     <div className='flex items-center justify-between'>
-                      <p className='font-semibold text-gray-800'>
-                        {comment.user.name}
-                      </p>
-                      <span className='flex items-center text-xs text-gray-500'>
+                      <p className='font-semibold '>{comment.user.name}</p>
+                      <span className='flex items-center text-xs text-muted-foreground'>
                         <Clock className='mr-1 h-3 w-3' />
                         {formatDistanceToNow(new Date(comment.createdAt), {
                           addSuffix: true,
                         })}
                       </span>
                     </div>
-                    <p className='line-clamp-2 text-sm text-gray-600'>
+                    <p className='line-clamp-2 text-sm text-muted-foreground'>
                       {comment.content}
                     </p>
-                    <p className='text-xs text-gray-500'>
+                    <p className='text-xs text-muted-foreground'>
                       on{' '}
                       <span className='font-medium text-primary'>
                         {comment.design.name}
@@ -99,7 +97,7 @@ export default function RecentComments() {
             ))}
           </ul>
         ) : (
-          <div className='p-6 text-center text-gray-500'>
+          <div className='p-6 text-center text-muted-foreground'>
             No recent comments found.
           </div>
         )}
@@ -116,7 +114,7 @@ export default function RecentComments() {
  */
 function RecentCommentsSkeleton() {
   return (
-    <div className='divide-y divide-gray-100'>
+    <div className='divide-y '>
       {Array(5)
         .fill(0)
         .map((_, index) => (

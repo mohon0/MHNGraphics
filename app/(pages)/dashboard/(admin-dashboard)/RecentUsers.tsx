@@ -18,10 +18,10 @@ export default function RecentUsers() {
   });
 
   return (
-    <Card className='overflow-hidden bg-linear-to-br from-white to-gray-50 shadow-lg'>
-      <CardHeader className='border-b border-gray-100 bg-white pb-4'>
+    <Card className='overflow-hidden'>
+      <CardHeader className='border-b pb-4'>
         <div className='flex items-center justify-between'>
-          <CardTitle className='text-lg font-bold text-gray-800 md:text-2xl'>
+          <CardTitle className='text-lg font-bold md:text-2xl'>
             Recent Users
           </CardTitle>
           <Link href='/dashboard/users?page=1'>
@@ -39,23 +39,23 @@ export default function RecentUsers() {
             Error loading recent users.
           </div>
         ) : data.data.length > 0 ? (
-          <ul className='divide-y divide-gray-100'>
+          <ul className='divide-y'>
             {data.data.map((user: UserProfile) => (
               <li key={user.id} className='group relative overflow-hidden'>
                 <Link
                   href={`/dashboard/users/${user.id}`}
-                  className='flex items-center space-x-4 p-4 transition-all duration-200 ease-in-out group-hover:bg-blue-50'
+                  className='flex items-center space-x-4 p-4'
                 >
-                  <Avatar className='h-12 w-12 rounded-full border-2 border-white shadow-xs transition-transform duration-200 ease-in-out group-hover:scale-110'>
+                  <Avatar className='h-12 w-12 rounded-full border-2  shadow-xs transition-transform duration-200 ease-in-out group-hover:scale-110'>
                     <AvatarImage src={user.image} alt={user.name} />
                     <AvatarFallback>
-                      <User className='h-6 w-6 text-gray-400' />
+                      <User className='h-6 w-6 text-muted-foreground' />
                     </AvatarFallback>
                   </Avatar>
                   <div className='flex-1 space-y-1'>
-                    <p className='font-semibold text-gray-800'>{user.name}</p>
+                    <p className='font-semibold'>{user.name}</p>
                     <div className='flex flex-wrap items-center space-x-2 space-y-1'>
-                      <span className='flex items-center text-xs text-gray-500'>
+                      <span className='flex items-center text-xs text-muted-foreground'>
                         <Clock className='mr-1 h-3 w-3' />
                         {formatDistanceToNow(new Date(user.createdAt), {
                           addSuffix: true,
@@ -76,7 +76,7 @@ export default function RecentUsers() {
             ))}
           </ul>
         ) : (
-          <div className='p-6 text-center text-gray-500'>
+          <div className='p-6 text-center text-muted-foreground'>
             No recent users found.
           </div>
         )}
@@ -93,7 +93,7 @@ export default function RecentUsers() {
  */
 function RecentUsersSkeleton() {
   return (
-    <div className='divide-y divide-gray-100'>
+    <div className='divide-y'>
       {Array(5)
         .fill(0)
         .map((_, index) => (

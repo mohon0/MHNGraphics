@@ -263,7 +263,7 @@ export default function ApplicationDataCard(app: ExtendedApplicationListType) {
               <TooltipTrigger asChild>
                 <Badge
                   variant='secondary'
-                  className={`flex items-center gap-1 ${statusConfig[app.status as StatusType]?.bgColor} border-0`}
+                  className={`flex items-center text-black gap-1 ${statusConfig[app.status as StatusType]?.bgColor} border-0`}
                 >
                   <StatusIcon
                     className={`h-3 w-3 ${statusConfig[app.status as StatusType]?.color}`}
