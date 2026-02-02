@@ -111,7 +111,7 @@ export function DashboardSidebar({
         },
         {
           title: 'View all',
-          url: '/best-computer-training-center/notice',
+          url: '/oylkka-it-and-training-center/notice',
         },
       ],
     },

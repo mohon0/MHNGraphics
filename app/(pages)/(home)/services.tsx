@@ -31,7 +31,7 @@ const services: Service[] = [
     title: 'Oylkka IT & Computer Training Center',
     icon: <GraduationCap className='w-8 h-8' />,
     badge: 'Education',
-    link: '/best-computer-training-center',
+    link: '/oylkka-it-and-training-center',
     showApplyButton: true,
     accentClass:
       'bg-blue-50 dark:bg-blue-950/30 text-blue-600 dark:text-blue-400',
@@ -63,7 +63,7 @@ const services: Service[] = [
     title: 'Oylkka Blood Bank',
     icon: <Heart className='w-8 h-8' />,
     badge: 'Healthcare',
-    link: '/best-computer-training-center/blood-donate',
+    link: '/oylkka-it-and-training-center/blood-donate',
     accentClass: 'bg-red-50 dark:bg-red-950/30 text-red-600 dark:text-red-400',
     borderClass: 'hover:border-red-200 dark:hover:border-red-800',
   },
@@ -183,7 +183,7 @@ const ServiceCard: React.FC<{ service: Service }> = ({ service }) => {
 
             {service.showApplyButton && (
               <Link
-                href='/best-computer-training-center/application'
+                href='/oylkka-it-and-training-center/application'
                 className='flex-1'
               >
                 <ApplyButton />

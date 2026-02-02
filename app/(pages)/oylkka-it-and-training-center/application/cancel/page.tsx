@@ -21,7 +21,7 @@ export default function ApplicationCancelPage() {
             Please try again. If the problem persists, please contact support.
           </p>
           <Button asChild>
-            <Link href='/best-computer-training-center/application'>
+            <Link href='/oylkka-it-and-training-center/application'>
               Try Again
             </Link>
           </Button>

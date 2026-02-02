@@ -8,7 +8,7 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import * as z from 'zod';
-import Preview from '@/app/(pages)/best-computer-training-center/application/ApplicationPreview';
+import Preview from '@/app/(pages)/oylkka-it-and-training-center/application/ApplicationPreview';
 import { Button } from '@/components/ui/button';
 import { Calendar } from '@/components/ui/calendar';
 import {

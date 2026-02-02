@@ -2,7 +2,7 @@
 
 import { useSearchParams } from 'next/navigation';
 import { Suspense } from 'react';
-import ApplicationHeader from '@/app/(pages)/best-computer-training-center/application/ApplicationHeader';
+import ApplicationHeader from '@/app/(pages)/oylkka-it-and-training-center/application/ApplicationHeader';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useSingleApplication } from '@/services/application';
 import type { UserApplication } from '@/utils/Interface';

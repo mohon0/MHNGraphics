@@ -1,10 +1,10 @@
+import { AudioWaveform } from 'lucide-react';
+import Link from 'next/link';
 import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
 } from '@/components/ui/sidebar';
-import { AudioWaveform } from 'lucide-react';
-import Link from 'next/link';
 
 export function TeamSwitcher() {
   return (

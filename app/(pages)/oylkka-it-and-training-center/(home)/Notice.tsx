@@ -15,6 +15,7 @@ import {
   Users,
 } from 'lucide-react';
 import Link from 'next/link';
+import { SiAnswer } from 'react-icons/si';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -66,41 +67,26 @@ export default function ModernNoticeBoard() {
   );
 
   return (
-    <div className='bg-linear-to-br from-slate-50 via-blue-50 to-indigo-100'>
-      {/* Background Elements */}
-      <div className='absolute inset-0 overflow-hidden'>
-        <div className='absolute -right-40 -top-40 h-80 w-80 rounded-full bg-linear-to-br from-blue-400/20 to-purple-600/20 blur-3xl' />
-        <div className='absolute -bottom-40 -left-40 h-80 w-80 rounded-full bg-linear-to-br from-indigo-400/20 to-pink-600/20 blur-3xl' />
-      </div>
-
+    <div>
       <div className='container relative mx-auto py-12'>
         <div className='grid grid-cols-1 items-start gap-12 lg:grid-cols-2'>
           {/* Notice Board Card */}
-          <Card className='hover:shadow-3xl group relative overflow-hidden border-0 bg-white/80 p-2 shadow-2xl backdrop-blur-xl transition-all duration-500 md:p-6'>
-            {/* Animated Background */}
-            <div className='absolute inset-0 bg-linear-to-br from-blue-500/5 via-transparent to-indigo-500/5' />
-            <div className='absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(59,130,246,0.1),transparent_50%)]' />
-
-            <CardHeader className='relative p-2 pb-6 md:p-6'>
+          <Card>
+            <CardHeader>
               <div className='flex items-center gap-6'>
                 <div className='relative'>
-                  <div className='flex items-center justify-center rounded-2xl bg-linear-to-br from-blue-500 via-blue-600 to-indigo-700 shadow-xl md:h-20 md:w-20'>
-                    <Bell className='text-white md:h-10 md:w-10' />
+                  <div className='flex items-center justify-center rounded-lg border  md:h-12 md:w-12'>
+                    <Bell />
                   </div>
-                  <div className='absolute -right-2 -top-2 h-3 w-3 animate-pulse rounded-full bg-linear-to-r from-red-500 to-pink-500 shadow-lg md:h-6 md:w-6' />
-                  <div className='absolute -right-1 -top-1 h-1 w-1 animate-ping rounded-full bg-red-400 md:h-4 md:w-4' />
                 </div>
                 <div className='flex-1'>
-                  <CardTitle className='bg-linear-to-r from-slate-800 via-blue-800 to-indigo-800 bg-clip-text text-xl font-bold text-transparent md:text-3xl'>
-                    নোটিশ বোর্ড
-                  </CardTitle>
-                  <p className='mt-2 flex items-center gap-2 text-slate-600'>
-                    <Sparkles className='h-4 w-4' />
+                  <CardTitle className='text-primary'>নোটিশ বোর্ড</CardTitle>
+                  <p className='mt-2 flex items-center gap-2 text-muted-foreground'>
                     সর্বশেষ ঘোষণা ও বিজ্ঞপ্তি
                   </p>
                 </div>
                 {data?.totalNotices && (
-                  <Badge className='bg-linear-to-r from-blue-500 to-indigo-600 px-4 py-2 text-white shadow-lg'>
+                  <Badge>
                     <Clock className='mr-1 h-3 w-3' />
                     {data.totalNotices} টি নোটিশ
                   </Badge>
@@ -126,20 +112,20 @@ export default function ModernNoticeBoard() {
                       target='_blank'
                       className='group/item block'
                     >
-                      <div className='flex items-start gap-4 rounded-2xl border border-white/50 bg-white/60 p-2 backdrop-blur-xs transition-all duration-300 hover:scale-[1.02] hover:border-blue-200 hover:bg-white/80 hover:shadow-xl md:p-5'>
+                      <div className='flex items-start gap-4 rounded-2xl border backdrop-blur-xs transition-all duration-300 hover:scale-[1.02] p-2 hover:shadow-xl md:p-3'>
                         <div className='shrink-0'>
-                          <div className='flex h-12 w-12 items-center justify-center rounded-xl bg-linear-to-br from-red-500 via-orange-500 to-yellow-500 shadow-lg transition-transform duration-300 group-hover/item:scale-110'>
-                            <FileText className='h-6 w-6 text-white' />
+                          <div className='flex h-10 w-10 items-center justify-center rounded-lg bg-primary transition-transform duration-300 group-hover/item:scale-110'>
+                            <FileText className='h-5 w-5 text-white' />
                           </div>
                         </div>
                         <div className='min-w-0 flex-1'>
-                          <h4 className='line-clamp-2 text-base font-semibold text-slate-800 transition-colors group-hover/item:text-blue-600'>
+                          <h4 className='line-clamp-2 text-base font-semibold  transition-colors group-hover/item:text-primary'>
                             {notice.title}
                           </h4>
-                          <div className='mt-3 flex items-center gap-3'>
+                          <div className='mt-2 flex items-center gap-3'>
                             <div className='flex items-center gap-1'>
-                              <Calendar className='h-4 w-4 text-slate-500' />
-                              <span className='text-sm text-slate-600'>
+                              <Calendar className='h-4 w-4 text-muted-foreground' />
+                              <span className='text-xs text-muted-foreground'>
                                 {formatNoticeDate(notice.createdAt)}
                               </span>
                             </div>
@@ -152,7 +138,7 @@ export default function ModernNoticeBoard() {
                           </div>
                         </div>
                         <div className='shrink-0'>
-                          <ExternalLink className='h-5 w-5 text-slate-400 transition-all duration-300 group-hover/item:scale-110 group-hover/item:text-blue-600' />
+                          <ExternalLink className='h-5 w-5 text-muted-foreground transition-all duration-300 group-hover/item:scale-110 group-hover/item:text-primary' />
                         </div>
                       </div>
                     </Link>
@@ -168,9 +154,9 @@ export default function ModernNoticeBoard() {
               )}
 
               {/* View All Button */}
-              <div className='border-t border-white/50 pt-6'>
-                <Link href='/best-computer-training-center/notice'>
-                  <Button className='group w-full bg-linear-to-r from-blue-600 to-indigo-600 py-3 text-white shadow-lg transition-all duration-300 hover:from-blue-700 hover:to-indigo-700 hover:shadow-xl'>
+              <div>
+                <Link href='/oylkka-it-and-training-center/notice'>
+                  <Button className='group w-full  shadow-lg transition-all duration-300 '>
                     <span className='font-medium'>সব নোটিশ দেখুন</span>
                     <ChevronRight className='ml-2 h-5 w-5 transition-transform group-hover:translate-x-1' />
                   </Button>
@@ -180,63 +166,46 @@ export default function ModernNoticeBoard() {
           </Card>
 
           {/* Application Section */}
-          <div className='space-y-8 p-2'>
+          <div className='space-y-8 grid grid-cols-1 gap-4 md:grid-cols-2'>
             {/* Application Button Card */}
-            <Card className='relative overflow-hidden border-0 bg-linear-to-br from-emerald-500 via-blue-600 to-purple-700 p-1 shadow-2xl'>
-              <div className='rounded-2xl bg-white/95 p-6 backdrop-blur-xs'>
-                <div className='text-center'>
-                  <div className='mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-linear-to-br from-emerald-400 to-blue-600 shadow-xl'>
-                    <Users className='h-8 w-8 text-white' />
+            <Card>
+              <CardContent className='flex  flex-col items-center gap-6 p-6 md:flex-row text-center'>
+                <div className='w-full'>
+                  <div className='mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-secondary'>
+                    <Users className='h-8 w-8' />
                   </div>
-                  <h3 className='mb-4 bg-linear-to-r from-slate-800 to-blue-800 bg-clip-text text-2xl font-bold text-transparent'>
-                    আজই যোগ দিন
-                  </h3>
-                  <p className='mb-6 text-slate-600'>
+                  <h3 className='mb-4 text-2xl font-bold '>আজই যোগ দিন</h3>
+                  <p className='mb-6 text-muted-foreground'>
                     আপনার ভবিষ্যৎ গড়ুন আমাদের সাথে
                   </p>
-                  <Link href='/best-computer-training-center/application'>
-                    <Button className='group relative overflow-hidden bg-linear-to-r from-emerald-500 via-blue-600 to-purple-600 px-8 py-4 text-lg font-semibold text-white shadow-xl transition-all duration-300 hover:scale-105 hover:shadow-2xl'>
-                      <span className='relative z-10 flex items-center gap-3'>
-                        আবেদন করুন
-                        <div className='h-3 w-3 animate-pulse rounded-full bg-white/80' />
-                      </span>
-                      <div className='absolute inset-0 bg-linear-to-r from-emerald-600 via-blue-700 to-purple-700 opacity-0 transition-opacity duration-300 group-hover:opacity-100' />
-                    </Button>
+                  <Link href='/oylkka-it-and-training-center/application'>
+                    <Button className='w-full'>আবেদন করুন</Button>
                   </Link>
                 </div>
-              </div>
+              </CardContent>
             </Card>
 
-            <Card className='relative overflow-hidden border-0 bg-gradient-to-br from-yellow-500 via-orange-600 to-orange-700 p-1 shadow-2xl'>
-              <div className='rounded-2xl bg-white/95 p-6 backdrop-blur-sm'>
-                <div className='text-center'>
-                  <div className='mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-gradient-to-br from-emerald-400 to-blue-600 shadow-xl'>
-                    <Sparkles className='h-8 w-8 text-white' />
+            <Card>
+              <CardContent className='flex flex-col items-center gap-6 p-6 md:flex-row text-center'>
+                <div className='w-full'>
+                  <div className='mx-auto mb-6 flex h-16 w-16 items-center bg-secondary justify-center rounded-full'>
+                    <SiAnswer className='h-8 w-8' />
                   </div>
-                  <h3 className='mb-4 bg-gradient-to-r from-slate-800 to-blue-800 bg-clip-text text-2xl font-bold text-transparent'>
-                    কুইজ শুরু করুন
-                  </h3>
-                  <p className='mb-6 text-slate-600'>
+                  <h3 className='mb-4 text-2xl font-bold '>কুইজ শুরু করুন</h3>
+                  <p className='mb-6 text-muted-foreground'>
                     আপনার জ্ঞান পরীক্ষা করুন এবং নতুন কিছু শিখুন
                   </p>
                   <Link href='/quiz'>
-                    <Button className='group relative overflow-hidden bg-gradient-to-r from-emerald-500 via-blue-600 to-purple-600 px-8 py-4 text-lg font-semibold text-white shadow-xl transition-all duration-300 hover:scale-105 hover:shadow-2xl'>
-                      <span className='relative z-10 flex items-center gap-3'>
-                        কুইজ খেলুন
-                        <div className='h-3 w-3 animate-pulse rounded-full bg-white/80' />
-                      </span>
-                      <div className='absolute inset-0 bg-gradient-to-r from-emerald-600 via-blue-700 to-purple-700 opacity-0 transition-opacity duration-300 group-hover:opacity-100' />
-                    </Button>
+                    <Button className='w-full'>কুইজ খেলুন</Button>
                   </Link>
                 </div>
-              </div>
+              </CardContent>
             </Card>
 
             {/* Required Documents Card */}
-            <Card className='relative overflow-hidden border-0 bg-white/80 shadow-xl backdrop-blur-xl'>
-              <div className='absolute inset-0 bg-linear-to-br from-amber-50/50 to-orange-50/50' />
+            <Card className='relative overflow-hidden md:col-span-2 '>
               <CardHeader className='relative'>
-                <CardTitle className='flex items-center gap-3 text-xl font-bold text-slate-800'>
+                <CardTitle className='flex items-center gap-3 text-xl font-bold '>
                   <Award className='h-6 w-6 text-amber-600' />
                   আবেদনের জন্য প্রয়োজনীয় কাগজপত্র
                 </CardTitle>
@@ -249,19 +218,17 @@ export default function ModernNoticeBoard() {
                 ].map((item, index) => (
                   <div
                     key={item}
-                    className='flex items-start gap-3 rounded-xl bg-white/60 p-4 backdrop-blur-xs'
+                    className='flex items-start gap-3 rounded-xl bg-secondary p-4 backdrop-blur-xs'
                   >
                     <CheckCircle className='mt-0.5 h-5 w-5 shrink-0 text-emerald-600' />
-                    <p className='text-slate-700'>
-                      <span className='font-semibold text-slate-800'>
-                        {index + 1}.
-                      </span>{' '}
+                    <p>
+                      <span className='font-semibold '>{index + 1}.</span>{' '}
                       {item}
                     </p>
                   </div>
                 ))}
-                <div className='mt-6 rounded-xl bg-linear-to-r from-blue-50 to-indigo-50 p-4'>
-                  <p className='flex items-center gap-2 text-sm text-blue-700'>
+                <div className='mt-6 rounded-xl text-primary p-4'>
+                  <p className='flex items-center gap-2 text-sm '>
                     <ArrowRight className='h-4 w-4' />
                     সব কাগজপত্র সাথে নিয়ে আসুন
                   </p>

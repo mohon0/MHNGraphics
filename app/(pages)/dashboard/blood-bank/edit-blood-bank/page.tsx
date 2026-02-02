@@ -8,10 +8,10 @@ import { Suspense, useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { z } from 'zod';
-import Header from '@/app/(pages)/best-computer-training-center/blood-donate/Header';
+import Header from '@/app/(pages)/oylkka-it-and-training-center/blood-donate/Header';
 import MemberModel, {
   MemberModelData,
-} from '@/app/(pages)/best-computer-training-center/blood-donate/MemberModel';
+} from '@/app/(pages)/oylkka-it-and-training-center/blood-donate/MemberModel';
 import { Button } from '@/components/ui/button';
 import {
   Card,

@@ -75,18 +75,18 @@ export default function SectionHeader({
       <div className='flex items-center gap-4'>
         <motion.div
           variants={lineLeft}
-          className='h-0.5 w-20 bg-gray-700'
+          className='h-0.5 w-20 bg-muted-foreground'
         ></motion.div>
         <motion.div variants={iconVariants} className='text-lg'>
           <Icon />
         </motion.div>
         <motion.div
           variants={lineRight}
-          className='h-0.5 w-20 bg-gray-700'
+          className='h-0.5 w-20 bg-muted-foreground'
         ></motion.div>
       </div>
       {text && (
-        <motion.div variants={lineRight} className='text-gray-600'>
+        <motion.div variants={lineRight} className='text-muted-foreground'>
           {text}
         </motion.div>
       )}

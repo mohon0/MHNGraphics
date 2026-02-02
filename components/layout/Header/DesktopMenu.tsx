@@ -65,7 +65,7 @@ export default function DesktopMenu({
 
         <NavigationMenuItem>
           <Link
-            href='/best-computer-training-center/blood-donate'
+            href='/oylkka-it-and-training-center/blood-donate'
             legacyBehavior
             passHref
           >
@@ -80,7 +80,7 @@ export default function DesktopMenu({
         {!best && (
           <NavigationMenuItem>
             <Link
-              href='/best-computer-training-center'
+              href='/oylkka-it-and-training-center'
               className='overflow-hidden'
               legacyBehavior
               passHref

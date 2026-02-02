@@ -17,7 +17,7 @@ export async function GET(req: NextRequest) {
 
     if (!paymentID || !applicationId || !userId) {
       return NextResponse.redirect(
-        `${myUrl}/best-computer-training-center/application/cancel?error=invalid_callback_parameters`,
+        `${myUrl}/oylkka-it-and-training-center/application/cancel?error=invalid_callback_parameters`,
         303,
       );
     }
@@ -28,7 +28,7 @@ export async function GET(req: NextRequest) {
 
     if (!application) {
       return NextResponse.redirect(
-        `${myUrl}/best-computer-training-center/application/cancel?error=application_not_found`,
+        `${myUrl}/oylkka-it-and-training-center/application/cancel?error=application_not_found`,
         303,
       );
     }
@@ -61,7 +61,7 @@ export async function GET(req: NextRequest) {
       });
 
       return NextResponse.redirect(
-        `${myUrl}/best-computer-training-center/application/cancel?reason=${encodeURIComponent(
+        `${myUrl}/oylkka-it-and-training-center/application/cancel?reason=${encodeURIComponent(
           statusMessage || 'Payment failed',
         )}`,
         303,
@@ -100,7 +100,7 @@ export async function GET(req: NextRequest) {
         });
 
         return NextResponse.redirect(
-          `${myUrl}/best-computer-training-center/application/success?applicationId=${application.id}`,
+          `${myUrl}/oylkka-it-and-training-center/application/success?applicationId=${application.id}`,
           303,
         );
       }
@@ -116,7 +116,7 @@ export async function GET(req: NextRequest) {
       await Prisma.application.delete({ where: { id: applicationId } });
 
       return NextResponse.redirect(
-        `${myUrl}/best-computer-training-center/application/cancel?error=${encodeURIComponent(
+        `${myUrl}/oylkka-it-and-training-center/application/cancel?error=${encodeURIComponent(
           executePaymentResponse.statusMessage || 'Payment execution failed',
         )}`,
         303,
@@ -143,13 +143,13 @@ export async function GET(req: NextRequest) {
     });
 
     return NextResponse.redirect(
-      `${myUrl}/best-computer-training-center/application/success?applicationId=${application.id}`,
+      `${myUrl}/oylkka-it-and-training-center/application/success?applicationId=${application.id}`,
       303,
     );
     // biome-ignore lint: error
   } catch (error) {
     return NextResponse.redirect(
-      `${myUrl}/best-computer-training-center/application/cancel?error=server_error`,
+      `${myUrl}/oylkka-it-and-training-center/application/cancel?error=server_error`,
       303,
     );
   }

@@ -1,3 +1,4 @@
+import { Clock, Eye, FileText, Globe, Lock, Shield } from 'lucide-react';
 import {
   Accordion,
   AccordionContent,
@@ -12,7 +13,6 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
-import { Clock, Eye, FileText, Globe, Lock, Shield } from 'lucide-react';
 
 export default function PrivacyPolicy() {
   const sections = [

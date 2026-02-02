@@ -1,12 +1,12 @@
 'use client';
 
-import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
-import img from '@/images/hero/best-computer.webp';
 import { motion } from 'framer-motion';
 import { ChevronDown } from 'lucide-react';
 import Image from 'next/image';
 import { useState } from 'react';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
+import img from '@/images/hero/best-computer.webp';
 import Services from './Services';
 import Testimonials from './Testimonials';
 import ToolsSkills from './ToolsSkills';

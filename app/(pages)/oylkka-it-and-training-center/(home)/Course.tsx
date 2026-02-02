@@ -34,7 +34,7 @@ export default function Courses() {
   };
 
   return (
-    <div className='space-y-10 bg-slate-100 px-2 py-16 md:px-20'>
+    <div className='space-y-10 px-2 py-16 md:px-20'>
       <SectionHeader
         title='আমাদের লেটেস্ট কোর্স সমূহ'
         text=' আমাদের চলমান সেরা কোর্সগুলো থেকে আপনার কাঙ্ক্ষিত কোর্স বেছে নিয়ে

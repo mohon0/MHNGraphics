@@ -2,7 +2,7 @@
 
 import Autoplay from 'embla-carousel-autoplay';
 import { motion } from 'framer-motion';
-import { Award, Sparkles, Target, Users, Zap } from 'lucide-react';
+import { Award, Users } from 'lucide-react';
 import Image from 'next/image';
 import type React from 'react';
 import { useEffect, useState } from 'react';
@@ -293,20 +293,6 @@ export const Slider: React.FC = () => {
                             }
                             transition={animation.title.transition}
                           >
-                            <Badge
-                              className={`mb-4 border-white/30 bg-linear-to-r ${slide.accentColor} text-white shadow-lg`}
-                            >
-                              {slide.theme === 'gradient' && (
-                                <Sparkles className='mr-1 h-3 w-3' />
-                              )}
-                              {slide.theme === 'modern' && (
-                                <Zap className='mr-1 h-3 w-3' />
-                              )}
-                              {slide.theme === 'elegant' && (
-                                <Target className='mr-1 h-3 w-3' />
-                              )}
-                              বিশেষ অফার
-                            </Badge>
                             <h1 className='text-3xl font-bold leading-tight md:text-5xl'>
                               {slide.title}
                             </h1>
@@ -422,16 +408,16 @@ export const Slider: React.FC = () => {
                           >
                             <Button
                               size='lg'
-                              className={`bg-linear-to-r ${slide.accentColor} font-semibold text-white shadow-lg hover:shadow-xl`}
+                              variant='outline'
+                              className='border-white w-full bg-transparent text-white backdrop-blur-xs hover:bg-white hover:text-black'
                             >
-                              শেখা শুরু করুন
+                              আরও জানুন
                             </Button>
                             <Button
                               size='lg'
-                              variant='outline'
-                              className='border-white bg-transparent text-white backdrop-blur-xs hover:bg-white hover:text-black'
+                              className={`bg-linear-to-r w-full ${slide.accentColor} font-semibold text-white shadow-lg hover:shadow-xl`}
                             >
-                              আরও জানুন
+                              শেখা শুরু করুন
                             </Button>
                           </motion.div>
                         </div>

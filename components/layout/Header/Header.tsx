@@ -38,7 +38,7 @@ export default function Header({
           </div>
           {best && (
             <Link
-              href='/best-computer-training-center/application'
+              href='/oylkka-it-and-training-center/application'
               className='hidden md:block'
             >
               <Button variant='secondary'>Apply Now</Button>

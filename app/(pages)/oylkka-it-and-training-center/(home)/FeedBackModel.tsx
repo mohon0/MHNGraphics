@@ -9,8 +9,8 @@ interface props {
 
 export default function FeedBackModel({ img, name, des, type }: props) {
   return (
-    <div className='relative flex w-full max-w-104 flex-col rounded-xl bg-transparent bg-clip-border text-gray-700 shadow-none'>
-      <div className='relative mx-0 mt-4 flex items-center gap-4 overflow-hidden rounded-xl bg-transparent bg-clip-border pb-8 pt-0 text-gray-700 shadow-none'>
+    <div className='relative flex w-full max-w-104 flex-col rounded-xl bg-transparent bg-clip-border  shadow-none'>
+      <div className='relative mx-0 mt-4 flex items-center gap-4 overflow-hidden rounded-xl bg-transparent bg-clip-border pb-8 pt-0  shadow-none'>
         <Image
           src={img}
           alt={name}

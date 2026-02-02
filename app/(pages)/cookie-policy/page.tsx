@@ -1,3 +1,4 @@
+import { Cookie, Info, Settings, Shield, ToggleLeft } from 'lucide-react';
 import {
   Accordion,
   AccordionContent,
@@ -12,7 +13,6 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
-import { Cookie, Info, Settings, Shield, ToggleLeft } from 'lucide-react';
 
 export default function CookiePolicy() {
   const sections = [

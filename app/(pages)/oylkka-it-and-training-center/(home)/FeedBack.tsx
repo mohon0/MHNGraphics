@@ -16,9 +16,7 @@ import FeedBackModel from './FeedBackModel';
 export default function FeedBack() {
   return (
     <div className='space-y-6'>
-      <div className='text-primary-100 text-center text-3xl font-bold'>
-        ছাত্র প্রতিক্রিয়া
-      </div>
+      <div className=' text-center text-3xl font-bold'>ছাত্র প্রতিক্রিয়া</div>
       <Carousel
         plugins={[
           Autoplay({

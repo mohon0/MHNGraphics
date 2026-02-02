@@ -8,8 +8,6 @@ interface InsightsModelProps {
   label: string;
   start?: number;
   icon: IconType;
-  bgColor?: string;
-  borderColor?: string;
   duration?: number;
 }
 
@@ -18,8 +16,7 @@ export default function InsightsModel({
   label,
   icon: Icon,
   start = 0,
-  bgColor = 'bg-gray-800',
-  borderColor = 'border-gray-500',
+
   duration = 4,
 }: InsightsModelProps) {
   const [shouldAnimate, setShouldAnimate] = useState(false);
@@ -37,13 +34,13 @@ export default function InsightsModel({
   return (
     <div ref={ref} className='flex flex-col items-center justify-center gap-3'>
       <div
-        className={`rounded-full border-4 ${borderColor} ${bgColor} p-3 text-white`}
+        className={`rounded-full  bg-primary/10 p-4 text-primary`}
         role='img'
         aria-label={label}
       >
         <Icon size={30} />
       </div>
-      <div className='text-3xl font-bold text-primary-200 md:text-4xl'>
+      <div className='text-3xl font-bold text-primary md:text-4xl'>
         {shouldAnimate && (
           <CountUp
             start={start}
@@ -54,9 +51,7 @@ export default function InsightsModel({
           />
         )}
       </div>
-      <div className='text-xl font-bold text-primary-100 md:text-2xl'>
-        {label}
-      </div>
+      <div className='text-xl font-bold md:text-2xl'>{label}</div>
     </div>
   );
 }

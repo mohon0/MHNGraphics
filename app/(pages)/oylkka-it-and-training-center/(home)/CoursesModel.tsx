@@ -2,6 +2,7 @@ import { motion, type Variants } from 'framer-motion';
 import Image, { type StaticImageData } from 'next/image';
 import type React from 'react';
 import { useState } from 'react';
+import { Button } from '@/components/ui/button';
 
 // Define possible directions
 type Direction = 'left' | 'right' | 'top' | 'bottom' | 'center';
@@ -59,11 +60,11 @@ export default function CoursesModel({ img, color, title }: props) {
       <motion.div
         className={`absolute inset-0 z-10 ${
           color === 'green'
-            ? 'bg-primary-100'
+            ? 'bg-green-500'
             : color === 'blue'
-              ? 'bg-primary-200'
+              ? 'bg-blue-500'
               : color === 'yellow'
-                ? 'bg-primary-300'
+                ? 'bg-primary'
                 : ''
         }`}
         key={hoverDirection} // Key prop to re-render when hoverDirection changes
@@ -75,24 +76,10 @@ export default function CoursesModel({ img, color, title }: props) {
         <div className='flex h-full flex-col items-center justify-between px-6 py-10'>
           <div className='space-y-4 text-white'>
             <div className='text-2xl'>{title}</div>
-            {/* <div className="text-thin text-sm">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Dolorem,
-              deleniti?
-            </div> */}
           </div>
           <div className='flex gap-5'>
-            <button
-              type='button'
-              className='hover:bg-primary-300 rounded border bg-white p-2 text-sm font-bold text-orange-600 shadow-lg transition-all duration-300 hover:text-white'
-            >
-              আরও জানুন
-            </button>
-            <button
-              type='button'
-              className='hover:bg-primary-300 rounded border bg-white p-2 text-sm font-bold text-orange-600 shadow-lg transition-all duration-300 hover:text-white'
-            >
-              এখন কিনুন
-            </button>
+            <Button>আরও জানুন</Button>
+            <Button variant='outline'>এখন কিনুন</Button>
           </div>
         </div>
       </motion.div>
@@ -101,11 +88,11 @@ export default function CoursesModel({ img, color, title }: props) {
         <div
           className={`absolute bottom-0 w-full p-4 text-sm text-white md:text-2xl ${
             color === 'green'
-              ? 'bg-primary-100'
+              ? 'bg-green-500'
               : color === 'blue'
-                ? 'bg-primary-200'
+                ? 'bg-blue-500'
                 : color === 'yellow'
-                  ? 'bg-primary-300'
+                  ? 'bg-primary'
                   : ''
           } `}
         >

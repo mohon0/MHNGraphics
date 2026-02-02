@@ -40,7 +40,7 @@ export const useSubmitApplication = () => {
       if (url) {
         router.push(url);
       } else {
-        router.push('/best-computer-training-center');
+        router.push('/oylkka-it-and-training-center');
       }
     },
 

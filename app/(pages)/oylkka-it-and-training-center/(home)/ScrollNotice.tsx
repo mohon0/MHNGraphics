@@ -1,12 +1,14 @@
+import Image from 'next/image';
 import Marquee from 'react-fast-marquee';
+import logo from '@/assets/logo.png';
 
 export default function ScrollNotice() {
   return (
     <div className='mx-2 my-2 flex grid-cols-1 flex-col items-center justify-center gap-4 md:grid md:grid-cols-12 md:gap-0 lg:mx-10'>
-      <div className='bg-primary-100 flex w-full items-center justify-center gap-2 rounded-md p-1 text-center md:col-span-3 lg:col-span-2'>
-        <div className='animate-pulse text-lg font-bold text-white'>
-          <p>ওয়েল্কা</p>
-          <p>ট্রেনিং সেন্টার</p>
+      <div className='bg-secondary flex w-full items-center justify-center gap-2 rounded-md p-1 text-center md:col-span-3 lg:col-span-2'>
+        <Image alt='oylkka-logo' src={logo} className='h-10 w-12' />
+        <div className='animate-pulse text-lg font-bold'>
+          ওয়েল্কা ট্রেনিং সেন্টার
         </div>
       </div>
       <Marquee

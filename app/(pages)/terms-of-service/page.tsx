@@ -1,4 +1,11 @@
 import {
+  FileWarning,
+  Scale,
+  ScrollText,
+  ShieldAlert,
+  UserCheck,
+} from 'lucide-react';
+import {
   Accordion,
   AccordionContent,
   AccordionItem,
@@ -12,13 +19,6 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
-import {
-  FileWarning,
-  Scale,
-  ScrollText,
-  ShieldAlert,
-  UserCheck,
-} from 'lucide-react';
 
 export default function TermsOfService() {
   const sections = [
