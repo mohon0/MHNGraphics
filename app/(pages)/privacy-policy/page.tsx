@@ -1,4 +1,3 @@
-import { Clock, Eye, FileText, Globe, Lock, Shield } from 'lucide-react';
 import {
   Accordion,
   AccordionContent,
@@ -13,6 +12,7 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
+import { Clock, Eye, FileText, Globe, Lock, Shield } from 'lucide-react';
 
 export default function PrivacyPolicy() {
   const sections = [
@@ -68,11 +68,10 @@ export default function PrivacyPolicy() {
           </CardHeader>
           <CardContent>
             <p className='text-muted-foreground'>
-              At Oylkka Graphics, we are committed to protecting your privacy
-              and ensuring the security of your personal information. This
-              Privacy Policy outlines our practices concerning the collection,
-              use, and sharing of your data when you use our website or
-              services.
+              At Oylkka IT, we are committed to protecting your privacy and
+              ensuring the security of your personal information. This Privacy
+              Policy outlines our practices concerning the collection, use, and
+              sharing of your data when you use our website or services.
             </p>
           </CardContent>
         </Card>

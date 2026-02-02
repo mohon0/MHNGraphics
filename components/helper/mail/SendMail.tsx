@@ -18,13 +18,13 @@ export default async function sendVerificationEmail(
     from: process.env.SMTP_SENDER,
     to: email,
     subject: 'User Registration Verification Code',
-    text: `Your verification code for user registration: ${verificationCode} | Sent from: Oylkka Graphics`,
+    text: `Your verification code for user registration: ${verificationCode} | Sent from: Oylkka IT`,
     html: `
     <div style="font-family: Arial, sans-serif; background-color: #f4f4f4; padding: 20px;">
       <table align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="max-width: 600px; background-color: #ffffff; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
         <tr>
           <td style="padding: 20px 40px; text-align: center; background-color: #7C3AED; color: #ffffff; border-radius: 8px 8px 0 0;">
-            <h1 style="margin: 0; color:#FFFFFF; font-size: 24px;">Welcome to Oylkka Graphics</h1>
+            <h1 style="margin: 0; color:#FFFFFF; font-size: 24px;">Welcome to Oylkka IT</h1>
           </td>
         </tr>
         <tr>
@@ -39,7 +39,7 @@ export default async function sendVerificationEmail(
         </tr>
         <tr>
           <td style="padding: 20px 40px; background-color: #f4f4f4; text-align: center; border-radius: 0 0 8px 8px;">
-            <p style="font-size: 14px; color: #999999;">Sent from Oylkka Graphics | © ${new Date().getFullYear()} Oylkka Graphics</p>
+            <p style="font-size: 14px; color: #999999;">Sent from Oylkka IT | © ${new Date().getFullYear()} Oylkka IT</p>
           </td>
         </tr>
       </table>
@@ -63,10 +63,10 @@ export async function sendWelcomeEmail(email: string) {
   });
 
   const mailData = {
-    from: `"Oylkka Graphics" <${process.env.SMTP_SENDER}>`,
+    from: `"Oylkka IT" <${process.env.SMTP_SENDER}>`,
     to: email,
-    subject: '🎉 Welcome to Oylkka Graphics! Let’s Get Started!',
-    text: `Thank you for subscribing to Oylkka Graphics! We're thrilled to have you with us. Stay tuned for updates, resources, and more!`,
+    subject: '🎉 Welcome to Oylkka IT! Let’s Get Started!',
+    text: `Thank you for subscribing to Oylkka IT! We're thrilled to have you with us. Stay tuned for updates, resources, and more!`,
     html: `
     <div style="font-family: Arial, sans-serif; background-color: #f9fafb; padding: 40px;">
       <table align="center" width="100%" style="max-width: 600px; background-color: #ffffff; border-radius: 10px; box-shadow: 0 6px 12px rgba(0,0,0,0.15); overflow: hidden;">
@@ -74,7 +74,7 @@ export async function sendWelcomeEmail(email: string) {
         <!-- Header -->
         <tr style="background-color: #7C3AED;">
           <td style="padding: 20px; text-align: center; color: #ffffff;">
-            <h1 style="margin: 0; font-size: 26px;">Welcome to Oylkka Graphics</h1>
+            <h1 style="margin: 0; font-size: 26px;">Welcome to Oylkka IT</h1>
           </td>
         </tr>
 
@@ -83,12 +83,12 @@ export async function sendWelcomeEmail(email: string) {
           <td style="padding: 40px;">
             <h2 style="color: #333333; font-size: 24px;">Hello and Welcome!</h2>
             <p style="font-size: 16px; color: #555555; line-height: 1.6;">
-              We're thrilled to have you join the Oylkka Graphics community! You'll now be the first to know about our latest content, updates, and exclusive resources, all curated just for you.
+              We're thrilled to have you join the Oylkka IT community! You'll now be the first to know about our latest content, updates, and exclusive resources, all curated just for you.
             </p>
 
             <div style="text-align: center; margin: 30px 0;">
               <a href="${siteUrl}" style="display: inline-block; background-color: #7C3AED; color: #ffffff; text-decoration: none; padding: 12px 24px; border-radius: 6px; font-size: 16px; font-weight: bold;">
-               Visit Oylkka Graphics
+               Visit Oylkka IT
               </a>
             </div>
 
@@ -110,7 +110,7 @@ export async function sendWelcomeEmail(email: string) {
         <tr>
           <td style="padding: 20px; text-align: center; background-color: #f4f4f4; color: #999999; font-size: 14px;">
             <p style="margin: 0;">If you prefer not to receive updates, you can <a href="${siteUrl}/unsubscribe?email=${email}" style="color: #7C3AED; text-decoration: none;">unsubscribe</a> at any time.</p>
-            <p style="margin: 0;">© ${new Date().getFullYear()} Oylkka Graphics | All rights reserved.</p>
+            <p style="margin: 0;">© ${new Date().getFullYear()} Oylkka IT | All rights reserved.</p>
           </td>
         </tr>
       </table>
@@ -133,10 +133,10 @@ export async function sendRegistrationEmail(email: string) {
   });
 
   const mailData = {
-    from: `"Oylkka Graphics" <${process.env.SMTP_SENDER}>`,
+    from: `"Oylkka IT" <${process.env.SMTP_SENDER}>`,
     to: email,
-    subject: '🎉 Welcome to Oylkka Graphics! Let’s Get Started!',
-    text: `Thank you for joining Oylkka Graphics! We're thrilled to have you with us. Stay tuned for updates, resources, and more!`,
+    subject: '🎉 Welcome to Oylkka IT! Let’s Get Started!',
+    text: `Thank you for joining Oylkka IT! We're thrilled to have you with us. Stay tuned for updates, resources, and more!`,
     html: `
     <div style="font-family: Arial, sans-serif; background-color: #f9fafb; padding: 40px;">
       <table align="center" width="100%" style="max-width: 600px; background-color: #ffffff; border-radius: 10px; box-shadow: 0 6px 12px rgba(0,0,0,0.15); overflow: hidden;">
@@ -144,7 +144,7 @@ export async function sendRegistrationEmail(email: string) {
         <!-- Header -->
         <tr style="background-color: #7C3AED;">
           <td style="padding: 20px; text-align: center; color: #ffffff;">
-            <h1 style="margin: 0; font-size: 26px;">Welcome to Oylkka Graphics</h1>
+            <h1 style="margin: 0; font-size: 26px;">Welcome to Oylkka IT</h1>
           </td>
         </tr>
 
@@ -153,12 +153,12 @@ export async function sendRegistrationEmail(email: string) {
           <td style="padding: 40px;">
             <h2 style="color: #333333; font-size: 24px;">Hello and Welcome!</h2>
             <p style="font-size: 16px; color: #555555; line-height: 1.6;">
-              We're thrilled to have you join the Oylkka Graphics community! You'll now be the first to know about our latest content, updates, and exclusive resources, all curated just for you.
+              We're thrilled to have you join the Oylkka IT community! You'll now be the first to know about our latest content, updates, and exclusive resources, all curated just for you.
             </p>
 
             <div style="text-align: center; margin: 30px 0;">
               <a href="${siteUrl}" style="display: inline-block; background-color: #7C3AED; color: #ffffff; text-decoration: none; padding: 12px 24px; border-radius: 6px; font-size: 16px; font-weight: bold;">
-               Visit Oylkka Graphics
+               Visit Oylkka IT
               </a>
             </div>
 
@@ -180,7 +180,7 @@ export async function sendRegistrationEmail(email: string) {
         <tr>
           <td style="padding: 20px; text-align: center; background-color: #f4f4f4; color: #999999; font-size: 14px;">
             <p style="margin: 0;">If you prefer not to receive updates, you can <a href="${siteUrl}/unsubscribe?email=${email}" style="color: #7C3AED; text-decoration: none;">unsubscribe</a> at any time.</p>
-            <p style="margin: 0;">© ${new Date().getFullYear()} Oylkka Graphics | All rights reserved.</p>
+            <p style="margin: 0;">© ${new Date().getFullYear()} Oylkka IT | All rights reserved.</p>
           </td>
         </tr>
       </table>

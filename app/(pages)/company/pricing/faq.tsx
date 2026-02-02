@@ -7,9 +7,9 @@ import {
 
 const faqs = [
   {
-    question: 'What services does Oylkka Graphics offer?',
+    question: 'What services does Oylkka IT offer?',
     answer:
-      'Oylkka Graphics offers a wide range of design services including branding, web design, UI/UX design, print design, and motion graphics. We cater to businesses of all sizes, from startups to large enterprises.',
+      'Oylkka IT offers a wide range of design services including branding, web design, UI/UX design, print design, and motion graphics. We cater to businesses of all sizes, from startups to large enterprises.',
   },
   {
     question: 'How long does a typical project take?',

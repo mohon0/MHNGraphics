@@ -14,7 +14,7 @@ export const TestimonialData = [
     title: 'Full Stack Web Development',
     duration: 'via Fiverr - Mar 4, 2024 - Aug 2, 2024',
     description:
-      "Oylkka Graphics' branding expertise helped us stand out in a crowded market. From logo design to marketing materials, every piece was thoughtfully crafted. They truly understand how to create impactful visual identities.",
+      "Oylkka IT' branding expertise helped us stand out in a crowded market. From logo design to marketing materials, every piece was thoughtfully crafted. They truly understand how to create impactful visual identities.",
   },
   {
     id: 2,
@@ -25,7 +25,7 @@ export const TestimonialData = [
     title: 'E-commerce Website Development',
     duration: 'via Upwork - Feb 1, 2024 - May 15, 2024',
     description:
-      'The print designs Oylkka Graphics created for our international conference were outstanding. From banners to brochures, the consistency and quality of the materials impressed all attendees. Highly recommended for event branding!',
+      'The print designs Oylkka IT created for our international conference were outstanding. From banners to brochures, the consistency and quality of the materials impressed all attendees. Highly recommended for event branding!',
   },
   {
     id: 3,
@@ -36,7 +36,7 @@ export const TestimonialData = [
     title: 'Custom CRM System',
     duration: 'via Direct Contract - Jan 10, 2024 - Jul 20, 2024',
     description:
-      'The motion graphics created by Oylkka Graphics for our ad campaign were simply stunning. They brought our vision to life with their exceptional creativity and technical skills. The results exceeded our expectations.',
+      'The motion graphics created by Oylkka IT for our ad campaign were simply stunning. They brought our vision to life with their exceptional creativity and technical skills. The results exceeded our expectations.',
   },
   {
     id: 4,
@@ -47,7 +47,7 @@ export const TestimonialData = [
     title: 'Website Redesign and SEO',
     duration: 'via Fiverr - Apr 5, 2024 - Jun 30, 2024',
     description:
-      'Working with Oylkka Graphics was a game-changer for our website. The UI/UX design they delivered increased our conversion rates significantly. Their team was responsive and professional throughout the project.',
+      'Working with Oylkka IT was a game-changer for our website. The UI/UX design they delivered increased our conversion rates significantly. Their team was responsive and professional throughout the project.',
   },
   {
     id: 5,
@@ -58,6 +58,6 @@ export const TestimonialData = [
     title: 'SaaS Application Development',
     duration: 'via Upwork - May 1, 2024 - Aug 31, 2024',
     description:
-      "Oylkka Graphics transformed our brand identity completely. Their creativity and attention to detail exceeded our expectations. The new logo and visual elements perfectly capture our company's spirit.",
+      "Oylkka IT transformed our brand identity completely. Their creativity and attention to detail exceeded our expectations. The new logo and visual elements perfectly capture our company's spirit.",
   },
 ];

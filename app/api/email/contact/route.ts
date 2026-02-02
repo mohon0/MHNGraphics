@@ -26,7 +26,7 @@ export async function POST(req: NextRequest) {
     });
 
     const mailOptions = {
-      from: `"Oylkka Graphics" <${process.env.SMTP_SENDER}>`,
+      from: `"Oylkka IT" <${process.env.SMTP_SENDER}>`,
       to: 'contact@freelancermohon.com',
       subject: 'New Contact Form Submission',
       html: `

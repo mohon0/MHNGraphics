@@ -1,4 +1,3 @@
-import { Cookie, Info, Settings, Shield, ToggleLeft } from 'lucide-react';
 import {
   Accordion,
   AccordionContent,
@@ -13,6 +12,7 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { Separator } from '@/components/ui/separator';
+import { Cookie, Info, Settings, Shield, ToggleLeft } from 'lucide-react';
 
 export default function CookiePolicy() {
   const sections = [
@@ -68,10 +68,10 @@ export default function CookiePolicy() {
           </CardHeader>
           <CardContent>
             <p className='text-muted-foreground'>
-              This Cookie Policy explains how Oylkka Graphics uses cookies and
-              similar technologies to recognize you when you visit our website.
-              It explains what these technologies are and why we use them, as
-              well as your rights to control our use of them.
+              This Cookie Policy explains how Oylkka IT uses cookies and similar
+              technologies to recognize you when you visit our website. It
+              explains what these technologies are and why we use them, as well
+              as your rights to control our use of them.
             </p>
           </CardContent>
         </Card>

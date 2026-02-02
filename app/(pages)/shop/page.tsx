@@ -1,15 +1,5 @@
 'use client';
 
-import {
-  ArrowRight,
-  Download,
-  Filter,
-  Search,
-  ShoppingCart,
-  Star,
-} from 'lucide-react';
-import Image from 'next/image';
-import { useState } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
@@ -28,6 +18,16 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Slider } from '@/components/ui/slider';
+import {
+  ArrowRight,
+  Download,
+  Filter,
+  Search,
+  ShoppingCart,
+  Star,
+} from 'lucide-react';
+import Image from 'next/image';
+import { useState } from 'react';
 
 const categories = [
   'All',
@@ -139,9 +139,7 @@ export default function ShopPage() {
 
   return (
     <div className='container mx-auto px-4 py-8'>
-      <h1 className='mb-8 text-center text-4xl font-bold'>
-        Oylkka Graphics Shop
-      </h1>
+      <h1 className='mb-8 text-center text-4xl font-bold'>Oylkka IT Shop</h1>
 
       {/* Featured Products Section */}
       <section className='mb-16'>
@@ -325,7 +323,7 @@ export default function ShopPage() {
               name: 'Alex Johnson',
               role: 'Graphic Designer',
               comment:
-                'The quality of assets on Oylkka Graphics is outstanding. It has significantly improved my workflow.',
+                'The quality of assets on Oylkka IT is outstanding. It has significantly improved my workflow.',
               rating: 5,
             },
             {

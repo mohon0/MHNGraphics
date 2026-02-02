@@ -1,10 +1,10 @@
-import { AudioWaveform } from 'lucide-react';
-import Link from 'next/link';
 import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
 } from '@/components/ui/sidebar';
+import { AudioWaveform } from 'lucide-react';
+import Link from 'next/link';
 
 export function TeamSwitcher() {
   return (
@@ -19,7 +19,7 @@ export function TeamSwitcher() {
               <AudioWaveform className='size-4' />
             </div>
             <div className='grid flex-1 text-left text-sm leading-tight'>
-              <span className='truncate font-semibold'>Oylkka Graphics</span>
+              <span className='truncate font-semibold'>Oylkka IT</span>
             </div>
           </SidebarMenuButton>
         </SidebarMenuItem>
