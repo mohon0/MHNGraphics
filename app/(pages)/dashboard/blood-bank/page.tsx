@@ -16,7 +16,7 @@ function BloodBankContent() {
   const { data: session, status } = useSession();
   const searchParams = useSearchParams();
   const [page, setPage] = useState(
-    Number.parseInt(searchParams.get('page') || '1'),
+    Number.parseInt(searchParams.get('page') || '1', 10),
   );
   const [bloodGroup, setBloodGroup] = useState(
     searchParams.get('bloodGroup') || 'All',

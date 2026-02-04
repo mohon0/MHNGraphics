@@ -62,7 +62,7 @@ function ApplicationListContent() {
     searchParams.get('name') || '',
   );
   const [page, setPage] = React.useState(
-    parseInt(searchParams.get('page') || '1'),
+    parseInt(searchParams.get('page') || '1', 10),
   );
   const type = searchParams.get('type') || 'all';
 

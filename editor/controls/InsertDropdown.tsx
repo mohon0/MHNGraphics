@@ -104,7 +104,7 @@ const InsertDropdown = () => {
       </Tooltip>
 
       <Dialog open={youtubeDialogOpen} onOpenChange={setYoutubeDialogOpen}>
-        <DialogContent className='sm:max-w-[425px]'>
+        <DialogContent className='sm:max-w-106.25'>
           <DialogHeader>
             <DialogTitle>Embed YouTube Video</DialogTitle>
           </DialogHeader>
@@ -131,7 +131,7 @@ const InsertDropdown = () => {
       </Dialog>
 
       <Dialog open={tableDialogOpen} onOpenChange={setTableDialogOpen}>
-        <DialogContent className='sm:max-w-[425px]'>
+        <DialogContent className='sm:max-w-106.25'>
           <DialogHeader>
             <DialogTitle>Insert Table</DialogTitle>
           </DialogHeader>
@@ -200,6 +200,7 @@ const TableBuilder = ({ onCreate }: TableBuilderProps) => {
         // biome-ignore lint: error
         <div key={`row-${rowIndex}`} className='flex gap-1'>
           {Array.from({ length: COLUMNS }, (_, colIndex) => (
+            // biome-ignore lint/a11y/useSemanticElements: this is fine
             <div
               // biome-ignore lint: error
               key={`col-${colIndex}`}

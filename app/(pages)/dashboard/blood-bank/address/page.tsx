@@ -66,7 +66,9 @@ function AddressPageSkeleton() {
 const AddressContent: React.FC = () => {
   const { status, data: session } = useSession();
   const searchParams = useSearchParams();
-  const [page, setPage] = useState(parseInt(searchParams.get('page') || '1'));
+  const [page, setPage] = useState(
+    parseInt(searchParams.get('page') || '1', 10),
+  );
   const [searchInput, setSearchInput] = useState('');
   const [filterBy, setFilterBy] = useState('All');
 

@@ -95,7 +95,7 @@ export default function Notice() {
     </TableRow>
   );
 
-  const startNumber = (currentPage - 1) * Number.parseInt(pageSize) + 1;
+  const startNumber = (currentPage - 1) * Number.parseInt(pageSize, 10) + 1;
 
   return (
     <>
@@ -152,7 +152,7 @@ export default function Notice() {
             </TableHeader>
             <TableBody>
               {isLoading ? (
-                Array.from({ length: Number.parseInt(pageSize) }).map(
+                Array.from({ length: Number.parseInt(pageSize, 10) }).map(
                   // biome-ignore lint: error
                   (_, i) => <NoticeSkeleton key={i} />,
                 )

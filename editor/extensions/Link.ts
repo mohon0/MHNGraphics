@@ -59,7 +59,6 @@ export const Link = TiptapLink.extend<LinkOptions, LinkEditorStorage>({
                     .focus(tr.selection.anchor)
                     .insertLink({ text: '\u200B' })
                     .run();
-                // @ts-ignore
                 return chain().setLink({ href: '' }).run();
               })
               .setMeta('addToHistory', false)

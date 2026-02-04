@@ -44,7 +44,8 @@ export const Youtube = Node.create<YoutubeOptions>({
       },
       width: {
         default: null,
-        parseHTML: (element) => Number.parseInt(element.style.width) || null,
+        parseHTML: (element) =>
+          Number.parseInt(element.style.width, 10) || null,
         renderHTML: (attrs) => {
           if (!attrs.width) return {};
           return { style: `width: ${attrs.width}%` };

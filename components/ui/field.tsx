@@ -84,6 +84,7 @@ function Field({
   ...props
 }: React.ComponentProps<'div'> & VariantProps<typeof fieldVariants>) {
   return (
+    // biome-ignore lint/a11y/useSemanticElements: this is fine
     <div
       role='group'
       data-slot='field'

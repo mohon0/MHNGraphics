@@ -179,6 +179,7 @@ const CarouselItem = React.forwardRef<
   const { orientation } = useCarousel();
 
   return (
+    // biome-ignore lint/a11y/useSemanticElements: this is fine
     <div
       ref={ref}
       role='group'

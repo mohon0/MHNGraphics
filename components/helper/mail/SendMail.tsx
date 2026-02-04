@@ -6,7 +6,7 @@ export default async function sendVerificationEmail(
 ) {
   const transporter = nodemailer.createTransport({
     host: process.env.SMTP_SERVER,
-    port: parseInt(process.env.SMTP_PORT || '587'),
+    port: parseInt(process.env.SMTP_PORT || '587', 10),
     secure: false,
     auth: {
       user: process.env.SMTP_USER,
@@ -54,7 +54,7 @@ const siteUrl = process.env.NEXT_PUBLIC_SITE_URL;
 export async function sendWelcomeEmail(email: string) {
   const transporter = nodemailer.createTransport({
     host: process.env.SMTP_SERVER,
-    port: parseInt(process.env.SMTP_PORT || '587'),
+    port: parseInt(process.env.SMTP_PORT || '587', 10),
     secure: false,
     auth: {
       user: process.env.SMTP_USER,
@@ -124,7 +124,7 @@ export async function sendWelcomeEmail(email: string) {
 export async function sendRegistrationEmail(email: string) {
   const transporter = nodemailer.createTransport({
     host: process.env.SMTP_SERVER,
-    port: parseInt(process.env.SMTP_PORT || '587'),
+    port: parseInt(process.env.SMTP_PORT || '587', 10),
     secure: false,
     auth: {
       user: process.env.SMTP_USER,

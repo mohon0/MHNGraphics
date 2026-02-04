@@ -964,8 +964,8 @@ export function QuizForm() {
                                   e.target.value.split(':');
                                 const newDate = new Date(field.value);
                                 newDate.setHours(
-                                  parseInt(hours),
-                                  parseInt(minutes),
+                                  parseInt(hours, 10),
+                                  parseInt(minutes, 10),
                                 );
                                 field.onChange(newDate);
                               }

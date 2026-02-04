@@ -895,8 +895,8 @@ export function QuizEditForm({ initialData }: { initialData: QuizFormData }) {
                                   e.target.value.split(':');
                                 const newDate = new Date(field.value);
                                 newDate.setHours(
-                                  parseInt(hours),
-                                  parseInt(minutes),
+                                  parseInt(hours, 10),
+                                  parseInt(minutes, 10),
                                 );
                                 field.onChange(newDate);
                               } else if (e.target.value) {
@@ -904,8 +904,8 @@ export function QuizEditForm({ initialData }: { initialData: QuizFormData }) {
                                   e.target.value.split(':');
                                 const newDate = new Date();
                                 newDate.setHours(
-                                  parseInt(hours),
-                                  parseInt(minutes),
+                                  parseInt(hours, 10),
+                                  parseInt(minutes, 10),
                                 );
                                 field.onChange(newDate);
                               }

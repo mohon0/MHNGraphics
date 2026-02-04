@@ -9,8 +9,9 @@ import { cn } from '@/lib/utils';
 
 function Pagination({ className, ...props }: React.ComponentProps<'nav'>) {
   return (
+    // biome-ignore lint/a11y/useSemanticElements: this is fine
     <nav
-      // biome-ignore lint: error
+      // biome-ignore lint/a11y/noRedundantRoles: this is fine
       role='navigation'
       aria-label='pagination'
       data-slot='pagination'
@@ -119,9 +120,9 @@ function PaginationEllipsis({
 export {
   Pagination,
   PaginationContent,
-  PaginationLink,
-  PaginationItem,
-  PaginationPrevious,
-  PaginationNext,
   PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
 };

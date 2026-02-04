@@ -36,7 +36,7 @@ export default function useTiptapEditor({
 
   useEffect(() => {
     if (!editor) return;
-    // @ts-ignore
+    // @ts-expect-error
     editor.setOptions({ editorProps: { placeholder } });
     forceUpdate();
   }, [editor, forceUpdate, placeholder]);

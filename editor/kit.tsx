@@ -24,7 +24,7 @@ const ExtensionKit = [
     includeChildren: true,
     showOnlyCurrent: true,
     placeholder: ({ editor }) => {
-      // @ts-ignore
+      // @ts-expect-error
       const placeholder = editor.options.editorProps.placeholder;
       return placeholder?.paragraph;
     },

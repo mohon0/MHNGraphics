@@ -130,6 +130,7 @@ export async function PUT(req: NextRequest) {
     };
 
     // Remove null or undefined values
+    // biome-ignore lint/suspicious/useIterableCallbackReturn: this is fine
     Object.keys(updatedData).forEach(
       (key) => updatedData[key] === '' && delete updatedData[key],
     );
