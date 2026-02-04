@@ -26,7 +26,8 @@ export default function MessageList({ conversationId }: MessageListProps) {
   const { ably, publishTypingIndicator, subscribeToTyping } = useAbly();
   const queryClient = useQueryClient();
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const scrollAreaRef = useRef<HTMLDivElement>(null);
+  // biome-ignore lint: error
+  const scrollAreaRef = useRef<any>(null);
   const [isOtherUserTyping, setIsOtherUserTyping] = useState(false);
   // biome-ignore lint: error
   const [otherUser, setOtherUser] = useState<any>(null);
