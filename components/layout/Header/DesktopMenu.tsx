@@ -1,7 +1,5 @@
 'use client';
 
-import Link from 'next/link';
-import React from 'react';
 import { Button } from '@/components/ui/button';
 import {
   NavigationMenu,
@@ -10,6 +8,7 @@ import {
   NavigationMenuList,
 } from '@/components/ui/navigation-menu';
 import { cn } from '@/lib/utils';
+import React from 'react';
 
 export default function DesktopMenu({
   fixed = false,
@@ -22,79 +21,58 @@ export default function DesktopMenu({
     <NavigationMenu>
       <NavigationMenuList className='space-x-7 text-sm'>
         <NavigationMenuItem>
-          <Link href='/' legacyBehavior passHref>
-            <NavigationMenuLink
-              className={fixed ? 'pl-2 text-white' : 'pl-2 text-foreground'}
-            >
-              Home
-            </NavigationMenuLink>
-          </Link>
+          <NavigationMenuLink
+            href='/'
+            className={fixed ? 'pl-2 text-white' : 'pl-2 text-foreground'}
+          >
+            Home
+          </NavigationMenuLink>
+          -
         </NavigationMenuItem>
 
         <NavigationMenuItem>
-          <Link
-            href='https://www.oylkka.com'
+          <NavigationMenuLink
             target='_blank'
-            legacyBehavior
-            passHref
+            href='https://www.oylkka.com'
+            className={
+              fixed ? 'pl-2 text-sm text-white' : 'pl-2 text-sm text-foreground'
+            }
           >
-            <NavigationMenuLink
-              className={
-                fixed
-                  ? 'pl-2 text-sm text-white'
-                  : 'pl-2 text-sm text-foreground'
-              }
-            >
-              Oylkka Shop
-            </NavigationMenuLink>
-          </Link>
+            Oylkka Shop
+          </NavigationMenuLink>
         </NavigationMenuItem>
         <NavigationMenuItem>
-          <Link href='/mhn-it' legacyBehavior passHref>
-            <NavigationMenuLink
-              className={
-                fixed
-                  ? 'pl-2 text-sm text-white'
-                  : 'pl-2 text-sm text-foreground'
-              }
-            >
-              Oylkka IT Agency
-            </NavigationMenuLink>
-          </Link>
+          <NavigationMenuLink
+            href='/mhn-it'
+            className={
+              fixed ? 'pl-2 text-sm text-white' : 'pl-2 text-sm text-foreground'
+            }
+          >
+            Oylkka IT Agency
+          </NavigationMenuLink>
         </NavigationMenuItem>
 
         <NavigationMenuItem>
-          <Link
+          <NavigationMenuLink
             href='/oylkka-it-and-training-center/blood-donate'
-            legacyBehavior
-            passHref
+            className={fixed ? 'pl-2 text-white' : 'pl-2 text-foreground'}
           >
-            <NavigationMenuLink
-              className={fixed ? 'pl-2 text-white' : 'pl-2 text-foreground'}
-            >
-              Blood Donate
-            </NavigationMenuLink>
-          </Link>
+            Blood Donate
+          </NavigationMenuLink>
         </NavigationMenuItem>
 
         {!best && (
           <NavigationMenuItem>
-            <Link
+            <NavigationMenuLink
               href='/oylkka-it-and-training-center'
-              className='overflow-hidden'
-              legacyBehavior
-              passHref
+              className={
+                fixed
+                  ? 'overflow-hidden text-white'
+                  : 'overflow-hidden text-black'
+              }
             >
-              <NavigationMenuLink
-                className={
-                  fixed
-                    ? 'overflow-hidden text-white'
-                    : 'overflow-hidden text-black'
-                }
-              >
-                <Button variant='secondary'>Oylkka IT & Training Center</Button>
-              </NavigationMenuLink>
-            </Link>
+              <Button variant='secondary'>Oylkka IT & Training Center</Button>
+            </NavigationMenuLink>
           </NavigationMenuItem>
         )}
       </NavigationMenuList>
