@@ -266,3 +266,15 @@ export function useCreateQuiz(
     ...options,
   });
 }
+
+export function useAdminSingleQuizResult(id: string) {
+  return useQuery({
+    queryKey: [QUERY_KEYS.ADMIN_SINGLE_QUIZ_RESULT, id],
+    queryFn: async () => {
+      const response = await axios.get(
+        `/api/admin/quiz/single-quiz/result?id=${id}`,
+      );
+      return response.data;
+    },
+  });
+}

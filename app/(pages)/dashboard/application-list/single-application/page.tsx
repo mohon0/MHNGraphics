@@ -5,9 +5,9 @@ import { useSearchParams } from 'next/navigation';
 import { Suspense, useRef } from 'react';
 import { IoMdPrint } from 'react-icons/io';
 import { useReactToPrint } from 'react-to-print';
+import logo from '@/assets/logo-white.png';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
-import logo from '@/images/oylkka-logo.png';
 import logo2 from '@/images/oylkka-logo-black.png';
 import { useSingleApplication } from '@/services/application';
 import type { UserApplication } from '@/utils/Interface';
@@ -63,9 +63,9 @@ function SingleApplication({ application }: { application: UserApplication }) {
   return (
     <div>
       <div ref={contentRef}>
-        <div className='flex flex-col items-center justify-center gap-6 bg-cyan-500 px-2 py-2 md:flex-row md:px-10 md:py-8 print:flex print:flex-row print:px-10 print:py-4'>
+        <div className='flex flex-col items-center justify-center gap-6 bg-primary px-2 py-2 md:flex-row md:px-10 md:py-8 print:flex print:flex-row print:px-10 print:py-4'>
           <div className='w-4/12 md:w-2/12 print:w-2/12'>
-            <Image src={logo} alt='' />
+            <Image src={logo} alt='logo' />
           </div>
           <div className='flex w-11/12 flex-col items-center justify-center text-center md:w-8/12 print:w-8/12'>
             <div className='text-center text-3xl font-bold text-black'>
@@ -92,15 +92,12 @@ function SingleApplication({ application }: { application: UserApplication }) {
           </div>
         </div>
 
-        <div className='my-1 grid grid-cols-3'>
-          <div className='flex items-center gap-3 pl-12'>
+        <div className='my-1 grid grid-cols-2 print:grid-cols-3 md:grid-cols-3 items-center'>
+          <div className='flex items-center gap-3 print:pl-12'>
             <div className='font-bold print:text-black'>SL No: </div>
             <div className='h-7 w-20 border'></div>
           </div>
-          <Button
-            variant='secondary'
-            className='mx-auto my-4 bg-cyan-700 text-lg font-bold text-white'
-          >
+          <Button className='mx-auto hidden print:block md:block'>
             Admission Form
           </Button>
           <div className='mr-1 flex flex-col justify-end border print:text-black'>
@@ -242,18 +239,18 @@ function SingleApplication({ application }: { application: UserApplication }) {
           </table>
           <div className='mt-24 hidden justify-between font-bold md:mx-12 md:flex lg:mx-10 print:mt-10 print:flex print:text-black'>
             <div>
-              <div className='h-0.5 w-40 bg-cyan-700'></div>
+              <div className='h-0.5 w-40 bg-primary'></div>
               <div>Director Signature</div>
               <div>Date:</div>
             </div>
             <div>
-              <div className='h-0.5 w-40 bg-cyan-700'></div>
+              <div className='h-0.5 w-40 bg-primary'></div>
               <div>Student Signature</div>
               <div>Date:</div>
             </div>
           </div>
         </div>
-        <div className='fixed bottom-0 hidden w-full bg-cyan-600 p-2 text-center text-white print:block'>
+        <div className='fixed bottom-0 hidden w-full bg-primary p-2 text-center text-white print:block'>
           <p>www.training.oylkka.com</p>
         </div>
 
@@ -284,7 +281,7 @@ function SingleApplication({ application }: { application: UserApplication }) {
             </p>
           </div>
           <div className='print:text-black'>
-            <div className='h-0.5 w-40 bg-cyan-700'></div>
+            <div className='h-0.5 w-40 bg-primary'></div>
             <div>Guardian Signature</div>
             <div>Date:</div>
           </div>

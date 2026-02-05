@@ -1,5 +1,10 @@
 'use client';
 
+import { Clock } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Badge } from '@/components/ui/badge';
+import { Skeleton } from '@/components/ui/skeleton';
 import {
   Table,
   TableBody,
@@ -7,131 +12,116 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { ArrowUpDown } from "lucide-react";
-import { useMemo, useState } from "react";
-
-// This is a placeholder type. You should define this based on your actual data structure.
-export interface UserResult {
-    id: string;
-    user: {
-        name: string;
-        image: string | null;
-    };
-    score: number;
-    completedAt: string; // ISO date string
-}
+} from '@/components/ui/table';
+import type { QuizResultEntry } from '@/types/quiz-type';
 
 interface UserResultsTableProps {
-  results: UserResult[];
+  results: QuizResultEntry[];
   isPending: boolean;
 }
 
-type SortKey = "user" | "score" | "completedAt";
-
-export function UserResultsTable({ results, isPending }: UserResultsTableProps) {
-  const [sortKey, setSortKey] = useState<SortKey>("completedAt");
-  const [sortDirection, setSortDirection] = useState<"asc" | "desc">("desc");
-
-  const sortedResults = useMemo(() => {
-    return [...results].sort((a, b) => {
-      const aValue = a[sortKey];
-      const bValue = b[sortKey];
-
-      if (sortKey === 'user') {
-          const aName = a.user.name.toLowerCase();
-          const bName = b.user.name.toLowerCase();
-          if (aName < bName) return sortDirection === "asc" ? -1 : 1;
-          if (aName > bName) return sortDirection === "asc" ? 1 : -1;
-          return 0;
-      }
-
-      if (aValue < bValue) return sortDirection === "asc" ? -1 : 1;
-      if (aValue > bValue) return sortDirection === "asc" ? 1 : -1;
-      return 0;
-    });
-  }, [results, sortKey, sortDirection]);
-
-  const handleSort = (key: SortKey) => {
-    if (sortKey === key) {
-      setSortDirection(sortDirection === "asc" ? "desc" : "asc");
-    } else {
-      setSortKey(key);
-      setSortDirection("asc");
-    }
-  };
-
+export function UserResultsTable({
+  results,
+  isPending,
+}: UserResultsTableProps) {
+  const router = useRouter();
 
   if (isPending) {
-    return <div>Loading results...</div>;
+    return (
+      <div className='space-y-3'>
+        {Array.from({ length: 5 }).map((_, i) => (
+          // biome-ignore lint/suspicious/noArrayIndexKey: this is fine
+          <Skeleton key={i} className='h-16 w-full' />
+        ))}
+      </div>
+    );
   }
 
   if (results.length === 0) {
     return (
-        <div className='bg-secondary rounded-lg p-12 text-center'>
-          <p className='text-muted-foreground font-semibold'>
-            No submissions yet
-          </p>
-          <p className='text-muted-foreground text-sm mt-1'>
-            Results will appear here once users complete the quiz.
-          </p>
-        </div>
-    )
+      <div className='bg-secondary rounded-lg p-12 text-center'>
+        <p className='text-muted-foreground font-semibold'>
+          No submissions yet
+        </p>
+        <p className='text-muted-foreground text-sm mt-1'>
+          Results will appear here once users complete the quiz.
+        </p>
+      </div>
+    );
   }
 
+  const handleClick = (resultId: string) => () => {
+    router.push(`/quiz/quiz-result/stats/${resultId}`);
+  };
+
   return (
-    <div className="rounded-lg border">
+    <div className='rounded-lg border'>
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead>
-                <Button variant="ghost" onClick={() => handleSort("user")}>
-                    Participant
-                    <ArrowUpDown className="ml-2 h-4 w-4" />
-                </Button>
-            </TableHead>
-            <TableHead>
-                <Button variant="ghost" onClick={() => handleSort("score")}>
-                    Score
-                    <ArrowUpDown className="ml-2 h-4 w-4" />
-                </Button>
-            </TableHead>
-            <TableHead>
-                <Button variant="ghost" onClick={() => handleSort("completedAt")}>
-                    Date Completed
-                    <ArrowUpDown className="ml-2 h-4 w-4" />
-                </Button>
-            </TableHead>
-            <TableHead className="text-right">Actions</TableHead>
+            <TableHead>Participant</TableHead>
+            <TableHead>Score</TableHead>
+            <TableHead>Percentage</TableHead>
+            <TableHead>Attempt</TableHead>
+            <TableHead>Time Spent</TableHead>
+            <TableHead>Completed</TableHead>
+            <TableHead className='text-right'>Status</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
-          {sortedResults.map((result) => (
-            <TableRow key={result.id}>
+          {results.map((result) => (
+            <TableRow
+              key={result.id}
+              onClick={handleClick(result.id)}
+              className=' cursor-pointer'
+            >
               <TableCell>
-                <div className="flex items-center gap-3">
+                <div className='flex items-center gap-3'>
                   <Avatar>
-                    <AvatarImage src={result.user.image || undefined} />
-                    <AvatarFallback>{result.user.name[0]}</AvatarFallback>
+                    <AvatarImage
+                      src={result.userImage || '/placeholder.svg'}
+                      alt={result.userName}
+                    />
+                    <AvatarFallback>
+                      {result.userName
+                        .split(' ')
+                        .map((n) => n[0])
+                        .join('')
+                        .toUpperCase()}
+                    </AvatarFallback>
                   </Avatar>
-                  <span className="font-medium">{result.user.name}</span>
+                  <span className='font-medium text-sm'>{result.userName}</span>
                 </div>
               </TableCell>
               <TableCell>
-                <Badge variant={result.score >= 70 ? "default" : "destructive"}>
-                  {result.score}%
+                <span className='font-semibold'>{result.score}</span>
+              </TableCell>
+              <TableCell>
+                <Badge
+                  variant={result.percentage >= 50 ? 'default' : 'destructive'}
+                >
+                  {result.percentage}%
                 </Badge>
               </TableCell>
               <TableCell>
-                {new Date(result.completedAt).toLocaleDateString()}
+                <span className='text-sm'>#{result.attemptNumber}</span>
               </TableCell>
-              <TableCell className="text-right">
-                <Button variant="outline" size="sm">
-                  View Details
-                </Button>
+              <TableCell>
+                <div className='flex items-center gap-1 text-sm'>
+                  <Clock className='h-3 w-3 text-muted-foreground' />
+                  {Math.floor(result.timeSpent / 60)}:
+                  {(result.timeSpent % 60).toString().padStart(2, '0')}
+                </div>
+              </TableCell>
+              <TableCell>
+                <span className='text-sm text-muted-foreground'>
+                  {new Date(result.completedAt).toLocaleDateString()}
+                </span>
+              </TableCell>
+              <TableCell className='text-right'>
+                <Badge variant={result.passed ? 'default' : 'outline'}>
+                  {result.passed ? 'Passed' : 'Failed'}
+                </Badge>
               </TableCell>
             </TableRow>
           ))}

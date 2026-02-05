@@ -1,8 +1,5 @@
 'use client';
 
-import { Calendar, Clock, Tag, Target } from 'lucide-react';
-import Link from 'next/link';
-import type { JSX } from 'react'; // Import JSX to declare the type
 import { Badge } from '@/components/ui/badge';
 import {
   Card,
@@ -11,22 +8,16 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
+import { Calendar, Clock, Tag, Target } from 'lucide-react';
+import Link from 'next/link';
+import type { JSX } from 'react'; // Import JSX to declare the type
 import { DifficultyBadge } from './difficulty-badge';
+import type { Quiz } from './page';
 import { QuizActions } from './quiz-actions';
 import { StatusBadge } from './status-badge';
 
-interface AdminQuiz {
-  id: string;
-  title: string;
-  description: string;
-  category: string;
-  difficulty: 'EASY' | 'MEDIUM' | 'HARD';
-  tags: string[];
-  status: 'DRAFT' | 'PUBLISHED' | 'SCHEDULED' | 'ARCHIVED';
+export interface AdminQuiz extends Quiz {
   scheduledFor?: string;
-  timeLimit: number;
-  passingScore: number;
-  createdAt: string;
   image?: string;
 }
 
@@ -36,6 +27,7 @@ interface QuizCardProps {
   onView?: (id: string) => void;
   onDuplicate?: (id: string) => void;
   onDelete?: (id: string) => void;
+  onViewResults?: (id: string) => void;
 }
 
 export function QuizCard({
@@ -44,6 +36,7 @@ export function QuizCard({
   onView,
   onDuplicate,
   onDelete,
+  onViewResults,
 }: QuizCardProps): JSX.Element {
   const createdDate = new Date(quiz.createdAt).toLocaleDateString('en-US', {
     month: 'short',
@@ -73,13 +66,14 @@ export function QuizCard({
               {quiz.description}
             </CardDescription>
           </div>
-          <div className='flex-shrink-0'>
+          <div className='shrink-0'>
             <QuizActions
-              quizId={quiz.id}
+              quiz={quiz}
               onEdit={onEdit}
               onView={onView}
               onDuplicate={onDuplicate}
               onDelete={onDelete}
+              onViewResults={onViewResults}
             />
           </div>
         </div>

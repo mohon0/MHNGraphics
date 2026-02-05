@@ -117,9 +117,9 @@ export interface ApplicationDetail {
   mobileNumber: string;
   guardianNumber: string;
   gender: string;
-  gpa: string;
+  gpaCgpa: string;
   nationality: string;
-  nid: string;
+  nidBirthReg: string;
   passingYear: string;
   regNumber: string;
   religion: string;
@@ -130,7 +130,7 @@ export interface ApplicationDetail {
   courseName: string;
   duration: string;
   education: string;
-  board: string;
+  educationBoard: string;
   course: string;
   pc: string;
   email: string;

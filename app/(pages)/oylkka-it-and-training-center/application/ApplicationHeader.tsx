@@ -1,10 +1,10 @@
 import Image from 'next/image';
-import logo from '@/images/oylkka-logo-black.png';
+import logo from '@/assets/logo.png';
 
 export default function ApplicationHeader() {
   return (
     <div className='flex flex-col items-center justify-center gap-6 text-center'>
-      <Image src={logo} alt='logo' className='h-16 w-16 md:h-20 md:w-20' />
+      <Image src={logo} alt='logo' className='h-16 w-20 md:h-20 md:w-28' />
       <div className='text-3xl font-bold lg:text-4xl'>
         Oylkka IT & Training Center
       </div>

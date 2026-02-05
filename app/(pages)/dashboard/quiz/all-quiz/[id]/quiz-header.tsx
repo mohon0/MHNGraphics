@@ -1,11 +1,11 @@
 'use client';
 
-import { Copy, Edit2, Trash2 } from 'lucide-react';
-import type { JSX } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import type { AdminQuiz } from '@/types/quiz-type';
+import { Copy, Edit2, Trash2 } from 'lucide-react';
+import type { JSX } from 'react';
 import { DifficultyBadge } from '../difficulty-badge';
+import type { AdminQuiz } from '../quiz-card';
 import { StatusBadge } from '../status-badge';
 
 interface QuizHeaderProps {
@@ -46,7 +46,7 @@ export function QuizHeader({
             </div>
 
             {/* Action Buttons */}
-            <div className='flex gap-2 flex-shrink-0'>
+            <div className='flex gap-2 shrink-0'>
               <Button
                 size='sm'
                 variant='outline'

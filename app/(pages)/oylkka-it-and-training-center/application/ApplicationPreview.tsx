@@ -20,7 +20,7 @@ export default function Preview() {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button variant='secondary' className='w-full shadow-lg'>
+        <Button variant='secondary' className=' shadow-lg'>
           Preview Application
         </Button>
       </DialogTrigger>
@@ -141,7 +141,7 @@ export default function Preview() {
                     item1='Education'
                     item2='Board'
                     value1={values.education}
-                    value2={values.board}
+                    value2={values.educationBoard}
                   />
                   <InfoRow
                     item1='Roll'
@@ -156,21 +156,21 @@ export default function Preview() {
                     </td>
                     <td className='w-full border p-1 px-2 md:w-1/2 print:w-1/2'>
                       <span className='font-bold'>GPA/CGPA: </span>
-                      <span className='pl-3'>{values.gpa}</span>
+                      <span className='pl-3'>{values.gpaCgpa}</span>
                     </td>
                   </tr>
 
                   <InfoRow
                     item1='Birth Reg/NID'
                     item2='Nationality'
-                    value1={values.nid}
+                    value1={values.nidBirthReg}
                     value2={values.nationality}
                   />
                   <InfoRow
                     item1='Course Name'
                     item2='Duration'
-                    value1={values.courseName}
-                    value2={values.course}
+                    value1={values.course}
+                    value2={values.duration}
                   />
                 </tbody>
               </table>

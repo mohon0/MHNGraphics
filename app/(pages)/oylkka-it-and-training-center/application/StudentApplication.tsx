@@ -874,13 +874,10 @@ export function StudentApplicationForm() {
                 </p>
               </div>
 
-              <div className='flex flex-col gap-4 md:flex-row md:gap-10'>
+              <div className='flex flex-col md:justify-end gap-4 md:flex-row md:gap-10'>
                 <Preview />
-                <Button
-                  type='submit'
-                  className='w-full'
-                  disabled={isSubmitting}
-                >
+
+                <Button type='submit' disabled={isSubmitting}>
                   {isSubmitting ? 'Submitting...' : 'Submit Application'}
                 </Button>
               </div>

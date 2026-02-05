@@ -13,4 +13,5 @@ export const QUERY_KEYS = {
   ALL_APPLICATION: 'All Applications',
   PROFILE_DESIGN: 'Profile Design',
   QUIZZES: 'Quizzes',
+  ADMIN_SINGLE_QUIZ_RESULT: 'Admin Single Quiz Result',
 };

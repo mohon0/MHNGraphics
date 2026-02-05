@@ -68,6 +68,10 @@ export default function AdminQuizList() {
     router.push(`/dashboard/quiz/all-quiz/${id}`);
   };
 
+  const handleViewResults = (id: string) => {
+    router.push(`/dashboard/quiz/results/${id}`);
+  };
+
   const handleDuplicate = (id: string) => {
     toast.promise(duplicateQuiz(id), {
       loading: 'Duplicating quiz...',
@@ -172,6 +176,7 @@ export default function AdminQuizList() {
               onView={handleView}
               onDuplicate={handleDuplicate}
               onDelete={handleDelete}
+              onViewResults={handleViewResults}
             />
           ))}
         </div>
