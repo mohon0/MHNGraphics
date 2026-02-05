@@ -2,6 +2,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
+import type { QuizListType } from '@/types/quiz-type';
 
 export type QuizDifficulty = 'EASY' | 'MEDIUM' | 'HARD';
 
@@ -115,7 +116,7 @@ export function useSingleQuizResultReview(id: string) {
 }
 
 export function useAdminQuizList() {
-  return useQuery({
+  return useQuery<QuizListType[]>({
     queryKey: ['admin-quiz-list'],
     queryFn: async () => {
       const response = await axios.get(`/api/quiz/admin/quiz-list`);

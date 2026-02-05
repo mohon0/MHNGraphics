@@ -17,20 +17,8 @@ import {
   useDeleteQuiz,
   useDuplicateQuiz,
 } from '@/services/quiz';
+import type { QuizListType } from '@/types/quiz-type';
 import { QuizCard } from './quiz-card';
-
-export interface Quiz {
-  id: string;
-  title: string;
-  description: string;
-  timeLimit: number;
-  passingScore: number;
-  category: string;
-  tags: [string];
-  difficulty: 'EASY' | 'MEDIUM' | 'HARD';
-  status: 'DRAFT' | 'PUBLISHED' | 'SCHEDULED' | 'ARCHIVED';
-  createdAt: string;
-}
 
 export default function AdminQuizList() {
   const { isPending, data: quizzes = [], error } = useAdminQuizList();
@@ -43,7 +31,7 @@ export default function AdminQuizList() {
   const { mutateAsync: duplicateQuiz } = useDuplicateQuiz();
 
   const filteredQuizzes = useMemo(() => {
-    return quizzes.filter((quiz: Quiz) => {
+    return quizzes.filter((quiz: QuizListType) => {
       const matchesSearch =
         quiz.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
         quiz.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -168,7 +156,7 @@ export default function AdminQuizList() {
         </div>
       ) : (
         <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
-          {filteredQuizzes.map((quiz: Quiz) => (
+          {filteredQuizzes.map((quiz: QuizListType) => (
             <QuizCard
               key={quiz.id}
               quiz={quiz}

@@ -16,10 +16,10 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import type { AdminQuiz } from './quiz-card';
+import type { QuizListType } from '@/types/quiz-type';
 
 interface QuizActionsProps {
-  quiz: AdminQuiz;
+  quiz: QuizListType;
   onEdit?: (id: string) => void;
   onView?: (id: string) => void;
   onDuplicate?: (id: string) => void;

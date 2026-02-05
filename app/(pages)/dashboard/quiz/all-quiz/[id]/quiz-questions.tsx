@@ -1,12 +1,11 @@
 'use client';
 
-import type { AdminQuiz } from '@/types/quiz-type';
+import type { QuestionType, SingleQuizType } from '@/types/quiz-type';
 import { QuestionCard } from './question-card';
 
 interface QuizQuestionsProps {
-  quiz: AdminQuiz;
+  quiz: SingleQuizType;
 }
-
 export function QuizQuestions({ quiz }: QuizQuestionsProps): React.JSX.Element {
   // Use React.JSX.Element instead of JSX.Element
   return (
@@ -23,7 +22,7 @@ export function QuizQuestions({ quiz }: QuizQuestionsProps): React.JSX.Element {
 
       <div className='space-y-4'>
         {quiz.questions.length > 0 ? (
-          quiz.questions.map((question, index) => (
+          quiz.questions.map((question: QuestionType, index) => (
             <QuestionCard key={question.id} question={question} index={index} />
           ))
         ) : (

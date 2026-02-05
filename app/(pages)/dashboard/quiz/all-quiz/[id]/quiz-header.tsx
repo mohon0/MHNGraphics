@@ -1,15 +1,15 @@
 'use client';
 
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
 import { Copy, Edit2, Trash2 } from 'lucide-react';
 import type { JSX } from 'react';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import type { SingleQuizType } from '@/types/quiz-type';
 import { DifficultyBadge } from '../difficulty-badge';
-import type { AdminQuiz } from '../quiz-card';
 import { StatusBadge } from '../status-badge';
 
 interface QuizHeaderProps {
-  quiz: AdminQuiz;
+  quiz: SingleQuizType;
   onEdit?: () => void;
   onDelete?: () => void;
   onDuplicate?: () => void;

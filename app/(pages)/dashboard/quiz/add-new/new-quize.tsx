@@ -577,7 +577,7 @@ export function QuizForm() {
                 (q) => !q.options.some((o) => o.isCorrect),
               ) && (
                 <div className='bg-destructive/10 border border-destructive/30 text-destructive px-4 py-3 rounded-lg flex items-start gap-3'>
-                  <span className='text-lg flex-shrink-0 mt-0.5'>⚠</span>
+                  <span className='text-lg shrink-0 mt-0.5'>⚠</span>
                   <div>
                     <p className='font-semibold text-sm'>
                       Missing Correct Answers
@@ -620,12 +620,12 @@ export function QuizForm() {
                     className={`flex items-start gap-3 p-4 transition group ${!question.options.some((o) => o.isCorrect) ? 'bg-destructive/5 hover:bg-destructive/10' : 'hover:bg-muted/50'}`}
                   >
                     <div
-                      className='flex-shrink-0 cursor-grab active:cursor-grabbing p-1 rounded transition'
+                      className='shrink-0 cursor-grab active:cursor-grabbing p-1 rounded transition'
                       title='Drag to reorder'
                     >
                       <GripVertical className='w-5 h-5 text-muted-foreground' />
                     </div>
-                    <span className='flex-shrink-0 w-8 h-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-sm font-semibold'>
+                    <span className='shrink-0 w-8 h-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-sm font-semibold'>
                       {qIndex + 1}
                     </span>
                     <button
@@ -658,7 +658,7 @@ export function QuizForm() {
                       variant='ghost'
                       size='sm'
                       onClick={() => removeQuestion(question.id)}
-                      className='flex-shrink-0 text-destructive hover:bg-destructive/10 opacity-0 group-hover:opacity-100 transition-opacity'
+                      className='shrink-0 text-destructive hover:bg-destructive/10 opacity-0 group-hover:opacity-100 transition-opacity'
                       title='Delete question'
                     >
                       <Trash2 className='w-4 h-4' />
@@ -695,7 +695,7 @@ export function QuizForm() {
                                   onClick={() =>
                                     toggleCorrectOption(question.id, option.id)
                                   }
-                                  className={`flex-shrink-0 w-6 h-6 rounded-full border-2 flex items-center justify-center transition ${
+                                  className={`shrink-0 w-6 h-6 rounded-full border-2 flex items-center justify-center transition ${
                                     option.isCorrect
                                       ? 'bg-primary border-primary'
                                       : 'border-border hover:border-primary'

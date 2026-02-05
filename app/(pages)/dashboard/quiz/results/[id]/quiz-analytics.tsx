@@ -3,10 +3,10 @@
 import { Award, TrendingUp, Users } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
-import type { QuizStats } from '@/types/quiz-type';
+import type { QuizStatsType } from '@/types/quiz-type';
 
 interface QuizAnalyticsProps {
-  stats: QuizStats;
+  stats: QuizStatsType;
   isPending: boolean;
 }
 

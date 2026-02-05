@@ -13,12 +13,12 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import type { QuizResultEntry } from '@/types/quiz-type';
+import type { QuizResultType } from '@/types/quiz-type';
 
-interface UserResultsTableProps {
-  results: QuizResultEntry[];
+type UserResultsTableProps = {
+  results: QuizResultType[];
   isPending: boolean;
-}
+};
 
 export function UserResultsTable({
   results,

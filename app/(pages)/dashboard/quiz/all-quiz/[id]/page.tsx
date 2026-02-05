@@ -90,7 +90,7 @@ export default function SingleAdminQuizPage({
           <div className='max-w-6xl mx-auto'>
             <div className='rounded-lg border border-destructive/20 bg-destructive/5 p-8'>
               <div className='flex items-center gap-4'>
-                <AlertCircle className='h-6 w-6 text-destructive flex-shrink-0' />
+                <AlertCircle className='h-6 w-6 text-destructive shrink-0' />
                 <div>
                   <p className='font-semibold text-destructive'>
                     Failed to load quiz

@@ -314,7 +314,7 @@ export function QuizEditForm({ initialData }: { initialData: QuizFormData }) {
 
       {/* Basic Information Section */}
       <Card className='border-0 shadow-sm hover:shadow-md transition-shadow'>
-        <CardHeader className='bg-gradient-to-r from-blue-50 to-blue-100 border-b rounded-t-lg'>
+        <CardHeader className='bg-linear-to-r from-blue-50 to-blue-100 border-b rounded-t-lg'>
           <div className='flex items-center gap-2'>
             <div className='w-1 h-6 bg-blue-600 rounded-full'></div>
             <div>
@@ -503,7 +503,7 @@ export function QuizEditForm({ initialData }: { initialData: QuizFormData }) {
 
       {/* Questions Section */}
       <Card className='border-0 shadow-sm hover:shadow-md transition-shadow'>
-        <CardHeader className='bg-gradient-to-r from-orange-50 to-orange-100 border-b rounded-t-lg'>
+        <CardHeader className='bg-linear-to-r from-orange-50 to-orange-100 border-b rounded-t-lg'>
           <div className='flex items-center gap-2'>
             <div className='w-1 h-6 bg-orange-600 rounded-full'></div>
             <div>
@@ -537,7 +537,7 @@ export function QuizEditForm({ initialData }: { initialData: QuizFormData }) {
             <Button
               type='button'
               onClick={addQuestion}
-              className='bg-gradient-to-r from-orange-600 to-orange-700 hover:from-orange-700 hover:to-orange-800 text-white'
+              className='bg-linear-to-r from-orange-600 to-orange-700 hover:from-orange-700 hover:to-orange-800 text-white'
             >
               + Add Question
             </Button>
@@ -573,15 +573,15 @@ export function QuizEditForm({ initialData }: { initialData: QuizFormData }) {
                           expandedQuestion === questionId ? null : questionId,
                         )
                       }
-                      className='w-full flex items-start gap-3 p-4 bg-gradient-to-r from-slate-50 to-slate-100 hover:from-slate-100 hover:to-slate-150 transition'
+                      className='w-full flex items-start gap-3 p-4 bg-linear-to-r from-slate-50 to-slate-100 hover:from-slate-100 hover:to-slate-150 transition'
                     >
                       <div
-                        className='flex-shrink-0 cursor-grab active:cursor-grabbing p-1 hover:bg-slate-200 rounded transition'
+                        className='shrink-0 cursor-grab active:cursor-grabbing p-1 hover:bg-slate-200 rounded transition'
                         title='Drag to reorder'
                       >
                         <GripVertical className='w-5 h-5 text-slate-600' />
                       </div>
-                      <span className='flex-shrink-0 w-8 h-8 rounded-full bg-orange-600 text-white flex items-center justify-center text-sm font-semibold'>
+                      <span className='shrink-0 w-8 h-8 rounded-full bg-orange-600 text-white flex items-center justify-center text-sm font-semibold'>
                         {qIndex + 1}
                       </span>
                       <div className='flex-1 text-left'>
@@ -620,7 +620,7 @@ export function QuizEditForm({ initialData }: { initialData: QuizFormData }) {
                                           optionId,
                                         )
                                       }
-                                      className={`flex-shrink-0 w-6 h-6 rounded-full border-2 flex items-center justify-center transition ${
+                                      className={`shrink-0 w-6 h-6 rounded-full border-2 flex items-center justify-center transition ${
                                         option.isCorrect
                                           ? 'bg-green-600 border-green-600'
                                           : 'border-slate-300 hover:border-green-600'
@@ -760,7 +760,7 @@ export function QuizEditForm({ initialData }: { initialData: QuizFormData }) {
 
       {/* Publishing & Scheduling Section */}
       <Card className='border-0 shadow-sm hover:shadow-md transition-shadow'>
-        <CardHeader className='bg-gradient-to-r from-purple-50 to-purple-100 border-b rounded-t-lg'>
+        <CardHeader className='bg-linear-to-r from-purple-50 to-purple-100 border-b rounded-t-lg'>
           <div className='flex items-center gap-2'>
             <div className='w-1 h-6 bg-purple-600 rounded-full'></div>
             <div>

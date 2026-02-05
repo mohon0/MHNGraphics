@@ -1,15 +1,15 @@
 'use client';
 
 import { CheckCircle2, Circle } from 'lucide-react';
-import type { JSX } from 'react'; // Added import for JSX
+import type { JSX } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader } from '@/components/ui/card';
-import type { QuizQuestion } from '@/types/quiz-type';
+import type { QuestionType } from '@/types/quiz-type';
 
-interface QuestionCardProps {
-  question: QuizQuestion;
+type QuestionCardProps = {
   index: number;
-}
+  question: QuestionType;
+};
 
 export function QuestionCard({
   question,
@@ -53,9 +53,9 @@ export function QuestionCard({
               }`}
             >
               {option.isCorrect ? (
-                <CheckCircle2 className='h-5 w-5 text-primary flex-shrink-0 mt-0.5' />
+                <CheckCircle2 className='h-5 w-5 text-primary shrink-0 mt-0.5' />
               ) : (
-                <Circle className='h-5 w-5 text-muted-foreground flex-shrink-0 mt-0.5' />
+                <Circle className='h-5 w-5 text-muted-foreground shrink-0 mt-0.5' />
               )}
               <div className='flex-1 min-w-0'>
                 <p
@@ -69,7 +69,7 @@ export function QuestionCard({
                 </p>
               </div>
               {option.isCorrect && (
-                <Badge className='bg-primary text-primary-foreground text-xs font-medium flex-shrink-0'>
+                <Badge className='bg-primary text-primary-foreground text-xs font-medium shrink-0'>
                   Correct
                 </Badge>
               )}

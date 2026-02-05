@@ -1,5 +1,8 @@
 'use client';
 
+import { Calendar, Clock, Tag, Target } from 'lucide-react';
+import Link from 'next/link';
+import type { JSX } from 'react';
 import { Badge } from '@/components/ui/badge';
 import {
   Card,
@@ -8,21 +11,13 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { Calendar, Clock, Tag, Target } from 'lucide-react';
-import Link from 'next/link';
-import type { JSX } from 'react'; // Import JSX to declare the type
+import type { QuizListType } from '@/types/quiz-type';
 import { DifficultyBadge } from './difficulty-badge';
-import type { Quiz } from './page';
 import { QuizActions } from './quiz-actions';
 import { StatusBadge } from './status-badge';
 
-export interface AdminQuiz extends Quiz {
-  scheduledFor?: string;
-  image?: string;
-}
-
 interface QuizCardProps {
-  quiz: AdminQuiz;
+  quiz: QuizListType;
   onEdit?: (id: string) => void;
   onView?: (id: string) => void;
   onDuplicate?: (id: string) => void;
