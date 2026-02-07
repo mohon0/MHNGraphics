@@ -7,7 +7,6 @@ import Image from 'next/image';
 import type React from 'react';
 import { useEffect, useState } from 'react';
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import {
   Carousel,
@@ -393,33 +392,6 @@ export const Slider: React.FC = () => {
                               ))}
                             </motion.div>
                           )}
-
-                          <motion.div
-                            // biome-ignore lint: error
-                            key={`buttons-${index}`}
-                            initial={animation.buttons.initial}
-                            animate={
-                              current === index
-                                ? animation.buttons.animate
-                                : animation.buttons.initial
-                            }
-                            transition={animation.buttons.transition}
-                            className='flex flex-row gap-4'
-                          >
-                            <Button
-                              size='lg'
-                              variant='outline'
-                              className='border-white w-full bg-transparent text-white backdrop-blur-xs hover:bg-white hover:text-black'
-                            >
-                              আরও জানুন
-                            </Button>
-                            <Button
-                              size='lg'
-                              className={`bg-linear-to-r w-full ${slide.accentColor} font-semibold text-white shadow-lg hover:shadow-xl`}
-                            >
-                              শেখা শুরু করুন
-                            </Button>
-                          </motion.div>
                         </div>
 
                         {/* Image Content */}
