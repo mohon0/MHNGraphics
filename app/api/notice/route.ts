@@ -69,7 +69,15 @@ export async function GET(req: NextRequest) {
         totalNotices,
         notices,
       }),
-      { status: 200, headers: { 'Content-Type': 'application/json' } },
+      {
+        status: 200,
+        headers: {
+          'Content-Type': 'application/json',
+          // Allow any origin to access this GET request
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Methods': 'GET, OPTIONS',
+        },
+      },
     );
     // biome-ignore lint: error
   } catch (error) {
