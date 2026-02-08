@@ -78,4 +78,5 @@ export type QuizResultType = {
   userName: string;
   userImage: string;
   percentage: number;
+  rank: number;
 };

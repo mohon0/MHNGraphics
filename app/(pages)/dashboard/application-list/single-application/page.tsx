@@ -129,7 +129,7 @@ function SingleApplication({ application }: { application: UserApplication }) {
             <tbody>
               <tr className='flex flex-col md:flex-row print:flex-row'>
                 <td className='w-full border-collapse border-2 p-1 px-2 md:w-1/2 print:w-1/2'>
-                  <span className='font-bold'>Student Full Name: </span>
+                  <span className='font-bold'>Student Name: </span>
                   <span className='pl-3'>
                     {capitalizeFirstLetter(application.studentName)}
                   </span>

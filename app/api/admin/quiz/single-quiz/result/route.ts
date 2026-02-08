@@ -41,8 +41,9 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ message: 'Quiz not found' }, { status: 404 });
     }
 
-    const results = await Prisma.quizResult.findMany({
-      where: whereClause,
+    // Fetch ALL results for proper ranking calculation
+    const allResults = await Prisma.quizResult.findMany({
+      where: { quizId },
       select: {
         id: true,
         userId: true,
@@ -52,8 +53,6 @@ export async function GET(req: NextRequest) {
         passed: true,
         attemptNumber: true,
         completedAt: true,
-        // Only include answers if specifically requested
-        answers: searchParams.get('includeAnswers') === 'true',
         user: {
           select: {
             id: true,
@@ -62,28 +61,65 @@ export async function GET(req: NextRequest) {
           },
         },
       },
-      orderBy: [{ score: 'desc' }, { completedAt: 'desc' }],
-      take: limit,
-      skip: offset,
+      // Sort by score DESC, then by timeSpent ASC (faster time = better rank)
+      orderBy: [{ score: 'desc' }, { timeSpent: 'asc' }],
     });
 
-    const totalCount = await Prisma.quizResult.count({
-      where: whereClause,
+    // Calculate rankings
+    const rankedResults = allResults.map((result, index, array) => {
+      let rank = index + 1;
+
+      // Handle ties: if previous result has same score and time, use same rank
+      if (index > 0) {
+        const prev = array[index - 1];
+        if (
+          prev.score === result.score &&
+          prev.timeSpent === result.timeSpent
+        ) {
+          // Find the rank of the first person in this tie group
+          let tieGroupIndex = index - 1;
+          while (
+            tieGroupIndex > 0 &&
+            array[tieGroupIndex - 1].score === result.score &&
+            array[tieGroupIndex - 1].timeSpent === result.timeSpent
+          ) {
+            tieGroupIndex--;
+          }
+          rank = tieGroupIndex + 1;
+        }
+      }
+
+      return {
+        ...result,
+        rank,
+      };
     });
+
+    // Apply filtering if userId is specified
+    const filteredResults = userId
+      ? rankedResults.filter((r) => r.userId === userId)
+      : rankedResults;
+
+    // Apply pagination
+    const paginatedResults = filteredResults.slice(offset, offset + limit);
+
+    const totalCount = filteredResults.length;
 
     // Calculate stats only if there are results
     const stats =
-      results.length > 0
+      filteredResults.length > 0
         ? {
             averageScore:
               Math.round(
-                (results.reduce((sum, r) => sum + r.score, 0) /
-                  results.length) *
+                (filteredResults.reduce((sum, r) => sum + r.score, 0) /
+                  filteredResults.length) *
                   10,
               ) / 10,
-            highestScore: Math.max(...results.map((r) => r.score)),
+            highestScore: Math.max(...filteredResults.map((r) => r.score)),
             passRate: Math.round(
-              (results.filter((r) => r.passed).length / results.length) * 100,
+              (filteredResults.filter((r) => r.passed).length /
+                filteredResults.length) *
+                100,
             ),
             totalAttempts: totalCount,
           }
@@ -99,8 +135,9 @@ export async function GET(req: NextRequest) {
           timeLimit: quiz.timeLimit,
           questionCount: quiz._count.questions,
         },
-        results: results.map(({ user, ...result }) => ({
+        results: paginatedResults.map(({ user, rank, ...result }) => ({
           ...result,
+          rank,
           userName: user.name,
           userImage: user.image,
           percentage: Math.round((result.score / result.totalQuestions) * 100),

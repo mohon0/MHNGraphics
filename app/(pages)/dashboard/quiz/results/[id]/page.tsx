@@ -99,7 +99,11 @@ export default function QuizResultPage({ params }: PageProps) {
             {pagination.hasMore && '(showing latest)'}
           </p>
         </div>
-        <UserResultsTable results={results} isPending={false} />
+        <UserResultsTable
+          results={results}
+          quizTitle={quiz.title}
+          isPending={false}
+        />
       </div>
     </div>
   );
