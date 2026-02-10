@@ -1,12 +1,12 @@
 'use client';
 
-import { Button } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
-import type { PaymentReport } from '@/utils/Interface';
 import { format } from 'date-fns';
 import { Printer } from 'lucide-react';
 import { forwardRef, useRef } from 'react';
 import { useReactToPrint } from 'react-to-print';
+import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
+import type { PaymentReport } from '@/utils/Interface';
 
 interface PrintButtonProps {
   studentData: {

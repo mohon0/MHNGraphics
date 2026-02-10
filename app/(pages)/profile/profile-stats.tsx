@@ -1,8 +1,8 @@
 'use client';
 
-import { Card, CardContent } from '@/components/ui/card';
 import { motion } from 'framer-motion';
 import { Award, CalendarIcon, ImageIcon } from 'lucide-react';
+import { Card, CardContent } from '@/components/ui/card';
 
 interface ProfileStatsProps {
   designCount: number;

@@ -12,7 +12,7 @@ import {
   Sparkles,
 } from 'lucide-react';
 
-import { use, useEffect, useMemo, useState } from 'react';
+import { use, useEffect, useMemo, useRef, useState } from 'react';
 
 import { useForm } from 'react-hook-form';
 
@@ -69,6 +69,13 @@ export default function QuizStart({
 
   // Track answers in local state as backup
   const [answers, setAnswers] = useState<Record<string, string>>({});
+  const [cheatingDetected, setCheatingDetected] = useState(false);
+
+  // Track answers in a ref to avoid dependency issues in effects
+  const answersRef = useRef(answers);
+  useEffect(() => {
+    answersRef.current = answers;
+  }, [answers]);
 
   // Create dynamic schema based on quiz questions with useMemo
   const quizSchema = useMemo(() => {
@@ -132,6 +139,54 @@ export default function QuizStart({
     }
   }, [allAnswered, showCelebration]);
 
+  // Anti-cheating mechanism: Detect when user leaves the page
+  useEffect(() => {
+    if (cheatingDetected || isSubmitting) {
+      return;
+    }
+
+    const handleVisibilityChange = () => {
+      if (document.hidden) {
+        setCheatingDetected(true);
+      }
+    };
+
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
+  }, [cheatingDetected, isSubmitting]);
+
+  // Submit quiz automatically when cheating is detected
+  useEffect(() => {
+    if (cheatingDetected) {
+      const endTime = Date.now();
+      const timeSpentSeconds = startTime
+        ? Math.floor((endTime - startTime) / 1000)
+        : 0;
+
+      submitQuiz({
+        quizId: id,
+        answers: answersRef.current,
+        timeSpent: timeSpentSeconds,
+      });
+    }
+  }, [cheatingDetected, id, startTime, submitQuiz]);
+
+  // Prevent copying text via context menu, copy/cut events
+  useEffect(() => {
+    const preventDefault = (e: Event) => e.preventDefault();
+    document.addEventListener('contextmenu', preventDefault);
+    document.addEventListener('copy', preventDefault);
+    document.addEventListener('cut', preventDefault);
+    return () => {
+      document.removeEventListener('contextmenu', preventDefault);
+      document.removeEventListener('copy', preventDefault);
+      document.removeEventListener('cut', preventDefault);
+    };
+  }, []);
+
   if (isPending || !targetTime) {
     return (
       <div className='min-h-screen bg-gradient-to-br from-background to-muted flex items-center justify-center px-4'>
@@ -156,6 +211,30 @@ export default function QuizStart({
                 </h3>
                 <p className='text-sm text-muted-foreground'>
                   Please check the quiz ID and try again.
+                </p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
+  if (cheatingDetected) {
+    return (
+      <div className='min-h-screen bg-gradient-to-br from-background to-muted flex items-center justify-center px-4'>
+        <Card className='max-w-md w-full border-destructive/20 bg-destructive/5'>
+          <CardContent className='pt-6'>
+            <div className='flex gap-4'>
+              <AlertTriangle className='w-6 h-6 text-destructive shrink-0 mt-1' />
+              <div>
+                <h3 className='font-semibold text-foreground mb-1'>
+                  Quiz Submitted Automatically
+                </h3>
+                <p className='text-sm text-muted-foreground'>
+                  To maintain the integrity of this quiz, leaving the page is
+                  not permitted. Your quiz has been submitted with your current
+                  answers.
                 </p>
               </div>
             </div>
@@ -245,7 +324,7 @@ export default function QuizStart({
 
   return (
     <div className='min-h-screen bg-gradient-to-br from-background via-background to-muted/30 py-4 sm:py-6 lg:py-8 px-3 sm:px-4'>
-      <div className='max-w-4xl mx-auto'>
+      <div className='max-w-4xl mx-auto select-none'>
         {/* Header */}
         <div className='mb-4 sm:mb-6 lg:mb-8'>
           {/* Title and Timer - Stack on mobile */}

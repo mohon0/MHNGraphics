@@ -1,5 +1,12 @@
 'use client';
 
+import axios from 'axios';
+import { motion } from 'framer-motion';
+import { MessageSquare } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { useSession } from 'next-auth/react';
+import { useState } from 'react';
+import { toast } from 'sonner';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -15,13 +22,6 @@ import {
 } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import axios from 'axios';
-import { motion } from 'framer-motion';
-import { MessageSquare } from 'lucide-react';
-import { useSession } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
-import { useCallback, useState } from 'react';
-import { toast } from 'sonner';
 import ProfileStats from './profile-stats';
 import ShareDialog from './share-dialog';
 
@@ -32,26 +32,11 @@ interface ProfileHeaderProps {
 }
 
 export default function ProfileHeader({ user }: ProfileHeaderProps) {
-  const [isFollowing, setIsFollowing] = useState(false);
   const [messageOpen, setMessageOpen] = useState(false);
   const [messageText, setMessageText] = useState('');
   const router = useRouter();
   const [isSending, setIsSending] = useState(false);
   const { data: session } = useSession();
-
-  const handleFollow = useCallback(() => {
-    setIsFollowing((prev) => {
-      const newState = !prev;
-
-      if (prev) {
-        toast.info(`Unfollowed ${user.name}`);
-      } else {
-        toast.success(`Following ${user.name}`);
-      }
-
-      return newState;
-    });
-  }, [user.name]);
 
   const handleSendMessage = async () => {
     if (!messageText.trim() || !user.id || !session?.user) {
