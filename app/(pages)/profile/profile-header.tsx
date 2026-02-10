@@ -1,12 +1,5 @@
 'use client';
 
-import axios from 'axios';
-import { motion } from 'framer-motion';
-import { MessageSquare, UserCheck, UserPlus } from 'lucide-react';
-import { useRouter } from 'next/navigation';
-import { useSession } from 'next-auth/react';
-import { useCallback, useState } from 'react';
-import { toast } from 'sonner';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -22,6 +15,13 @@ import {
 } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
+import axios from 'axios';
+import { motion } from 'framer-motion';
+import { MessageSquare } from 'lucide-react';
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/navigation';
+import { useCallback, useState } from 'react';
+import { toast } from 'sonner';
 import ProfileStats from './profile-stats';
 import ShareDialog from './share-dialog';
 
@@ -89,7 +89,7 @@ export default function ProfileHeader({ user }: ProfileHeaderProps) {
 
   return (
     <div className='space-y-6'>
-      <Card className='overflow-hidden border-none bg-linear-to-r from-slate-100 to-slate-50 shadow-md dark:from-slate-900 dark:to-slate-800'>
+      <Card>
         <CardContent className='p-6 sm:p-8'>
           <div className='flex flex-col items-center gap-6 sm:flex-row sm:items-center'>
             <motion.div
@@ -98,8 +98,7 @@ export default function ProfileHeader({ user }: ProfileHeaderProps) {
               transition={{ duration: 0.5 }}
               className='relative'
             >
-              <div className='absolute -inset-1 rounded-full bg-linear-to-r from-pink-500 via-purple-500 to-cyan-500 opacity-75 blur-xs'></div>
-              <Avatar className='border-background h-28 w-28 border-4 shadow-xl'>
+              <Avatar className='h-28 w-28  shadow-xl'>
                 <AvatarImage src={user.image} alt={user.name} />
                 <AvatarFallback className='text-4xl font-medium'>
                   {user.name
@@ -135,24 +134,6 @@ export default function ProfileHeader({ user }: ProfileHeaderProps) {
             </div>
 
             <div className='mt-4 flex flex-wrap justify-center gap-2 sm:mt-0 sm:justify-end'>
-              <Button
-                variant={isFollowing ? 'outline' : 'default'}
-                onClick={handleFollow}
-                className='gap-1.5 transition-all duration-300 hover:scale-105'
-              >
-                {isFollowing ? (
-                  <>
-                    <UserCheck className='h-4 w-4' />
-                    <span>Following</span>
-                  </>
-                ) : (
-                  <>
-                    <UserPlus className='h-4 w-4' />
-                    <span>Follow</span>
-                  </>
-                )}
-              </Button>
-
               <Dialog open={messageOpen} onOpenChange={setMessageOpen}>
                 <DialogTrigger asChild>
                   <Button

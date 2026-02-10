@@ -1,8 +1,8 @@
 'use client';
 
-import { motion } from 'framer-motion';
-import { Award, CalendarIcon, ImageIcon, Users } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
+import { motion } from 'framer-motion';
+import { Award, CalendarIcon, ImageIcon } from 'lucide-react';
 
 interface ProfileStatsProps {
   designCount: number;
@@ -27,11 +27,7 @@ export default function ProfileStats({
       label: 'Designs',
       value: designCount,
     },
-    {
-      icon: <Users className='h-5 w-5 text-primary' />,
-      label: 'Followers',
-      value: Math.floor(Math.random() * 1000), // Placeholder value
-    },
+
     {
       icon: <Award className='h-5 w-5 text-primary' />,
       label: 'Status',
@@ -53,7 +49,7 @@ export default function ProfileStats({
     >
       <Card>
         <CardContent className='p-0'>
-          <div className='grid grid-cols-2 divide-x divide-border md:grid-cols-4'>
+          <div className='grid grid-cols-3 divide-x divide-border '>
             {stats.map((stat, index) => (
               <motion.div
                 key={stat.label}

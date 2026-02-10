@@ -66,15 +66,18 @@ export function useSubmitQuiz() {
       quizId,
       answers,
       timeSpent,
+      tabSwitchCount,
     }: {
       quizId: string;
       answers: Record<string, string>;
       timeSpent: number;
+      tabSwitchCount?: number;
     }) => {
       const response = await axios.post(`/api/quiz/submit`, {
         quizId,
         answers,
         timeSpent,
+        tabSwitchCount,
       });
       return response.data;
     },

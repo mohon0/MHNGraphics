@@ -1,7 +1,7 @@
-import { type NextRequest, NextResponse } from 'next/server';
+import { Prisma } from '@/components/helper/prisma/Prisma';
 import type { Session } from 'next-auth';
 import { getServerSession } from 'next-auth/next';
-import { Prisma } from '@/components/helper/prisma/Prisma';
+import { type NextRequest, NextResponse } from 'next/server';
 import { authOptions } from '../auth/[...nextauth]/Options';
 
 export interface CustomSession extends Session {
@@ -35,6 +35,8 @@ export async function GET(req: NextRequest) {
         status: true,
         image: true,
         bio: true,
+        email: true,
+        phoneNumber: true,
         design: {
           orderBy: {
             createdAt: 'desc',
