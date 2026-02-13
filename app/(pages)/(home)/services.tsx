@@ -5,6 +5,7 @@ import {
   GraduationCap,
   Heart,
   Palette,
+  Play,
   ShoppingCart,
 } from 'lucide-react';
 import Link from 'next/link';
@@ -20,9 +21,11 @@ interface Service {
   badge: string;
   link: string;
   showApplyButton?: boolean;
+  showQuizButton?: boolean;
   soon?: boolean;
   accentClass?: string;
   borderClass?: string;
+  gradientClass?: string;
 }
 
 const services: Service[] = [
@@ -33,9 +36,11 @@ const services: Service[] = [
     badge: 'Education',
     link: '/oylkka-it-and-training-center',
     showApplyButton: true,
+    showQuizButton: true,
     accentClass:
-      'bg-blue-50 dark:bg-blue-950/30 text-blue-600 dark:text-blue-400',
-    borderClass: 'hover:border-blue-200 dark:hover:border-blue-800',
+      'bg-gradient-to-br from-blue-100 to-blue-50 dark:from-blue-950 dark:to-blue-900/50 text-blue-600 dark:text-blue-400',
+    borderClass: 'hover:border-blue-300 dark:hover:border-blue-700',
+    gradientClass: 'from-blue-500/5 to-transparent',
   },
 
   {
@@ -45,8 +50,9 @@ const services: Service[] = [
     badge: 'Creative',
     link: '/',
     accentClass:
-      'bg-pink-50 dark:bg-pink-950/30 text-pink-600 dark:text-pink-400',
-    borderClass: 'hover:border-pink-200 dark:hover:border-pink-800',
+      'bg-gradient-to-br from-purple-100 to-purple-50 dark:from-purple-950 dark:to-purple-900/50 text-purple-600 dark:text-purple-400',
+    borderClass: 'hover:border-purple-300 dark:hover:border-purple-700',
+    gradientClass: 'from-purple-500/5 to-transparent',
   },
   {
     id: 'ecommerce',
@@ -55,8 +61,9 @@ const services: Service[] = [
     badge: 'Commerce',
     link: 'https://www.oylkka.com',
     accentClass:
-      'bg-green-50 dark:bg-green-950/30 text-green-600 dark:text-green-400',
-    borderClass: 'hover:border-green-200 dark:hover:border-green-800',
+      'bg-gradient-to-br from-emerald-100 to-emerald-50 dark:from-emerald-950 dark:to-emerald-900/50 text-emerald-600 dark:text-emerald-400',
+    borderClass: 'hover:border-emerald-300 dark:hover:border-emerald-700',
+    gradientClass: 'from-emerald-500/5 to-transparent',
   },
   {
     id: 'blood-bank',
@@ -64,8 +71,10 @@ const services: Service[] = [
     icon: <Heart className='w-8 h-8' />,
     badge: 'Healthcare',
     link: '/oylkka-it-and-training-center/blood-donate',
-    accentClass: 'bg-red-50 dark:bg-red-950/30 text-red-600 dark:text-red-400',
-    borderClass: 'hover:border-red-200 dark:hover:border-red-800',
+    accentClass:
+      'bg-gradient-to-br from-red-100 to-red-50 dark:from-red-950 dark:to-red-900/50 text-red-600 dark:text-red-400',
+    borderClass: 'hover:border-red-300 dark:hover:border-red-700',
+    gradientClass: 'from-red-500/5 to-transparent',
   },
   {
     id: 'foundation',
@@ -75,33 +84,11 @@ const services: Service[] = [
     link: '#',
     soon: true,
     accentClass:
-      'bg-amber-50 dark:bg-amber-950/30 text-amber-600 dark:text-amber-400',
-    borderClass: 'hover:border-amber-200 dark:hover:border-amber-800',
+      'bg-gradient-to-br from-amber-100 to-amber-50 dark:from-amber-950 dark:to-amber-900/50 text-amber-600 dark:text-amber-400',
+    borderClass: 'hover:border-amber-300 dark:hover:border-amber-700',
+    gradientClass: 'from-amber-500/5 to-transparent',
   },
 ];
-
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.1,
-    },
-  },
-};
-
-const cardVariants = {
-  hidden: { y: 50, opacity: 0 },
-  visible: {
-    y: 0,
-    opacity: 1,
-    transition: {
-      type: 'spring',
-      stiffness: 100,
-      damping: 10,
-    },
-  },
-};
 
 const ServiceCard: React.FC<{ service: Service }> = ({ service }) => {
   const isExternalLink = service.link.startsWith('http');
@@ -109,9 +96,9 @@ const ServiceCard: React.FC<{ service: Service }> = ({ service }) => {
 
   const LearnMoreButton = () => (
     <Button
-      className={`w-full font-semibold rounded-lg ${isSoon ? 'cursor-not-allowed opacity-50' : ''}`}
+      className={`w-full font-semibold rounded-xl transition-all duration-300 ${isSoon ? 'cursor-not-allowed opacity-50' : 'hover:shadow-lg hover:scale-105'}`}
       disabled={isSoon}
-      variant='secondary'
+      variant='default'
     >
       {isSoon ? 'Coming Soon' : 'Learn More'}
       {!isSoon && (
@@ -121,47 +108,55 @@ const ServiceCard: React.FC<{ service: Service }> = ({ service }) => {
   );
 
   const ApplyButton = () => (
-    <Button className='w-full font-semibold rounded-lg'>Apply Now</Button>
+    <Button
+      className='w-full font-semibold rounded-xl transition-all duration-300 hover:shadow-lg hover:scale-105'
+      variant='secondary'
+    >
+      Apply Now
+    </Button>
+  );
+
+  const QuizButton = () => (
+    <Button className='w-full font-semibold rounded-xl transition-all duration-300 hover:shadow-lg hover:scale-105 bg-linear-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white'>
+      <Play className='mr-2 h-4 w-4' />
+      Play Quiz
+    </Button>
   );
 
   return (
-    <motion.div
-      variants={cardVariants}
-      whileHover={{
-        scale: isSoon ? 1 : 1.05,
-        y: isSoon ? 0 : -2,
-      }}
-      transition={{ type: 'spring', stiffness: 300, damping: 20 }}
-      className={`h-full ${isSoon ? 'cursor-not-allowed' : ''}`}
-    >
+    <div className={`h-full ${isSoon ? 'cursor-not-allowed' : ''}`}>
       <Card
-        className={`group relative flex h-full flex-col overflow-hidden rounded-2xl border transition-all duration-500 ${isSoon ? 'opacity-60' : `hover:shadow-lg ${service.borderClass}`}`}
+        className={`group relative flex h-full flex-col overflow-hidden rounded-3xl border-2 bg-linear-to-br transition-all duration-500 ${
+          isSoon
+            ? 'opacity-60 border-muted'
+            : `border-gray-200 dark:border-gray-700 ${service.borderClass} shadow-sm hover:shadow-2xl hover:border-opacity-100`
+        } ${service.gradientClass}`}
       >
         <div
-          className={`absolute inset-0 rounded-2xl opacity-0 transition-opacity duration-500 ${isSoon ? '' : 'group-hover:opacity-100'}`}
+          className={`absolute inset-0 rounded-3xl opacity-0 transition-opacity duration-500 ${isSoon ? '' : 'group-hover:opacity-100'}`}
           style={{
-            background: `linear-gradient(to bottom right, var(--color-accent-light), transparent)`,
+            background: `radial-gradient(circle at top right, var(--color-accent-light), transparent)`,
           }}
         />
-        <CardHeader className='relative z-10 flex-grow p-6 sm:p-8'>
-          <div className='flex items-center justify-between mb-4'>
+        <CardHeader className='relative z-10 grow p-6 sm:p-8'>
+          <div className='flex items-center justify-between mb-6'>
             <motion.div
-              className={`p-3 rounded-lg ${service.accentClass}`}
-              whileHover={{ scale: isSoon ? 1 : 1.1, rotate: isSoon ? 0 : 5 }}
+              className={`p-4 rounded-2xl shadow-md ${service.accentClass}`}
+              whileHover={{ scale: isSoon ? 1 : 1.15, rotate: isSoon ? 0 : 8 }}
               transition={{ type: 'spring', stiffness: 400, damping: 10 }}
             >
               {service.icon}
             </motion.div>
-            <Badge variant='secondary'>{service.badge}</Badge>
+            <Badge variant='secondary' className='rounded-full px-4'>
+              {service.badge}
+            </Badge>
           </div>
-          <CardTitle className='text-xl font-bold text-foreground transition-colors duration-500'>
+          <CardTitle className='text-2xl font-bold text-foreground transition-colors duration-500 leading-snug'>
             {service.title}
           </CardTitle>
         </CardHeader>
-        <CardFooter className='relative z-10 p-6 sm:p-8 pt-4'>
-          <div
-            className={`w-full flex ${service.showApplyButton ? 'flex-row gap-3' : 'flex-col'}`}
-          >
+        <CardFooter className='relative z-10 p-6 sm:p-8 pt-2 gap-3 flex flex-col'>
+          <div className='w-full flex gap-3'>
             {isExternalLink || isSoon ? (
               <a
                 href={isSoon ? '#' : service.link}
@@ -181,7 +176,16 @@ const ServiceCard: React.FC<{ service: Service }> = ({ service }) => {
               </Link>
             )}
 
-            {service.showApplyButton && (
+            {service.showApplyButton && !service.showQuizButton && (
+              <Link
+                href='/oylkka-it-and-training-center/application'
+                className='flex-1'
+              >
+                <ApplyButton />
+              </Link>
+            )}
+
+            {service.showApplyButton && service.showQuizButton && (
               <Link
                 href='/oylkka-it-and-training-center/application'
                 className='flex-1'
@@ -190,35 +194,38 @@ const ServiceCard: React.FC<{ service: Service }> = ({ service }) => {
               </Link>
             )}
           </div>
+
+          {service.showQuizButton && (
+            <Link href='/oylkka-it-and-training-center/quiz' className='w-full'>
+              <QuizButton />
+            </Link>
+          )}
         </CardFooter>
       </Card>
-    </motion.div>
+    </div>
   );
 };
 
 const ServicesSection: React.FC = () => {
   return (
-    <section className='py-20 px-4 sm:px-6 lg:px-8 bg-background'>
+    <section className='py-24 px-4 sm:px-6 lg:px-8 bg-linear-to-b from-background via-background/50 to-background'>
       <div className='max-w-7xl mx-auto'>
-        <div className='text-center mb-16'>
-          <h2 className='text-4xl md:text-5xl font-extrabold text-foreground mb-4 leading-tight'>
-            Explore Our Services
-          </h2>
-          <p className='text-lg text-muted-foreground max-w-2xl mx-auto'>
-            From digital strategy to creative design, we've got you covered.
-          </p>
+        <div className='text-center mb-20'>
+          <div>
+            <h2 className='text-5xl md:text-6xl font-extrabold text-foreground mb-6 leading-tight tracking-tight'>
+              Explore Our Services
+            </h2>
+            <p className='text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed'>
+              Discover our comprehensive suite of educational, creative, and
+              business solutions designed to empower your growth.
+            </p>
+          </div>
         </div>
-        <motion.div
-          className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8'
-          variants={containerVariants}
-          initial='hidden'
-          whileInView='visible'
-          viewport={{ once: true, amount: 0.2 }}
-        >
+        <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-10'>
           {services.map((service) => (
             <ServiceCard key={service.id} service={service} />
           ))}
-        </motion.div>
+        </div>
       </div>
     </section>
   );
