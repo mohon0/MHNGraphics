@@ -1,4 +1,7 @@
 'use client';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { motion } from 'framer-motion';
 import {
   ArrowRight,
@@ -10,9 +13,6 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import type React from 'react';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Card, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 
 interface Service {
   id: string;
@@ -196,7 +196,7 @@ const ServiceCard: React.FC<{ service: Service }> = ({ service }) => {
           </div>
 
           {service.showQuizButton && (
-            <Link href='/oylkka-it-and-training-center/quiz' className='w-full'>
+            <Link href='/quiz' className='w-full'>
               <QuizButton />
             </Link>
           )}

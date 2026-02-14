@@ -1,12 +1,12 @@
 'use client';
 
-import { formatDistanceToNow } from 'date-fns';
-import { useSession } from 'next-auth/react';
-import { useEffect, useState } from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { usePresence } from '@/hooks/use-presence';
 import { cn } from '@/lib/utils';
+import { formatDistanceToNow } from 'date-fns';
+import { useSession } from 'next-auth/react';
+import { useEffect, useState } from 'react';
 
 interface ConversationItemProps {
   conversation: {
@@ -112,7 +112,7 @@ export function ConversationItem({
             className={cn(
               'truncate text-sm',
               isUnread ? 'text-foreground' : 'text-muted-foreground',
-              'max-w-[180px] sm:max-w-[140px]', // Wider on mobile
+              'max-w-45 sm:max-w-35', // Wider on mobile
             )}
           >
             {lastMessage
@@ -124,7 +124,7 @@ export function ConversationItem({
           {isUnread && (
             <Badge
               variant='default'
-              className='h-5 min-w-[20px] rounded-full px-1.5'
+              className='h-5 min-w-5 rounded-full px-1.5'
             >
               1
             </Badge>
