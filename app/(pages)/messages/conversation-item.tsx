@@ -1,12 +1,12 @@
 'use client';
 
+import { formatDistanceToNow } from 'date-fns';
+import { useSession } from 'next-auth/react';
+import { useEffect, useState } from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { usePresence } from '@/hooks/use-presence';
 import { cn } from '@/lib/utils';
-import { formatDistanceToNow } from 'date-fns';
-import { useSession } from 'next-auth/react';
-import { useEffect, useState } from 'react';
 
 interface ConversationItemProps {
   conversation: {
