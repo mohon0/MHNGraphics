@@ -1,5 +1,9 @@
 'use client';
 
+import Autoplay from 'embla-carousel-autoplay';
+import Image from 'next/image';
+import Link from 'next/link';
+import { FaFacebook, FaLinkedin, FaTwitter } from 'react-icons/fa';
 import { Card, CardContent } from '@/components/ui/card';
 import {
   Carousel,
@@ -8,10 +12,6 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from '@/components/ui/carousel';
-import Autoplay from 'embla-carousel-autoplay';
-import Image from 'next/image';
-import Link from 'next/link';
-import { FaFacebook, FaLinkedin, FaTwitter } from 'react-icons/fa';
 import SectionHeader from './section-header';
 import { TeamData } from './TeamData';
 

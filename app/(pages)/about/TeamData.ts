@@ -1,8 +1,4 @@
 import Pic1 from '@/images/team/img1.jpg';
-import Pic10 from '@/images/team/img10.jpg';
-import Pic11 from '@/images/team/img11.jpg';
-import Pic12 from '@/images/team/img12.jpg';
-import Pic15 from '@/images/team/img15.jpg';
 import Pic2 from '@/images/team/img2.jpg';
 import Pic3 from '@/images/team/img3.jpg';
 import Pic4 from '@/images/team/img4.jpg';
@@ -11,6 +7,10 @@ import Pic6 from '@/images/team/img6.jpg';
 import Pic7 from '@/images/team/img7.jpg';
 import Pic8 from '@/images/team/img8.jpg';
 import Pic9 from '@/images/team/img9.jpeg';
+import Pic10 from '@/images/team/img10.jpg';
+import Pic11 from '@/images/team/img11.jpg';
+import Pic12 from '@/images/team/img12.jpg';
+import Pic15 from '@/images/team/img15.jpg';
 
 export const TeamData = [
   {

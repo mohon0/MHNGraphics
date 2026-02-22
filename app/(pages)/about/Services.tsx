@@ -58,6 +58,7 @@ const FeatureModel = ({ data }: { data: Props }) => {
       animate={isInView ? 'visible' : 'hidden'}
       variants={itemVariants}
       transition={{ duration: 0.6, ease: 'easeOut' }}
+      className='bg-primary/5 rounded-2xl'
     >
       <motion.div
         className='white-bg dark:dark-bg flex h-full flex-col rounded-md p-5 transition-all duration-300 md:p-12'
