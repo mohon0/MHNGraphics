@@ -2,8 +2,10 @@
 
 import { format } from 'date-fns';
 import { Printer } from 'lucide-react';
+import Image from 'next/image';
 import { forwardRef, useRef } from 'react';
 import { useReactToPrint } from 'react-to-print';
+import logo from '@/assets/logo.png';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import type { PaymentReport } from '@/utils/Interface';
@@ -45,10 +47,22 @@ const PrintablePaymentReport = forwardRef<
     >
       {/* Header Section */}
       <div className='print:flex print:justify-between print:items-start print:border-b-2 print:border-black print:pb-3 print:mb-4'>
-        <div>
-          <h1 className='print:text-xl print:font-black print:tracking-tighter print:uppercase'>
-            Oylkka IT & Training Center
-          </h1>
+        <div className='flex items-center gap-4'>
+          <Image
+            src={logo}
+            alt='Oylkka Logo'
+            className='w-10 h-8'
+            height={100}
+            width={100}
+          />
+          <div>
+            <h1 className='print:text-lg print:font-bold text-primary print:uppercase'>
+              Oylkka IT & Training Center
+            </h1>
+            <p className='text-xs'>
+              www.training.oylkka.com | mobile: 01989-491248
+            </p>
+          </div>
         </div>
         <div className='print:text-right'>
           <p className='print:text-xs print:font-bold'>DATE</p>
@@ -78,18 +92,21 @@ const PrintablePaymentReport = forwardRef<
             <span className='print:text-gray-500'>Course:</span>{' '}
             <span className='print:font-semibold'>{studentData.course}</span>
           </p>
+          <p className='text-primary'>
+            <span className='text-gray-500'>Roll:</span>{' '}
+            <span className='print:font-semibold'>{studentData.duration}</span>
+          </p>
+
+          <p>
+            <span className='text-gray-500'>Duration:</span>{' '}
+            <span className='print:font-semibold'>{studentData.duration}</span>
+          </p>
           {studentData.mobileNumber && (
             <p>
               <span className='print:text-gray-500'>Phone:</span>{' '}
               <span className='print:font-semibold'>
                 {studentData.mobileNumber}
               </span>
-            </p>
-          )}
-          {studentData.email && (
-            <p className='print:col-span-2'>
-              <span className='print:text-gray-500'>Email:</span>{' '}
-              <span className='print:font-semibold'>{studentData.email}</span>
             </p>
           )}
         </div>
@@ -154,17 +171,17 @@ const PrintablePaymentReport = forwardRef<
       {/* Footer / Signatures */}
       <div className='print:mt-auto print:pt-12 print:grid print:grid-cols-2 print:gap-12 print:text-[10px]'>
         <div className='print:text-center'>
-          <div className='print:border-t print:border-gray-400 print:pt-2'>
+          <div className='print:border-t print:border-primary print:pt-2 w-40'>
             <p className='print:font-medium'>Student's Signature</p>
           </div>
         </div>
         <div className='print:text-center'>
-          <div className='print:border-t print:border-black print:pt-2'>
+          <div className='print:border-t print:border-primary w-40 print:pt-2'>
             <p className='print:font-bold print:uppercase tracking-widest'>
               Authorized Office
             </p>
             <p className='print:text-[8px] print:text-gray-400'>
-              Oylkka IT & Training
+              Oylkka IT & Training Center
             </p>
           </div>
         </div>
