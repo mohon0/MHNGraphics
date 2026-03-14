@@ -50,6 +50,7 @@ function PaymentPage() {
             mobileNumber: paymentData?.mobileNumber,
             email: paymentData?.email,
             image: paymentData?.image,
+            roll: paymentData?.roll,
             duration: paymentData?.duration,
           }}
           paymentsData={paymentData?.payments || []}

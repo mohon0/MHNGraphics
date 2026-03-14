@@ -17,6 +17,7 @@ interface PrintButtonProps {
     fullAddress?: string;
     mobileNumber?: string;
     email?: string;
+    roll?: string;
     duration?: string;
     image?: string;
   };
@@ -94,7 +95,7 @@ const PrintablePaymentReport = forwardRef<
           </p>
           <p className='text-primary'>
             <span className='text-gray-500'>Roll:</span>{' '}
-            <span className='print:font-semibold'>{studentData.duration}</span>
+            <span className='print:font-semibold'>{studentData.roll}</span>
           </p>
 
           <p>

@@ -22,6 +22,7 @@ export async function GET(req: NextRequest) {
         fullAddress: true,
         email: true,
         mobileNumber: true,
+        roll: true,
         course: true,
         duration: true,
         payments: {
