@@ -40,7 +40,7 @@ export default function DurationToggle() {
     return (
       <Card>
         <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
-          <Skeleton className='h-5 w-[140px]' />
+          <Skeleton className='h-5 w-35' />
           <Skeleton className='h-9 w-9 rounded-full' />
         </CardHeader>
         <CardContent className='mt-4'>
@@ -79,7 +79,7 @@ export default function DurationToggle() {
                 <InfoIcon className='h-4 w-4 text-muted-foreground cursor-help' />
               </TooltipTrigger>
               <TooltipContent>
-                <p className='w-[200px] text-xs'>
+                <p className='w-50 text-xs'>
                   Toggle to enable or disable the free application functionality
                   for users.
                 </p>

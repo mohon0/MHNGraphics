@@ -5,6 +5,7 @@ import QuickStats from './QuickStats';
 import RecentActivity from './RecentActivity';
 import RecentComments from './RecentComments';
 import RecentUsers from './RecentUsers';
+import SMSBalanceCard from './sms-balance';
 import TopPerformingDesigns from './TopPerformingDesigns';
 
 /**
@@ -24,6 +25,7 @@ export default function AdminDashboard() {
     <div className='min-h-screen'>
       <div className='mt-6 grid grid-cols-2 gap-2 md:gap-6 lg:grid-cols-4'>
         <QuickStats isLoading={isLoading} data={data} />
+        <SMSBalanceCard />
         <DurationToggle />
       </div>
       <div className='mt-8 grid gap-6 md:grid-cols-2'>

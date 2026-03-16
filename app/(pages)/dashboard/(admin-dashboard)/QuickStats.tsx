@@ -88,11 +88,11 @@ export default function QuickStats({ isLoading, data }: QuickStatsProps) {
               // biome-ignore lint: error
               <Card key={index} className='overflow-hidden'>
                 <CardHeader className='flex flex-row items-center justify-between space-y-0 pb-2'>
-                  <Skeleton className='h-4 w-[100px]' />
+                  <Skeleton className='h-4 w-25' />
                   <Skeleton className='h-8 w-8 rounded-full' />
                 </CardHeader>
                 <CardContent>
-                  <Skeleton className='h-7 w-[60px]' />
+                  <Skeleton className='h-7 w-15' />
                 </CardContent>
               </Card>
             ))

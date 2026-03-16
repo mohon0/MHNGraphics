@@ -3,6 +3,7 @@ import { getToken } from 'next-auth/jwt';
 import { UploadImage } from '@/components/helper/image/UploadImage';
 import { Prisma } from '@/components/helper/prisma/Prisma';
 import { bkashConfig } from '@/lib/bkash';
+import { sendSMS } from '@/lib/sms';
 import { createPayment } from '@/services/bkash';
 import { cleanupUserPendingApplications } from '@/utils/applicationCleanup';
 import cloudinary from '@/utils/cloudinary';
@@ -37,7 +38,6 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Check for existing application
     const existingApplication = await Prisma.application.findFirst({
       where: { userId },
     });
@@ -49,10 +49,8 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Extract form data from the request
     const formData = await req.formData();
 
-    // Use utility functions to safely get values
     const studentName = getStringValue(formData, 'studentName');
     const email = getStringValue(formData, 'email');
     const fatherName = getStringValue(formData, 'fatherName');
@@ -88,7 +86,6 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Handle file upload
     let imageUrl = { secure_url: '', public_id: '' };
     const imageFile = formData.get('image') as Blob;
 
@@ -104,7 +101,6 @@ export async function POST(req: NextRequest) {
       }
     }
 
-    // Generate new roll number
     let roll = 2000;
     const lastApplication = await Prisma.application.findFirst({
       orderBy: { createdAt: 'desc' },
@@ -115,9 +111,6 @@ export async function POST(req: NextRequest) {
       roll = lastApplication.roll + 1;
     }
 
-    // Use utility function for birthDay
-
-    // Validate date format
     if (!birthDay || Number.isNaN(Date.parse(birthDay))) {
       return NextResponse.json(
         { message: 'Invalid birth date format. Use ISO format (YYYY-MM-DD)' },
@@ -125,9 +118,8 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Convert to Date object if needed
     const birthDate = new Date(birthDay);
-    // Create a new application
+
     try {
       const newApplication = await Prisma.application.create({
         data: {
@@ -190,7 +182,6 @@ export async function POST(req: NextRequest) {
       );
 
       if (createPaymentResponse.statusCode !== '0000') {
-        // Update order status to FAILED
         if (newApplication.imageId) {
           const result = await cloudinary.uploader.destroy(
             newApplication.imageId,
@@ -202,9 +193,7 @@ export async function POST(req: NextRequest) {
         }
 
         await Prisma.application.delete({
-          where: {
-            id: newApplication.id,
-          },
+          where: { id: newApplication.id },
         });
 
         return NextResponse.json({
@@ -213,11 +202,11 @@ export async function POST(req: NextRequest) {
           paymentMethod: 'BKASH',
         });
       }
-      // Update order with payment initiation details
 
       const currentMetadata =
         // biome-ignore lint: error
         (newApplication.metadata as Record<string, any>) || {};
+
       await Prisma.application.update({
         where: { id: newApplication.id },
         data: {
@@ -230,6 +219,13 @@ export async function POST(req: NextRequest) {
           },
         },
       });
+
+      // 👇 Fire-and-forget SMS after successful payment confirmation
+      sendSMS(
+        newApplication.mobileNumber ?? '',
+        `Dear ${newApplication.studentName}, Your application to Oylkka IT for ${newApplication.course} has been received. Roll: ${newApplication.roll}`,
+        // biome-ignore lint/suspicious/noConsole: this is fine
+      ).catch((err) => console.error('[SMS Failed]', err));
 
       return NextResponse.json({
         message: 'Payment initiated successfully',

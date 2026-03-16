@@ -14,4 +14,5 @@ export const QUERY_KEYS = {
   PROFILE_DESIGN: 'Profile Design',
   QUIZZES: 'Quizzes',
   ADMIN_SINGLE_QUIZ_RESULT: 'Admin Single Quiz Result',
+  SMS_BALANCE: 'SMS Balance',
 };
