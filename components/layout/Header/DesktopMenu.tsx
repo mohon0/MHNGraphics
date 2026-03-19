@@ -27,7 +27,6 @@ export default function DesktopMenu({
           >
             Home
           </NavigationMenuLink>
-          -
         </NavigationMenuItem>
 
         <NavigationMenuItem>

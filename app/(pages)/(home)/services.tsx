@@ -2,6 +2,7 @@
 import { motion } from 'framer-motion';
 import {
   ArrowRight,
+  Brush,
   GraduationCap,
   Heart,
   Palette,
@@ -53,6 +54,17 @@ const services: Service[] = [
       'bg-gradient-to-br from-purple-100 to-purple-50 dark:from-purple-950 dark:to-purple-900/50 text-purple-600 dark:text-purple-400',
     borderClass: 'hover:border-purple-300 dark:hover:border-purple-700',
     gradientClass: 'from-purple-500/5 to-transparent',
+  },
+  {
+    id: 'graphics',
+    title: 'Oylkka Graphics',
+    icon: <Brush className='w-8 h-8' />,
+    badge: 'Design',
+    link: '/design?category=all&query=&page=1',
+    accentClass:
+      'bg-gradient-to-br from-indigo-100 to-indigo-50 dark:from-indigo-950 dark:to-indigo-900/50 text-indigo-600 dark:text-indigo-400',
+    borderClass: 'hover:border-indigo-300 dark:hover:border-indigo-700',
+    gradientClass: 'from-indigo-500/5 to-transparent',
   },
   {
     id: 'ecommerce',

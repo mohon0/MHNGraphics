@@ -18,7 +18,7 @@ interface ImageMarqueeProps {
 
 export default function ImageMarquee({
   title = 'View Design & Sell Content',
-  viewAllLink = '/designs',
+  viewAllLink = '/design?category=all&query=&page=1',
 }: ImageMarqueeProps) {
   const [isClient, setIsClient] = useState(false);
 
@@ -82,7 +82,7 @@ export default function ImageMarquee({
           <h2 className='mb-6 text-2xl font-bold md:text-3xl lg:text-4xl'>
             {title}
           </h2>
-          <div className='h-[200px] md:h-[300px]'></div>
+          <div className='h-50 md:h-75'></div>
         </div>
       </section>
     );

@@ -1,31 +1,47 @@
 import Image, { type StaticImageData } from 'next/image';
-import { FaFacebook, FaInstagram, FaTwitter } from 'react-icons/fa';
-import { Card } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Card, CardContent, CardHeader } from '@/components/ui/card';
 
-interface props {
+interface MemberProps {
   name: string;
-  title: string;
+  designation: string;
+  department?: string;
   img: StaticImageData;
 }
 
-export default function MembersModel({ name, title, img }: props) {
+export default function MembersModel({
+  name,
+  designation,
+  department,
+  img,
+}: MemberProps) {
   return (
-    <Card className='overflow-hidden'>
-      <Image src={img} alt='profile-picture' />
+    <Card className='group overflow-hidden border-muted bg-card transition-all hover:border-primary/50'>
+      <CardHeader className='p-0'>
+        <div className='relative aspect-4/5 w-full overflow-hidden'>
+          <Image
+            src={img}
+            alt={name}
+            fill
+            placeholder='blur'
+            className='object-cover transition-transform duration-300 group-hover:scale-105'
+          />
+        </div>
+      </CardHeader>
 
-      <div className='p-6 text-center'>
-        <h4 className='text-blue-gray-900 mb-2 block font-sans text-2xl font-semibold leading-snug tracking-normal antialiased'>
+      <CardContent className='flex flex-col items-center p-6 text-center'>
+        <h4 className='text-2xl font-bold tracking-tight text-foreground'>
           {name}
         </h4>
-        <p className='from-blue-gray-600 to-blue-gray-400 block bg-linear-to-tr bg-clip-text font-sans text-base font-medium leading-relaxed antialiased'>
-          {title}
-        </p>
-      </div>
-      <div className='flex justify-center gap-7 p-6 pt-2'>
-        <FaFacebook />
-        <FaTwitter />
-        <FaInstagram />
-      </div>
+
+        <p className='text-sm font-medium text-primary'>{designation}</p>
+
+        {department && (
+          <Badge variant='secondary' className='mt-4 font-normal'>
+            {department}
+          </Badge>
+        )}
+      </CardContent>
     </Card>
   );
 }
