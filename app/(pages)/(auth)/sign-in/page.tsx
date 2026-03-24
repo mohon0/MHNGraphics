@@ -98,7 +98,7 @@ export default function Login() {
                         <FormItem>
                           <FormLabel>Email / Phone Number</FormLabel>
                           <FormControl>
-                            <Input placeholder='john@email.com' {...field} />
+                            <Input placeholder='01xxxxxxxxx' {...field} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -163,7 +163,7 @@ export default function Login() {
                 <div className='text-center md:hidden'>
                   <p>Don&#39;t have an account?</p>
                   <Link href='/sign-up' className='font-semibold text-primary'>
-                    Create an account
+                    Create a new account
                   </Link>
                 </div>
               </section>

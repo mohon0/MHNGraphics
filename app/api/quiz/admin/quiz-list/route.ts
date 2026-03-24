@@ -12,7 +12,7 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ message: 'Token not found' }, { status: 401 });
     }
 
-    if (token.role !== 'ADMIN') {
+    if (token.role !== 'ADMIN' && token.role !== 'MODERATOR') {
       return NextResponse.json({ message: 'Access denied' }, { status: 403 });
     }
 

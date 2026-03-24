@@ -67,8 +67,25 @@ export function DashboardSidebar({
     },
   ];
 
-  // Admin-only nav items
-  const adminNavMain = [
+  // Quiz nav item, accessible by Admin and Moderator
+  const quizNavItem = {
+    title: 'Quiz',
+    url: '#',
+    icon: ClipboardList,
+    items: [
+      {
+        title: 'Add new',
+        url: '/dashboard/quiz/add-new',
+      },
+      {
+        title: 'View all',
+        url: '/dashboard/quiz/all-quiz',
+      },
+    ],
+  };
+
+  // Admin-only nav items (excluding Quiz)
+  const adminOnlyNavMain = [
     {
       title: 'Application',
       url: '#',
@@ -115,21 +132,6 @@ export function DashboardSidebar({
         },
       ],
     },
-    {
-      title: 'Quiz',
-      url: '#',
-      icon: ClipboardList,
-      items: [
-        {
-          title: 'Add new',
-          url: '/dashboard/quiz/add-new',
-        },
-        {
-          title: 'View all',
-          url: '/dashboard/quiz/all-quiz',
-        },
-      ],
-    },
   ];
 
   // Admin-only project items
@@ -167,10 +169,14 @@ export function DashboardSidebar({
   ];
 
   // Select data based on role
-  const navMain =
-    session?.user?.role === 'ADMIN'
-      ? [...commonNavMain, ...adminNavMain]
-      : commonNavMain;
+  let navMain: Array<(typeof commonNavMain)[number]>;
+  if (session?.user?.role === 'ADMIN') {
+    navMain = [...commonNavMain, ...adminOnlyNavMain, quizNavItem];
+  } else if (session?.user?.role === 'MODERATOR') {
+    navMain = [...commonNavMain, quizNavItem];
+  } else {
+    navMain = commonNavMain;
+  }
 
   const projects =
     session?.user?.role === 'ADMIN' ? adminProjects : userProjects;

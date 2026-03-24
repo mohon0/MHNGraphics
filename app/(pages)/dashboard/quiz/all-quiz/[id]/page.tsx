@@ -28,7 +28,7 @@ export default function SingleAdminQuizPage({
   const { mutateAsync: duplicateQuiz } = useDuplicateQuiz();
 
   const handleEdit = useCallback((): void => {
-    router.push(`/admin/quizzes/${id}/edit`);
+    router.push(`/dashboard/quiz/edit-quiz/${id}`);
   }, [router, id]);
 
   const handleDuplicate = () => {

@@ -149,7 +149,10 @@ export function useDeleteQuiz({
     onSuccess: () => {
       // Invalidate and refetch notices query to update the UI
       queryClient.invalidateQueries({
-        queryKey: ['admin-quiz-list', 'quizzes'],
+        queryKey: ['admin-quiz-list'],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ['quizzes'],
       });
       onSuccess?.();
     },
