@@ -331,3 +331,18 @@ model QuizResult {
   @@unique([userId, quizId, attemptNumber])
   @@index([userId, quizId])
 }
+
+model HeroBanner {
+  id             String   @id @default(auto()) @map("_id") @db.ObjectId
+  title          String
+  subtitle       String?
+  slogan         String?
+  image          String
+  imageId        String
+  isActive       Boolean  @default(true)
+  bannerPosition String   @default("hero")
+  alignment      String   @default("left")
+  tag            String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+}

@@ -141,6 +141,11 @@ export function DashboardSidebar({
       url: `/dashboard/users?page=1`,
       icon: UserRoundSearch,
     },
+    {
+      name: 'Hero Banner',
+      url: `/dashboard/hero`,
+      icon: GalleryHorizontal,
+    },
 
     {
       name: 'Comments',
