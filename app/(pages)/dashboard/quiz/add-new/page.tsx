@@ -4,7 +4,7 @@ import { QuizForm } from './new-quize';
 
 export default function NewQuiz() {
   const { isLoading, isAuthenticated, hasRequiredRole } = useAuth({
-    requiredRole: 'ADMIN', // Only allow admins to access
+    requiredRole: ['ADMIN', 'MODERATOR'],
     redirectTo: '/access-denied', // Redirect to an access-denied page if not authorized
   });
 

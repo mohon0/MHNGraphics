@@ -1,18 +1,13 @@
 import { useRouter } from 'next/navigation';
-import { signIn, useSession } from 'next-auth/react';
+import { useSession } from 'next-auth/react';
 import { useEffect, useMemo } from 'react';
 
 interface AuthOptions {
-  /** Specify a required role (e.g., "ADMIN"). */
-  requiredRole?: string;
-  /** Path to redirect if the user is not authenticated or unauthorized. */
+  // Now accepts a string or an array of strings
+  requiredRole?: string | string[];
   redirectTo?: string;
 }
 
-/**
- * Custom hook to manage authentication state.
- * It automatically redirects unauthenticated users or those without the required role.
- */
 export function useAuth({
   requiredRole,
   redirectTo = '/access-denied',
@@ -24,36 +19,35 @@ export function useAuth({
   const isLoading = status === 'loading';
   const user = session?.user ?? null;
 
-  // Memoize the role check so that it recalculates only when 'user' or 'requiredRole' changes.
   const hasRequiredRole = useMemo(() => {
     if (!requiredRole) return true;
+
+    // If it's an array, check if user.role is in it. If string, do direct check.
+    if (Array.isArray(requiredRole)) {
+      return requiredRole.includes(user?.role as string);
+    }
+
     return user?.role === requiredRole;
   }, [requiredRole, user]);
 
   useEffect(() => {
-    if (isLoading) return; // Still loading; do nothing.
+    if (isLoading) return;
 
     if (!isAuthenticated) {
-      // Not authenticated: redirect to the provided redirect path or prompt sign in.
-      if (redirectTo) {
-        router.push(redirectTo);
-      } else {
-        signIn();
-      }
+      router.push(redirectTo);
       return;
     }
 
-    // If a required role is specified and the user doesn't match, redirect.
     if (requiredRole && !hasRequiredRole) {
       router.push(redirectTo);
     }
   }, [
     isAuthenticated,
     isLoading,
-    requiredRole,
     hasRequiredRole,
     router,
     redirectTo,
+    requiredRole,
   ]);
 
   return { session, user, isAuthenticated, isLoading, hasRequiredRole };
