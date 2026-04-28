@@ -6,70 +6,59 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import type React from 'react';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import img5 from '@/images/hero/oylkka-blood-bank.webp';
-import img2 from '@/images/hero/oylkka-e-commerc.webp';
-import img4 from '@/images/hero/oylkka-graphics.webp';
-import img3 from '@/images/hero/oylkka-it-agency.webp';
-import img1 from '@/images/services/brand10.jpg';
 import { cn } from '@/lib/utils';
+import { useHeroBanners } from '@/services/banner';
 import HeroSkeleton from './skeleton';
 
-const heroData = [
-  {
-    image: img1,
-    title: 'Learn Smarter',
-    subtitle: 'Grow Faster',
-    description: 'Master the skills you need for a high-tech career.',
-  },
-  {
-    image: img2, // oylkka e commerce
-    title: 'Shop Your Way',
-    subtitle: 'The Easy Way',
-    description: 'Your favorite products delivered with ease.',
-  },
-  {
-    image: img3, // oylkka it agency
-    title: 'Innovate Your',
-    subtitle: 'Business Now',
-    description: 'Cutting-edge IT solutions for modern success.',
-  },
-  {
-    image: img4,
-    title: 'Design Your',
-    subtitle: 'Visual Story',
-    description: 'Transform your ideas into stunning visuals.',
-  },
-  {
-    image: img5, // oylkka blood bank
-    title: 'Give the Gift',
-    subtitle: 'Of Life',
-    description: 'Your donation can save a life today.',
-  },
-];
+interface HeroBanner {
+  id: string;
+  title: string;
+  subtitle?: string | null;
+  slogan?: string | null;
+  image: string;
+  isActive: boolean;
+}
 
 export default function HeroImmersiveEnhanced() {
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState('');
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const { isPending, data, isError } = useHeroBanners();
 
-  // Image transition effect
+  // Filter active banners and set up rotation
   useEffect(() => {
-    const randomIndex = Math.floor(Math.random() * heroData.length);
-    setCurrentIndex(randomIndex);
-    setIsLoading(false);
+    if (data && data.length > 0) {
+      const activeBanners = data.filter(
+        (banner: HeroBanner) => banner.isActive,
+      );
+      if (activeBanners.length > 0) {
+        const randomIndex = Math.floor(Math.random() * activeBanners.length);
+        setCurrentIndex(randomIndex);
+      }
+    }
+  }, [data]);
 
-    // Set up image rotation
+  // Image rotation effect
+  useEffect(() => {
+    if (!data) return;
+    const activeBanners = data.filter((banner: HeroBanner) => banner.isActive);
+    if (activeBanners.length <= 1) return;
+
     const interval = setInterval(() => {
-      setCurrentIndex((prevIndex) => (prevIndex + 1) % heroData.length);
-    }, 10000); // Change every 10 seconds
+      setCurrentIndex((prevIndex) => (prevIndex + 1) % activeBanners.length);
+    }, 10000);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [data]);
+
+  const activeBanners = useMemo(() => {
+    return Array.isArray(data)
+      ? data.filter((banner: HeroBanner) => banner.isActive)
+      : [];
+  }, [data]);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -77,12 +66,24 @@ export default function HeroImmersiveEnhanced() {
     router.push(`/design?category=all&query=${formattedQuery}&page=1`);
   };
 
-  if (error) {
-    return <div className='text-center text-red-500'>{error}</div>;
+  if (isError) {
+    return (
+      <div className='text-center text-red-500'>
+        Failed to load hero banners
+      </div>
+    );
   }
 
-  if (isLoading) {
+  if (isPending || !data) {
     return <HeroSkeleton />;
+  }
+
+  if (activeBanners.length === 0) {
+    return (
+      <div className='text-center text-muted-foreground py-20'>
+        No active banners found
+      </div>
+    );
   }
 
   const categories = [
@@ -110,13 +111,14 @@ export default function HeroImmersiveEnhanced() {
             className='absolute inset-0'
           >
             <Image
-              src={heroData[currentIndex].image || '/placeholder.svg'}
-              alt={`Hero background ${currentIndex + 1}`}
+              src={activeBanners[currentIndex].image || '/placeholder.svg'}
+              alt={
+                activeBanners[currentIndex].title ||
+                `Hero background ${currentIndex + 1}`
+              }
               fill
               priority
-              placeholder='blur'
               className='object-cover object-center'
-              onError={() => setError('Failed to load image')}
             />
             {/* Enhanced gradient overlay for better text contrast */}
             <div className='absolute inset-0 bg-linear-to-b from-black/85 via-black/70 to-black/85' />
@@ -125,7 +127,7 @@ export default function HeroImmersiveEnhanced() {
       </div>
 
       {/* Content */}
-      <div className='relative mx-auto flex min-h-[700px] max-w-7xl flex-col items-center justify-center px-4 py-20 sm:px-6 lg:px-8'>
+      <div className='relative mx-auto flex min-h-175 max-w-7xl flex-col items-center justify-center px-4 py-20 sm:px-6 lg:px-8'>
         <AnimatePresence mode='wait'>
           <motion.div
             key={currentIndex}
@@ -137,16 +139,20 @@ export default function HeroImmersiveEnhanced() {
           >
             <h1 className='mb-6 text-4xl font-bold tracking-tight  drop-shadow-xs sm:text-5xl md:text-6xl lg:text-7xl'>
               <span className='block text-primary'>
-                {heroData[currentIndex].title}
+                {activeBanners[currentIndex].title}
               </span>
-              <span className='mt-2 block text-white drop-shadow-sm'>
-                {heroData[currentIndex].subtitle}
-              </span>
+              {activeBanners[currentIndex].subtitle && (
+                <span className='mt-2 block text-white drop-shadow-sm'>
+                  {activeBanners[currentIndex].subtitle}
+                </span>
+              )}
             </h1>
 
-            <p className='mx-auto mb-10 max-w-2xl text-lg text-white/90 drop-shadow-xs sm:text-xl'>
-              {heroData[currentIndex].description}
-            </p>
+            {activeBanners[currentIndex].slogan && (
+              <p className='mx-auto mb-10 max-w-2xl text-lg text-white/90 drop-shadow-xs sm:text-xl'>
+                {activeBanners[currentIndex].slogan}
+              </p>
+            )}
           </motion.div>
         </AnimatePresence>
 
@@ -203,10 +209,10 @@ export default function HeroImmersiveEnhanced() {
 
         {/* Slide indicators */}
         <div className='absolute bottom-8 left-1/2 flex -translate-x-1/2 transform gap-2'>
-          {heroData.map((_, index) => (
+          {activeBanners.map((_: HeroBanner, index: number) => (
             <button
               type='button'
-              // biome-ignore lint: error
+              // biome-ignore lint/suspicious/noArrayIndexKey: this is fine
               key={index}
               onClick={() => setCurrentIndex(index)}
               className={cn(

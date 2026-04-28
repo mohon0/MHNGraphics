@@ -52,7 +52,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { useDeleteHeroBanner, useHeroBanners } from '@/services/banner';
+import { useAdminHeroBanners, useDeleteHeroBanner } from '@/services/banner';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -410,7 +410,7 @@ function BannerListSkeleton({ view }: { view: 'grid' | 'list' }) {
 // ─── Main Page ────────────────────────────────────────────────────────────────
 
 export default function AdminHeroBannerListPage() {
-  const { isPending, data, isError, refetch } = useHeroBanners();
+  const { isPending, data, isError, refetch } = useAdminHeroBanners();
   const { mutate: deleteBanner, isPending: isDeleting } = useDeleteHeroBanner();
 
   const [view, setView] = useState<'grid' | 'list'>('grid');

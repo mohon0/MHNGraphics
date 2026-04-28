@@ -15,5 +15,6 @@ export const QUERY_KEYS = {
   QUIZZES: 'Quizzes',
   ADMIN_SINGLE_QUIZ_RESULT: 'Admin Single Quiz Result',
   SMS_BALANCE: 'SMS Balance',
+  ADMIN_HERO_BANNER: 'Admin Hero Banner',
   HERO_BANNER: 'Hero Banner',
 };

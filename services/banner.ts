@@ -3,11 +3,21 @@ import axios from 'axios';
 import { toast } from 'sonner';
 import { QUERY_KEYS } from '@/constant/QueryKeys';
 
+export function useAdminHeroBanners() {
+  return useQuery({
+    queryKey: [QUERY_KEYS.ADMIN_HERO_BANNER],
+    queryFn: async () => {
+      const response = await axios.get('/api/admin/banner/hero/all');
+      return response.data;
+    },
+  });
+}
+
 export function useHeroBanners() {
   return useQuery({
     queryKey: [QUERY_KEYS.HERO_BANNER],
     queryFn: async () => {
-      const response = await axios.get('/api/admin/banner/hero/all');
+      const response = await axios.get('/api/hero');
       return response.data;
     },
   });
