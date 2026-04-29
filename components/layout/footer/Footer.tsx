@@ -1,18 +1,15 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import axios from 'axios';
 import {
-  ChevronRight,
-  Facebook,
-  Github,
-  Instagram,
-  Linkedin,
-  Mail,
-  Send,
-  Twitter,
-  Zap,
-} from 'lucide-react';
+  IconBrandFacebook,
+  IconBrandGithub,
+  IconBrandInstagram,
+  IconBrandLinkedin,
+  IconBrandTwitter,
+} from '@tabler/icons-react';
+import axios from 'axios';
+import { ChevronRight, Mail, Send, Zap } from 'lucide-react';
 import Link from 'next/link';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
@@ -201,27 +198,27 @@ export default function Footer() {
               <div className='grid grid-cols-5 gap-3'>
                 {[
                   {
-                    icon: Facebook,
+                    icon: IconBrandFacebook,
                     href: 'https://www.facebook.com/www.md.mohon',
                     label: 'Facebook',
                   },
                   {
-                    icon: Twitter,
+                    icon: IconBrandTwitter,
                     href: 'https://www.twitter.com/mohongraphics',
                     label: 'Twitter',
                   },
                   {
-                    icon: Instagram,
+                    icon: IconBrandInstagram,
                     href: 'https://www.instagram.com/mohongraphics',
                     label: 'Instagram',
                   },
                   {
-                    icon: Linkedin,
+                    icon: IconBrandLinkedin,
                     href: 'https://linkedin.com/in/mohongraphics',
                     label: 'LinkedIn',
                   },
                   {
-                    icon: Github,
+                    icon: IconBrandGithub,
                     href: 'https://www.github.com/mohon01',
                     label: 'GitHub',
                   },
