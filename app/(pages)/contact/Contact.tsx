@@ -4,36 +4,32 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import axios from 'axios';
 import {
   AtSign,
+  Loader2,
   Mail,
   MapPin,
   MessageSquare,
   Phone,
   Send,
-  Sparkles,
   User,
 } from 'lucide-react';
 import Image from 'next/image';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { z } from 'zod';
+import logo from '@/assets/logo.png';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent } from '@/components/ui/card';
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form';
+import { Field, FieldError } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import logo from '@/images/oylkka-logo.png';
+
+// ── Schema ────────────────────────────────────────────────────────────────────
 
 const FormSchema = z.object({
   username: z
     .string()
-    .min(2, { message: 'Username must be at least 2 characters.' }),
+    .min(2, { message: 'Name must be at least 2 characters.' }),
   phoneNumber: z
     .string()
     .min(10, { message: 'Phone number must be at least 10 digits.' }),
@@ -43,225 +39,323 @@ const FormSchema = z.object({
     .min(10, { message: 'Message must be at least 10 characters.' }),
 });
 
+type FormData = z.infer<typeof FormSchema>;
+
+// ── Contact info data ─────────────────────────────────────────────────────────
+
+const contactItems = [
+  {
+    icon: MapPin,
+    label: 'Our Location',
+    value: 'Rofi Tower 5th Floor, Paira Chattra, Jhenaidah, Dhaka, Bangladesh',
+    href: null,
+  },
+  {
+    icon: Phone,
+    label: 'Phone Number',
+    value: '+8801989-491248',
+    href: 'tel:+8801989491248',
+  },
+  {
+    icon: Mail,
+    label: 'Email Address',
+    value: 'contact@oylkka.com',
+    href: 'mailto:contact@oylkka.com',
+  },
+];
+
+// ── Page ──────────────────────────────────────────────────────────────────────
+
 export default function Contact() {
-  const form = useForm<z.infer<typeof FormSchema>>({
+  const [sent, setSent] = useState(false);
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors, isSubmitting },
+    reset,
+  } = useForm<FormData>({
     resolver: zodResolver(FormSchema),
-    defaultValues: {
-      username: '',
-      phoneNumber: '',
-      email: '',
-      message: '',
-    },
+    defaultValues: { username: '', phoneNumber: '', email: '', message: '' },
   });
 
-  async function onSubmit(data: z.infer<typeof FormSchema>) {
+  async function onSubmit(data: FormData) {
     toast.promise(axios.post('/api/email/contact', data), {
-      loading: 'Sending your message...',
+      loading: 'Sending your message…',
       success: () => {
-        form.reset();
-        return 'Your message was successfully sent';
+        reset();
+        setSent(true);
+        return 'Message sent successfully!';
       },
-      error: 'Failed to send your message',
+      error: 'Failed to send your message.',
     });
   }
 
   return (
-    <section className='container mx-auto px-4 py-16'>
-      <div className='mx-auto max-w-5xl'>
-        {/* Header */}
-        <div className='mb-16 text-center'>
-          <div className='mb-4 inline-flex items-center justify-center rounded-full bg-primary/10 px-4 py-1 text-sm font-medium text-primary'>
-            <Sparkles className='mr-2 h-4 w-4' />
-            Let&#39;s Connect
-          </div>
-          <h2 className='mb-4 text-3xl font-bold tracking-tight md:text-4xl lg:text-5xl'>
-            Get in Touch with Our Creative Team
-          </h2>
-          <p className='mx-auto max-w-2xl text-muted-foreground'>
-            Have a project in mind or just want to say hello? We&#39;d love to
-            hear from you. Our team is ready to answer your questions and
-            discuss your needs.
-          </p>
+    <section className='min-h-screen bg-background max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 md:py-24 space-y-16'>
+      {/* ── Hero header ──────────────────────────────────────────────────── */}
+      <div>
+        {/* Eyebrow */}
+        <div className='flex items-center gap-3 mb-6'>
+          <div className='h-px w-10 bg-primary' />
+          <span className='text-xs font-semibold tracking-[0.2em] uppercase text-primary'>
+            Contact
+          </span>
         </div>
 
-        {/* Contact Grid */}
-        <div className='grid gap-8 lg:grid-cols-5 lg:gap-12'>
-          {/* Info Card */}
-          <div className='rounded-lg border p-4 md:col-span-2 md:p-8'>
-            <div className='h-full space-y-8'>
-              <div>
-                <div className='inline-flex h-12 w-12 items-center justify-center'>
-                  <Image
-                    src={logo}
-                    alt='Oylkka IT Logo'
-                    width={40}
-                    height={40}
-                    className='rounded'
-                  />
-                </div>
-                <h3 className='mt-4 text-xl font-bold'>Oylkka IT</h3>
-                <p className='mt-2 text-sm text-muted-foreground'>
-                  Transforming ideas into visual masterpieces. Your vision, our
-                  expertise.
-                </p>
-              </div>
+        <h1 className='text-4xl sm:text-5xl md:text-6xl font-bold leading-[1.05] tracking-tight max-w-2xl'>
+          Let&apos;s{' '}
+          <span className='italic font-bold text-primary'>create</span>{' '}
+          something great
+          <span className='text-primary'>.</span>
+        </h1>
 
-              <div className='space-y-4'>
-                <div className='flex items-start gap-3'>
-                  <div className='flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary'>
-                    <MapPin className='h-5 w-5' />
-                  </div>
-                  <div>
-                    <p className='font-medium'>Our Location</p>
-                    <p className='text-sm text-muted-foreground'>
-                      Rofi Tower 5th Floor, Paira Chattra, Jhenaidah, Dhaka,
-                      Bangladesh
-                    </p>
-                  </div>
-                </div>
+        <p className='mt-6 text-sm md:text-base text-muted-foreground leading-relaxed max-w-xl'>
+          Have a project in mind or just want to say hello? Our team is ready to
+          answer your questions and discuss your needs.
+        </p>
+      </div>
 
-                <div className='flex items-start gap-3'>
-                  <div className='flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary'>
-                    <Phone className='h-5 w-5' />
-                  </div>
-                  <div>
-                    <p className='font-medium'>Phone Number</p>
-                    <p className='text-sm text-muted-foreground'>
-                      +8801989-491248
-                    </p>
-                  </div>
-                </div>
+      {/* ── Main grid ────────────────────────────────────────────────────── */}
 
-                <div className='flex items-start gap-3'>
-                  <div className='flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary/10 text-primary'>
-                    <Mail className='h-5 w-5' />
-                  </div>
-                  <div>
-                    <p className='font-medium'>Email Address</p>
-                    <p className='text-sm text-muted-foreground'>
-                      contact@oylkka.com
-                    </p>
-                  </div>
-                </div>
-              </div>
-
-              <div className='mt-auto'>
-                <p className='text-sm font-medium'>Working Hours</p>
-                <p className='mt-2 text-sm text-muted-foreground'>
-                  Saturday - Thursday: 9:00 AM - 5:00 PM
-                  <br />
-                  Friday: Closed
-                </p>
+      <div className='grid lg:grid-cols-5 gap-12 lg:gap-20 items-start'>
+        {/* ── Info column (2 cols) ──────────────────────────────────────── */}
+        <div className='lg:col-span-2 space-y-10'>
+          {/* Brand block */}
+          <div className='space-y-4'>
+            <div className='w-11 h-11 rounded-xl bg-primary/10 flex items-center justify-center'>
+              <Image
+                src={logo}
+                alt='Oylkka IT'
+                width={24}
+                height={24}
+                className='rounded'
+              />
+            </div>
+            <div>
+              <h2 className='text-base font-bold leading-snug'>Oylkka IT</h2>
+              <div className='flex items-center gap-2 mt-2'>
+                <div className='h-px w-5 bg-primary/40' />
+                <span className='text-[10px] font-semibold tracking-[0.18em] uppercase text-primary/60'>
+                  Design Studio
+                </span>
               </div>
             </div>
+            <p className='text-sm text-muted-foreground leading-relaxed max-w-xs'>
+              Transforming ideas into visual masterpieces. Your vision, our
+              expertise.
+            </p>
           </div>
 
-          {/* Contact Form */}
-          <Card className='lg:col-span-3'>
-            <CardContent className='p-6 sm:p-8'>
-              <Form {...form}>
-                <form
-                  onSubmit={form.handleSubmit(onSubmit)}
-                  className='space-y-6'
-                >
-                  <div className='grid gap-6 sm:grid-cols-2'>
-                    <FormField
-                      control={form.control}
-                      name='username'
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Full Name</FormLabel>
-                          <FormControl>
-                            <div className='relative'>
-                              <User className='absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground' />
-                              <Input
-                                className='pl-10'
-                                placeholder='Your Full Name'
-                                {...field}
-                              />
-                            </div>
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
+          {/* Divider */}
+          <div className='h-px w-full bg-border' />
 
-                    <FormField
-                      control={form.control}
-                      name='phoneNumber'
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Phone Number</FormLabel>
-                          <FormControl>
-                            <div className='relative'>
-                              <Phone className='absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground' />
-                              <Input
-                                className='pl-10'
-                                placeholder='+8801XXXXXXXXX'
-                                {...field}
-                              />
-                            </div>
-                          </FormControl>
-                          <FormMessage />
-                        </FormItem>
-                      )}
+          {/* Contact items */}
+          <div className='space-y-6'>
+            {contactItems.map(({ icon: Icon, label, value, href }) => (
+              <div key={label} className='flex items-start gap-4'>
+                {/* Icon container — same as feature card */}
+                <div className='w-11 h-11 rounded-xl bg-primary/10 flex items-center justify-center shrink-0'>
+                  <Icon className='w-5 h-5 text-primary' />
+                </div>
+                <div>
+                  <p className='text-[10px] font-semibold tracking-[0.18em] uppercase text-muted-foreground mb-1'>
+                    {label}
+                  </p>
+                  {href ? (
+                    <a
+                      href={href}
+                      className='text-sm text-foreground hover:text-primary transition-colors duration-200 leading-relaxed'
+                    >
+                      {value}
+                    </a>
+                  ) : (
+                    <p className='text-sm text-foreground leading-relaxed'>
+                      {value}
+                    </p>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Divider */}
+          <div className='h-px w-full bg-border' />
+
+          {/* Working hours */}
+          <div>
+            <div className='flex items-center gap-2.5 mb-4'>
+              <div className='h-px w-5 bg-primary' />
+              <span className='text-[10px] font-semibold tracking-[0.2em] uppercase text-primary'>
+                Working Hours
+              </span>
+            </div>
+            <p className='text-sm text-muted-foreground leading-relaxed'>
+              Saturday – Thursday: 9:00 AM – 5:00 PM
+              <br />
+              Friday: Closed
+            </p>
+          </div>
+        </div>
+
+        {/* ── Form column (3 cols) ──────────────────────────────────────── */}
+        <div className='lg:col-span-3'>
+          <div className='rounded-2xl border border-border p-6 sm:p-8'>
+            {/* Form header */}
+            <div className='mb-8'>
+              <div className='flex items-center gap-3 mb-4'>
+                <div className='h-px w-8 bg-primary' />
+                <span className='text-xs font-semibold tracking-[0.2em] uppercase text-primary'>
+                  Send a Message
+                </span>
+              </div>
+              <h2 className='text-2xl md:text-3xl font-bold tracking-tight leading-tight'>
+                We&apos;d love to{' '}
+                <span className='italic font-light text-muted-foreground'>
+                  hear
+                </span>{' '}
+                from you
+                <span className='text-primary'>.</span>
+              </h2>
+            </div>
+
+            {sent ? (
+              /* ── Success state ── */
+              <div className='flex items-start gap-4 rounded-2xl border border-border px-6 py-5'>
+                <div className='w-11 h-11 rounded-xl bg-primary/10 flex items-center justify-center shrink-0'>
+                  <Send className='w-5 h-5 text-primary' />
+                </div>
+                <div>
+                  <p className='text-base font-bold leading-snug'>
+                    Message sent!
+                  </p>
+                  <p className='text-sm text-muted-foreground mt-1 leading-relaxed'>
+                    Thanks for reaching out. We&apos;ll get back to you shortly.
+                  </p>
+                  <Button
+                    onClick={() => setSent(false)}
+                    className='mt-4 text-xs font-semibold tracking-[0.15em] uppercase text-primary hover:opacity-70 transition-opacity duration-200'
+                  >
+                    Send another →
+                  </Button>
+                </div>
+              </div>
+            ) : (
+              /* ── Form ── */
+              <form onSubmit={handleSubmit(onSubmit)} className='space-y-5'>
+                {/* Name + Phone row */}
+                <div className='grid sm:grid-cols-2 gap-5'>
+                  <Field data-invalid={!!errors.username}>
+                    <Label
+                      htmlFor='username'
+                      className='text-xs font-semibold tracking-[0.12em] uppercase text-muted-foreground mb-1.5 block'
+                    >
+                      Full Name
+                    </Label>
+                    <div className='relative'>
+                      <User className='absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground' />
+                      <Input
+                        id='username'
+                        placeholder='Your Full Name'
+                        className='h-11 rounded-xl pl-10'
+                        disabled={isSubmitting}
+                        {...register('username')}
+                      />
+                    </div>
+                    {errors.username && (
+                      <FieldError>{errors.username.message}</FieldError>
+                    )}
+                  </Field>
+
+                  <Field data-invalid={!!errors.phoneNumber}>
+                    <Label
+                      htmlFor='phoneNumber'
+                      className='text-xs font-semibold tracking-[0.12em] uppercase text-muted-foreground mb-1.5 block'
+                    >
+                      Phone Number
+                    </Label>
+                    <div className='relative'>
+                      <Phone className='absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground' />
+                      <Input
+                        id='phoneNumber'
+                        placeholder='+8801XXXXXXXXX'
+                        className='h-11 rounded-xl pl-10'
+                        disabled={isSubmitting}
+                        {...register('phoneNumber')}
+                      />
+                    </div>
+                    {errors.phoneNumber && (
+                      <FieldError>{errors.phoneNumber.message}</FieldError>
+                    )}
+                  </Field>
+                </div>
+
+                {/* Email */}
+                <Field data-invalid={!!errors.email}>
+                  <Label
+                    htmlFor='email'
+                    className='text-xs font-semibold tracking-[0.12em] uppercase text-muted-foreground mb-1.5 block'
+                  >
+                    Email Address
+                  </Label>
+                  <div className='relative'>
+                    <AtSign className='absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground' />
+                    <Input
+                      id='email'
+                      type='email'
+                      placeholder='you@example.com'
+                      className='h-11 rounded-xl pl-10'
+                      disabled={isSubmitting}
+                      {...register('email')}
                     />
                   </div>
+                  {errors.email && (
+                    <FieldError>{errors.email.message}</FieldError>
+                  )}
+                </Field>
 
-                  <FormField
-                    control={form.control}
-                    name='email'
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Email Address</FormLabel>
-                        <FormControl>
-                          <div className='relative'>
-                            <AtSign className='absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground' />
-                            <Input
-                              className='pl-10'
-                              placeholder='you@example.com'
-                              {...field}
-                            />
-                          </div>
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
+                {/* Message */}
+                <Field data-invalid={!!errors.message}>
+                  <Label
+                    htmlFor='message'
+                    className='text-xs font-semibold tracking-[0.12em] uppercase text-muted-foreground mb-1.5 block'
+                  >
+                    Your Message
+                  </Label>
+                  <div className='relative'>
+                    <MessageSquare className='absolute left-3 top-3.5 w-4 h-4 text-muted-foreground' />
+                    <Textarea
+                      id='message'
+                      placeholder='How can we help you?'
+                      className='min-h-37.5 resize-none rounded-xl pl-10'
+                      disabled={isSubmitting}
+                      {...register('message')}
+                    />
+                  </div>
+                  {errors.message && (
+                    <FieldError>{errors.message.message}</FieldError>
+                  )}
+                </Field>
 
-                  <FormField
-                    control={form.control}
-                    name='message'
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Your Message</FormLabel>
-                        <FormControl>
-                          <div className='relative'>
-                            <MessageSquare className='absolute left-3 top-3 h-4 w-4 text-muted-foreground' />
-                            <Textarea
-                              className='min-h-[150px] resize-none pl-10'
-                              placeholder='How can we help you?'
-                              {...field}
-                            />
-                          </div>
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
+                {/* Submit */}
+                <div className='pt-1'>
                   <Button
                     type='submit'
-                    className='group w-full sm:w-auto'
                     size='lg'
+                    className='h-12 px-8 gap-2'
+                    disabled={isSubmitting}
                   >
-                    <Send className='mr-2 h-4 w-4 transition-transform group-hover:translate-x-1' />
-                    Send Message
+                    {isSubmitting ? (
+                      <Loader2 className='w-4 h-4 animate-spin' />
+                    ) : (
+                      <Send className='w-4 h-4' />
+                    )}
+                    {isSubmitting ? 'Sending…' : 'Send Message'}
                   </Button>
-                </form>
-              </Form>
-            </CardContent>
-          </Card>
+                </div>
+              </form>
+            )}
+          </div>
         </div>
       </div>
     </section>

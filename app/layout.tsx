@@ -1,12 +1,16 @@
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
+import { Geist, Inter } from 'next/font/google';
 import type { ReactNode } from 'react';
 import { Toaster } from '@/components/ui/sonner';
+import { TooltipProvider } from '@/components/ui/tooltip';
 import { ThemeProvider } from '@/context/theme-provider';
+import { cn } from '@/lib/utils';
 import SessionWrapper from '../context/SessionProvider';
 import ReactQueryProvider from '../context/TanstackQueryProvider';
 import './globals.css';
+
+const geist = Geist({ subsets: ['latin'], variable: '--font-sans' });
 
 const inter = Inter({
   subsets: ['latin'],
@@ -66,7 +70,11 @@ interface RootLayoutProps {
 export default function RootLayout({ children }: RootLayoutProps) {
   return (
     <ReactQueryProvider>
-      <html lang='en' suppressHydrationWarning>
+      <html
+        lang='en'
+        suppressHydrationWarning
+        className={cn('font-sans', geist.variable)}
+      >
         <body className={inter.className}>
           <ThemeProvider
             attribute='class'
@@ -74,7 +82,9 @@ export default function RootLayout({ children }: RootLayoutProps) {
             enableSystem
             disableTransitionOnChange
           >
-            <SessionWrapper>{children}</SessionWrapper>
+            <TooltipProvider>
+              <SessionWrapper>{children}</SessionWrapper>
+            </TooltipProvider>
           </ThemeProvider>
           <ReactQueryDevtools initialIsOpen={false} />
           <Toaster position='top-right' richColors />

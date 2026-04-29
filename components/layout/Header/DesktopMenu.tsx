@@ -1,7 +1,6 @@
 'use client';
 
 import React from 'react';
-import { Button } from '@/components/ui/button';
 import {
   NavigationMenu,
   NavigationMenuItem,
@@ -23,7 +22,11 @@ export default function DesktopMenu({
         <NavigationMenuItem>
           <NavigationMenuLink
             href='/'
-            className={fixed ? 'pl-2 text-white' : 'pl-2 text-foreground'}
+            className={
+              fixed
+                ? 'pl-2 text-white hover:text-black'
+                : 'pl-2 text-foreground'
+            }
           >
             Home
           </NavigationMenuLink>
@@ -34,7 +37,9 @@ export default function DesktopMenu({
             target='_blank'
             href='https://www.oylkka.com'
             className={
-              fixed ? 'pl-2 text-sm text-white' : 'pl-2 text-sm text-foreground'
+              fixed
+                ? 'pl-2 text-sm text-white hover:text-black'
+                : 'pl-2 text-sm text-foreground'
             }
           >
             Oylkka Shop
@@ -44,7 +49,9 @@ export default function DesktopMenu({
           <NavigationMenuLink
             href='/mhn-it'
             className={
-              fixed ? 'pl-2 text-sm text-white' : 'pl-2 text-sm text-foreground'
+              fixed
+                ? 'pl-2 text-sm text-white hover:text-black'
+                : 'pl-2 text-sm text-foreground'
             }
           >
             Oylkka IT Agency
@@ -54,7 +61,11 @@ export default function DesktopMenu({
         <NavigationMenuItem>
           <NavigationMenuLink
             href='/oylkka-it-and-training-center/blood-donate'
-            className={fixed ? 'pl-2 text-white' : 'pl-2 text-foreground'}
+            className={
+              fixed
+                ? 'pl-2 text-white hover:text-black'
+                : 'pl-2 text-foreground'
+            }
           >
             Blood Donate
           </NavigationMenuLink>
@@ -66,11 +77,11 @@ export default function DesktopMenu({
               href='/oylkka-it-and-training-center'
               className={
                 fixed
-                  ? 'overflow-hidden text-white'
+                  ? 'overflow-hidden hover:text-black bg-secondary '
                   : 'overflow-hidden text-black'
               }
             >
-              <Button variant='secondary'>Oylkka IT & Training Center</Button>
+              Oylkka IT & Training Center
             </NavigationMenuLink>
           </NavigationMenuItem>
         )}
