@@ -1,39 +1,51 @@
-import Image from 'next/image';
-import { Badge } from '@/components/ui/badge';
-import img from '@/images/best-computer/logo.png';
+'use client';
+
+import { useInView } from 'framer-motion';
+import { useRef } from 'react';
 
 export default function Header() {
-  return (
-    <div className='relative mb-16 mt-6 overflow-hidden rounded-xl bg-linear-to-r from-primary via-primary/90 to-primary p-6 text-white shadow-lg md:p-10'>
-      <div className='absolute -right-20 -top-20 h-64 w-64 rounded-full bg-white/10'></div>
-      <div className='absolute -bottom-16 -left-16 h-40 w-40 rounded-full bg-white/10'></div>
+  const ref = useRef(null);
+  const inView = useInView(ref, { once: true, margin: '-60px' });
 
-      <div className='relative z-10 flex flex-col items-center justify-between gap-6 md:flex-row'>
-        <div className='text-center md:text-left'>
-          <Badge
-            variant='outline'
-            className='mb-4 border-white/20 bg-white/10 text-white'
-          >
-            রক্তযোদ্ধা পরিবার, ঝিনাইদহ
-          </Badge>
-          <h1 className='mb-2 text-3xl font-bold text-red-500 md:text-4xl lg:text-5xl'>
-            রক্তদান করুন, জীবন বাঁচান
+  return (
+    <section
+      ref={ref}
+      className='relative pt-16 pb-12 bg-primary/5 border-b border-border overflow-hidden'
+    >
+      {/* Decorative background text */}
+      <div className='absolute right-8 top-4 font-display text-[8rem] font-bold text-primary/5 leading-none select-none pointer-events-none hidden lg:block'>
+        রক্ত
+      </div>
+
+      <div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'>
+        <div
+          className={`max-w-2xl transform transition-all duration-700 ${
+            inView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
+          }`}
+        >
+          {/* Eyebrow */}
+          <div className='flex items-center gap-3 mb-4'>
+            <div className='h-px w-10 bg-primary' />
+            <span className='text-xs font-semibold tracking-[0.2em] uppercase text-primary'>
+              রক্তযোদ্ধা পরিবার, ঝিনাইদহ
+            </span>
+          </div>
+
+          {/* Heading with italic contrast */}
+          <h1 className='font-display text-4xl sm:text-5xl md:text-6xl font-bold leading-tight mb-4'>
+            রক্তদান করুন,{' '}
+            <span className='italic font-light text-muted-foreground'>
+              জীবন
+            </span>{' '}
+            বাঁচান<span className='text-primary'>.</span>
           </h1>
-          <p className='mb-4 max-w-md text-white/80'>
-            আমরা পেরেছি, আমরাই পারবো, রক্ত দিয়ে অসহায় মানুষের পাশে দাড়াবো
+
+          {/* Body copy */}
+          <p className='text-muted-foreground text-base leading-relaxed'>
+            আমরা পেরেছি, আমরাই পারবো। রক্ত দিয়ে অসহায় মানুষের পাশে দাঁড়াবো।
           </p>
         </div>
-
-        <div className='relative h-32 w-32 overflow-hidden rounded-full border-4 border-white/20 md:h-40 md:w-40'>
-          <Image
-            src={img || '/placeholder.svg'}
-            alt='রক্তযোদ্ধা লোগো'
-            className='object-contain'
-            fill
-            sizes='160px'
-          />
-        </div>
       </div>
-    </div>
+    </section>
   );
 }

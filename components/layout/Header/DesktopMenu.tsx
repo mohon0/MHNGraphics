@@ -47,7 +47,7 @@ export default function DesktopMenu({
         </NavigationMenuItem>
         <NavigationMenuItem>
           <NavigationMenuLink
-            href='/mhn-it'
+            href='/oylkka-it'
             className={
               fixed
                 ? 'pl-2 text-sm text-white hover:text-black'
@@ -78,7 +78,7 @@ export default function DesktopMenu({
               className={
                 fixed
                   ? 'overflow-hidden hover:text-black bg-secondary '
-                  : 'overflow-hidden text-black'
+                  : 'overflow-hidden text-black bg-secondary'
               }
             >
               Oylkka IT & Training Center

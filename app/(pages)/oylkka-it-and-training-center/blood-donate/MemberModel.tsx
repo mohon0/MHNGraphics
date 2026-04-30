@@ -1,3 +1,6 @@
+'use client';
+
+import { motion } from 'framer-motion';
 import Image, { type StaticImageData } from 'next/image';
 import { Card } from '@/components/ui/card';
 import img2 from '@/images/best-computer/img1.jpg';
@@ -12,23 +15,26 @@ export default function MemberModel({
   number2,
 }: BloodMemberType) {
   return (
-    <Card className='flex items-center gap-6 rounded-lg bg-white p-4 transition-shadow duration-300 hover:shadow-lg dark:bg-gray-800'>
-      <div className='relative h-20 w-20 overflow-hidden rounded-full'>
-        <Image src={img} alt={name} layout='fill' objectFit='cover' />
-      </div>
-      <div className='space-y-2'>
-        <p className='text-xl font-semibold text-primary dark:text-white'>
-          {name}
-        </p>
-        <p className='text-md font-medium text-gray-600 dark:text-gray-400'>
-          {title}
-        </p>
-        <p className='text-sm text-gray-500 dark:text-gray-300'>{number}</p>
-        {number2 && (
-          <p className='text-sm text-gray-500 dark:text-gray-300'>{number2}</p>
-        )}
-      </div>
-    </Card>
+    <motion.div
+      whileHover={{ y: -8 }}
+      transition={{ duration: 0.3, ease: 'easeOut' }}
+    >
+      <Card className='flex flex-col items-center gap-4 border-border bg-card p-6 transition-all duration-300 hover:border-primary/30 hover:shadow-md'>
+        <div className='relative h-24 w-24 overflow-hidden rounded-full border-2 border-primary/20'>
+          <Image src={img} alt={name} layout='fill' objectFit='cover' />
+        </div>
+        <div className='text-center space-y-2'>
+          <p className='font-sans text-lg font-bold text-foreground'>{name}</p>
+          <p className='text-sm font-medium text-primary'>{title}</p>
+          <div className='space-y-1 pt-2 border-t border-border'>
+            <p className='text-xs text-muted-foreground'>{number}</p>
+            {number2 && (
+              <p className='text-xs text-muted-foreground'>{number2}</p>
+            )}
+          </div>
+        </div>
+      </Card>
+    </motion.div>
   );
 }
 

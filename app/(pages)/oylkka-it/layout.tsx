@@ -8,7 +8,7 @@ export default function layout({
 }>) {
   return (
     <div>
-      <Header fixed />
+      <Header />
       {children}
       <Footer />
     </div>
