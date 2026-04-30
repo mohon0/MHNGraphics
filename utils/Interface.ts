@@ -231,6 +231,7 @@ export interface UserProfile {
   image: string;
   name: string;
   email: string;
+  phoneNumber: string;
   bio: string;
   createdAt: Date;
   status: string;

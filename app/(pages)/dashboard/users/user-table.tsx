@@ -131,7 +131,10 @@ function UserRow({
       </TableCell>
 
       {/* Email */}
-      <TableCell className='text-muted-foreground'>{item.email}</TableCell>
+      <TableCell className='text-muted-foreground'>
+        <p>{item.email}</p>
+        {item.phoneNumber}
+      </TableCell>
 
       {/* Status */}
       <TableCell>
@@ -144,7 +147,7 @@ function UserRow({
               onStatusChange(item.id, value as UserStatus)
             }
           >
-            <SelectTrigger className='h-8 w-[120px]'>
+            <SelectTrigger className='h-8 w-30'>
               <SelectValue placeholder='Status' />
             </SelectTrigger>
             <SelectContent>
@@ -254,9 +257,9 @@ export function UserTable({ users, onDelete, onStatusChange }: UserTableProps) {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead className='w-[80px]'>Avatar</TableHead>
+              <TableHead className='w-20'>Avatar</TableHead>
               <TableHead>Name</TableHead>
-              <TableHead>Email</TableHead>
+              <TableHead>Contact</TableHead>
               <TableHead>Status</TableHead>
               <TableHead>Created At</TableHead>
               <TableHead className='text-right'>Actions</TableHead>

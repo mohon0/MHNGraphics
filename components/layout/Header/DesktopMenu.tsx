@@ -24,7 +24,7 @@ export default function DesktopMenu({
             href='/'
             className={
               fixed
-                ? 'pl-2 text-white hover:text-black'
+                ? 'pl-2 text-white dark:hover:text-white hover:text-black'
                 : 'pl-2 text-foreground'
             }
           >
@@ -38,8 +38,8 @@ export default function DesktopMenu({
             href='https://www.oylkka.com'
             className={
               fixed
-                ? 'pl-2 text-sm text-white hover:text-black'
-                : 'pl-2 text-sm text-foreground'
+                ? 'pl-2 text-white dark:hover:text-white hover:text-black'
+                : 'pl-2 text-foreground'
             }
           >
             Oylkka Shop
@@ -50,8 +50,8 @@ export default function DesktopMenu({
             href='/oylkka-it'
             className={
               fixed
-                ? 'pl-2 text-sm text-white hover:text-black'
-                : 'pl-2 text-sm text-foreground'
+                ? 'pl-2 text-white dark:hover:text-white hover:text-black'
+                : 'pl-2 text-foreground'
             }
           >
             Oylkka IT Agency
@@ -63,7 +63,7 @@ export default function DesktopMenu({
             href='/oylkka-it-and-training-center/blood-donate'
             className={
               fixed
-                ? 'pl-2 text-white hover:text-black'
+                ? 'pl-2 text-white dark:hover:text-white hover:text-black'
                 : 'pl-2 text-foreground'
             }
           >
@@ -77,8 +77,8 @@ export default function DesktopMenu({
               href='/oylkka-it-and-training-center'
               className={
                 fixed
-                  ? 'overflow-hidden hover:text-black bg-secondary '
-                  : 'overflow-hidden text-black bg-secondary'
+                  ? 'overflow-hidden bg-secondary text-foreground'
+                  : 'overflow-hidden text-foreground bg-secondary'
               }
             >
               Oylkka IT & Training Center

@@ -39,6 +39,7 @@ export async function GET(req: NextRequest) {
       select: {
         id: true,
         name: true,
+        phoneNumber: true,
         email: true,
         image: true,
         status: true,
