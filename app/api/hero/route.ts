@@ -2,8 +2,10 @@ import { type NextRequest, NextResponse } from 'next/server';
 import Prisma from '@/lib/prisma';
 
 const ALLOWED_ORIGINS = [
-  'https://www.training.oylkka.com/',
-  'https://training.oylkka.com/',
+  'https://www.training.oylkka.com',
+  'https://training.oylkka.com',
+  'training.oylkka.com',
+  'www.training.oylkka.com',
 ];
 
 function corsHeaders(origin: string | null): Record<string, string> | null {

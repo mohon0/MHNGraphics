@@ -8,6 +8,8 @@ import { deletePDF, UploadPDF } from '@/utils/cloudinary';
 const ALLOWED_ORIGINS = [
   'https://www.training.oylkka.com',
   'https://training.oylkka.com',
+  'training.oylkka.com',
+  'www.training.oylkka.com',
 ];
 
 function corsHeaders(origin: string | null): Record<string, string> | null {
