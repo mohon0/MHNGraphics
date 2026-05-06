@@ -5,7 +5,10 @@ import Prisma from '@/lib/prisma';
 import { NoticeSchema } from '@/lib/Schemas';
 import { deletePDF, UploadPDF } from '@/utils/cloudinary';
 
-const ALLOWED_ORIGINS = ['https://www.training.oylkka.com'];
+const ALLOWED_ORIGINS = [
+  'https://www.training.oylkka.com/',
+  'https://training.oylkka.com/',
+];
 
 function corsHeaders(origin: string | null): Record<string, string> | null {
   if (origin && ALLOWED_ORIGINS.includes(origin)) {
