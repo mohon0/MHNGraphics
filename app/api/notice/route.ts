@@ -8,27 +8,27 @@ import { deletePDF, UploadPDF } from '@/utils/cloudinary';
 const ALLOWED_ORIGINS = [
   'https://www.training.oylkka.com',
   'https://training.oylkka.com',
-  'training.oylkka.com',
-  'www.training.oylkka.com',
 ];
 
-function corsHeaders(origin: string | null): Record<string, string> | null {
-  if (origin && ALLOWED_ORIGINS.includes(origin)) {
-    return {
-      'Access-Control-Allow-Origin': origin,
-      'Access-Control-Allow-Methods': 'GET, POST, DELETE, OPTIONS',
-      'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-    };
-  }
-  return null;
+function corsHeaders(origin: string | null): Record<string, string> {
+  const allowedOrigin =
+    origin && ALLOWED_ORIGINS.includes(origin) ? origin : ALLOWED_ORIGINS[0];
+
+  return {
+    'Access-Control-Allow-Origin': allowedOrigin,
+    'Access-Control-Allow-Methods': 'GET, POST, DELETE, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+    Vary: 'Origin',
+  };
 }
 
 export async function OPTIONS(req: NextRequest) {
-  const headers = corsHeaders(req.headers.get('origin'));
-  return new NextResponse(null, { status: 204, headers: headers || undefined });
+  return new NextResponse(null, {
+    status: 204,
+    headers: corsHeaders(req.headers.get('origin')),
+  });
 }
 
-// POST: Upload a PDF and save a new Notice record
 export async function POST(req: NextRequest) {
   const authError = await requireAuth(req, ['ADMIN']);
   if (authError) return authError;
@@ -41,9 +41,7 @@ export async function POST(req: NextRequest) {
     const title = formData.get('title') as string;
     const pdf = formData.get('pdf') as File;
 
-    // Validate with Zod schema
     const validationResult = NoticeSchema.safeParse({ title, pdf });
-
     if (!validationResult.success) {
       return NextResponse.json(
         {
@@ -54,10 +52,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Upload the PDF to Cloudinary in the "notices" folder
     const uploadResult = await UploadPDF(pdf, 'notices');
-
-    // Save notice details into the database
     const notice = await Prisma.notice.create({
       data: {
         title,
@@ -71,7 +66,13 @@ export async function POST(req: NextRequest) {
         message: 'PDF uploaded and notice saved successfully',
         notice,
       }),
-      { status: 201, headers: { 'Content-Type': 'application/json' } },
+      {
+        status: 201,
+        headers: {
+          'Content-Type': 'application/json',
+          ...corsHeaders(req.headers.get('origin')), // ✅ add CORS to POST response too
+        },
+      },
     );
     // biome-ignore lint: error
   } catch (error) {
@@ -79,16 +80,15 @@ export async function POST(req: NextRequest) {
   }
 }
 
-// GET: Fetch Notice records with pagination support
 export async function GET(req: NextRequest) {
+  const origin = req.headers.get('origin');
+
   try {
     const { searchParams } = req.nextUrl;
-    // Get page and pageSize from the query, with defaults if not provided
     const page = parseInt(searchParams.get('page') || '1', 10);
     const pageSize = parseInt(searchParams.get('pageSize') || '10', 10);
     const skip = (page - 1) * pageSize;
 
-    // Run both the findMany and count queries in parallel
     const [notices, totalNotices] = await Promise.all([
       Prisma.notice.findMany({
         skip,
@@ -101,24 +101,21 @@ export async function GET(req: NextRequest) {
     const totalPages = Math.ceil(totalNotices / pageSize);
 
     return new NextResponse(
-      JSON.stringify({
-        page,
-        pageSize,
-        totalPages,
-        totalNotices,
-        notices,
-      }),
+      JSON.stringify({ page, pageSize, totalPages, totalNotices, notices }),
       {
         status: 200,
         headers: {
           'Content-Type': 'application/json',
-          ...(corsHeaders(req.headers.get('origin')) ?? {}),
+          ...corsHeaders(origin),
         },
       },
     );
     // biome-ignore lint: error
   } catch (error) {
-    return new NextResponse('Internal Server Error', { status: 500 });
+    return new NextResponse('Internal Server Error', {
+      status: 500,
+      headers: corsHeaders(origin), // ✅ CORS on error responses too
+    });
   }
 }
 
@@ -130,7 +127,6 @@ export async function DELETE(req: NextRequest) {
   if (csrfError) return csrfError;
 
   try {
-    // Retrieve the 'id' parameter from the query string.
     const { searchParams } = req.nextUrl;
     const id = searchParams.get('id');
 
@@ -138,30 +134,25 @@ export async function DELETE(req: NextRequest) {
       return new NextResponse('Notice ID is required', { status: 400 });
     }
 
-    // Find the notice by its ID.
-    const notice = await Prisma.notice.findUnique({
-      where: { id },
-    });
-
+    const notice = await Prisma.notice.findUnique({ where: { id } });
     if (!notice) {
       return new NextResponse('Notice not found', { status: 404 });
     }
 
-    // Optionally delete the associated PDF from Cloudinary if a public ID exists.
     if (notice.pdfPublicId) {
       await deletePDF(notice.pdfPublicId);
     }
 
-    // Delete the notice record from the database.
-    await Prisma.notice.delete({
-      where: { id },
-    });
+    await Prisma.notice.delete({ where: { id } });
 
     return new NextResponse(
       JSON.stringify({ message: 'Notice deleted successfully' }),
       {
         status: 200,
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          ...corsHeaders(req.headers.get('origin')), // ✅ CORS on DELETE response too
+        },
       },
     );
     // biome-ignore lint: error

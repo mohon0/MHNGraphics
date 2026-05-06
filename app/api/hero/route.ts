@@ -4,43 +4,40 @@ import Prisma from '@/lib/prisma';
 const ALLOWED_ORIGINS = [
   'https://www.training.oylkka.com',
   'https://training.oylkka.com',
-  'training.oylkka.com',
-  'www.training.oylkka.com',
 ];
 
-function corsHeaders(origin: string | null): Record<string, string> | null {
-  if (origin && ALLOWED_ORIGINS.includes(origin)) {
-    return {
-      'Access-Control-Allow-Origin': origin,
-      'Access-Control-Allow-Methods': 'GET, POST, DELETE, OPTIONS',
-      'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-    };
-  }
-  return null;
+function corsHeaders(origin: string | null): Record<string, string> {
+  const allowedOrigin =
+    origin && ALLOWED_ORIGINS.includes(origin) ? origin : ALLOWED_ORIGINS[0];
+
+  return {
+    'Access-Control-Allow-Origin': allowedOrigin,
+    'Access-Control-Allow-Methods': 'GET, POST, DELETE, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+    Vary: 'Origin', // important when allowing multiple origins
+  };
 }
 
 export async function OPTIONS(req: NextRequest) {
-  const headers = corsHeaders(req.headers.get('origin'));
-  // status 204: No Content is standard for OPTIONS
   return new NextResponse(null, {
     status: 204,
-    headers: headers || undefined,
+    headers: corsHeaders(req.headers.get('origin')),
   });
 }
 
 export async function GET(req: NextRequest) {
+  const origin = req.headers.get('origin');
+
   try {
     const banners = await Prisma.heroBanner.findMany({
-      where: {
-        isActive: true,
-      },
+      where: { isActive: true },
     });
 
     return new NextResponse(JSON.stringify(banners), {
       status: 200,
       headers: {
         'Content-Type': 'application/json',
-        ...(corsHeaders(req.headers.get('origin')) ?? {}),
+        ...corsHeaders(origin),
       },
     });
   } catch (_error) {
@@ -50,7 +47,7 @@ export async function GET(req: NextRequest) {
         status: 500,
         headers: {
           'Content-Type': 'application/json',
-          ...(corsHeaders(req.headers.get('origin')) ?? {}),
+          ...corsHeaders(origin),
         },
       },
     );
