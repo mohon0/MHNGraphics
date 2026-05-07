@@ -66,7 +66,7 @@ const services: Service[] = [
     link: '/oylkka-it-and-training-center',
     applyLink: '/oylkka-it-and-training-center/application',
     quizLink:
-      'https://drive.google.com/file/d/1dz_kKE3bRXAq0kqIm0btfquV4wuoUMLi/view',
+      'https://drive.google.com/file/d/1mVJeMamImwnSYmaajfECJtXeSAwfR5JC/view',
   },
   {
     id: 'it-agency',

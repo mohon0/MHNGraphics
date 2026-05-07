@@ -142,21 +142,17 @@ export const HeroBannerSchema = z.object({
   slogan: z.string().max(80, 'Slogan must be under 80 characters').optional(),
   bannerPosition: z.string().min(1, 'Position is required'),
   alignment: z.enum(['left', 'center', 'right']),
-  tag: z.string().max(40, 'Tag must be under 40 characters').optional(),
   isActive: z.boolean(),
   image: z
-    .custom<Blob | null>()
-    .refine((file) => file instanceof Blob, 'Banner image is required')
+    .instanceof(File, { message: 'Banner image is required' })
+    .refine((f) => f.size <= 2 * 1024 * 1024, 'Image must be under 2 MB')
     .refine(
-      (file) => !file || file?.size <= 2 * 1024 * 1024,
-      'Image must be under 2 MB',
-    )
-    .refine(
-      (file) =>
-        !file || ['image/jpeg', 'image/png', 'image/webp'].includes(file?.type),
+      (f) => ['image/jpeg', 'image/png', 'image/webp'].includes(f.type),
       'Only JPG, PNG, or WebP allowed',
     ),
 });
+
+export type HeroBannerSchemaType = z.infer<typeof HeroBannerSchema>;
 
 export const NoticeSchema = z.object({
   title: z.string().min(1, 'Title is required'),

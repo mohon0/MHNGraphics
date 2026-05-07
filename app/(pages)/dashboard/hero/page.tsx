@@ -211,7 +211,7 @@ function BannerCard({
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem
-                className='text-destructive focus:text-destructive'
+                className='text-destructive'
                 onClick={() => onDelete(banner.id)}
               >
                 <Trash2 className='mr-2 h-4 w-4' />

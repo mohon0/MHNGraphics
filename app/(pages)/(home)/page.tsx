@@ -9,7 +9,7 @@ import Services from './services';
 export default function Home() {
   return (
     <>
-      <Header fixed />
+      <Header />
       <Hero />
       <Services />
       <CategorySlider />

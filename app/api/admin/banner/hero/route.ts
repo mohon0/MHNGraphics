@@ -27,11 +27,11 @@ export async function POST(req: NextRequest) {
     // Validate with Zod schema
     const validationResult = HeroBannerSchema.safeParse({
       title,
-      subtitle,
-      slogan,
+      subtitle: subtitle ?? undefined,
+      slogan: slogan ?? undefined,
       bannerPosition,
       alignment,
-      tag,
+      tag: tag ?? undefined,
       isActive,
       image: imageFile ?? undefined,
     });

@@ -24,35 +24,33 @@ export function useHeroBanners() {
   });
 }
 
-export function useAddHeroBanner() {
+export function useAddHeroBanner(onSuccess?: () => void) {
   const queryClient = useQueryClient();
 
   return useMutation({
     mutationFn: async (formData: FormData) => {
-      // 1. Define the promise for the request
-      const addPromise = apiClient
-        .post('/api/admin/banner/hero', formData, {
+      const { data } = await apiClient.post(
+        '/api/admin/banner/hero',
+        formData,
+        {
           headers: { 'Content-Type': 'multipart/form-data' },
-        })
-        .then((res) => res.data);
-
-      // 2. Use toast.promise to manage feedback
-      return toast.promise(addPromise, {
-        loading: 'Creating your banner...',
-        success: (data) => {
-          // Invalidate the query on success
-          queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.HERO_BANNER] });
-          return data.message || 'Banner created successfully! ✨';
         },
-        error: (error) => {
-          if (axios.isAxiosError(error)) {
-            return (
-              error.response?.data?.message || 'Failed to create banner ❌'
-            );
-          }
-          return 'An unexpected error occurred.';
-        },
-      });
+      );
+      return data;
+    },
+    onSuccess: (data) => {
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.HERO_BANNER] });
+      toast.success(data.message || 'Banner created successfully! ✨');
+      if (onSuccess) onSuccess();
+    },
+    onError: (error) => {
+      if (axios.isAxiosError(error)) {
+        toast.error(
+          error.response?.data?.message || 'Failed to create banner ❌',
+        );
+      } else {
+        toast.error('An unexpected error occurred.');
+      }
     },
   });
 }
@@ -62,7 +60,7 @@ export function useDeleteHeroBanner() {
 
   return useMutation({
     mutationFn: async (id: string) => {
-      const deletePromise = axios
+      const deletePromise = apiClient
         .delete<{
           message: string;
         }>(`/api/admin/banner/hero/${id}`)
@@ -73,6 +71,9 @@ export function useDeleteHeroBanner() {
         success: (data) => {
           queryClient.invalidateQueries({
             queryKey: [QUERY_KEYS.HERO_BANNER],
+          });
+          queryClient.invalidateQueries({
+            queryKey: [QUERY_KEYS.ADMIN_HERO_BANNER],
           });
 
           return data.message || 'Design deleted successfully ✅';

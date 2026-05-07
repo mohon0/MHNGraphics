@@ -15,7 +15,6 @@ import { useRouter } from 'next/navigation';
 import { useCallback, useRef, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
-import { z } from 'zod';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
@@ -45,6 +44,7 @@ import {
 import { Separator } from '@/components/ui/separator';
 import { Switch } from '@/components/ui/switch';
 import { Textarea } from '@/components/ui/textarea';
+import { HeroBannerSchema, type HeroBannerSchemaType } from '@/lib/Schemas';
 import { useAddHeroBanner } from '@/services/banner';
 
 // ─── Constants ────────────────────────────────────────────────────────────────
@@ -64,33 +64,6 @@ const ALIGNMENT_OPTIONS = [
   { value: 'right', label: 'Right', icon: AlignRight },
 ] as const;
 
-// ─── Schema ───────────────────────────────────────────────────────────────────
-
-const formSchema = z.object({
-  title: z
-    .string()
-    .min(1, 'Title is required')
-    .max(100, 'Title must be under 100 characters'),
-  subtitle: z
-    .string()
-    .max(200, 'Subtitle must be under 200 characters')
-    .optional(),
-  slogan: z.string().max(80, 'Slogan must be under 80 characters').optional(),
-  bannerPosition: z.string().min(1, 'Position is required'),
-  alignment: z.enum(['left', 'center', 'right']),
-  tag: z.string().max(40, 'Tag must be under 40 characters').optional(),
-  isActive: z.boolean(),
-  image: z
-    .instanceof(File, { message: 'Banner image is required' })
-    .refine((f) => f.size <= 2 * 1024 * 1024, 'Image must be under 2 MB')
-    .refine(
-      (f) => ['image/jpeg', 'image/png', 'image/webp'].includes(f.type),
-      'Only JPG, PNG, or WebP allowed',
-    ),
-});
-
-type FormValues = z.infer<typeof formSchema>;
-
 // ─── Live Preview ─────────────────────────────────────────────────────────────
 
 function BannerLivePreview({
@@ -98,14 +71,12 @@ function BannerLivePreview({
   title,
   subtitle,
   slogan,
-  tag,
   alignment,
 }: {
   previewUrl: string | null;
   title: string;
   subtitle: string;
   slogan: string;
-  tag: string;
   alignment: 'left' | 'center' | 'right';
 }) {
   const alignClass =
@@ -141,11 +112,6 @@ function BannerLivePreview({
           className={`absolute inset-0 flex flex-col justify-center p-6 ${alignClass}`}
         >
           <div className='max-w-xs rounded-md bg-black/45 p-4 backdrop-blur-sm'>
-            {tag && (
-              <span className='mb-2 inline-block rounded-full bg-white/20 px-2.5 py-0.5 text-[10px] font-medium text-white'>
-                {tag}
-              </span>
-            )}
             {slogan && (
               <p className='mb-1 text-[10px] font-medium uppercase tracking-widest text-white/70'>
                 {slogan}
@@ -315,18 +281,20 @@ function ImageUploadField({
 
 export default function AddHeroBannerPage() {
   const router = useRouter();
-  const { mutate: addBanner, isPending } = useAddHeroBanner();
+  const { mutate: addBanner, isPending } = useAddHeroBanner(() => {
+    form.reset();
+    setPreviewUrl(null);
+  });
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 
-  const form = useForm<FormValues>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<HeroBannerSchemaType>({
+    resolver: zodResolver(HeroBannerSchema),
     defaultValues: {
       title: '',
       subtitle: '',
       slogan: '',
       bannerPosition: 'hero',
       alignment: 'left',
-      tag: '',
       isActive: true,
     },
   });
@@ -335,25 +303,19 @@ export default function AddHeroBannerPage() {
   const watchedTitle = form.watch('title');
   const watchedSubtitle = form.watch('subtitle');
   const watchedSlogan = form.watch('slogan');
-  const watchedTag = form.watch('tag');
   const watchedAlignment = form.watch('alignment');
 
-  const onSubmit = (values: FormValues) => {
+  const onSubmit = (values: HeroBannerSchemaType) => {
     const formData = new FormData();
     formData.append('title', values.title);
     if (values.subtitle) formData.append('subtitle', values.subtitle);
     if (values.slogan) formData.append('slogan', values.slogan);
     formData.append('bannerPosition', values.bannerPosition);
     formData.append('alignment', values.alignment);
-    if (values.tag) formData.append('tag', values.tag);
     formData.append('isActive', String(values.isActive));
     formData.append('image', values.image);
 
-    addBanner(formData, {
-      onSuccess: () => {
-        router.push('/dashboard/hero');
-      },
-    });
+    addBanner(formData);
   };
 
   return (
@@ -451,27 +413,6 @@ export default function AddHeroBannerPage() {
                         </FormControl>
                         <FormDescription>
                           Small eyebrow text shown above the title.
-                        </FormDescription>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-
-                  {/* Tag */}
-                  <FormField
-                    control={form.control}
-                    name='tag'
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Tag</FormLabel>
-                        <FormControl>
-                          <Input
-                            placeholder='e.g. New, Hot, Featured'
-                            {...field}
-                          />
-                        </FormControl>
-                        <FormDescription>
-                          Short badge label shown on the banner chip.
                         </FormDescription>
                         <FormMessage />
                       </FormItem>
@@ -635,7 +576,6 @@ export default function AddHeroBannerPage() {
                       title={watchedTitle}
                       subtitle={watchedSubtitle ?? ''}
                       slogan={watchedSlogan ?? ''}
-                      tag={watchedTag ?? ''}
                       alignment={watchedAlignment}
                     />
                   </CardContent>
