@@ -1,5 +1,7 @@
 'use client';
 
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { motion, useInView, type Variants } from 'framer-motion';
 import {
   ArrowRight,
@@ -12,8 +14,6 @@ import {
 } from 'lucide-react';
 import Link from 'next/link';
 import { type FC, type ReactNode, useRef } from 'react';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
 
 // ── Animation config ──────────────────────────────────────────────────────────
 
@@ -66,7 +66,7 @@ const services: Service[] = [
     link: '/oylkka-it-and-training-center',
     applyLink: '/oylkka-it-and-training-center/application',
     quizLink:
-      'https://drive.google.com/file/d/1mVJeMamImwnSYmaajfECJtXeSAwfR5JC/view',
+      'https://drive.google.com/file/d/1mHG1KrqOL8ufaJvs5W5O23birafbWrMw/view?usp=sharing',
   },
   {
     id: 'it-agency',
@@ -180,6 +180,7 @@ const ServiceCard: FC<{ service: Service; index: number }> = ({
           <div className='flex gap-2'>
             <Button
               size='sm'
+              variant='outline'
               className='flex-1 h-9 gap-1.5 rounded-xl group/btn'
               asChild
             >
@@ -212,12 +213,11 @@ const ServiceCard: FC<{ service: Service; index: number }> = ({
           {quizLink && (
             <Button
               size='sm'
-              variant='outline'
-              className='w-full h-9 gap-1.5 rounded-xl hover:border-primary/30 hover:text-primary'
+              className='w-full h-9 gap-1.5 rounded-xl hover:border-primary/30 hover:text-white'
               asChild
             >
               <Link href={quizLink}>
-                <Play className='w-3.5 h-3.5' />
+                <Play className='w-3.5 h-3.5 animate-ping' />
                 Download Apps For Android
               </Link>
             </Button>
