@@ -1,5 +1,4 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import apiClient from '@/lib/apiClient';
@@ -20,7 +19,7 @@ export function useQuizzes(searchParams: SearchParams) {
   return useQuery({
     queryKey: ['quizzes', page, limit, search, difficulty],
     queryFn: async () => {
-      const response = await axios.get('/api/quiz', {
+      const response = await apiClient.get('/api/quiz', {
         params: {
           page,
           limit,
@@ -38,7 +37,7 @@ export function useQuizInfo(id: string) {
   return useQuery({
     queryKey: ['quizinfo', id],
     queryFn: async () => {
-      const response = await axios.get(`/api/quiz/single-quiz?id=${id}`);
+      const response = await apiClient.get(`/api/quiz/single-quiz?id=${id}`);
       return response.data;
     },
     enabled: !!id,
@@ -49,7 +48,7 @@ export function useSingleQuiz(id: string) {
   return useQuery({
     queryKey: ['quizwithquestions', id],
     queryFn: async () => {
-      const response = await axios.get(
+      const response = await apiClient.get(
         `/api/quiz/single-quiz/with-questions?id=${id}`,
       );
       return response.data;
@@ -101,7 +100,7 @@ export function useSingleQuizResult(id: string) {
   return useQuery({
     queryKey: ['quiz-result', id],
     queryFn: async () => {
-      const response = await axios.get(`/api/quiz/quiz-result?id=${id}`);
+      const response = await apiClient.get(`/api/quiz/quiz-result?id=${id}`);
       return response.data;
     },
   });
@@ -111,7 +110,7 @@ export function useSingleQuizResultReview(id: string) {
   return useQuery({
     queryKey: ['quiz-result-review', id],
     queryFn: async () => {
-      const response = await axios.get(
+      const response = await apiClient.get(
         `/api/quiz/quiz-result/review-result?id=${id}`,
       );
       return response.data;
@@ -123,7 +122,7 @@ export function useAdminQuizList() {
   return useQuery<QuizListType[]>({
     queryKey: ['admin-quiz-list'],
     queryFn: async () => {
-      const response = await axios.get(`/api/quiz/admin/quiz-list`);
+      const response = await apiClient.get(`/api/quiz/admin/quiz-list`);
       return response.data;
     },
   });
@@ -142,7 +141,7 @@ export function useDeleteQuiz({
 
   return useMutation({
     mutationFn: async (id: string) => {
-      const response = await axios.delete('/api/quiz/admin', {
+      const response = await apiClient.delete('/api/quiz/admin', {
         params: { id },
       });
       return response.data;
@@ -168,7 +167,9 @@ export function useDuplicateQuiz() {
 
   return useMutation({
     mutationFn: async (id: string) => {
-      const response = await axios.post('/api/quiz/admin/duplicate', { id });
+      const response = await apiClient.post('/api/quiz/admin/duplicate', {
+        id,
+      });
       return response.data;
     },
     onSuccess: () => {
@@ -183,7 +184,7 @@ export function useUpdateQuiz() {
   return useMutation({
     // biome-ignore lint/suspicious/noExplicitAny: this is fine
     mutationFn: async (quizData: any) => {
-      const response = await axios.put('/api/quiz/admin', quizData);
+      const response = await apiClient.put('/api/quiz/admin', quizData);
       return response.data;
     },
     onSuccess: (_data, variables) => {
@@ -199,7 +200,9 @@ export function useSingleAdminQuiz(id: string) {
   return useQuery({
     queryKey: ['single-admin-quiz', id],
     queryFn: async () => {
-      const response = await axios.get(`/api/admin/quiz/single-quiz?id=${id}`);
+      const response = await apiClient.get(
+        `/api/admin/quiz/single-quiz?id=${id}`,
+      );
       return response.data;
     },
     enabled: !!id,

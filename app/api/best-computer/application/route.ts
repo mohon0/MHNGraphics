@@ -474,7 +474,7 @@ export async function PATCH(req: NextRequest) {
       'transactionId',
     ];
 
-    const ADMIN_ONLY_FIELDS = ['editable'];
+    const ADMIN_ONLY_FIELDS = ['editable', 'status', 'certificate'];
 
     // Prepare updated data from whitelisted fields only
     const updatedData: Record<string, string | number | Date | boolean | null> =
@@ -499,6 +499,8 @@ export async function PATCH(req: NextRequest) {
           throw new Error(`Invalid birth date: ${value}`);
         }
         updatedData.birthDay = date;
+      } else if (key === 'editable') {
+        updatedData.editable = value.toString() === 'true';
       } else {
         updatedData[key] = value.toString();
       }
@@ -509,14 +511,13 @@ export async function PATCH(req: NextRequest) {
     updatedData.imageId = imageId;
 
     // Perform the update operation
-    const updatedDesign = await Prisma.application.update({
+    await Prisma.application.update({
       where: { id },
       data: updatedData,
     });
 
     return NextResponse.json({
-      message: 'Design updated successfully',
-      design: updatedDesign,
+      message: 'Application updated successfully',
     });
     // biome-ignore lint: error
   } catch (error) {

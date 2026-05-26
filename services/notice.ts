@@ -1,19 +1,17 @@
-import { useQuery, useQueryClient } from '@tanstack/react-query';
-import axios from 'axios';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import apiClient from '@/lib/apiClient';
 
 export function useNotice(page: number = 1, pageSize: number = 10) {
   return useQuery({
     queryKey: ['notices', page, pageSize],
     queryFn: async () => {
-      const response = await axios.get(
+      const response = await apiClient.get(
         `/api/notice?page=${page}&pageSize=${pageSize}`,
       );
       return response.data;
     },
   });
 }
-
-import { useMutation } from '@tanstack/react-query';
 
 interface UseUploadNoticeOptions {
   onSuccess?: () => void;
@@ -24,34 +22,28 @@ export function useUploadNotice({
   onSuccess,
   onError,
 }: UseUploadNoticeOptions = {}) {
+  const queryClient = useQueryClient();
+
   return useMutation({
     mutationFn: async (formData: FormData) => {
-      const response = await fetch('/api/notice', {
-        method: 'POST',
-        body: formData,
+      const response = await apiClient.post('/api/notice', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
       });
 
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-        throw new Error(errorData.message || 'Failed to upload notice');
-      }
-
-      return response.json();
-    },
-    onMutate: () => {
-      // Return context that will be passed to onSuccess/onError
-      return {};
+      return response.data;
     },
     onSuccess: () => {
-      // Call custom onSuccess callback
+      queryClient.invalidateQueries({ queryKey: ['notices'] });
       onSuccess?.();
     },
     onError: (error) => {
-      // Call custom onError callback
       onError?.(error);
     },
   });
 }
+
 interface UseDeleteNoticeOptions {
   onSuccess?: () => void;
   onError?: (error: Error) => void;
@@ -65,11 +57,12 @@ export function useDeleteNotice({
 
   return useMutation({
     mutationFn: async (id: string) => {
-      const response = await axios.delete('/api/notice', { params: { id } });
+      const response = await apiClient.delete('/api/notice', {
+        params: { id },
+      });
       return response.data;
     },
     onSuccess: () => {
-      // Invalidate and refetch notices query to update the UI
       queryClient.invalidateQueries({ queryKey: ['notices'] });
       onSuccess?.();
     },

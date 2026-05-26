@@ -1,7 +1,6 @@
 'use client';
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import axios from 'axios';
 import { useState } from 'react';
 import { toast } from 'sonner';
 import apiClient from '@/lib/apiClient';
@@ -16,7 +15,7 @@ const BloodBankService = {
     bloodGroup,
   }: BloodBankQuery): Promise<BloodBankData> => {
     try {
-      const response = await axios.get(API_ENDPOINT, {
+      const response = await apiClient.get(API_ENDPOINT, {
         params: {
           page: currentPage,
           search: search,
@@ -45,7 +44,7 @@ const BloodBankService = {
     donor: Omit<Donor, 'id' | 'createdAt'>,
   ): Promise<Donor> => {
     try {
-      const response = await axios.post(API_ENDPOINT, donor);
+      const response = await apiClient.post(API_ENDPOINT, donor);
       return response.data;
     } catch (error) {
       // biome-ignore lint: error
@@ -56,7 +55,7 @@ const BloodBankService = {
 
   updateDonor: async (id: string, donor: Partial<Donor>): Promise<Donor> => {
     try {
-      const response = await axios.patch(`${API_ENDPOINT}?id=${id}`, donor);
+      const response = await apiClient.patch(`${API_ENDPOINT}?id=${id}`, donor);
       return response.data;
     } catch (error) {
       // biome-ignore lint: error
@@ -125,7 +124,7 @@ export function useAddress({ currentPage, filterBy, searchInput }: Props) {
   return useQuery({
     queryKey: ['address', currentPage, filterBy, searchInput],
     queryFn: async () => {
-      const response = await axios.get(
+      const response = await apiClient.get(
         `/api/best-computer/blood-bank/address?page=${currentPage}&filterBy=${filterBy}&search=${searchInput}`,
       );
       return response.data;
@@ -137,7 +136,7 @@ export function useSingleDonar(id: string | string[]) {
   return useQuery({
     queryKey: ['Single donar', id],
     queryFn: async () => {
-      const response = await axios.get(
+      const response = await apiClient.get(
         `/api/best-computer/blood-bank/single-donar?id=${id}`,
       );
       return response.data;

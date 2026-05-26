@@ -10,7 +10,7 @@ import type { Design } from '@/utils/Interface';
 // Common fetch function
 async function fetchDesignData(url: string, params: object) {
   try {
-    const response = await axios.get(url, { params });
+    const response = await apiClient.get(url, { params });
     return response.data;
     // biome-ignore lint: error
   } catch (error) {
@@ -163,7 +163,9 @@ export function useSingleDesign({ id }: { id: string }) {
   return useQuery({
     queryKey: [QUERY_KEYS.SINGLE_DESIGN, id],
     queryFn: async () => {
-      const response = await axios.get(`/api/design/single-design?id=${id}`);
+      const response = await apiClient.get(
+        `/api/design/single-design?id=${id}`,
+      );
       return response.data;
     },
   });
@@ -174,7 +176,7 @@ export function useIncrementViews() {
 
   return useMutation({
     mutationFn: async (id: string) => {
-      const response = await axios.post(
+      const response = await apiClient.post(
         `/api/design/single-design/view?id=${id}`,
       );
       return response.data;
@@ -191,7 +193,9 @@ export function useRelatedDesign(id: string) {
   return useQuery({
     queryKey: [QUERY_KEYS.RELATED_DESIGN, id],
     queryFn: async () => {
-      const response = await axios.get(`/api/design/related-design?id=${id}`);
+      const response = await apiClient.get(
+        `/api/design/related-design?id=${id}`,
+      );
       return response.data;
     },
   });
@@ -276,7 +280,7 @@ export function useUpdateDesignLike() {
       postId: string;
       userId: string;
     }) => {
-      const updatePromise = axios
+      const updatePromise = apiClient
         .post<{ message: string }>(`/api/design/single-design/like`, {
           postId,
           userId,

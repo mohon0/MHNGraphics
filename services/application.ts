@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
-import axios, { type AxiosResponse } from 'axios';
+import type { AxiosResponse } from 'axios';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import type { z } from 'zod';
@@ -157,16 +157,19 @@ export function useApplicationList({
       type,
     ],
     queryFn: async () => {
-      const response = await axios.get(`/api/best-computer/all-application`, {
-        params: {
-          page,
-          filter,
-          certificate,
-          sortBy,
-          type,
-          searchQuery: debouncedSearchQuery,
+      const response = await apiClient.get(
+        `/api/best-computer/all-application`,
+        {
+          params: {
+            page,
+            filter,
+            certificate,
+            sortBy,
+            type,
+            searchQuery: debouncedSearchQuery,
+          },
         },
-      });
+      );
       return response.data;
     },
   });
@@ -176,7 +179,7 @@ export function useSingleApplication({ id }: { id: string }) {
   return useQuery({
     queryKey: ['Single Application', id],
     queryFn: async () => {
-      const response = await axios.get(
+      const response = await apiClient.get(
         `/api/best-computer/single-application?id=${id}`,
       );
       return response.data;
@@ -188,7 +191,7 @@ export function useUserApplication() {
   return useQuery({
     queryKey: ['User Application Data'],
     queryFn: async () => {
-      const response = await axios.get(`/api/best-computer/application`);
+      const response = await apiClient.get(`/api/best-computer/application`);
       return response.data;
     },
   });

@@ -1,6 +1,5 @@
 'use client';
 import { zodResolver } from '@hookform/resolvers/zod';
-import axios from 'axios';
 import { motion, useInView } from 'framer-motion';
 import { CheckCircle2, Droplets, Phone, Upload, User } from 'lucide-react';
 import type React from 'react';
@@ -29,6 +28,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { bangladeshDistricts } from '@/constant/District';
+import apiClient from '@/lib/apiClient';
 import Header from './Header';
 import MemberModel, { MemberModelData } from './MemberModel';
 
@@ -135,18 +135,22 @@ export default function BloodDonation() {
       formData.append(key, value);
     });
 
-    toast
-      .promise(axios.post('/api/best-computer/blood-bank', formData), {
-        loading: 'Please wait...',
-        success: 'Form has been successfully submitted',
-        error: 'Failed to submit form',
-      })
-      .unwrap()
-      .then(() => {
-        form.reset();
-        setImage(null);
-        location.reload();
-      });
+    const apiPromise = apiClient.post(
+      '/api/best-computer/blood-bank',
+      formData,
+    );
+
+    toast.promise(apiPromise, {
+      loading: 'Please wait...',
+      success: 'Form has been successfully submitted',
+      error: 'Failed to submit form',
+    });
+
+    apiPromise.then(() => {
+      form.reset();
+      setImage(null);
+      location.reload();
+    });
   }
 
   return (
