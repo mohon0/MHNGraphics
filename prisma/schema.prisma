@@ -25,6 +25,16 @@ enum QuizDifficulty {
   HARD
 }
 
+// ─── App Download Platforms ────────────────────────────────────────────────────
+
+enum AppPlatform {
+  ANDROID
+  WINDOWS
+  IOS
+  MACOS
+  LINUX
+}
+
 model Account {
   id                String  @id @default(auto()) @map("_id") @db.ObjectId
   userId            String  @db.ObjectId
@@ -330,6 +340,22 @@ model QuizResult {
 
   @@unique([userId, quizId, attemptNumber])
   @@index([userId, quizId])
+}
+
+// ============================================
+// APP DOWNLOAD MODELS
+// ============================================
+
+model AppRelease {
+  id          String      @id @default(auto()) @map("_id") @db.ObjectId
+  platform    AppPlatform
+  downloadUrl String
+  version     String?
+  isActive    Boolean     @default(true)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  @@unique([platform])
 }
 
 model HeroBanner {

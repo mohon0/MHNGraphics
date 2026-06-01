@@ -3,6 +3,7 @@ import {
   BadgeCheck,
   ChartNoAxesCombined,
   ClipboardList,
+  Download,
   FileUser,
   GalleryHorizontal,
   HeartPulse,
@@ -145,6 +146,11 @@ export function DashboardSidebar({
       name: 'Hero Banner',
       url: `/dashboard/hero`,
       icon: GalleryHorizontal,
+    },
+    {
+      name: 'App Release',
+      url: '/dashboard/app-download',
+      icon: Download,
     },
 
     {

@@ -288,3 +288,14 @@ export const ApplicationSchema = z.object({
 });
 
 // export type ApplicationSchemaType = z.infer<typeof ApplicationSchema>;
+
+// ─── App Download ──────────────────────────────────────────────────────────────
+
+export const AppReleaseUpsertSchema = z.object({
+  platform: z.enum(['ANDROID', 'WINDOWS', 'IOS', 'MACOS', 'LINUX']),
+  downloadUrl: z.string().url('Must be a valid URL').min(1, 'URL is required'),
+  version: z.string().optional(),
+  isActive: z.boolean().default(true),
+});
+
+export type AppReleaseUpsertSchemaType = z.infer<typeof AppReleaseUpsertSchema>;

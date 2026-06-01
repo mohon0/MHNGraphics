@@ -17,4 +17,6 @@ export const QUERY_KEYS = {
   SMS_BALANCE: 'SMS Balance',
   ADMIN_HERO_BANNER: 'Admin Hero Banner',
   HERO_BANNER: 'Hero Banner',
+  APP_RELEASES: 'App Releases',
+  ADMIN_APP_RELEASES: 'Admin App Releases',
 };

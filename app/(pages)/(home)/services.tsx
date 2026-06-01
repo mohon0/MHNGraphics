@@ -50,7 +50,7 @@ interface Service {
   external?: boolean;
   soon?: boolean;
   applyLink?: string;
-  quizLink?: string;
+  appLink?: string;
 }
 
 // ── Data ──────────────────────────────────────────────────────────────────────
@@ -65,8 +65,7 @@ const services: Service[] = [
     tag: 'Education',
     link: '/oylkka-it-and-training-center',
     applyLink: '/oylkka-it-and-training-center/application',
-    quizLink:
-      'https://drive.google.com/file/d/1mHG1KrqOL8ufaJvs5W5O23birafbWrMw/view?usp=sharing',
+    appLink: '/oylkka-it-and-training-center/app-download',
   },
   {
     id: 'it-agency',
@@ -132,7 +131,7 @@ const ServiceCard: FC<{ service: Service; index: number }> = ({
     external,
     soon,
     applyLink,
-    quizLink,
+    appLink,
   } = service;
 
   const cardContent = (
@@ -209,16 +208,16 @@ const ServiceCard: FC<{ service: Service; index: number }> = ({
             )}
           </div>
 
-          {/* Quiz button — full width secondary row */}
-          {quizLink && (
+          {/* App download button — full width secondary row */}
+          {appLink && (
             <Button
               size='sm'
               className='w-full h-9 gap-1.5 rounded-xl hover:border-primary/30 hover:text-white'
               asChild
             >
-              <Link href={quizLink}>
+              <Link href={appLink}>
                 <Play className='w-3.5 h-3.5 animate-ping' />
-                Download Apps For Android
+                Download App
               </Link>
             </Button>
           )}
