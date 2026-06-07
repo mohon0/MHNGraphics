@@ -8,7 +8,6 @@ import {
   IconBrandLinkedin,
   IconBrandTwitter,
 } from '@tabler/icons-react';
-import axios from 'axios';
 import { CheckCircle2, Loader2, Send } from 'lucide-react';
 import Link from 'next/link';
 import { useState } from 'react';
@@ -18,6 +17,7 @@ import { z } from 'zod';
 import { Button } from '@/components/ui/button';
 import { Field, FieldError } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
+import apiClient from '@/lib/apiClient';
 import Logo from '../Header/logo';
 import { ThemeToggle } from './theme-toggle';
 
@@ -111,7 +111,7 @@ function Newsletter() {
 
   const onSubmit = async (data: FormData) => {
     await toast.promise(
-      axios.post('/api/dashboard/subscribe', { email: data.email }),
+      apiClient.post('/api/dashboard/subscribe', { email: data.email }),
       {
         loading: 'Subscribing…',
         success: () => {

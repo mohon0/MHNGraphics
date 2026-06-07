@@ -1,13 +1,11 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import axios from 'axios';
 import { format } from 'date-fns';
 import { CalendarIcon, Loader2 } from 'lucide-react';
 import * as React from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
-
 import { Button } from '@/components/ui/button';
 import { Calendar } from '@/components/ui/calendar';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -25,6 +23,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover';
+import apiClient from '@/lib/apiClient';
 import { PaymentFormSchema, type PaymentFormSchemaType } from '@/lib/Schemas';
 import { cn } from '@/lib/utils';
 import { useFetchPaymentReport } from '@/services/payment';
@@ -58,7 +57,7 @@ export default function PaymentForm({ id, onSuccess }: PaymentFormProps) {
     };
 
     toast.promise(
-      axios.post(
+      apiClient.post(
         `/api/best-computer/application/payment-report?id=${id}`,
         formattedData,
       ),

@@ -1,6 +1,5 @@
 'use client';
 import { zodResolver } from '@hookform/resolvers/zod';
-import axios from 'axios';
 import { Calendar, Droplets, MapPin, Phone, Upload, User } from 'lucide-react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import type React from 'react';
@@ -41,6 +40,7 @@ import {
 import { Separator } from '@/components/ui/separator';
 import { Skeleton } from '@/components/ui/skeleton';
 import { bangladeshDistricts } from '@/constant/District';
+import apiClient from '@/lib/apiClient';
 import { useSingleDonar } from '@/services/blood-bank';
 
 const fileSizeValidator = (maxSizeInKB: number) => (file: File) => {
@@ -149,18 +149,21 @@ function BloodDonation() {
     });
 
     // Use toast.promise to handle async request states
-    await toast.promise(axios.put('/api/best-computer/blood-bank', formData), {
-      loading: 'Please wait...',
-      success: () => {
-        setImage(null);
-        refetch();
-        setTimeout(() => {
-          router.back(); // Redirects back after success
-        }, 2000);
-        return 'Form has been successfully submitted';
+    await toast.promise(
+      apiClient.put('/api/best-computer/blood-bank', formData),
+      {
+        loading: 'Please wait...',
+        success: () => {
+          setImage(null);
+          refetch();
+          setTimeout(() => {
+            router.back(); // Redirects back after success
+          }, 2000);
+          return 'Form has been successfully submitted';
+        },
+        error: 'Failed to submit form',
       },
-      error: 'Failed to submit form',
-    });
+    );
   }
 
   return (

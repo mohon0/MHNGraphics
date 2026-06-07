@@ -220,7 +220,7 @@ export function useCreateQuiz(
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: async (quizData: any) => {
-      const createPromise = axios
+      const createPromise = apiClient
         .post('/api/admin/quiz/add-new', quizData)
         .then((res) => res.data);
 

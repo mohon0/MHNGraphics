@@ -1,7 +1,6 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import axios from 'axios';
 import { format } from 'date-fns';
 import {
   AlertCircle,
@@ -15,7 +14,6 @@ import * as React from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { z } from 'zod';
-
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import {
   AlertDialog,
@@ -52,6 +50,7 @@ import {
 } from '@/components/ui/popover';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Skeleton } from '@/components/ui/skeleton';
+import apiClient from '@/lib/apiClient';
 import { cn } from '@/lib/utils';
 import { useFetchPaymentReport } from '@/services/payment';
 import type { PaymentReport } from '@/utils/Interface';
@@ -84,7 +83,7 @@ export default function DeletePaymentSummary({ id }: { id: string }) {
     if (!selectedPayment) return;
 
     await toast.promise(
-      axios.delete(
+      apiClient.delete(
         `/api/best-computer/application/payment-report?id=${selectedPayment.id}`,
       ),
       {

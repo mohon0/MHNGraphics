@@ -1,7 +1,6 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import axios from 'axios';
 import {
   AtSign,
   Loader2,
@@ -23,6 +22,7 @@ import { Field, FieldError } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
+import apiClient from '@/lib/apiClient';
 
 // ── Schema ────────────────────────────────────────────────────────────────────
 
@@ -80,7 +80,7 @@ export default function Contact() {
   });
 
   async function onSubmit(data: FormData) {
-    toast.promise(axios.post('/api/email/contact', data), {
+    toast.promise(apiClient.post('/api/email/contact', data), {
       loading: 'Sending your message…',
       success: () => {
         reset();

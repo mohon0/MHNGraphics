@@ -1,6 +1,5 @@
 'use client';
 
-import axios from 'axios';
 import { motion } from 'framer-motion';
 import { MessageSquare } from 'lucide-react';
 import { useRouter } from 'next/navigation';
@@ -22,6 +21,7 @@ import {
 } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
+import apiClient from '@/lib/apiClient';
 import ProfileStats from './profile-stats';
 import ShareDialog from './share-dialog';
 
@@ -46,13 +46,16 @@ export default function ProfileHeader({ user }: ProfileHeaderProps) {
     setIsSending(true);
     try {
       // First create or get existing conversation
-      const conversationResponse = await axios.post('/api/chat/conversations', {
-        userId: user.id,
-      });
+      const conversationResponse = await apiClient.post(
+        '/api/chat/conversations',
+        {
+          userId: user.id,
+        },
+      );
       const conversationId = conversationResponse.data.id;
 
       // Then send the message
-      await axios.post(`/api/conversations/${conversationId}/messages`, {
+      await apiClient.post(`/api/conversations/${conversationId}/messages`, {
         content: messageText,
       });
 

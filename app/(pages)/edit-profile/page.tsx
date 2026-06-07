@@ -1,7 +1,6 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import axios from 'axios';
 import { CameraIcon, Eye, EyeOff } from 'lucide-react';
 import { useSession } from 'next-auth/react';
 import { useEffect, useState } from 'react';
@@ -24,6 +23,7 @@ import { Input } from '@/components/ui/input';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Textarea } from '@/components/ui/textarea';
+import apiClient from '@/lib/apiClient';
 import { useEditProfileInfo } from '@/services/profile';
 
 // Validation schemas
@@ -96,7 +96,7 @@ export default function ProfileForm() {
     }
     toast.loading('Please wait...');
     try {
-      const response = await axios.put('/api/editprofile', formData, {
+      const response = await apiClient.put('/api/editprofile', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
@@ -126,7 +126,7 @@ export default function ProfileForm() {
   async function onPasswordSubmit(data: PasswordFormValues) {
     toast.loading('Please wait...');
     try {
-      const response = await axios.patch('/api/editprofile', data);
+      const response = await apiClient.patch('/api/editprofile', data);
       if (response.status === 200) {
         toast.dismiss();
         toast.success('Password updated successfully');

@@ -1,7 +1,6 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import axios from 'axios';
 import { format } from 'date-fns';
 import { CalendarIcon } from 'lucide-react';
 import { useState } from 'react';
@@ -43,6 +42,7 @@ import {
 } from '@/components/ui/select';
 import { Separator } from '@/components/ui/separator';
 import { bangladeshDistricts } from '@/constant/District';
+import apiClient from '@/lib/apiClient';
 import { cn } from '@/lib/utils';
 import type { UserApplication } from '@/utils/Interface';
 import EditApplicationImage from './EditApplicationImage';
@@ -259,7 +259,7 @@ export function StudentApplicationForm({
     toast.loading('Please wait...');
 
     try {
-      const response = await axios.patch(
+      const response = await apiClient.patch(
         '/api/best-computer/application',
         submissionData,
         {

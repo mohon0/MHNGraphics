@@ -1,18 +1,18 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import axios from 'axios';
 import { useSession } from 'next-auth/react';
+import apiClient from '@/lib/apiClient';
 
 export function useConversations() {
   const { data: session } = useSession();
   const queryClient = useQueryClient();
 
   const getConversations = async () => {
-    const response = await axios.get('/api/chat/conversation');
+    const response = await apiClient.get('/api/chat/conversation');
     return response.data;
   };
 
   const createConversation = async (userId: string) => {
-    const response = await axios.post('/api/chat/conversation', { userId });
+    const response = await apiClient.post('/api/chat/conversation', { userId });
     return response.data;
   };
 
@@ -48,14 +48,14 @@ export function useConversationMessages(conversationId: string) {
     if (pageParam) params.append('cursor', pageParam);
     params.append('limit', '30');
 
-    const response = await axios.get(
+    const response = await apiClient.get(
       `/api/chat/message?conversationId=${conversationId}&${params.toString()}`,
     );
     return response.data;
   };
 
   const sendMessage = async (content: string) => {
-    const response = await axios.post(
+    const response = await apiClient.post(
       `/api/chat/message?conversationId=${conversationId}`,
       { content },
     );
@@ -65,7 +65,7 @@ export function useConversationMessages(conversationId: string) {
   const markAsRead = async (messageIds: string[]) => {
     if (!messageIds.length) return;
 
-    const response = await axios.post(
+    const response = await apiClient.post(
       `/api/chat/message/read?conversationId=${conversationId}`,
       { messageIds },
     );

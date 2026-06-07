@@ -1,11 +1,11 @@
 'use client';
 
-import axios from 'axios';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Suspense } from 'react';
 import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
+import apiClient from '@/lib/apiClient';
 import DesignSkeleton from './DesignSkeleton';
 
 function UnSubscribe() {
@@ -16,7 +16,7 @@ function UnSubscribe() {
   async function handleUnsubscribe() {
     try {
       toast.loading('Please wait...');
-      const response = await axios.delete(
+      const response = await apiClient.delete(
         `/api/dashboard/subscribe?mail=${mail}`,
       );
       if (response.status === 200) {

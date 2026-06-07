@@ -1,8 +1,8 @@
 'use client';
 
-import axios from 'axios';
 import { useSession } from 'next-auth/react';
 import { useEffect, useState } from 'react';
+import apiClient from '@/lib/apiClient';
 import { useAbly } from './useAbly';
 
 export interface UserStatus {
@@ -25,7 +25,7 @@ export function usePresence() {
     // Set user as online when component mounts
     const setOnline = async () => {
       try {
-        await axios.post('/api/chat/presence', { isOnline: true });
+        await apiClient.post('/api/chat/presence', { isOnline: true });
       } catch (error) {
         // biome-ignore lint: error
         console.error('Failed to set online status:', error);
@@ -48,7 +48,7 @@ export function usePresence() {
       window.removeEventListener('beforeunload', handleBeforeUnload);
 
       // Also set offline when component unmounts (e.g., logout)
-      axios.post('/api/chat/presence', { isOnline: false });
+      apiClient.post('/api/chat/presence', { isOnline: false });
     };
   }, [session?.user?.id]);
 
@@ -87,7 +87,9 @@ export function usePresence() {
 
     // Otherwise fetch from API
     try {
-      const response = await axios.get(`/api/chat/presence?userId=${userId}`);
+      const response = await apiClient.get(
+        `/api/chat/presence?userId=${userId}`,
+      );
       const status = response.data;
 
       // Update local state
