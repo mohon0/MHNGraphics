@@ -49,7 +49,11 @@ apiClient.interceptors.request.use(async (config) => {
 
   if (STATE_CHANGING_METHODS.includes(method)) {
     if (!csrfToken) {
-      await fetchCsrfToken();
+      try {
+        await fetchCsrfToken();
+      } catch {
+        // CSRF token unavailable — request proceeds without it
+      }
     }
     if (csrfToken) {
       config.headers['x-csrf-token'] = csrfToken;
